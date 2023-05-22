@@ -1,0 +1,87 @@
+
+
+code {
+  font-family: var(--font-family-mono);
+  background-color: var(--CodeBg);
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.docPage {
+  margin-top: 10px;
+  margin-bottom: 60px;
+}
+
+.docPageTitle {
+  font-size: 48px;
+  font-weight: bold;
+  color: var(--Header);
+  margin-left: 70px;
+}
+
+.docNotFoundMsg {
+  position: absolute;
+  top: 300px;
+  color: var(--TextDark);
+  text-align: center;
+}
+
+.code {
+  margin-top: 10px;
+  margin-left: -30px;
+  margin-right: -30px;
+  background-color: var(--CodeBlockBg);
+  border: 1px solid var(--Border);
+  border-radius: 10px;
+}
+
+
+.blockContainer {
+  position: relative;
+  padding-left: 70px;
+  padding-right: 70px;
+}
+
+.blockBgSelected, .blockContainer:hover .blockBg {
+  background-color: #283033;
+  position: absolute;
+  top: 0;
+  left: 40px;
+  right: 40px;
+  bottom: 0;
+  border-radius: 10px;
+  z-index: -1;
+}
+
+.blockBgSelected {
+  border-left: 5px solid var(--Red);
+}
+
+textarea.pageEditor {
+  font-family: var(--font-family-mono);
+  font-size: 1em;
+  line-height: 1.5em;
+  color: var(--Text);
+  width: calc(100% - 80px);
+  margin-left: 40px;
+  margin-top: 10px;
+  padding-left: 26px;
+  padding-top: 21px;
+  padding-bottom: 10px;
+  padding-right: 15px;
+  box-sizing: border-box;
+  border: none;
+  border-left: 5px solid var(--Text);
+  border-radius: 10px;
+  background-color: var(--PageEditFormBg);
+  resize: none;
+  outline: none;
+  overflow: visible;
+
+}
+
+textarea:focus.pageEditor {
+  border: none;
+  border-left: 5px solid var(--Red);
+  background-color: var(--PageEditFormBg);
+}

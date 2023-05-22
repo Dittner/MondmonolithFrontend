@@ -1,0 +1,107 @@
+
+/* Dropdown */
+
+.login.dropDownContainer {
+  display: flex;
+  justify-content: right;
+}
+
+.login.dropDownList {
+  position: absolute;
+  top: 40px;
+  width: 250px;
+  height: fit-content;
+  padding: 20px;
+  background-color: var(--DocListBg);
+  border-radius: 10px;
+  box-shadow: 0 10px 20px #00000020;
+}
+
+
+button.signOutBtn,
+.login.dropDownLbl {
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  background: none;
+  color: var(--MenuBtn);
+}
+
+button.signOutBtn:hover,
+.login.dropDownLbl:hover,
+.login.dropDownLbl-opened {
+  font-size: 16px;
+  font-weight: bold;
+  -webkit-appearance: none;
+  appearance: none;
+  color: var(--Red);
+  cursor: pointer;
+}
+
+/* *************** */
+
+/* AUTH FORM */
+
+.login input[type=text],
+.login input[type=password] {
+  width: 100%;
+  padding: 12px 12px;
+  margin: 8px 0;
+  font-size: 16px;
+  display: block;
+  border: 1px solid var(--TextDark);
+  border-radius: 0;
+  color: var(--Text);
+  background: none;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.login input[type=text]:focus,
+.login input[type=password]:focus {
+  border: 1px solid var(--Red);
+  background: none;
+  color: var(--Red);
+}
+
+.login input[type=submit] {
+  width: 100%;
+  background-color: var(--Red);
+  font-size: 16px;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.login input[type=submit]:hover {
+  background-color: #c25e66;
+}
+
+.login input[type=submit]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.login fieldset{
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: right;
+}
+
+p.authWithError {
+  font-size: 14px;
+  color: var(--Error);
+  text-align: center;
+}
+
+p.userName {
+  font-family: var(--font-family-mono);
+  white-space: pre;
+  font-size: 16px;
+}
+

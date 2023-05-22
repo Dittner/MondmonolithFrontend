@@ -1,0 +1,153 @@
+.docListContainer {
+  min-width: 200px;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: left;
+  flex-direction: column;
+  padding: 0;
+}
+
+.docListContainer span {
+  font-size: 14px;
+  padding-right: 8px;
+  bottom: 1px;
+  position: relative;
+}
+
+ul,
+.dirTitle,
+.docLink,
+.docLinkActive {
+  font-size: 18px;
+  color: var(--TextDark);
+  width: 100%;
+}
+
+.dirTitle {
+  font-weight: bold;
+  color: var(--TextDark);
+}
+
+.docListContainer ul {
+  padding-bottom: 20px;
+}
+
+.docLink,
+.docLinkActive {
+  font-family: var(--font-family-mono);
+  font-size: 18px;
+  padding-left: 3px;
+  min-width: 200px;
+  align-items: center;
+  display: flex;
+}
+
+.docLink::before {
+  white-space: pre;
+  content: "- ";
+}
+
+.docLinkActive::before {
+  white-space: pre;
+  content: "> ";
+}
+
+.docLinkActive {
+  color: var(--Text);
+}
+
+.docLinkContent,
+.dirContent {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: left;
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 30px;
+  background-color: transparent;
+}
+
+.docLinkContent:hover,
+.dirContent:hover{
+  background-color: var(--DarkBg);
+}
+
+.docLinkContent:hover .edit.icon-edit,
+.dirContent:hover .edit.icon-edit{
+  display: inline;
+}
+
+.edit.icon-edit {
+  display: none;
+}
+
+
+ul {
+  list-style-type: none;
+}
+
+.btn.createDoc {
+  height: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.btn {
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  background-color: transparent;
+  border-radius: 30px;
+  color: var(--MenuBtn);
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.btn:hover {
+  color: var(--Red);
+}
+
+p.errMsg {
+  font-size: 14px;
+  color: var(--Error);
+  text-align: center;
+}
+
+.editForm {
+  padding-left: 45px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  background-color: var(--DarkBg);
+}
+
+/* Input */
+
+input.editFormInput {
+  width: 100%;
+  font-family: var(--font-family);
+  padding: 0;
+  margin-bottom: 10px;
+  color: var(--Text);
+  font-size: 18px;
+  display: inline-block;
+  border: 0;
+  border-bottom: 1px solid var(--TextDark);
+  box-sizing: border-box;
+  background-color: transparent;
+  outline: none;
+}
+
+input.editFormInput:focus {
+  border: 0;
+  color: var(--Red);
+  border-bottom: 1px solid var(--Red);
+}
+
+input.editFormInput::placeholder {
+  color: var(--Text);
+  opacity: 0.5;
+}

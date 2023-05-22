@@ -1,0 +1,144 @@
+/******************************/
+/*--------- INPUTS ---------*/
+/******************************/
+
+.input_container{
+  position: relative;
+  box-sizing: border-box;
+}
+
+.input_placeholder {
+  font-size: 12px;
+  left: 8px;
+  top: -2px;
+  color: var(--Text);
+  background-color: var(--DocListBg);
+  padding-left: 5px;
+  padding-right: 5px;
+  position: absolute;
+}
+
+.input_placeholder_focused {
+  font-size: 12px;
+  left: 8px;
+  top: -2px;
+  color: var(--Red);
+  background-color: var(--DocListBg);
+  padding-left: 5px;
+  padding-right: 5px;
+  position: absolute;
+}
+
+/******************************/
+/*--------- LOADING ---------*/
+/******************************/
+
+/* Spinner */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.spinner,
+.spinner:after {
+  border-radius: 50%;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  border: 3px solid #789ba933;
+  border-top: 3px solid var(--Header);
+  border-left: 3px solid var(--Header);
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1s infinite linear;
+  animation: load8 1s infinite linear;
+}
+
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.smallSpinner,
+.smallSpinner:after {
+  border-radius: 50%;
+}
+
+.smallSpinner {
+  width: 15px;
+  height: 15px;
+  margin: 5px;
+  display: inline-block;
+  border-top: 1px solid var(--Red);
+  border-left: 1px solid var(--Red);
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 0.75s infinite linear;
+  animation: load8 0.75s infinite linear;
+}
+
+
+/******************************/
+/*--------- STACK ---------*/
+/******************************/
+
+div.vstack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+div.hstack {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: left;
+}
+
+div.valignTop {
+  align-items: flex-start;
+}
+div.valignCenter {
+  align-items: center;
+}
+div.valignBase {
+  align-items: baseline;
+}
+div.valignBottom {
+  align-items: flex-end;
+}
+
+div.halignLeft {
+  justify-content: left;
+}
+div.halignCenter {
+  justify-content: center;
+}
+div.halignRight {
+  justify-content: right;
+}

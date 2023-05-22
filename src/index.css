@@ -1,13 +1,207 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  color-scheme: dark;
+  /* color palette */
+  --DarkGray: #3D3B48;
+  --LightGray: #DEDEDE;
+  --DarkGreen: #33B97E;
+  --Red: #E06C75;
+  --Error: #ff4178;
+  --Text: #b4c2ce;
+  --TextDark: #76818d;
+  --DocListTextSelected: #d2e4f2;
+  --DocListBg: #2e373b;
+  --AppBg: #252a2d;
+  --DarkBg: #00000020;
+  --CodeBg: #2c3438;
+  --CodeBlockBg: #2e393f20;
+  --Border: #2e393f;
+  --Header: #789ba9;
+  --MenuBtn: #a29cbe;
+  --PageEditFormBg: #1f2528;
+  --font-family: system-ui, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, sans-serif;
+  --font-family-mono: Menlo, source-code-pro, Monaco, Consolas, 'Courier New', monospace;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+::selection {
+  color: #333;
+  background: #c1b79e;
 }
+
+.text-bold {
+  font-weight: 700;
+}
+
+.text-semi-bold {
+  font-weight: 600;
+}
+
+.text-medium {
+  font-weight: 500;
+}
+
+.text-regular {
+  font-weight: 400;
+}
+
+.text-default {
+  font-size: 1rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0 0;
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--Text);
+  background-color: var(--AppBg);
+}
+
+body, p, a, ul, li, h1, h2, h3 {
+  margin: 0;
+  padding: 0;
+  text-decoration: 0;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+div,
+p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+/* DOC VIEW LAYOUT */
+.toolsPanel {
+  grid-area: toolsPanel;
+  border-bottom: 1px solid var(--Border);
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  position: sticky;
+  top: 0;
+  height: 50px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.authPanel {
+  grid-area: authPanel;
+  border-bottom: 1px solid var(--Border);
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  position: sticky;
+  top: 0;
+  height: 50px;
+  padding-left: 10px;
+  padding-right: 10px;
+  z-index: 1;
+}
+
+.docList {
+  grid-area: docList;
+  background-color: var(--DocListBg);
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  overflow: auto;
+  height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: right;
+}
+
+.docBody {
+  grid-area: docBody;
+  top: 0;
+  min-height: calc(100vh - 51px);
+}
+
+.docTopics {
+  grid-area: docTopics;
+  border-left-width: 1px;
+  border-left-style: solid;
+  border-color: var(--Border);
+  position: sticky;
+  box-sizing: border-box;
+  overflow: auto;
+  top: 51px;
+  padding-top: 10px;
+  height: calc(100vh - 51px);
+}
+
+@media (max-width: 1200px) {
+  .docsView {
+    display: grid;
+    min-width: 750px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(50px, auto);
+    grid-template-areas:
+    "toolsPanel authPanel"
+    "docBody docBody";
+  }
+
+  .docsViewAndDocList {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(50px, auto);
+    grid-template-areas:
+    "docListAndDocsView toolsPanel"
+    "docListAndDocsView docBody";
+    overflow: clip;
+  }
+
+  .docListAndDocsView {
+    width: 350px;
+    grid-area: docListAndDocsView;
+    background-color: var(--DocListBg);
+    box-sizing: border-box;
+    position: sticky;
+    top: 0;
+    overflow: auto;
+    height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: right;
+  }
+
+  .docList {
+    display: none;
+  }
+
+  .btn.showDocList {
+    position: absolute;
+    left: 20px;
+    height: 50px;
+  }
+
+ .docTopics {
+    display: none;
+    position: absolute;
+  }
+}
+
+@media (min-width: 1200px) {
+  .docsView, .docsViewAndDocList {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: minmax(50px, auto);
+    grid-template-areas:
+    "docList toolsPanel toolsPanel authPanel authPanel"
+    "docList docBody docBody docBody docTopics";
+  }
+
+  .btn.showDocList {
+    display: none;
+  }
+}
+
+
+/* *************** */
+

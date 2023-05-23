@@ -12,13 +12,15 @@ import {ToolsPanel} from "./tools/ToolsPanel";
 export const DocsView = observer(() => {
   console.log("DocsView init");
   const docsContext = useDocsContext()
-  const [isDocListShown, setIsDocListShown] = useState(false)
-
   useEffect(() => {
     docsContext.repo.fetchDirectories()
   })
 
   const {pathname, hash, key} = useLocation()
+
+  const showDocList = ()=> {
+    docsContext.app.isDocListShown = true
+  }
 
   useEffect(() => {
     if (hash === '') {
@@ -37,19 +39,17 @@ export const DocsView = observer(() => {
   }, [pathname, hash, key]); // do this on route change
 
   return (
-    <div className={isDocListShown ? "docsViewAndDocList" : "docsView"}>
+    <div className="docsView">
       <div className="toolsPanel">
         <button className="btn showDocList"
-                onClick={() => {
-                  setIsDocListShown(!isDocListShown)
-                }}>{isDocListShown ? "Hide docs" : "Show docs"}
+                onClick={showDocList}>Show docs
         </button>
         <ToolsPanel/>
       </div>
       <div className="authPanel">
         <AuthPanel/>
       </div>
-      <div className={isDocListShown ? "docListAndDocsView" : "docList"}>
+      <div className={docsContext.app.isDocListShown ? "docList" : "docList hidden"}>
         <DocList/>
       </div>
       <div className="docBody">

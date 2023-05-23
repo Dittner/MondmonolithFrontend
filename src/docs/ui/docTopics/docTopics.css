@@ -5,6 +5,7 @@
   align-items: flex-start;
   flex-direction: column;
   margin-left: 10px;
+  width: 100%;
 }
 
 .topicLink {
@@ -12,7 +13,6 @@
   width: 100%;
   text-decoration: none;
   color: var(--Header);
-  /* padding: 12px; */
   box-sizing: border-box;
 }
 

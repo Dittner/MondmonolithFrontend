@@ -40,7 +40,7 @@ export class User {
         this.authWithError = "Invalid login or password!"
         this.authStatus = AuthStatus.SIGNED_OUT
       }
-    }, 2000)
+    }, 1000)
   }
 
   @action signOut() {
@@ -163,14 +163,12 @@ export class Page {
 
 export class PageBlock {
   readonly uid: string
-  @observable lang: string
   @observable data: string
   @observable isEditing: boolean = false
   @observable page: Page | undefined
 
-  constructor(uid: string, lang: string, data: string) {
+  constructor(uid: string, data: string) {
     this.uid = uid
-    this.lang = lang
     this.data = data
     makeObservable(this)
   }

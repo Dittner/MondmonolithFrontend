@@ -16,6 +16,7 @@ export class DocsContext {
   @observable readonly editTools: EditTools;
   @observable dirs: Directory[] = [];
   @observable dirsLoadStatus: LoadStatus = LoadStatus.PENDING
+  @observable app: App
 
   repo: DocsRepo
   domainService: DomainService
@@ -25,6 +26,7 @@ export class DocsContext {
     this.editTools = new EditTools()
     this.repo = new DemoDocsRepo(this)
     this.domainService = new DomainService(this)
+    this.app = new App()
     makeObservable(this)
   }
 
@@ -48,3 +50,12 @@ export class DocsContext {
   }
 }
 
+export class App {
+  readonly uid
+  @observable isDocListShown = false;
+
+  constructor() {
+    this.uid = UUID()
+    makeObservable(this)
+  }
+}

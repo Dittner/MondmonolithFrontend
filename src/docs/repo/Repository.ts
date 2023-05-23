@@ -30,7 +30,7 @@ export class DemoDocsRepo implements DocsRepo {
       const rawDocs = generateDocs()
       this.context.send(this.parseRawDocs(rawDocs), LoadStatus.LOADED)
       console.log("fetchDirectories complete")
-    }, 2000)
+    }, 1000)
   }
 
   private parseRawDocs(rawDocs: any): Directory[] {
@@ -78,7 +78,7 @@ export class DemoDocsRepo implements DocsRepo {
             doc.pages = []
             doc.loadStatus = DocLoadStatus.LOADED
         }
-      }, 2000)
+      }, 1000)
     }
   }
 
@@ -88,7 +88,7 @@ export class DemoDocsRepo implements DocsRepo {
     sortedPages.forEach(p => {
       const pageBlocks: PageBlock[] = []
       p.blocks.forEach((b: any) => {
-        pageBlocks.push(new PageBlock(b.uid, b.lang, b.data))
+        pageBlocks.push(new PageBlock(b.uid, b.data))
       })
       res.push(new Page(p.uid, p.title, pageBlocks))
     })

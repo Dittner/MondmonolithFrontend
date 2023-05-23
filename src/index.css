@@ -5,20 +5,21 @@
   --LightGray: #DEDEDE;
   --DarkGreen: #33B97E;
   --Red: #E06C75;
+  --Yellow: #e0aa6c;
   --Error: #ff4178;
-  --Text: #b4c2ce;
+  --Text: #c7d7e5;
   --TextDark: #76818d;
   --DocListTextSelected: #d2e4f2;
-  --DocListBg: #2e373b;
-  --AppBg: #252a2d;
+  --DocListBg: #2c3438;
+  --AppBg: #23282a;
   --DarkBg: #00000020;
-  --CodeBg: #2c3438;
+  --CodeBg: #323a3b;
   --CodeBlockBg: #2e393f20;
   --Border: #2e393f;
   --Header: #789ba9;
   --MenuBtn: #a29cbe;
   --PageEditFormBg: #1f2528;
-  --font-family: system-ui, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, sans-serif;
+  --font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
   --font-family-mono: Menlo, source-code-pro, Monaco, Consolas, 'Courier New', monospace;
 }
 
@@ -43,12 +44,9 @@
   font-weight: 400;
 }
 
-.text-default {
-  font-size: 1rem;
-}
-
 html {
   scroll-behavior: smooth;
+  font-size: 18px;
 }
 
 body {
@@ -58,6 +56,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: var(--Text);
   background-color: var(--AppBg);
+  outline: none;
 }
 
 body, p, a, ul, li, h1, h2, h3 {
@@ -66,14 +65,24 @@ body, p, a, ul, li, h1, h2, h3 {
   text-decoration: 0;
 }
 
+h1 {
+  font-size: 3rem;
+}
+
 h2 {
   font-size: 2rem;
 }
 
+h3 {
+  font-size: 1.5rem;
+}
+
 div,
 p {
-  font-size: 1.2rem;
-  line-height: 1.6;
+  font-family: var(--font-family);
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: 450;
 }
 
 /* DOC VIEW LAYOUT */
@@ -147,32 +156,18 @@ p {
     "docBody docBody";
   }
 
-  .docsViewAndDocList {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: minmax(50px, auto);
-    grid-template-areas:
-    "docListAndDocsView toolsPanel"
-    "docListAndDocsView docBody";
-    overflow: clip;
-  }
-
-  .docListAndDocsView {
-    width: 350px;
-    grid-area: docListAndDocsView;
-    background-color: var(--DocListBg);
-    box-sizing: border-box;
-    position: sticky;
-    top: 0;
-    overflow: auto;
-    height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: right;
-  }
-
   .docList {
-    display: none;
+    position: fixed;
+    width: 300px;
+    z-index: 10;
+    box-shadow: 10px 0 20px #00000020;
+    left: 0;
+    transition: left 0.5s;
+  }
+
+  .docList.hidden {
+    left: -300px;
+    transition: left 0.5s;
   }
 
   .btn.showDocList {
@@ -187,8 +182,27 @@ p {
   }
 }
 
-@media (min-width: 1200px) {
-  .docsView, .docsViewAndDocList {
+@media (min-width: 1200px) and (max-width: 1500px) {
+  .docsView {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: minmax(50px, auto);
+    grid-template-areas:
+    "docList toolsPanel toolsPanel authPanel authPanel"
+    "docList docBody docBody docBody docBody";
+  }
+
+  .btn.showDocList, .docTopics, .btn.hideDocList {
+    display: none;
+  }
+
+  .docList {
+    display: flex;
+  }
+}
+
+@media (min-width: 1500px) {
+  .docsView {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-auto-rows: minmax(50px, auto);
@@ -197,11 +211,13 @@ p {
     "docList docBody docBody docBody docTopics";
   }
 
-  .btn.showDocList {
+  .btn.showDocList, .btn.hideDocList {
     display: none;
+  }
+
+  .docList, .docTopics {
+    display: flex;
   }
 }
 
-
 /* *************** */
-

@@ -21,6 +21,10 @@ export const DocList = observer(() => {
     }
   }
 
+  const hideDocList = ()=> {
+    docsContext.app.isDocListShown = false
+  }
+
   const docsContext = useDocsContext()
   console.log("DocList, dirs: ", docsContext.dirs)
   if (docsContext.dirsLoadStatus === LoadStatus.LOADING) {
@@ -28,12 +32,20 @@ export const DocList = observer(() => {
   }
   return (
     <div className='docListContainer'>
-      <button className="btn createDoc"
-              style={{visibility: docsContext.editTools.editMode ? "visible" : "hidden"}}
-              onClick={() => {
-                setIsNewDocCreating(true)
-              }}>+ New doc
-      </button>
+      <div className="hstack halignLeft valignCenter">
+        <button className="btn createDoc"
+                style={{visibility: docsContext.editTools.editMode ? "visible" : "hidden"}}
+                onClick={() => {
+                  setIsNewDocCreating(true)
+                }}>New doc
+        </button>
+
+        <button className="btn hideDocList"
+                onClick={hideDocList}>Hide
+        </button>
+
+      </div>
+
 
       {isNewDocCreating &&
         <DocEditForm doc={null}
@@ -53,6 +65,7 @@ export const DocList = observer(() => {
     </div>
   )
 })
+
 
 const DirectoryView = observer(({dir}: { dir: Directory }) => {
   const docsContext = useDocsContext()
@@ -78,7 +91,6 @@ const DirectoryView = observer(({dir}: { dir: Directory }) => {
   }
   return (
     <div className="dirContent">
-      {/*<span className="icon-folder"/>*/}
       <p className="dirTitle">{dir.title}</p>
       {dir.isStoring &&
         <div className="smallSpinner"></div>

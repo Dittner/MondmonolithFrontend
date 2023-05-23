@@ -1,10 +1,10 @@
 code[class*=language-],
 pre[class*=language-] {
-	color: #e0e0e0;
+	color: var(--Text);
 	background: 0 0;
+	font-size: 1rem;
+	line-height: 1.6rem;
 	font-family: Menlo, Monaco, Consolas, 'Source Code Pro', 'Andale Mono', 'Ubuntu Mono', monospace;
-	font-size: 1em;
-	line-height: 1.5em;
 	text-align: left;
 	white-space: pre;
 	word-spacing: normal;
@@ -19,12 +19,22 @@ pre[class*=language-] {
 	hyphens: none;
 	padding: 0;
 	margin: 0;
+	outline: none;
 }
 
 pre[class*=language-] {
-	padding: 15px 5px 15px 30px;
-	margin: 5px 0;
-	overflow: auto
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 30px;
+	padding-right: 15px;
+	overflow: auto;
+	background-color: var(--CodeBlockBg);
+	border: 1px solid var(--Border);
+	border-radius: 10px;
+	white-space: pre;
+	margin-top: 10px;
+	margin-left: -30px;
+	margin-right: -30px;
 }
 
 :not(pre)>code[class*=language-],

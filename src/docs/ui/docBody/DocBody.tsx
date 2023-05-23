@@ -3,8 +3,7 @@ import {Route, Routes, useParams} from "react-router-dom";
 import {LoadingSpinner} from "../common/Loading";
 import {observer} from "mobx-react";
 import {useDocsContext} from "../../../App";
-import {KeyboardEventHandler, useEffect, useLayoutEffect, useRef, useState} from "react";
-import parse from 'html-react-parser';
+import {useEffect, useRef, useState} from "react";
 import Prism from "prismjs";
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-jsx';
@@ -12,6 +11,7 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-python';
 import {DocLoadStatus, Page, PageBlock} from "../../domain/DomainModel";
 import {LoadStatus} from "../../DocsContext";
+import ReactMarkdown from "react-markdown";
 
 export const DocBody = () => {
   return <Routes>
@@ -75,14 +75,30 @@ const PageTitle = observer(({page}: { page: Page }) => {
     }
   }
 
-  if (page.isEditing) {
-    return (
-      <PageTitleEditor page={page}/>
-    )
+  const selectTitle = () => {
+    if (editTools.editMode) {
+      editTools.selectedItem = editTools.selectedItem === page ? undefined : page
+    }
+  }
+
+  let bgClassName: string = ""
+  if (editTools.editMode && editTools.selectedItem === page) {
+    bgClassName = "blockBgSelected"
+  } else if (editTools.editMode) {
+    bgClassName = "blockBg"
+  }
+
+  if (editTools.editMode && page.isEditing) {
+    return <PageTitleEditor page={page}/>
   }
 
   return (
-    <h1 className="docPageTitle" onDoubleClick={startEdit}>{page.title}</h1>
+    <div className="blockContainer"
+         onClick={selectTitle}
+         onDoubleClick={startEdit}>
+      <h1 className="docPageTitle">{page.title}</h1>
+      <div className={bgClassName}></div>
+    </div>
   )
 })
 
@@ -128,7 +144,7 @@ const PageBlockView = observer(({block}: { block: PageBlock }) => {
     bgClassName = "blockBg"
   }
 
-  if (block.isEditing) {
+  if (editTools.editMode && block.isEditing) {
     return (
       <PageBlockEditor block={block}/>
     )
@@ -138,22 +154,8 @@ const PageBlockView = observer(({block}: { block: PageBlock }) => {
     <div className="blockContainer"
          onClick={selectBlock}
          onDoubleClick={editBlock}>
-      {block.lang === "html" &&
-        <div className="htmlBlock">{parse(block.data)}
-          <div className={bgClassName}></div>
-        </div>
-      }
-
-      {block.lang !== "html" &&
-        <>
-          <div className="code">
-            <pre>
-              <code className={`language-${block.lang}`}>{block.data}</code>
-            </pre>
-          </div>
-          <div className={bgClassName}></div>
-        </>
-      }
+      <ReactMarkdown className="markdown">{block.data}</ReactMarkdown>
+      <div className={bgClassName}></div>
     </div>
   )
 })
@@ -212,14 +214,13 @@ const TextArea = ({text, onApply, onCancel}: TextAreaProps) => {
   return (
     <div className="pageEditorContainer">
       <textarea className="pageEditor"
+                value={value}
                 ref={ta}
                 rows={1}
                 spellCheck="false"
                 onChange={onChange}
                 onKeyDown={onKeyDown}
-                autoFocus>
-        {value}
-      </textarea>
+                autoFocus/>
     </div>
   )
 }

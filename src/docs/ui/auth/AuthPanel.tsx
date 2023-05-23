@@ -31,8 +31,8 @@ export const AuthPanel = observer(() => {
     <div className='authPanel'>
       {user.authStatus === AuthStatus.AUTHORIZED &&
         <>
-          <p className="userName">{editTools.editMode ? "Edit mode " : "Read mode "}</p>
-          <label className="switch" title="Edit mode">
+          <p className="userName">{editTools.editMode ? "Edit mode: " : "Read mode: "}</p>
+          <label className="switch">
             <input type="checkbox"
                    checked={editTools.editMode}
                    onChange={() => editTools.toggleEditMode()}/>

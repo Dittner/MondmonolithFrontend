@@ -1,3 +1,30 @@
+
+/******************************/
+/*--------- BUTTONS ---------*/
+/******************************/
+button {
+  margin: 0;
+  padding: 0;
+}
+
+.btn {
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  background-color: transparent;
+  border-radius: 30px;
+  color: var(--MenuBtn);
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.btn:hover {
+  color: var(--Red);
+}
+
+
 /******************************/
 /*--------- INPUTS ---------*/
 /******************************/

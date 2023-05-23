@@ -9,17 +9,15 @@
 }
 
 .docListContainer span {
-  font-size: 14px;
   padding-right: 8px;
   bottom: 1px;
   position: relative;
 }
 
-ul,
+.docListContainer ul,
 .dirTitle,
 .docLink,
 .docLinkActive {
-  font-size: 18px;
   color: var(--TextDark);
   width: 100%;
 }
@@ -31,12 +29,12 @@ ul,
 
 .docListContainer ul {
   padding-bottom: 20px;
+  list-style-type: none;
 }
 
 .docLink,
 .docLinkActive {
   font-family: var(--font-family-mono);
-  font-size: 18px;
   padding-left: 3px;
   min-width: 200px;
   align-items: center;
@@ -83,36 +81,22 @@ ul,
   display: none;
 }
 
-
-ul {
-  list-style-type: none;
-}
-
 .btn.createDoc {
   height: 50px;
   padding-left: 20px;
   padding-right: 20px;
 }
 
-.btn {
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  background-color: transparent;
-  border-radius: 30px;
-  color: var(--MenuBtn);
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  cursor: pointer;
-}
-
-.btn:hover {
-  color: var(--Red);
+.btn.hideDocList {
+  height: 50px;
+  position: absolute;
+  right: 0;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 p.errMsg {
-  font-size: 14px;
+  font-size: 0.8rem;
   color: var(--Error);
   text-align: center;
 }
@@ -132,7 +116,7 @@ input.editFormInput {
   padding: 0;
   margin-bottom: 10px;
   color: var(--Text);
-  font-size: 18px;
+  font-size: 1rem;
   display: inline-block;
   border: 0;
   border-bottom: 1px solid var(--TextDark);

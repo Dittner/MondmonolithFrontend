@@ -3,7 +3,7 @@ import {Route, Routes, useParams} from "react-router-dom";
 import {LoadingSpinner} from "../common/Loading";
 import {observer} from "mobx-react";
 import {useDocsContext} from "../../../App";
-import {useEffect, useRef, useState} from "react";
+import {useEffect} from "react";
 import Prism from "prismjs";
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-jsx';
@@ -11,6 +11,7 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-python';
 import {DocLoadStatus, Page, PageBlock} from "../../domain/DomainModel";
 import {LoadStatus} from "../../DocsContext";
+import {TextArea} from "../common/Input"
 import ReactMarkdown from "react-markdown";
 
 export const DocBody = () => {
@@ -105,7 +106,6 @@ const PageTitle = observer(({page}: { page: Page }) => {
 const PageTitleEditor = observer(({page}: { page: Page }) => {
   const apply = (value: string) => {
     page.title = value
-    page.isEditing = false
   }
 
   const cancel = () => {
@@ -154,7 +154,7 @@ const PageBlockView = observer(({block}: { block: PageBlock }) => {
     <div className="blockContainer"
          onClick={selectBlock}
          onDoubleClick={editBlock}>
-      <ReactMarkdown className="markdown">{block.data}</ReactMarkdown>
+      <ReactMarkdown>{block.data}</ReactMarkdown>
       <div className={bgClassName}></div>
     </div>
   )
@@ -174,53 +174,3 @@ const PageBlockEditor = observer(({block}: { block: PageBlock }) => {
     <TextArea text={block.data} onApply={apply} onCancel={cancel}/>
   )
 })
-
-interface TextAreaProps {
-  text: string,
-  onApply: (value: string) => void,
-  onCancel: () => void
-}
-
-const TextArea = ({text, onApply, onCancel}: TextAreaProps) => {
-  const [value, setValue] = useState(text);
-  const ta = useRef<HTMLTextAreaElement>(null);
-
-  const adjustScroller = () => {
-    if (ta && ta.current) {
-      ta.current.style.height = "inherit";
-      ta.current.style.height = `${ta.current.scrollHeight + 5}px`;
-    }
-  }
-  const onChange = (event: any) => {
-    setValue(event.target.value)
-    adjustScroller()
-  }
-
-  useEffect(() => {
-    adjustScroller()
-  }, [])
-
-  const onKeyDown = (e: any) => {
-    //Enter key
-    if (e.keyCode === 13 && !e.shiftKey) {
-      onApply(value)
-    }
-    //ESC key
-    if (e.keyCode === 27) {
-      onCancel()
-    }
-  }
-
-  return (
-    <div className="pageEditorContainer">
-      <textarea className="pageEditor"
-                value={value}
-                ref={ta}
-                rows={1}
-                spellCheck="false"
-                onChange={onChange}
-                onKeyDown={onKeyDown}
-                autoFocus/>
-    </div>
-  )
-}

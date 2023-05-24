@@ -3,24 +3,33 @@
   /* color palette */
   --DarkGray: #3D3B48;
   --LightGray: #DEDEDE;
-  --DarkGreen: #33B97E;
   --Red: #E06C75;
-  --Yellow: #e0aa6c;
+  --Yellow: #c29a5f;
   --Error: #ff4178;
   --Text: #c7d7e5;
   --TextDark: #76818d;
+  --TextGreen: #a7c6d2;
+  --TextBlue: #b1c5de;
+  --Header: #789ba9;
   --DocListTextSelected: #d2e4f2;
   --DocListBg: #2c3438;
   --AppBg: #23282a;
   --DarkBg: #00000020;
-  --CodeBg: #323a3b;
+  --CodeBg: #2e393f50;
   --CodeBlockBg: #2e393f20;
   --Border: #2e393f;
-  --Header: #789ba9;
   --MenuBtn: #a29cbe;
   --PageEditFormBg: #1f2528;
   --font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
-  --font-family-mono: Menlo, source-code-pro, Monaco, Consolas, 'Courier New', monospace;
+  --font-family-mono: Menlo, source-code-pro, Monaco, 'Courier New', monospace;
+}
+
+@font-face {
+  font-family: "ibm";
+  src: url("./fonts/ibm-plex-mono-light.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
 }
 
 ::selection {
@@ -59,7 +68,7 @@ body {
   outline: none;
 }
 
-body, p, a, ul, li, h1, h2, h3 {
+body, p, a, h1, h2, h3 {
   margin: 0;
   padding: 0;
   text-decoration: 0;
@@ -83,6 +92,16 @@ p {
   font-size: 1rem;
   line-height: 1.7;
   font-weight: 450;
+}
+
+blockquote {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-left: 5px solid #4c5157;
+  margin: 10px 0;
+  padding: 20px;
+  background-color: #2d3034;
+  color: #9aa8bb;
 }
 
 /* DOC VIEW LAYOUT */

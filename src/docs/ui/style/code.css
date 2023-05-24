@@ -40,13 +40,17 @@ pre[class*=language-] {
 :not(pre)>code[class*=language-],
 pre[class*=language-] {
 	#background: #282a34;
-	border-radius: 10px
+	border-radius: 10px;
 }
 
-:not(pre)>code[class*=language-] {
-	padding: .1em;
-	border-radius: .3em;
-	white-space: normal
+code:not([class*=language-]) {
+	white-space: normal;
+	font-family: var(--font-family-mono);
+	background-color: var(--CodeBg);
+	border: 1px solid var(--Border);
+	padding: 4px;
+	border-radius: 4px;
+	color: var(--TextBlue);
 }
 
 .token.block-comment,
@@ -55,6 +59,12 @@ pre[class*=language-] {
 .token.doctype,
 .token.prolog {
 	color: #747b7c
+}
+
+
+.token.comment.bold {
+	color: #747b7c;
+	font-weight: bold;
 }
 
 .token.punctuation,
@@ -91,6 +101,10 @@ pre[class*=language-] {
 .token.function-name,
 .token.function {
 	color: #64B1EB
+}
+
+.token.class {
+	color: #74d7d3;
 }
 
 .token.class-name,

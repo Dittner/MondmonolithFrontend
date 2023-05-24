@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {useLocation} from "react-router-dom";
 import {DocList} from "./docList/DocList";
 import {observer} from "mobx-react";
@@ -8,6 +8,8 @@ import {DocTopics} from "./docTopics/DocTopics";
 import "./style/code.css";
 import {AuthPanel} from "./auth/AuthPanel";
 import {ToolsPanel} from "./tools/ToolsPanel";
+import {AuthStatus} from "../domain/DomainModel";
+import {IntroView} from "./intro/IntroView";
 
 export const DocsView = observer(() => {
   console.log("DocsView init");
@@ -18,7 +20,7 @@ export const DocsView = observer(() => {
 
   const {pathname, hash, key} = useLocation()
 
-  const showDocList = ()=> {
+  const showDocList = () => {
     docsContext.app.isDocListShown = true
   }
 
@@ -34,9 +36,13 @@ export const DocsView = observer(() => {
           console.log("elementPos=", elementPos);
           window.scrollTo(0, elementPos < 100 ? 0 : elementPos - 50);
         }
-      }, 0);
+      }, 0)
     }
   }, [pathname, hash, key]); // do this on route change
+
+  if (docsContext.user.authStatus !== AuthStatus.AUTHORIZED) {
+    return <IntroView/>
+  }
 
   return (
     <div className="docsView">

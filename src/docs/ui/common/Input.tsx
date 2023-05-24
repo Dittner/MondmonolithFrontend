@@ -1,7 +1,7 @@
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 
 // @ts-ignore
-export const Input = ({type, defaultValue, placeholder, autoFocus=false, onChange}) => {
+export const Input = ({type, defaultValue, placeholder, autoFocus = false, onChange}) => {
   console.log("new Input")
   const [focused, setFocused] = useState(false);
   return (
@@ -19,4 +19,52 @@ export const Input = ({type, defaultValue, placeholder, autoFocus=false, onChang
       <p className={focused ? 'input_placeholder_focused' : 'input_placeholder'}>{placeholder}</p>
     </div>
   )
+}
+
+interface TextAreaProps {
+  text: string,
+  onApply: (value: string) => void | undefined,
+  onCancel: () => void | undefined
+  autoFocus?: boolean
+}
+
+export const TextArea = ({text, onApply, onCancel, autoFocus}: TextAreaProps) => {
+  const [value, setValue] = useState(text);
+  const ta = useRef<HTMLTextAreaElement>(null);
+
+  const adjustScroller = () => {
+    if (ta && ta.current) {
+      ta.current.style.height = "inherit";
+      ta.current.style.height = `${ta.current.scrollHeight + 5}px`;
+    }
+  }
+  const onChange = (event: any) => {
+    setValue(event.target.value)
+    adjustScroller()
+  }
+
+  useEffect(() => {
+    adjustScroller()
+  })
+
+  const onKeyDown = (e: any) => {
+    //Enter key
+    if (e.keyCode === 13 && !e.shiftKey) {
+      e.preventDefault()
+      onApply(value)
+    }
+    //ESC key
+    if (e.keyCode === 27) {
+      e.preventDefault()
+      onCancel()
+    }
+  }
+
+  return <textarea value={value}
+                   ref={ta}
+                   rows={1}
+                   spellCheck="false"
+                   onChange={onChange}
+                   onKeyDown={onKeyDown}
+                   autoFocus={autoFocus}/>
 }

@@ -56,6 +56,30 @@ button {
   position: absolute;
 }
 
+textarea {
+  font-family: var(--font-family-mono);
+  font-size: 1rem;
+  line-height: 1.6rem;
+  color: var(--TextGreen);
+  box-sizing: border-box;
+  border: none;
+  border-left: 5px solid var(--TextGreen);
+  border-radius: 10px;
+  background-color: var(--PageEditFormBg);
+  resize: none;
+  outline: none;
+  overflow: visible;
+  caret-color: var(--Red);
+  box-shadow: 1px 4px 4px #00000010 inset;
+  transition: border-left 500ms;
+}
+
+textarea:focus {
+  border-left: 5px solid var(--Red);
+  background-color: var(--PageEditFormBg);
+  transition: border-left 500ms;
+}
+
 /******************************/
 /*--------- LOADING ---------*/
 /******************************/

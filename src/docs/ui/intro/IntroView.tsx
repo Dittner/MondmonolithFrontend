@@ -3,6 +3,7 @@ import {observer} from "mobx-react";
 import {TextArea} from "../common/Input";
 import React, {useEffect, useState} from "react";
 import ReactMarkdown from "react-markdown";
+import parse from 'html-react-parser';
 import Prism from "prismjs";
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-jsx';
@@ -17,7 +18,7 @@ export const IntroView = observer(() => {
     <AuthPanel/>
     <div className="aboutContainer">
       <div className="about">
-        <span>{aboutTxt}</span>
+        <span>{parse(aboutTxt)}</span>
       </div>
       <div className="highlightFunc">
         <span className="token keyword">func </span>
@@ -41,16 +42,15 @@ export const IntroView = observer(() => {
   </>
 })
 
-const aboutTxt:String =`/***
-*                                              *
-*   Designed by developers for developers      *   =========================
-*   This is a web-solution, that enables you   *   MODE   |   VER   |   DATE
-*   to make notes using a markdown-editor.     *   –––––––––––––––––––––––––
-*   Markdown helps to format notes and code    *   demo   |   1.0   |   2023
-*   fragments easily without having to write   *   =========================
-*   a plane text or HTML tags.                 *
-*                                              *
-/***
+const aboutTxt = `/***
+*                                                       *
+*   <b>Designed by developers for developers</b>               *   =========================
+*   This is a web-solution, that enables you to make    *   MODE   |   VER   |   DATE
+*   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––––
+*   to format notes and code fragments easily without   *   demo   |   1.0   |   2023
+*   having to write a plane text or HTML tags.          *   =========================
+*                                                       *
+***/
 `
 
 const headings = `# HAL 9000
@@ -108,11 +108,7 @@ const MarkdownEditor = ({text, title, autoFocus}: { text: string, title: string,
   const [value, setValue] = useState(text)
   const apply = (newValue: string) => {
     if (value !== newValue) {
-      setValue("")
-      //Need to rerender markdownText to update code fragment
-      setTimeout(() => {
-        setValue(newValue)
-      }, 0)
+      setValue(newValue)
     }
   }
 
@@ -141,8 +137,11 @@ const MarkdownEditor = ({text, title, autoFocus}: { text: string, title: string,
 
 const MarkdownText = ({value}: { value: string }) => {
   console.log("new MarkdownText")
+  //Use random key to force a new rendering of the code fragment in ReactMarkdown
+  const key = Math.random()
   useEffect(() => {
-    Prism.highlightAll()
+      console.log("--Prism.highlightAll")
+      Prism.highlightAll()
   })
-  return <ReactMarkdown>{value}</ReactMarkdown>
+  return <ReactMarkdown key={key}>{value}</ReactMarkdown>
 }

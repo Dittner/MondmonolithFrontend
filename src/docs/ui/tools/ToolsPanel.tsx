@@ -6,8 +6,6 @@ import {observer} from "mobx-react";
 export const ToolsPanel = observer(() => {
 
   return (
-    <>
-
-    </>
+    <div>Tools</div>
   )
 })

@@ -1,16 +1,18 @@
 div.mainView {
-  background-color: #727a67;
-  height: 100vh;
-  width: 100vw;
+  background-color: var(--AppBg);
+  height: 100%;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 div.asciiCanvas {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  height: 100%;
   overflow: clip;
-  background-color: #727a67;
+  background-color: #9ba68c;
   width: 1400px;
   margin: auto;
 }
@@ -20,19 +22,14 @@ div.asciiCanvas p {
   font-size: 0.324rem;
   line-height: 0.415rem;
   white-space: pre;
-  color: #64B1EB;
   position: absolute;
+  color: #000;
+  background-size: contain;
+  overflow: clip;
   z-index: 0;
 }
 
 div.asciiCanvas img {
   z-index: 1;
   width: 100%;
-}
-
-p.asciiCanvas.bg {
-  color: #000;
-  background-size: contain;
-  z-index: 0;
-  overflow: clip;
 }

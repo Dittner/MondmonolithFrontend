@@ -1,20 +1,16 @@
 "use strict";
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 exports.__esModule = true;
 exports.run = void 0;
 var run = function () {
-    var arr = [1, 2, 3];
-    console.log("before", arr.length);
-    var el = arr.splice(0, 1);
-    console.log.apply(console, __spreadArray(["after", arr.length, ", el= "], el, false));
+    console.log("40 && 2 || 33", " = ", (40 && 2 || 33));
+    console.log("(4*2) && (3*6)", " = ", ((4 * 2) && (3 * 6)));
+    console.log("0 && 2", " = ", (0 && 2));
+    console.log("false && 0 && ''", " = ", (false && 0 && ''));
+    console.log("false || 0 || ''", " = ", (false || 0 || ''));
+    console.log("false && 1", " = ", (false && 1));
+    console.log("0 && 1", " = ", (0 && 1));
+    console.log("false || 0", " = ", (false || 0));
+    //console.log("", " = ", ())
 };
 exports.run = run;
 (0, exports.run)();

@@ -104,6 +104,14 @@ blockquote {
   color: #9aa8bb;
 }
 
+hr {
+  display: block;
+  margin: 0;
+  color: var(--Border);
+  border-style: inset;
+  border-width: 1px;
+}
+
 /* DOC VIEW LAYOUT */
 .toolsPanel {
   grid-area: toolsPanel;
@@ -120,8 +128,8 @@ blockquote {
 
 .authPanel {
   grid-area: authPanel;
-  border-bottom: 1px solid var(--Border);
   display: flex;
+  border-bottom: 1px solid var(--Border);
   align-items: center;
   justify-content: right;
   position: sticky;
@@ -207,7 +215,7 @@ blockquote {
     grid-template-columns: repeat(5, 1fr);
     grid-auto-rows: minmax(50px, auto);
     grid-template-areas:
-    "docList toolsPanel toolsPanel authPanel authPanel"
+    "docList toolsPanel toolsPanel toolsPanel authPanel"
     "docList docBody docBody docBody docBody";
   }
 
@@ -226,7 +234,7 @@ blockquote {
     grid-template-columns: repeat(5, 1fr);
     grid-auto-rows: minmax(50px, auto);
     grid-template-areas:
-    "docList toolsPanel toolsPanel authPanel authPanel"
+    "docList toolsPanel toolsPanel toolsPanel authPanel"
     "docList docBody docBody docBody docTopics";
   }
 

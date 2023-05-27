@@ -6,7 +6,7 @@ pre[class*=language-] {
 	line-height: 1.6rem;
 	font-family: Menlo, Monaco, Consolas, 'Source Code Pro', 'Andale Mono', 'Ubuntu Mono', monospace;
 	text-align: left;
-	white-space: pre;
+	white-space: pre-wrap;
 	word-spacing: normal;
 	word-break: normal;
 	word-wrap: normal;
@@ -31,7 +31,7 @@ pre[class*=language-] {
 	background-color: var(--CodeBlockBg);
 	border: 1px solid var(--Border);
 	border-radius: 10px;
-	white-space: pre;
+	white-space: pre-wrap;
 	margin-top: 10px;
 	margin-left: -30px;
 	margin-right: -30px;

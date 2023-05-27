@@ -22,7 +22,7 @@ export const MainView = observer(() => {
   if (asciiText) {
     return <div className="mainView">
       <div className="asciiCanvas">
-        <p className="asciiCanvas bg">{asciiText}</p>
+        <p>{asciiText}</p>
         <img src={require('./resource/primates.png')} alt="Primates"/>
       </div>
     </div>

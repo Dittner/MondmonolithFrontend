@@ -10,7 +10,7 @@ import 'prismjs/components/prism-jsx';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-python';
 import {DocLoadStatus, Page, PageBlock} from "../../domain/DomainModel";
-import {LoadStatus} from "../../DocsContext";
+import {LoadStatus, YesNoDialog} from "../../DocsContext";
 import {TextArea} from "../common/Input"
 import ReactMarkdown from "react-markdown";
 
@@ -56,7 +56,7 @@ const PageList = observer(() => {
   )
 })
 
-const PageView = ({page}: { page: Page }) => {
+const PageView = observer(({page}: { page: Page }) => {
   return (
     <div id={'#' + page.id} className="docPage">
       <PageTitle page={page}/>
@@ -65,7 +65,7 @@ const PageView = ({page}: { page: Page }) => {
       })}
     </div>
   )
-}
+})
 
 const PageTitle = observer(({page}: { page: Page }) => {
   const {editTools} = useDocsContext()
@@ -105,7 +105,10 @@ const PageTitle = observer(({page}: { page: Page }) => {
 
 const PageTitleEditor = observer(({page}: { page: Page }) => {
   const apply = (value: string) => {
-    page.title = value
+    if (value) {
+      page.title = value
+      page.isEditing = false
+    }
   }
 
   const cancel = () => {
@@ -113,32 +116,60 @@ const PageTitleEditor = observer(({page}: { page: Page }) => {
   }
 
   return (
-    <TextArea text={page.title} onApply={apply} onCancel={cancel}/>
+    <TextArea text={page.title} onApply={apply} onCancel={cancel} autoFocus/>
   )
 })
 
-
 const PageBlockView = observer(({block}: { block: PageBlock }) => {
-  const {editTools} = useDocsContext()
+  const {editTools, app} = useDocsContext()
+  const isSelected = editTools.selectedItem === block
 
   useEffect(() => {
     Prism.highlightAll()
   })
 
-  const selectBlock = () => {
+  const selectBlock = (e: any) => {
+    e.stopPropagation()
     if (editTools.editMode) {
-      editTools.selectedItem = editTools.selectedItem === block ? undefined : block
+      editTools.selectedItem = isSelected ? undefined : block
     }
   }
 
-  const editBlock = () => {
+  const editBlock = (e: any) => {
+    e.stopPropagation()
     if (editTools.editMode) {
       block.isEditing = true
     }
   }
 
+  const moveBlockUp = (e: any) => {
+    e.stopPropagation()
+    if (editTools.editMode) {
+      block.page?.moveBlockUp(block)
+    }
+  }
+
+  const moveBlockDown = (e: any) => {
+    e.stopPropagation()
+    if (editTools.editMode) {
+      block.page?.moveBlockDown(block)
+    }
+  }
+
+  const deleteBlock = (e: any) => {
+    e.stopPropagation()
+    if (editTools.editMode && block) {
+      app.yesNoDialog = new YesNoDialog(
+        "Are you sure you want to remove this page's block?",
+        () => {
+          block.page?.deleteBlock(block)
+        }
+      )
+    }
+  }
+
   let bgClassName: string = ""
-  if (editTools.editMode && editTools.selectedItem === block) {
+  if (editTools.editMode && isSelected) {
     bgClassName = "blockBgSelected"
   } else if (editTools.editMode) {
     bgClassName = "blockBg"
@@ -152,9 +183,21 @@ const PageBlockView = observer(({block}: { block: PageBlock }) => {
 
   return (
     <div className="blockContainer"
-         onClick={selectBlock}
-         onDoubleClick={editBlock}>
-      <ReactMarkdown>{block.data}</ReactMarkdown>
+         onClick={selectBlock}>
+      {editTools.editMode && isSelected &&
+        <div className="tools">
+          <button className="icon-edit"
+                  onClick={editBlock}></button>
+          <button className="icon-up"
+                  onClick={moveBlockUp}></button>
+          <button className="icon-down"
+                  onClick={moveBlockDown}></button>
+          <button className="icon-delete"
+                  onClick={deleteBlock}></button>
+        </div>
+      }
+
+      <ReactMarkdown>{block.text}</ReactMarkdown>
       <div className={bgClassName}></div>
     </div>
   )
@@ -162,8 +205,10 @@ const PageBlockView = observer(({block}: { block: PageBlock }) => {
 
 const PageBlockEditor = observer(({block}: { block: PageBlock }) => {
   const apply = (value: string) => {
-    block.data = value
-    block.isEditing = false
+    if (value) {
+      block.text = value
+      block.isEditing = false
+    }
   }
 
   const cancel = () => {
@@ -171,6 +216,6 @@ const PageBlockEditor = observer(({block}: { block: PageBlock }) => {
   }
 
   return (
-    <TextArea text={block.data} onApply={apply} onCancel={cancel}/>
+    <TextArea text={block.text} onApply={apply} onCancel={cancel} autoFocus/>
   )
 })

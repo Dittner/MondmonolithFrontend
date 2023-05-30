@@ -77,8 +77,7 @@ Memoization is an optimisation technique base on remembering results returned by
 ~~~javascript
 const memoize = (fn) => {
   const argKey = (x) => x.toString() + ':' + typeof x
-  const generateKey = (args) =>
-    args.map(argKey).join('|')
+  const generateKey = (args) => args.map(argKey).join('|')
   const cache = Object.create(null)
 
   return (...args) => {

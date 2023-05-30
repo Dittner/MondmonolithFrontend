@@ -31,6 +31,7 @@ export class User {
     }
 
     this.authStatus = AuthStatus.AUTHORIZING
+    this.authWithError = ""
     setTimeout(() => {
       if (login === 'demo' && pwd === 'pwd') {
         this.authStatus = AuthStatus.AUTHORIZED
@@ -55,6 +56,7 @@ export class EditTools {
   readonly uid: string
   @observable editMode: boolean = false
   @observable selectedItem: Page | PageBlock | undefined = undefined
+
   constructor() {
     this.uid = UUID()
     makeObservable(this)
@@ -87,10 +89,10 @@ export class Directory {
     doc.dir = this
   }
 
-  @action remove(doc: Doc):Doc | undefined {
+  @action remove(doc: Doc): Doc | undefined {
     const docInd = this.docs.findIndex(d => d.uid === doc.uid)
     if (docInd !== -1) {
-      this.docs.splice(docInd,1)
+      this.docs.splice(docInd, 1)
       doc.dir = undefined
       return doc
     }
@@ -123,6 +125,13 @@ export class Doc {
   @computed get id(): string {
     return strToHashId(this.title)
   }
+
+  @action createPage(): void {
+    const p = new Page(UUID(), "TITLE")
+    p.doc = this
+    p.isEditing = true
+    this.pages.unshift(p)
+  }
 }
 
 const strToHashId = filterCharacters()
@@ -147,29 +156,51 @@ export class Page {
   @observable storeWithError: string = ""
   @observable doc: Doc | undefined
   @observable isEditing: boolean = false
-  @observable readonly blocks: PageBlock[] = [];
+  @observable blocks: PageBlock[] = [];
 
-  constructor(uid: string, title: string, blocks: PageBlock[]) {
+  constructor(uid: string, title: string) {
     this.uid = uid
     this.title = title
-    this.blocks = blocks
     makeObservable(this)
   }
 
   @computed get id(): string {
     return strToHashId(this.title)
   }
+
+  @action moveBlockUp(block: PageBlock): void {
+    const blockInd = this.blocks.findIndex(b => b.uid === block.uid)
+    if (blockInd !== -1 && blockInd !== 0) {
+      this.blocks[blockInd] = this.blocks[blockInd - 1]
+      this.blocks[blockInd - 1] = block
+    }
+  }
+
+  @action moveBlockDown(block: PageBlock): void {
+    const blockInd = this.blocks.findIndex(b => b.uid === block.uid)
+    if (blockInd !== -1 && blockInd < this.blocks.length - 1) {
+      this.blocks[blockInd] = this.blocks[blockInd + 1]
+      this.blocks[blockInd + 1] = block
+    }
+  }
+
+  @action deleteBlock(block: PageBlock): void {
+    const blockInd = this.blocks.findIndex(b => b.uid === block.uid)
+    if (blockInd !== -1) {
+      this.blocks.splice(blockInd, 1)
+    }
+  }
 }
 
 export class PageBlock {
   readonly uid: string
-  @observable data: string
+  @observable text: string
   @observable isEditing: boolean = false
   @observable page: Page | undefined
 
-  constructor(uid: string, data: string) {
+  constructor(uid: string, text: string) {
     this.uid = uid
-    this.data = data
+    this.text = text
     makeObservable(this)
   }
 }

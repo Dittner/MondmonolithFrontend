@@ -27,32 +27,19 @@
 }
 
 .dirTitle {
-  font-weight: bold;
   color: var(--TextDark);
+  text-transform: uppercase;
 }
 
 .docListContainer ul {
-  padding-bottom: 20px;
   list-style-type: none;
 }
 
 .docLink,
 .docLinkActive {
-  font-family: var(--font-family-mono);
-  padding-left: 3px;
-  min-width: 200px;
+  padding-left: 20px;
   align-items: center;
   display: flex;
-}
-
-.docLink::before {
-  white-space: pre;
-  content: "- ";
-}
-
-.docLinkActive::before {
-  white-space: pre;
-  content: "> ";
 }
 
 .docLinkActive {
@@ -63,11 +50,11 @@
 .dirContent {
   display: flex;
   flex-direction: row;
-  align-items: baseline;
+  align-items: center;
   justify-content: left;
   padding-left: 20px;
-  padding-right: 20px;
-  height: 30px;
+  padding-right: 10px;
+  height: 35px;
   background-color: transparent;
 }
 
@@ -106,36 +93,11 @@ p.errMsg {
 }
 
 .editForm {
-  padding-left: 45px;
-  padding-right: 20px;
+  width: calc(100% - 20px);
+  display: flex;
+  flex-direction: column;
+  padding-left: 10px;
+  padding-right: 10px;
   padding-bottom: 10px;
-  background-color: var(--DarkBg);
-}
-
-/* Input */
-
-input.editFormInput {
-  width: 100%;
-  font-family: var(--font-family);
-  padding: 0;
-  margin-bottom: 10px;
-  color: var(--Text);
-  font-size: 1rem;
-  display: inline-block;
-  border: 0;
-  border-bottom: 1px solid var(--TextDark);
-  box-sizing: border-box;
-  background-color: transparent;
-  outline: none;
-}
-
-input.editFormInput:focus {
-  border: 0;
-  color: var(--Red);
-  border-bottom: 1px solid var(--Red);
-}
-
-input.editFormInput::placeholder {
-  color: var(--Text);
-  opacity: 0.5;
+  gap: 10px;
 }

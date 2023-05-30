@@ -10,10 +10,10 @@
     "@types/node": "^16.18.30",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
+    "html-react-parser": "^3.0.16",
     "mobx": "^6.9.0",
     "mobx-react": "^7.6.0",
     "prismjs": "^1.29.0",
-    "html-react-parser": "^3.0.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.7",
@@ -49,6 +49,7 @@
     ]
   },
   "devDependencies": {
-    "@types/prismjs": "^1.26.0"
+    "@types/prismjs": "^1.26.0",
+    "file-loader": "^6.2.0"
   }
 }

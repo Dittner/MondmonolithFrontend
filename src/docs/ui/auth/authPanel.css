@@ -11,58 +11,34 @@
   top: 40px;
   width: 250px;
   height: fit-content;
-  padding: 20px;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 5px;
   background-color: var(--DocListBg);
   border-radius: 10px;
   box-shadow: 0 10px 20px #00000020;
 }
 
-button.signOutBtn,
 .login.dropDownLbl {
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 1rem;
   border: none;
   background: none;
-  color: var(--MenuBtn);
+  color: var(--Red);
 }
 
-button.signOutBtn:hover,
 .login.dropDownLbl:hover,
 .login.dropDownLbl-opened {
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 1rem;
   -webkit-appearance: none;
   appearance: none;
-  color: var(--Red);
+  color: var(--Text);
   cursor: pointer;
 }
 
 /* *************** */
 
 /* AUTH FORM */
-
-.login input[type=text],
-.login input[type=password] {
-  width: 100%;
-  padding: 12px 12px;
-  margin: 8px 0;
-  font-size: 16px;
-  display: block;
-  border: 1px solid var(--TextDark);
-  border-radius: 0;
-  color: var(--Text);
-  background: none;
-  box-sizing: border-box;
-  outline: none;
-}
-
-.login input[type=text]:focus,
-.login input[type=password]:focus {
-  border: 1px solid var(--Red);
-  background: none;
-  color: var(--Red);
-}
-
 .login input[type=submit] {
   width: 100%;
   background-color: var(--Red);
@@ -99,7 +75,15 @@ p.authWithError {
 }
 
 p.userName {
+  color: var(--TextDark);
   font-family: var(--font-family-mono);
+  white-space: pre;
+  font-size: 16px;
+}
+
+p.separator {
+  font-family: var(--font-family-mono);
+  color: var(--Border);
   white-space: pre;
   font-size: 16px;
 }
@@ -129,7 +113,7 @@ p.userName {
   display: block;
   transition: all 0.3s;
   border-radius: 15px;
-  background-color: var(--MenuBtn);
+  background-color: #626973;
   cursor: pointer;
 }
 
@@ -147,7 +131,7 @@ p.userName {
 }
 
 input:checked + .roundBtn {
-  background-color: #E06C75;
+  background-color: var(--Red);
 }
 
 input:checked + .roundBtn:before {

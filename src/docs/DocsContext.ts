@@ -53,9 +53,22 @@ export class DocsContext {
 export class App {
   readonly uid
   @observable isDocListShown = false;
+  @observable yesNoDialog: YesNoDialog | undefined = undefined;
 
   constructor() {
     this.uid = UUID()
     makeObservable(this)
+  }
+}
+
+export class YesNoDialog {
+  readonly text: string;
+  readonly onApply: () => void;
+  readonly onCancel: (() => void) | undefined;
+
+  constructor(text: string, onApply: () => void, onCancel?: (() => void) | undefined) {
+    this.text = text
+    this.onApply = onApply
+    this.onCancel = onCancel
   }
 }

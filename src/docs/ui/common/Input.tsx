@@ -1,9 +1,16 @@
 import {useEffect, useRef, useState} from "react";
 
 // @ts-ignore
-export const Input = ({type, defaultValue, placeholder, autoFocus = false, onChange}) => {
+export const Input = ({type, defaultValue, placeholder, autoFocus = false, onChange, onSubmitted}) => {
   console.log("new Input")
-  const [focused, setFocused] = useState(false);
+  const onKeyDown = (e: any) => {
+    //Enter key
+    if (e.keyCode === 13 && !e.shiftKey) {
+      e.preventDefault()
+      onSubmitted()
+    }
+  }
+
   return (
     <div className="input_container">
       <input className="input_field"
@@ -13,10 +20,9 @@ export const Input = ({type, defaultValue, placeholder, autoFocus = false, onCha
              autoFocus={autoFocus}
              type={type}
              defaultValue={defaultValue}
-             onChange={onChange}
-             onFocus={() => setFocused(true)}
-             onBlur={() => setFocused(false)}/>
-      <p className={focused ? 'input_placeholder_focused' : 'input_placeholder'}>{placeholder}</p>
+             onChange={e => onChange(e.currentTarget.value)}
+             onKeyDown={onKeyDown}/>
+      <p className='input_placeholder'>{placeholder}</p>
     </div>
   )
 }
@@ -35,7 +41,7 @@ export const TextArea = ({text, onApply, onCancel, autoFocus}: TextAreaProps) =>
   const adjustScroller = () => {
     if (ta && ta.current) {
       ta.current.style.height = "inherit";
-      ta.current.style.height = `${ta.current.scrollHeight + 5}px`;
+      ta.current.style.height = `${ta.current.scrollHeight + 0}px`;
     }
   }
   const onChange = (event: any) => {

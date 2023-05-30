@@ -5,6 +5,9 @@ import {useDocsContext} from "../../../App";
 import {LoadStatus} from "../../DocsContext";
 import {observer} from "mobx-react";
 import {Directory, Doc} from "../../domain/DomainModel";
+import {SmallSpinner} from "../common/Loading";
+import {HAlign, HStack, VAlign} from "../common/Stack";
+import {Input} from "../common/Input";
 
 export const DocList = observer(() => {
   console.log("new DocList")
@@ -21,7 +24,7 @@ export const DocList = observer(() => {
     }
   }
 
-  const hideDocList = ()=> {
+  const hideDocList = () => {
     docsContext.app.isDocListShown = false
   }
 
@@ -32,7 +35,7 @@ export const DocList = observer(() => {
   }
   return (
     <div className='docListContainer'>
-      <div className="hstack halignLeft valignCenter">
+      <HStack halign={HAlign.CENTER} valign={VAlign.CENTER}>
         <button className="btn createDoc"
                 style={{visibility: docsContext.editTools.editMode ? "visible" : "hidden"}}
                 onClick={() => {
@@ -44,15 +47,13 @@ export const DocList = observer(() => {
                 onClick={hideDocList}>Hide
         </button>
 
-      </div>
-
+      </HStack>
 
       {isNewDocCreating &&
         <DocEditForm doc={null}
                      onCancel={onCancel}
                      onApply={onApply}/>
       }
-
 
       {docsContext.dirs.map(dir => {
         return <ul key={dir.uid}>
@@ -92,9 +93,6 @@ const DirectoryView = observer(({dir}: { dir: Directory }) => {
   return (
     <div className="dirContent">
       <p className="dirTitle">{dir.title}</p>
-      {dir.isStoring &&
-        <div className="smallSpinner"></div>
-      }
       {!dir.isStoring && docsContext.editTools.editMode &&
         <button className="edit icon-edit"
                 onClick={startEditing}></button>
@@ -132,7 +130,7 @@ const DocLink = observer((props: any) => {
                to={`./${doc.uid}`}>{doc.title}
       </NavLink>
       {doc.isStoring &&
-        <div className="smallSpinner"></div>
+        <SmallSpinner/>
       }
       {!doc.isStoring && docsContext.editTools.editMode &&
         <button className="edit icon-edit"
@@ -144,8 +142,8 @@ const DocLink = observer((props: any) => {
 
 const DocEditForm = (props: any) => {
   const doc = props.doc as Doc | undefined
-  const onCancel = props.onCancel as () => {}
-  const onApply = props.onApply as (docTitle: string, dirTitle: string) => {}
+  const onCancel = props.onCancel as () => void
+  const onApply = props.onApply as (docTitle: string, dirTitle: string) => void
   console.log("new DocEditForm")
 
   const [newDocTitle, setNewDocTitle] = useState(doc?.title ?? '');
@@ -160,31 +158,27 @@ const DocEditForm = (props: any) => {
 
   return (
     <div className='editForm'>
-      <input className="editFormInput"
+      <Input type="text"
+             defaultValue={newDocTitle}
              placeholder="Doc's title"
-             autoCorrect="off"
-             autoComplete="off"
-             type="text"
-             value={newDocTitle}
-             onChange={e => setNewDocTitle(e.target.value)}
+             onChange={setNewDocTitle}
+             onSubmitted={apply}
              autoFocus/>
 
-      <input className="editFormInput"
+      <Input type="text"
+             defaultValue={newDirTitle}
              placeholder="Directory"
-             autoCorrect="off"
-             autoComplete="off"
-             type="text"
-             value={newDirTitle}
-             onChange={e => setNewDirTitle(e.target.value)}/>
+             onChange={setNewDirTitle}
+             onSubmitted={apply}/>
 
-      <div className="hstack valignCenter halignCenter">
+      <HStack halign={HAlign.CENTER} valign={VAlign.CENTER}>
         <button onClick={cancel}
                 className="btn">Cancel
         </button>
         <button className="btn"
                 onClick={apply}>Store
         </button>
-      </div>
+      </HStack>
 
       {doc?.storeWithError &&
         <p className="errMsg">{doc.storeWithError}</p>
@@ -196,14 +190,14 @@ const DocEditForm = (props: any) => {
 const DirEditForm = (props: any) => {
   console.log("new DirEditForm")
   const dir = props.dir as Directory
-  const onCancel = props.onCancel as () => {}
-  const onApply = props.onApply as (title: string) => {}
+  const onCancel = props.onCancel as () => void
+  const onApply = props.onApply as (title: string) => void
 
 
   const [title, setTitle] = useState(dir.title ?? '');
 
   const apply = () => {
-    onApply(title)
+    if(!dir.isStoring && title) onApply(title)
   }
   const cancel = () => {
     onCancel()
@@ -211,23 +205,24 @@ const DirEditForm = (props: any) => {
 
   return (
     <div className='editForm'>
-      <input className="editFormInput"
-             placeholder="Title"
-             autoCorrect="off"
-             autoComplete="off"
-             type="text"
-             value={title}
-             onChange={e => setTitle(e.target.value)}
+      <Input type="text"
+             defaultValue={title}
+             placeholder="Directory"
+             onChange={setTitle}
+             onSubmitted={apply}
              autoFocus/>
 
-      <div className="hstack valignCenter halignCenter">
+      <HStack halign={HAlign.CENTER} valign={VAlign.CENTER}>
+        {dir.isStoring &&
+          <SmallSpinner/>
+        }
         <button onClick={cancel}
                 className="btn">Cancel
         </button>
         <button className="btn"
                 onClick={apply}>Store
         </button>
-      </div>
+      </HStack>
 
       {dir.storeWithError &&
         <p className="errMsg">{dir.storeWithError}</p>

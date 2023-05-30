@@ -5,3 +5,11 @@ export const LoadingSpinner = () => {
     </div>
   );
 }
+
+export const SmallSpinner = () => {
+  return (
+    <div className="smallSpinner-container">
+      <div className="smallSpinner"></div>
+    </div>
+  );
+}

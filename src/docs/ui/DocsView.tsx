@@ -7,9 +7,9 @@ import {DocBody} from "./docBody/DocBody";
 import {DocTopics} from "./docTopics/DocTopics";
 import "./style/code.css";
 import {AuthPanel} from "./auth/AuthPanel";
-import {ToolsPanel} from "./tools/ToolsPanel";
 import {AuthStatus} from "../domain/DomainModel";
 import {IntroView} from "./intro/IntroView";
+import {HAlign, HStack, VAlign} from "./common/Stack";
 
 export const DocsView = observer(() => {
   console.log("DocsView init");
@@ -19,10 +19,6 @@ export const DocsView = observer(() => {
   })
 
   const {pathname, hash, key} = useLocation()
-
-  const showDocList = () => {
-    docsContext.app.isDocListShown = true
-  }
 
   useEffect(() => {
     if (hash === '') {
@@ -45,27 +41,62 @@ export const DocsView = observer(() => {
   }
 
   return (
-    <div className="docsView">
-      <div className="toolsPanel">
-        <button className="btn showDocList"
-                onClick={showDocList}>Show docs
-        </button>
-        <ToolsPanel/>
+    <>
+      <ModalView/>
+      <div className="docsView">
+        <div className="menu">
+          <AuthPanel/>
+        </div>
+        <div className={docsContext.app.isDocListShown ? "docList" : "docList hidden"}>
+          <DocList/>
+        </div>
+        <div className="docBody">
+          <DocBody/>
+        </div>
+        <div className="docTopics">
+          <DocTopics/>
+        </div>
       </div>
-      <div className="authPanel">
-        <AuthPanel/>
-      </div>
-      <div className={docsContext.app.isDocListShown ? "docList" : "docList hidden"}>
-        <DocList/>
-      </div>
-      <div className="docBody">
-        <DocBody/>
-      </div>
-      <div className="docTopics">
-        <DocTopics/>
-      </div>
-    </div>
+
+    </>
   )
 })
 
+export const ModalView = observer(() => {
+  console.log("new ModalView")
 
+  const {app} = useDocsContext()
+
+  const apply = () => {
+    if (app.yesNoDialog) {
+      app.yesNoDialog.onApply()
+      app.yesNoDialog = undefined
+    }
+  }
+
+  const cancel = () => {
+    if (app.yesNoDialog) {
+      app.yesNoDialog.onCancel?.()
+      app.yesNoDialog = undefined
+    }
+  }
+
+  return <>
+    {app.yesNoDialog &&
+      <div className="modalView">
+        <div className="yesNoDialog">
+          <h3>{app.yesNoDialog.text}</h3>
+
+          <HStack halign={HAlign.CENTER} valign={VAlign.TOP}>
+            <button onClick={cancel}
+                    className="btn">No
+            </button>
+            <button className="btn"
+                    onClick={apply}>Yes
+            </button>
+          </HStack>
+        </div>
+      </div>
+    }
+  </>
+})

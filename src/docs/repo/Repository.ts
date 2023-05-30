@@ -90,7 +90,10 @@ export class DemoDocsRepo implements DocsRepo {
       p.blocks.forEach((b: any) => {
         pageBlocks.push(new PageBlock(b.uid, b.data))
       })
-      res.push(new Page(p.uid, p.title, pageBlocks))
+      const page = new Page(p.uid, p.title)
+      pageBlocks.forEach(b => b.page = page)
+      page.blocks = pageBlocks
+      res.push(page)
     })
     return res
   }

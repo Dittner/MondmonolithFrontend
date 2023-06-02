@@ -1,0 +1,35 @@
+{
+  "uid": "react",
+  "title": "React",
+  "directory": "Frontend",
+  "pages": [
+    {
+      "uid": "1887cf6af4b-84821ab5-2a",
+      "title": "useEffect",
+      "blocks": [
+        {
+          "uid": "1887cf6af4b-84821ab5-2b",
+          "text": "## Хук эффекта\n\nС помощью хука эффекта `useEffect` вы можете выполнять побочные эффекты из функционального компонента. Он выполняет ту же роль, что и `componentDidMount`, `componentDidUpdate` и `componentWillUnmount` в React-классах, объединив их в единый API. По умолчанию, React запускает эффекты после каждого рендера, включая первый рендер.\n  \nХуки НЕ работают внутри классов, а используются вместо них.\n  \nК примеру, этот компонент устанавливает заголовок документа после того, как React обновляет DOM:\n"
+        },
+        {
+          "uid": "1887cf6af4b-84821ab5-2c",
+          "text": "~~~jsx\nimport React, { useState, useEffect } from 'react';\n  \nfunction Example() {\n  const [count, setCount] = useState(0);\n  \n  // По принципу componentDidMount и componentDidUpdate:\n  useEffect(() => {\n    // Обновляем заголовок документа, используя API браузера\n    document.title = `Вы нажали ${count} раз`;\n  });\n  \n  return (\n    <div>\n      <p>Вы нажали {count} раз</p>\n      <button onClick={() => setCount(count + 1)}>\n        Нажми на меня\n      </button>\n    </div>\n  );\n}\n~~~"
+        }
+      ]
+    },
+    {
+      "uid": "1887cf6af4b-84821ab5-2d",
+      "title": "useIterator",
+      "blocks": [
+        {
+          "uid": "1887cf6af4b-84821ab5-2e",
+          "text": "## Custom hook useIterator\n  Перебор значений:"
+        },
+        {
+          "uid": "1887cf6af4b-84821ab5-2f",
+          "text": "~~~jsx\nimport React from \"react\";\nimport { useIterator } from \"../hooks\";\n  \nexport function RepoMenu({ repositories,  onSelect = f => f}) {\n  const [{ name }, prev, next] = useIterator(\n    repositories\n  );\n\n  useEffect(() => {\n    if (name) onSelect(name);\n  }, [name]);\n    \n  return (\n    <div style={{ display: \"flex\" }}>\n      <button onClick={prev}>&lt;</button>\n      <p>{name}</p>\n      <button onClick={next}>&gt;</button>\n    </div>);\n}\n~~~"
+        }
+      ]
+    }
+  ]
+}

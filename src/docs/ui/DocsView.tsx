@@ -7,13 +7,12 @@ import {DocBody} from "./docBody/DocBody";
 import {DocTopics} from "./docTopics/DocTopics";
 import "./style/code.css";
 import {Header} from "./header/Header";
-import {AuthStatus} from "../domain/DomainModel";
-import {IntroView} from "./intro/IntroView";
 import {HAlign, HStack, VAlign} from "./common/Stack";
 
 export const DocsView = observer(() => {
   console.log("DocsView init");
   const docsContext = useDocsContext()
+
   useEffect(() => {
     docsContext.docsLoader.fetchDirectories()
   })
@@ -35,10 +34,6 @@ export const DocsView = observer(() => {
       }, 0)
     }
   }, [pathname, hash, key]); // do this on route change
-
-  if (docsContext.user.authStatus !== AuthStatus.AUTHORIZED) {
-    return <IntroView/>
-  }
 
   return (
     <>

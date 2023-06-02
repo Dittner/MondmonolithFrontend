@@ -1,7 +1,9 @@
 import {DocsContext, InfoDialog, LoadStatus, YesNoDialog} from "../../DocsContext";
 import {Directory, Doc, DocLoadStatus, Page, PageBlock} from "../../domain/DomainModel";
-import {generateDocs, generateJavaDoc, generateJSDoc, generateReactDoc} from "./DemoDocs";
 import {action} from "mobx";
+import javaDemoDoc from "../../../resources/demoDocs/java.json"
+import jsDemoDoc from "../../../resources/demoDocs/js.json"
+import reactDemoDoc from "../../../resources/demoDocs/react.json"
 
 export interface DocsLoader {
   fetchDirectories(): void
@@ -29,7 +31,7 @@ export class DemoDocsRepo implements DocsLoader {
     console.log("--fetchDirectories, start fetching...")
 
     setTimeout(() => {
-      const rawDocs = generateDocs()
+      const rawDocs = [javaDemoDoc, jsDemoDoc, reactDemoDoc]
       this.context.send(this.parseRawDocs(rawDocs), LoadStatus.LOADED)
       console.log("fetchDirectories complete")
     }, 1000)
@@ -59,22 +61,26 @@ export class DemoDocsRepo implements DocsLoader {
     console.log("fetchDoc, id =", docUID)
     const doc = this.context.findDoc(d => d.uid === docUID)
 
-    if (doc?.loadStatus === DocLoadStatus.HEADER_LOADED) {
+    if (doc && doc?.loadStatus === DocLoadStatus.HEADER_LOADED) {
       doc.loadStatus = DocLoadStatus.LOADING
       console.log("fetchDoc, start fetching...")
+      let d: Doc
       setTimeout(() => {
         switch (docUID) {
           case 'java':
-            doc.init(this.parseRawPages(generateJavaDoc().pages))
-            doc.loadStatus = DocLoadStatus.LOADED
+            d = this.context.docsParser.parseDoc(javaDemoDoc)
+            d.loadStatus = DocLoadStatus.LOADED
+            doc.dir?.replaceWith(d)
             break
           case 'js':
-            doc.init(this.parseRawPages(generateJSDoc().pages))
-            doc.loadStatus = DocLoadStatus.LOADED
+            d = this.context.docsParser.parseDoc(jsDemoDoc)
+            d.loadStatus = DocLoadStatus.LOADED
+            doc.dir?.replaceWith(d)
             break
           case 'react':
-            doc.init(this.parseRawPages(generateReactDoc().pages))
-            doc.loadStatus = DocLoadStatus.LOADED
+            d = this.context.docsParser.parseDoc(reactDemoDoc)
+            d.loadStatus = DocLoadStatus.LOADED
+            doc.dir?.replaceWith(d)
             break
           default:
             doc.loadStatus = DocLoadStatus.LOADED

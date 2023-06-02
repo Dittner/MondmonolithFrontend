@@ -30,22 +30,22 @@ interface StackProps {
 const buildStackStyle = (style: any, props: StackProps) => {
   if (props.hasOwnProperty("width")) style["width"] = props.width
   if (props.hasOwnProperty("height")) style["height"] = props.height
-  if (props.hasOwnProperty("minWidth")) style["min-width"] = props.minWidth
-  if (props.hasOwnProperty("minHeight")) style["min-height"] = props.minHeight
+  if (props.hasOwnProperty("minWidth")) style["minWidth"] = props.minWidth
+  if (props.hasOwnProperty("minHeight")) style["minHeight"] = props.minHeight
   if (props.hasOwnProperty("gap")) style["gap"] = props.gap
-  if (props.hasOwnProperty("paddingLeft")) style["padding-left"] = props.paddingLeft
-  if (props.hasOwnProperty("paddingRight")) style["padding-right"] = props.paddingRight
-  if (props.hasOwnProperty("paddingTop")) style["padding-top"] = props.paddingTop
-  if (props.hasOwnProperty("paddingBottom")) style["padding-bottom"] = props.paddingBottom
+  if (props.hasOwnProperty("paddingLeft")) style["paddingLeft"] = props.paddingLeft
+  if (props.hasOwnProperty("paddingRight")) style["paddingRight"] = props.paddingRight
+  if (props.hasOwnProperty("paddingTop")) style["paddingTop"] = props.paddingTop
+  if (props.hasOwnProperty("paddingBottom")) style["paddingBottom"] = props.paddingBottom
   return style
 }
 
 export const VStack = (props: StackProps) => {
   const defStyle = {
     "display": "flex",
-    "flex-direction": "column",
-    "align-items": "flex-start",
-    "justify-content": "center",
+    "flexDirection": "column",
+    "alignItems": "flex-start",
+    "justifyContent": "center",
     "width": "100%",
     "gap": "10px",
   }
@@ -54,29 +54,29 @@ export const VStack = (props: StackProps) => {
 
   switch (props.halign) {
     case HAlign.LEFT:
-      style["align-items"] = "flex-start";
+      style["alignItems"] = "flex-start";
       break;
     case HAlign.CENTER:
-      style["align-items"] = "center";
+      style["alignItems"] = "center";
       break;
     case HAlign.RIGHT:
-      style["align-items"] = "flex-end";
+      style["alignItems"] = "flex-end";
       break;
   }
 
 
   switch (props.valign) {
     case VAlign.TOP:
-      style["justify-content"] = "flex-start";
+      style["justifyContent"] = "flex-start";
       break;
     case VAlign.CENTER:
-      style["justify-content"] = "center";
+      style["justifyContent"] = "center";
       break;
     case VAlign.BASE:
-      style["align-items"] = "baseline";
+      style["alignItems"] = "baseline";
       break;
     case VAlign.BOTTOM:
-      style["justify-content"] = "flex-end";
+      style["justifyContent"] = "flex-end";
       break;
   }
 
@@ -86,40 +86,40 @@ export const VStack = (props: StackProps) => {
 export const HStack = (props: StackProps) => {
   const defStyle = {
     "display": "flex",
-    "flex-direction": "row",
-    "align-items": "flex-start",
-    "justify-content": "center",
+    "flexDirection": "row",
+    "alignItems": "flex-start",
+    "justifyContent": "center",
     "height": "100%",
     "gap": "10px",
-    "box-sizing": "border-box",
+    "boxSizing": "border-box",
   }
 
   const style = buildStackStyle(defStyle, props)
 
   switch (props.halign) {
     case HAlign.LEFT:
-      style["justify-content"] = "flex-start";
+      style["justifyContent"] = "flex-start";
       break;
     case HAlign.CENTER:
-      style["justify-content"] = "center";
+      style["justifyContent"] = "center";
       break;
     case HAlign.RIGHT:
-      style["justify-content"] = "flex-end";
+      style["justifyContent"] = "flex-end";
       break;
   }
 
   switch (props.valign) {
     case VAlign.TOP:
-      style["align-items"] = "flex-start";
+      style["alignItems"] = "flex-start";
       break;
     case VAlign.CENTER:
-      style["align-items"] = "center";
+      style["alignItems"] = "center";
       break;
     case VAlign.BASE:
-      style["align-items"] = "baseline";
+      style["alignItems"] = "baseline";
       break;
     case VAlign.BOTTOM:
-      style["align-items"] = "flex-end";
+      style["alignItems"] = "flex-end";
       break;
   }
 

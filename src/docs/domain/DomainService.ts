@@ -3,6 +3,7 @@ import {Directory, Doc} from "./DomainModel";
 import {UUID} from "../infrastructure/UIDGenerator";
 import {action} from "mobx";
 
+
 export class DomainService {
   private context: DocsContext
 
@@ -30,7 +31,6 @@ export class DomainService {
   @action updateDirTitle(dir: Directory, newDirTitle: string) {
     if (dir.title === newDirTitle) return
 
-
     const destDir = this.context.dirs.find(d => d.title === newDirTitle)
     if (destDir) {
       while (dir.docs.length > 0) {
@@ -48,7 +48,7 @@ export class DomainService {
 
   @action createDoc(docTitle: string, dirTitle: string) {
     const doc = new Doc(UUID(), docTitle)
-    const dir = this.context.dirs.find(d => d.title === dirTitle)
+    const dir = this.context.dirs.find(dir => dir.title === dirTitle)
     if (dir) {
       dir.add(doc)
     } else {

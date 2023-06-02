@@ -9,7 +9,7 @@
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icons' !important;
-  font-size: 16px;
+  font-size: 1rem;
   speak: never;
   font-style: normal;
   font-weight: normal;
@@ -30,16 +30,39 @@ button[class^="icon-"], button[class*=" icon-"] {
   margin: 0;
   background-color: var(--Red25);
   border-radius: 4px;
-  min-width: 28px;
-  min-height: 28px;
+  min-width: 32px;
+  min-height: 32px;
 }
 
-button[class^="icon-"]:hover, button[class*=" icon-"]:hover{
+button[class^="icon-"]:hover,
+button[class*=" icon-"]:hover {
   color: var(--Text);
   background-color: var(--Red);
   cursor: pointer;
 }
 
+button[class^="icon-"]:disabled,
+button[class*=" icon-"]:disabled {
+  color: var(--TextDark);
+  background-color: var(--PanelBg);
+  cursor: not-allowed;
+}
+
+button.withoutBg, button.withoutBg:hover {
+  background: none;
+}
+
+.icon-close:before {
+  content: "\e907";
+}
+
+.icon-menu:before {
+  content: "\e905";
+}
+
+.icon-plus:before {
+  content: "\e906";
+}
 .icon-delete:before {
   content: "\e900";
 }

@@ -1,6 +1,6 @@
 import './docList.css';
 import {NavLink} from "react-router-dom";
-import {useState} from "react";
+import {ChangeEvent, useRef, useState} from "react";
 import {useDocsContext} from "../../../App";
 import {LoadStatus} from "../../DocsContext";
 import {observer} from "mobx-react";
@@ -8,6 +8,7 @@ import {Directory, Doc} from "../../domain/DomainModel";
 import {SmallSpinner} from "../common/Loading";
 import {HAlign, HStack, VAlign} from "../common/Stack";
 import {Input} from "../common/Input";
+import {Spacer} from "../common/Spacer";
 
 export const DocList = observer(() => {
   console.log("new DocList")
@@ -35,24 +36,37 @@ export const DocList = observer(() => {
   }
   return (
     <div className='docListContainer'>
-      <HStack halign={HAlign.CENTER} valign={VAlign.CENTER}>
-        <button className="btn createDoc"
-                style={{visibility: docsContext.editTools.editMode ? "visible" : "hidden"}}
-                onClick={() => {
-                  setIsNewDocCreating(true)
-                }}>New doc
-        </button>
+      <HStack halign={HAlign.CENTER}
+              valign={VAlign.CENTER}
+              gap="0"
+              width="100%"
+              minHeight="50px"
+              paddingLeft="20px"
+              paddingRight="10px">
+        {docsContext.editTools.editMode &&
+        <>
+          <button className="btn createDoc"
+                  onClick={() => {
+                    setIsNewDocCreating(true)
+                  }}>New doc
+          </button>
 
-        <button className="btn hideDocList"
-                onClick={hideDocList}>Hide
-        </button>
+          <p className="separator">{' | '}</p>
 
+          <DocPicker/>
+        </>
+        }
+
+        <Spacer/>
+
+        <button className="icon-close withoutBg hideDocListBtn"
+                onClick={hideDocList}/>
       </HStack>
 
       {isNewDocCreating &&
-        <DocEditForm doc={null}
-                     onCancel={onCancel}
-                     onApply={onApply}/>
+      <DocEditForm doc={null}
+                   onCancel={onCancel}
+                   onApply={onApply}/>
       }
 
       {docsContext.dirs.map(dir => {
@@ -65,6 +79,30 @@ export const DocList = observer(() => {
       })}
     </div>
   )
+})
+
+const DocPicker = observer(() => {
+  const docsContext = useDocsContext()
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const f = e.target.files[0]
+      docsContext.docsLoader.loadDocFromDisc(f)
+    }
+  }
+
+  const importDoc = () => {
+    inputRef.current?.click();
+  }
+
+  return <>
+    <button className="btn"
+            onClick={importDoc}>Import
+    </button>
+
+    <input ref={inputRef} className="btn" type="file" onChange={handleFileChange} style={{display: 'none'}}/>
+  </>
 })
 
 
@@ -94,8 +132,8 @@ const DirectoryView = observer(({dir}: { dir: Directory }) => {
     <div className="dirContent">
       <p className="dirTitle">{dir.title}</p>
       {!dir.isStoring && docsContext.editTools.editMode &&
-        <button className="edit icon-edit"
-                onClick={startEditing}></button>
+      <button className="edit icon-edit"
+              onClick={startEditing}/>
       }
     </div>
   )
@@ -130,11 +168,11 @@ const DocLink = observer((props: any) => {
                to={`./${doc.uid}`}>{doc.title}
       </NavLink>
       {doc.isStoring &&
-        <SmallSpinner/>
+      <SmallSpinner/>
       }
       {!doc.isStoring && docsContext.editTools.editMode &&
-        <button className="edit icon-edit"
-                onClick={startEditing}></button>
+      <button className="edit icon-edit"
+              onClick={startEditing}/>
       }
     </div>
   )
@@ -146,8 +184,8 @@ const DocEditForm = (props: any) => {
   const onApply = props.onApply as (docTitle: string, dirTitle: string) => void
   console.log("new DocEditForm")
 
-  const [newDocTitle, setNewDocTitle] = useState(doc?.title ?? '');
-  const [newDirTitle, setNewDirTitle] = useState(doc?.dir?.title ?? '');
+  const [newDocTitle, setNewDocTitle] = useState(doc?.title || '')
+  const [newDirTitle, setNewDirTitle] = useState(doc?.dir?.title || '')
 
   const apply = () => {
     onApply(newDocTitle, newDirTitle)
@@ -176,12 +214,12 @@ const DocEditForm = (props: any) => {
                 className="btn">Cancel
         </button>
         <button className="btn"
-                onClick={apply}>Store
+                onClick={apply}>Save
         </button>
       </HStack>
 
       {doc?.storeWithError &&
-        <p className="errMsg">{doc.storeWithError}</p>
+      <p className="errMsg">{doc.storeWithError}</p>
       }
     </div>
   )
@@ -194,10 +232,10 @@ const DirEditForm = (props: any) => {
   const onApply = props.onApply as (title: string) => void
 
 
-  const [title, setTitle] = useState(dir.title ?? '');
+  const [title, setTitle] = useState(dir.title || '');
 
   const apply = () => {
-    if(!dir.isStoring && title) onApply(title)
+    if (!dir.isStoring && title) onApply(title)
   }
   const cancel = () => {
     onCancel()
@@ -214,18 +252,18 @@ const DirEditForm = (props: any) => {
 
       <HStack halign={HAlign.CENTER} valign={VAlign.CENTER}>
         {dir.isStoring &&
-          <SmallSpinner/>
+        <SmallSpinner/>
         }
         <button onClick={cancel}
                 className="btn">Cancel
         </button>
         <button className="btn"
-                onClick={apply}>Store
+                onClick={apply}>Save
         </button>
       </HStack>
 
       {dir.storeWithError &&
-        <p className="errMsg">{dir.storeWithError}</p>
+      <p className="errMsg">{dir.storeWithError}</p>
       }
     </div>
   )

@@ -6,7 +6,7 @@ import {useDocsContext} from "../../App";
 import {DocBody} from "./docBody/DocBody";
 import {DocTopics} from "./docTopics/DocTopics";
 import "./style/code.css";
-import {AuthPanel} from "./auth/AuthPanel";
+import {Header} from "./header/Header";
 import {AuthStatus} from "../domain/DomainModel";
 import {IntroView} from "./intro/IntroView";
 import {HAlign, HStack, VAlign} from "./common/Stack";
@@ -15,7 +15,7 @@ export const DocsView = observer(() => {
   console.log("DocsView init");
   const docsContext = useDocsContext()
   useEffect(() => {
-    docsContext.repo.fetchDirectories()
+    docsContext.docsLoader.fetchDirectories()
   })
 
   const {pathname, hash, key} = useLocation()
@@ -44,8 +44,8 @@ export const DocsView = observer(() => {
     <>
       <ModalView/>
       <div className="docsView">
-        <div className="menu">
-          <AuthPanel/>
+        <div className="header">
+          <Header/>
         </div>
         <div className={docsContext.app.isDocListShown ? "docList" : "docList hidden"}>
           <DocList/>
@@ -68,7 +68,9 @@ export const ModalView = observer(() => {
   const {app} = useDocsContext()
 
   const apply = () => {
-    if (app.yesNoDialog) {
+    if (app.infoDialog) {
+      app.infoDialog = undefined
+    } else if (app.yesNoDialog) {
       app.yesNoDialog.onApply()
       app.yesNoDialog = undefined
     }
@@ -83,20 +85,33 @@ export const ModalView = observer(() => {
 
   return <>
     {app.yesNoDialog &&
-      <div className="modalView">
-        <div className="yesNoDialog">
-          <h3>{app.yesNoDialog.text}</h3>
+    <div className="modalView">
+      <div className="yesNoDialog">
+        <p>{app.yesNoDialog.text}</p>
 
-          <HStack halign={HAlign.CENTER} valign={VAlign.TOP}>
-            <button onClick={cancel}
-                    className="btn">No
-            </button>
-            <button className="btn"
-                    onClick={apply}>Yes
-            </button>
-          </HStack>
-        </div>
+        <HStack halign={HAlign.CENTER} valign={VAlign.TOP} gap="50px">
+          <button onClick={cancel}
+                  className="btn">No
+          </button>
+          <button className="btn"
+                  onClick={apply}>Yes
+          </button>
+        </HStack>
       </div>
+    </div>
+    }
+
+    {app.infoDialog &&
+    <div className="modalView">
+      <div className="yesNoDialog">
+        <h2>{app.infoDialog.title}</h2>
+        <p>{app.infoDialog.text}</p>
+
+        <button onClick={apply}
+                className="btn">OK
+        </button>
+      </div>
+    </div>
     }
   </>
 })

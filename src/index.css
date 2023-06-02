@@ -13,15 +13,19 @@
   --TextBlue: #b1c5de;
   --Header: #789ba9;
   --DocListTextSelected: #d2e4f2;
-  --DocListBg: #292f31;
+  --PanelBg: #292f31;
   --AppBg: #23282a;
-  --DarkBg: #00000020;
+  --DarkBg: #00000015;
   --CodeBg: #2e393f50;
   --CodeBlockBg: #2e393f20;
   --Border: #2e393f;
   --Pink: #a29cbe;
   --InputBg: #1f2528;
-  --font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+  --BtnWeight: 600;
+  --BtnColor: #E06C75;
+  --BtnHoverColor: #c7d7e5;
+  --BtnDisabledColor: #76818d;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   --font-family-mono: Menlo, source-code-pro, Monaco, 'Courier New', monospace;
 }
 
@@ -117,12 +121,12 @@ hr {
 }
 
 /* DOC VIEW LAYOUT */
-.menu {
+.header {
   grid-area: headerMenu;
+  width: calc(100% - 20px);
   display: flex;
-  border-bottom: 1px solid var(--Border);
   align-items: center;
-  justify-content: right;
+  justify-content: stretch;
   flex-direction: row;
   position: sticky;
   top: 0;
@@ -132,9 +136,13 @@ hr {
   z-index: 1;
 }
 
+.withBottomBorder {
+  border-bottom: 1px solid var(--Border);
+}
+
 .docList {
   grid-area: docList;
-  background-color: var(--DocListBg);
+  background-color: var(--PanelBg);
   box-sizing: border-box;
   position: sticky;
   top: 0;
@@ -170,15 +178,13 @@ hr {
     min-width: 750px;
     grid-template-columns: repeat(1, 1fr);
     grid-auto-rows: minmax(50px, auto);
-    grid-template-areas:
-    "headerMenu"
-    "docBody";
+    grid-template-areas: "headerMenu" "docBody";
   }
 
   .docList {
     position: fixed;
     width: 300px;
-    z-index: 10;
+    z-index: 2;
     box-shadow: 10px 0 20px #00000020;
     left: 0;
     transition: left 0.5s;
@@ -189,14 +195,13 @@ hr {
     transition: left 0.5s;
   }
 
-  .showDocList {
-    position: fixed;
-    left: 20px;
-  }
-
- .docTopics {
+  .docTopics {
     display: none;
     position: absolute;
+  }
+
+  .showDocList {
+    display: inline-block;
   }
 }
 
@@ -205,12 +210,10 @@ hr {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-auto-rows: minmax(50px, auto);
-    grid-template-areas:
-    "docList headerMenu headerMenu headerMenu headerMenu"
-    "docList docBody docBody docBody docBody";
+    grid-template-areas: "docList headerMenu headerMenu headerMenu headerMenu" "docList docBody docBody docBody docBody";
   }
 
-  .showDocList, .docTopics, .btn.hideDocList {
+  .showDocList, .docTopics, .hideDocListBtn {
     display: none;
   }
 
@@ -224,12 +227,10 @@ hr {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-auto-rows: minmax(50px, auto);
-    grid-template-areas:
-    "docList headerMenu headerMenu headerMenu headerMenu"
-    "docList docBody docBody docBody docTopics";
+    grid-template-areas: "docList headerMenu headerMenu headerMenu headerMenu" "docList docBody docBody docBody docTopics";
   }
 
-  .showDocList, .btn.hideDocList {
+  .showDocList, .hideDocListBtn {
     display: none;
   }
 
@@ -250,24 +251,30 @@ div.modalView {
   height: 100%;
   background-color: #00000050;
   font-size: 100px;
-  z-index: 5;
+  z-index: 10;
 }
 
 div.yesNoDialog {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
   width: 350px;
+  gap: 20px;
   height: fit-content;
   background-color: #333c3f;
   box-shadow: 0 10px 20px #00000020;
   border-radius: 20px;
 }
 
-div.yesNoDialog h3{
-  padding: 30px;
+div.yesNoDialog p {
+  font-size: 1.25rem;
   color: var(--Text);
   text-align: center;
 }
 
-div.yesNoDialog button{
+div.yesNoDialog button {
   font-size: 1.25rem;
   width: 33%;
 }

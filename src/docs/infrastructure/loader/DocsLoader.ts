@@ -1,14 +1,17 @@
-import {DocsContext, LoadStatus} from "../DocsContext";
-import {Directory, Doc, DocLoadStatus, Page, PageBlock} from "../domain/DomainModel";
+import {DocsContext, InfoDialog, LoadStatus, YesNoDialog} from "../../DocsContext";
+import {Directory, Doc, DocLoadStatus, Page, PageBlock} from "../../domain/DomainModel";
 import {generateDocs, generateJavaDoc, generateJSDoc, generateReactDoc} from "./DemoDocs";
-import {runInAction} from "mobx";
+import {action} from "mobx";
 
-export interface DocsRepo {
-  fetchDirectories: () => void
-  fetchDoc: (docUID: string) => void
+export interface DocsLoader {
+  fetchDirectories(): void
+
+  fetchDoc(docUID: string): void
+
+  loadDocFromDisc(doc: File): void
 }
 
-export class DemoDocsRepo implements DocsRepo {
+export class DemoDocsRepo implements DocsLoader {
   private context: DocsContext
 
   constructor(context: DocsContext) {
@@ -20,9 +23,8 @@ export class DemoDocsRepo implements DocsRepo {
     if (this.context.dirsLoadStatus !== LoadStatus.PENDING) {
       return
     }
-    runInAction(() => {
-      this.context.dirsLoadStatus = LoadStatus.LOADING
-    })
+
+    this.context.dirsLoadStatus = LoadStatus.LOADING
 
     console.log("--fetchDirectories, start fetching...")
 
@@ -63,19 +65,18 @@ export class DemoDocsRepo implements DocsRepo {
       setTimeout(() => {
         switch (docUID) {
           case 'java':
-            doc.pages = this.parseRawPages(generateJavaDoc().pages)
+            doc.init(this.parseRawPages(generateJavaDoc().pages))
             doc.loadStatus = DocLoadStatus.LOADED
             break
           case 'js':
-            doc.pages = this.parseRawPages(generateJSDoc().pages)
+            doc.init(this.parseRawPages(generateJSDoc().pages))
             doc.loadStatus = DocLoadStatus.LOADED
             break
           case 'react':
-            doc.pages = this.parseRawPages(generateReactDoc().pages)
+            doc.init(this.parseRawPages(generateReactDoc().pages))
             doc.loadStatus = DocLoadStatus.LOADED
             break
           default:
-            doc.pages = []
             doc.loadStatus = DocLoadStatus.LOADED
         }
       }, 1000)
@@ -91,10 +92,57 @@ export class DemoDocsRepo implements DocsRepo {
         pageBlocks.push(new PageBlock(b.uid, b.data))
       })
       const page = new Page(p.uid, p.title)
-      pageBlocks.forEach(b => b.page = page)
-      page.blocks = pageBlocks
+      page.init(pageBlocks)
       res.push(page)
     })
     return res
+  }
+
+
+  @action loadDocFromDisc(doc: File) {
+    const onError = (title: string, msg: string): void => {
+      this.context.app.infoDialog = new InfoDialog(title, msg)
+      console.log(msg)
+    }
+
+    const onComplete = (text: any) => {
+      try {
+        const data = JSON.parse(text)
+        try {
+          const doc = this.context.docsParser.parseDoc(data)
+          const dir = this.context.dirs.find(d => d.uid === data.directory)
+          if (dir) {
+            const duplicate = dir.docs.find(d => d.uid === doc.uid)
+            if (duplicate) {
+              const msg = `The directory «${dir.title}» has the doc «${doc.title}» yet. Do you want to overwrite it?`
+              const overwriteDoc = () => {
+                dir.replaceWith(doc)
+              }
+              this.context.app.yesNoDialog = new YesNoDialog(msg, overwriteDoc)
+            } else {
+              dir.add(doc)
+            }
+          } else {
+            const dir = new Directory(data.directory, data.directory)
+            dir.add(doc)
+            this.context.dirs.push(dir)
+          }
+        } catch (e) {
+          onError("The file is damaged", `An error has occurred while parsing a file. Details: ${e}`)
+        }
+
+      } catch (e) {
+        onError("The file is damaged", `Details: ${e}`)
+      }
+    }
+
+    if (doc.type !== "application/json") {
+      onError("Invalid file", "The extension of the selected file should be json")
+
+    } else {
+      doc.text()
+        .then(text => onComplete(text))
+        .catch(err => onError("The Loading a file is failed", `Details: ${err}`))
+    }
   }
 }

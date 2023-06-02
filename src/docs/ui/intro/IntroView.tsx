@@ -9,13 +9,13 @@ import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-jsx';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-python';
-import {AuthPanel} from "../auth/AuthPanel";
+import {Header} from "../header/Header";
 
 export const IntroView = observer(() => {
   console.log("new IntroView")
 
-  return <>
-    <AuthPanel/>
+  return <div className="introView">
+    <Header/>
     <div className="aboutContainer">
       <div className="about">
         <span>{parse(aboutTxt)}</span>
@@ -31,7 +31,7 @@ export const IntroView = observer(() => {
       </div>
     </div>
 
-    <div className="introView">
+    <div className="markdownExamples">
       <p className="markdownSyntax">Examples of Markdown formatting</p>
       <MarkdownEditor text={headings} title="0.Headings, font style" autoFocus/>
       <MarkdownEditor text={blockquote} title="1.Blockquote"/>
@@ -39,7 +39,7 @@ export const IntroView = observer(() => {
       <MarkdownEditor text={lists} title="3.Lists"/>
       <MarkdownEditor text={links} title="4.Links"/>
     </div>
-  </>
+  </div>
 })
 
 const aboutTxt = `/***
@@ -126,7 +126,7 @@ const MarkdownEditor = ({text, title, autoFocus}: { text: string, title: string,
       </div>
       <div className="markdownResult">
         {value &&
-          <MarkdownText value={value}/>
+        <MarkdownText value={value}/>
         }
       </div>
       <div className="vgap"/>
@@ -139,8 +139,8 @@ const MarkdownText = ({value}: { value: string }) => {
   //Use random key to force a new rendering of the code fragment in ReactMarkdown
   const key = Math.random()
   useEffect(() => {
-      console.log("--Prism.highlightAll")
-      Prism.highlightAll()
+    console.log("--Prism.highlightAll")
+    Prism.highlightAll()
   })
   return <ReactMarkdown key={key}>{value}</ReactMarkdown>
 }

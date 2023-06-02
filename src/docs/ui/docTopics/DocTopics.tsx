@@ -12,7 +12,7 @@ export const DocTopics = () => {
 }
 
 const EmptyDocTopicsView = () => {
-  return <p>No doc is selected</p>
+  return <></>
 }
 
 const DocTopicsView = observer(() => {

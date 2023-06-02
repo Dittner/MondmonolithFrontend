@@ -1,15 +1,16 @@
+import spinner from '../../../resources/SVG/spinner.svg';
+import smallSpinner from '../../../resources/SVG/smallSpinner.svg';
+
 export const LoadingSpinner = () => {
   return (
-    <div className="spinner-container">
-      <div className="spinner"></div>
+    <div className="spinnerContainer">
+      <img src={spinner} className="spinner" alt="spinner"/>
     </div>
-  );
+  )
 }
 
 export const SmallSpinner = () => {
   return (
-    <div className="smallSpinner-container">
-      <div className="smallSpinner"></div>
-    </div>
+    <img src={smallSpinner} className="smallSpinner" alt="spinner"/>
   );
 }

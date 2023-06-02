@@ -41,7 +41,7 @@ export const TextArea = ({text, onApply, onCancel, autoFocus}: TextAreaProps) =>
   const adjustScroller = () => {
     if (ta && ta.current) {
       ta.current.style.height = "inherit";
-      ta.current.style.height = `${ta.current.scrollHeight + 0}px`;
+      ta.current.style.height = `${ta.current.scrollHeight + 5}px`;
     }
   }
   const onChange = (event: any) => {

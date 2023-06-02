@@ -1,38 +1,47 @@
 
+div.tools {
+  height: 40px;
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: right;
+  gap: 5px;
+}
+
+div.withBg {
+  background-color: var(--AppBg);
+}
+
 /* Dropdown */
 
-.login.dropDownContainer {
+.loginDropDown {
   display: flex;
   justify-content: right;
 }
 
-.login.dropDownList {
+.loginDropDown .dropDownList {
   position: absolute;
   top: 40px;
   width: 250px;
   height: fit-content;
-  padding-top: 20px;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-bottom: 5px;
-  background-color: var(--DocListBg);
+  padding: 20px;
+  background-color: var(--PanelBg);
   border-radius: 10px;
   box-shadow: 0 10px 20px #00000020;
 }
 
-.login.dropDownLbl {
-  font-size: 1rem;
+.loginDropDown .dropDownLbl {
+  font-weight: var(--BtnWeight);
   border: none;
   background: none;
-  color: var(--Red);
+  color: var(--BtnColor);
 }
 
-.login.dropDownLbl:hover,
-.login.dropDownLbl-opened {
-  font-size: 1rem;
-  -webkit-appearance: none;
-  appearance: none;
-  color: var(--Text);
+.loginDropDown .dropDownLbl:hover,
+.loginDropDown .dropDownLbl-opened {
+  font-weight: var(--BtnWeight);
+  color: var(--BtnHoverColor);
   cursor: pointer;
 }
 

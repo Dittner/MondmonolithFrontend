@@ -1,4 +1,4 @@
-import {UUID} from "../infrastructure/UIDGenerator";
+import {UUID} from "../UIDGenerator";
 
 export function generateDocs() {
   const info = [];
@@ -11,7 +11,7 @@ export function generateDocs() {
 }
 
 export function generateReactDoc() {
-  const doc = {uid: "react", title: "React", directory: "FRONTEND", pages: {}}
+  const doc = {uid: "react", title: "React", directory: "Frontend", pages: {}}
   const page1 = {uid: UUID(), title: "useEffect", blocks: {}}
 
   const pageBlock11 = {uid: UUID(), data: ""}
@@ -84,7 +84,7 @@ export function RepoMenu({ repositories,  onSelect = f => f}) {
 }
 
 export function generateJavaDoc() {
-  const doc = {uid: "java", title: "Java", directory: "BACKEND", pages: {}};
+  const doc = {uid: "java", title: "Java", directory: "Backend", pages: {}};
 
   const page1 = {uid: UUID(), title: "Map<,>", blocks: {}}
 
@@ -146,7 +146,7 @@ try (Stream<String> lines = Files.lines(dictionary)) {
 }
 
 export function generateJSDoc() {
-  const doc = {uid: "js", title: "JavaScript", directory: "FRONTEND", pages:{}};
+  const doc = {uid: "js", title: "JavaScript", directory: "Frontend", pages: {}};
 
   const page1 = {uid: UUID(), title: "Promise", blocks: {}}
 

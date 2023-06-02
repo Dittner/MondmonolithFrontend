@@ -10,7 +10,7 @@ import 'prismjs/components/prism-jsx';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-python';
 import {DocLoadStatus, Page, PageBlock} from "../../domain/DomainModel";
-import {LoadStatus, YesNoDialog} from "../../DocsContext";
+import {LoadStatus} from "../../DocsContext";
 import {TextArea} from "../common/Input"
 import ReactMarkdown from "react-markdown";
 
@@ -22,7 +22,9 @@ export const DocBody = () => {
 }
 
 const EmptyDoc = () => {
-  return <p>No doc is selected</p>
+  return <div className="emptyDoc">
+    <p>No doc is selected</p>
+  </div>
 }
 
 const PageList = observer(() => {
@@ -35,9 +37,21 @@ const PageList = observer(() => {
 
   useEffect(() => {
     if (doc?.loadStatus === DocLoadStatus.HEADER_LOADED) {
-      docsContext.repo.fetchDoc(doc.uid)
+      docsContext.docsLoader.fetchDoc(doc.uid)
     }
   })
+
+  const exportDocAsJSON = () => {
+    if (doc) {
+      const docJSON = JSON.stringify(doc.serialize())
+      const blob = new Blob([docJSON], {type: "text/plain"});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.download = doc.uid + ".json";
+      link.href = url;
+      link.click();
+    }
+  }
 
   if (doc?.loadStatus === DocLoadStatus.LOADING || docsContext.dirsLoadStatus === LoadStatus.LOADING) {
     return <LoadingSpinner/>
@@ -52,6 +66,11 @@ const PageList = observer(() => {
       {doc.pages.map(page => {
         return <PageView key={page.uid} page={page}/>
       })}
+
+      <button id="exportBtn"
+              className="btn"
+              onClick={exportDocAsJSON}>Export as JSON
+      </button>
     </div>
   )
 })
@@ -69,21 +88,23 @@ const PageView = observer(({page}: { page: Page }) => {
 
 const PageTitle = observer(({page}: { page: Page }) => {
   const {editTools} = useDocsContext()
+  const isSelected = editTools.selectedItem === page
 
-  const startEdit = () => {
-    if (editTools.editMode) {
+  const selectTitle = () => {
+    if (editTools.editMode && !isSelected) {
+      editTools.selectedItem = page
+    }
+  }
+
+  const editPage = (e: any) => {
+    e.stopPropagation()
+    if (editTools.editMode && isSelected) {
       page.isEditing = true
     }
   }
 
-  const selectTitle = () => {
-    if (editTools.editMode) {
-      editTools.selectedItem = editTools.selectedItem === page ? undefined : page
-    }
-  }
-
   let bgClassName: string = ""
-  if (editTools.editMode && editTools.selectedItem === page) {
+  if (editTools.editMode && isSelected) {
     bgClassName = "blockBgSelected"
   } else if (editTools.editMode) {
     bgClassName = "blockBg"
@@ -96,9 +117,9 @@ const PageTitle = observer(({page}: { page: Page }) => {
   return (
     <div className="blockContainer"
          onClick={selectTitle}
-         onDoubleClick={startEdit}>
+         onDoubleClick={editPage}>
       <h1 className="docPageTitle">{page.title}</h1>
-      <div className={bgClassName}></div>
+      <div className={bgClassName}/>
     </div>
   )
 })
@@ -121,7 +142,7 @@ const PageTitleEditor = observer(({page}: { page: Page }) => {
 })
 
 const PageBlockView = observer(({block}: { block: PageBlock }) => {
-  const {editTools, app} = useDocsContext()
+  const {editTools} = useDocsContext()
   const isSelected = editTools.selectedItem === block
 
   useEffect(() => {
@@ -129,42 +150,15 @@ const PageBlockView = observer(({block}: { block: PageBlock }) => {
   })
 
   const selectBlock = (e: any) => {
-    e.stopPropagation()
-    if (editTools.editMode) {
-      editTools.selectedItem = isSelected ? undefined : block
+    if (editTools.editMode && !isSelected) {
+      editTools.selectedItem = block
     }
   }
 
-  const editBlock = (e: any) => {
+  const editPage = (e: any) => {
     e.stopPropagation()
-    if (editTools.editMode) {
+    if (editTools.editMode && isSelected) {
       block.isEditing = true
-    }
-  }
-
-  const moveBlockUp = (e: any) => {
-    e.stopPropagation()
-    if (editTools.editMode) {
-      block.page?.moveBlockUp(block)
-    }
-  }
-
-  const moveBlockDown = (e: any) => {
-    e.stopPropagation()
-    if (editTools.editMode) {
-      block.page?.moveBlockDown(block)
-    }
-  }
-
-  const deleteBlock = (e: any) => {
-    e.stopPropagation()
-    if (editTools.editMode && block) {
-      app.yesNoDialog = new YesNoDialog(
-        "Are you sure you want to remove this page's block?",
-        () => {
-          block.page?.deleteBlock(block)
-        }
-      )
     }
   }
 
@@ -183,22 +177,10 @@ const PageBlockView = observer(({block}: { block: PageBlock }) => {
 
   return (
     <div className="blockContainer"
-         onClick={selectBlock}>
-      {editTools.editMode && isSelected &&
-        <div className="tools">
-          <button className="icon-edit"
-                  onClick={editBlock}></button>
-          <button className="icon-up"
-                  onClick={moveBlockUp}></button>
-          <button className="icon-down"
-                  onClick={moveBlockDown}></button>
-          <button className="icon-delete"
-                  onClick={deleteBlock}></button>
-        </div>
-      }
-
+         onClick={selectBlock}
+         onDoubleClick={editPage}>
       <ReactMarkdown>{block.text}</ReactMarkdown>
-      <div className={bgClassName}></div>
+      <div className={bgClassName}/>
     </div>
   )
 })

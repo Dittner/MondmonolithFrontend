@@ -1,8 +1,9 @@
-import {action, computed, makeObservable, observable} from 'mobx';
+import {action, makeObservable, observable} from 'mobx';
 import {Directory, Doc, EditTools, User} from "./domain/DomainModel";
-import {DemoDocsRepo, DocsRepo} from "./repo/Repository";
 import {DomainService} from "./domain/DomainService";
 import {UUID} from "./infrastructure/UIDGenerator";
+import {DemoDocsRepo, DocsLoader} from "./infrastructure/loader/DocsLoader";
+import {DocsParser, DocsParserV1} from "./infrastructure/parser/DocsParser";
 
 export enum LoadStatus {
   PENDING = "PENDING",
@@ -16,15 +17,25 @@ export class DocsContext {
   @observable readonly editTools: EditTools;
   @observable dirs: Directory[] = [];
   @observable dirsLoadStatus: LoadStatus = LoadStatus.PENDING
-  @observable app: App
+  @observable readonly app: App
+  readonly docsParser: DocsParser
+  readonly docsLoader: DocsLoader
+  readonly domainService: DomainService
 
-  repo: DocsRepo
-  domainService: DomainService
+  static self: DocsContext
 
-  constructor() {
+  static init() {
+    if (!DocsContext.self) {
+      DocsContext.self = new DocsContext()
+    }
+    return DocsContext.self
+  }
+
+  private constructor() {
     this.user = new User()
     this.editTools = new EditTools()
-    this.repo = new DemoDocsRepo(this)
+    this.docsParser = new DocsParserV1()
+    this.docsLoader = new DemoDocsRepo(this)
     this.domainService = new DomainService(this)
     this.app = new App()
     makeObservable(this)
@@ -54,6 +65,7 @@ export class App {
   readonly uid
   @observable isDocListShown = false;
   @observable yesNoDialog: YesNoDialog | undefined = undefined;
+  @observable infoDialog: InfoDialog | undefined = undefined;
 
   constructor() {
     this.uid = UUID()
@@ -70,5 +82,15 @@ export class YesNoDialog {
     this.text = text
     this.onApply = onApply
     this.onCancel = onCancel
+  }
+}
+
+export class InfoDialog {
+  readonly title: string;
+  readonly text: string;
+
+  constructor(title: string, text: string) {
+    this.title = title
+    this.text = text
   }
 }

@@ -5,18 +5,19 @@
   margin: 0;
   padding: 0;
   cursor: pointer;
+  font-size: 1rem;
+  font-weight: var(--BtnWeight);
 }
 
 .btn,
 .btn:link,
 .btn:visited {
-  height: 50px;
+  height: 30px;
   width: min-content;
-  font-size: 1rem;
   border: none;
   background-color: transparent;
   border-radius: 30px;
-  color: var(--Red);
+  color: var(--BtnColor);
   text-align: center;
   text-decoration: none;
   white-space: pre;
@@ -24,11 +25,11 @@
 }
 
 .btn:hover {
-  color: var(--Text);
+  color: var(--BtnHoverColor);
 }
 
 .btn:disabled {
-  color: var(--TextDark);
+  color: var(--BtnDisabledColor);
   cursor: not-allowed;
 }
 
@@ -47,13 +48,12 @@ div.input_container {
 div.input_container input[type=text],
 div.input_container input[type=password] {
   width: 100%;
-  height: 50px;
+  height: 45px;
   padding-left: 12px;
   padding-right: 12px;
   padding-top: 14px;
   margin: 0;
   font-size: 1rem;
-  line-height: 1.6rem;
   display: block;
   background: none;
   border: 1px solid var(--InputBg);
@@ -66,6 +66,7 @@ div.input_container input[type=password] {
 
 div.input_container input[type=text]:focus,
 div.input_container input[type=password]:focus {
+  border: 1px solid var(--InputBg);
   border-bottom: 1px solid var(--Red);
   color: var(--Text);
   transition: border-bottom 300ms;
@@ -114,8 +115,7 @@ textarea:focus {
 /*--------- LOADING ---------*/
 /******************************/
 
-/* Spinner */
-.spinner-container {
+.spinnerContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -123,72 +123,35 @@ textarea:focus {
   height: 100%;
 }
 
-.spinner,
-.spinner:after {
-  border-radius: 50%;
-}
-
 .spinner {
-  width: 30px;
-  height: 30px;
-  display: inline-block;
-  border: 3px solid #789ba933;
-  border-top: 3px solid var(--Header);
-  border-left: 3px solid var(--Header);
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-animation: load8 1s infinite linear;
-  animation: load8 1s infinite linear;
-}
-
-@-webkit-keyframes load8 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes load8 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-
-.smallSpinner-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50px;
-  height: 50px;
-}
-
-.smallSpinner,
-.smallSpinner:after {
-  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  pointer-events: none;
 }
 
 .smallSpinner {
-  width: 15px;
-  height: 15px;
+  height: 20px;
+  width: 20px;
   margin: 5px;
-  display: inline-block;
-  border-top: 1px solid var(--Red);
-  border-left: 1px solid var(--Red);
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-animation: load8 0.75s infinite linear;
-  animation: load8 0.75s infinite linear;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spinner,
+  .smallSpinner {
+    animation: AppSpinnerAnimation infinite 500ms linear;
+  }
+}
+
+@keyframes AppSpinnerAnimation {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
 
 
@@ -200,7 +163,7 @@ div.vstack {
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: right;
+  justify-content: center;
   align-items: flex-start;
   gap: 10px;
 }
@@ -233,6 +196,7 @@ div.vstack.halignRight {
   align-items: flex-end;
 }
 
+
 div.hstack {
   height: 100%;
   display: flex;
@@ -255,6 +219,7 @@ div.hstack.valignBase {
 div.hstack.valignBottom {
   align-items: flex-end;
 }
+
 
 div.hstack.halignLeft {
   justify-content: flex-start;
@@ -279,3 +244,8 @@ div.spacer {
 /******************************/
 /*---------  ---------*/
 /******************************/
+
+div.horSeparator {
+  height: 1px;
+  border-bottom: 1px solid #ff4178;
+}

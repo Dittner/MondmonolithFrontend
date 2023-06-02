@@ -1,10 +1,10 @@
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import {DocsView} from "./docs/ui/DocsView";
 import {DocsContext} from "./docs/DocsContext";
 import React from "react";
 import {MainView} from "./main/MainView";
 
-const docsContext = React.createContext(new DocsContext())
+const docsContext = React.createContext(DocsContext.init())
 export const useDocsContext = () => React.useContext(docsContext);
 
 export default function App() {

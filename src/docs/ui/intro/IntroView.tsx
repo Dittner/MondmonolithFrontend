@@ -10,36 +10,55 @@ import 'prismjs/components/prism-jsx';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-python';
 import {Header} from "../header/Header";
+import {HAlign, HStack, VAlign, VStack} from "../common/Stack";
+import {VSeparator} from "../common/Separator";
+import {Spacer} from "../common/Spacer";
+import {useDocsContext} from "../../../App";
+import {AppSize} from "../../application/Application";
+import {build, SelectorRuleBuilder} from "../../application/NoCSS";
 
 export const IntroView = observer(() => {
   console.log("new IntroView")
 
-  return <div className="introView">
-    <Header/>
-    <div className="aboutContainer">
-      <div className="about">
-        <span>{parse(aboutTxt)}</span>
-      </div>
-      <div className="highlightFunc">
-        <span className="token keyword">func </span>
-        <span className="token function">highlight</span>
-        <span className="token symbol">(</span>
-        <span>your_notes</span>
-        <span className="token symbol">: [</span>
-        <span className="token class">String</span>
-        <span className="token symbol">{"]) {...}     "}</span>
-      </div>
+  return <VStack halign={HAlign.CENTER}
+                 valign={VAlign.CENTER}
+                 gap="50px"
+                 paddingTop="50px"
+                 paddingBottom="50px"
+                 paddingLeft="20px"
+                 paddingRight="20px">
+
+    <Header builder={build()
+      .width("100%")
+      .height("50px")
+      .top("0")
+      .fixed()}/>
+
+    <div className="about">
+      <span>{parse(aboutTxt)}</span>
     </div>
 
-    <div className="markdownExamples">
+    <div className="highlightFunc">
+      <span className="token keyword">func </span>
+      <span className="token function">highlight</span>
+      <span className="token symbol">(</span>
+      <span>your_notes</span>
+      <span className="token symbol">: [</span>
+      <span className="token class">String</span>
+      <span className="token symbol">{"]) {...}"}</span>
+    </div>
+
+    <VStack halign={HAlign.STRETCH}
+            valign={VAlign.TOP}
+            maxWidth={"1700px"}>
       <p className="markdownSyntax">Examples of Markdown formatting</p>
       <MarkdownEditor text={headings} title="0.Headings, font style" autoFocus/>
       <MarkdownEditor text={blockquote} title="1.Blockquote"/>
       <MarkdownEditor text={code} title="2.Code"/>
       <MarkdownEditor text={lists} title="3.Lists"/>
       <MarkdownEditor text={links} title="4.Links"/>
-    </div>
-  </div>
+    </VStack>
+  </VStack>
 })
 
 const aboutTxt = `/***
@@ -102,7 +121,8 @@ const links = `## Much more info:
 * [React-Markdown](https://remarkjs.github.io/react-markdown/)
 * [Markdown basic syntax](https://www.markdownguide.org/basic-syntax/)`
 
-const MarkdownEditor = ({text, title, autoFocus}: { text: string, title: string, autoFocus?: boolean }) => {
+const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title: string, autoFocus?: boolean }) => {
+  const {app} = useDocsContext()
   console.log("new MarkdownEditor")
   const [value, setValue] = useState(text)
   const apply = (newValue: string) => {
@@ -115,32 +135,85 @@ const MarkdownEditor = ({text, title, autoFocus}: { text: string, title: string,
     console.log("cancel")
   }
 
-  return (
-    <div className="markdownEditor">
-      <p className="markdownTitle">{title}</p>
-      <div className="markdownArea">
+  if (app.size === AppSize.S) {
+    return (
+      <VStack halign={HAlign.STRETCH}
+              valign={VAlign.TOP}
+              gap="5px"
+              width="100%"
+              paddingLeft="20px"
+              paddingRight="20px">
+
+        <p className="markdownTitle">{title}</p>
+
         <TextArea text={value}
                   onApply={apply}
                   onCancel={cancel}
-                  autoFocus={autoFocus}/>
-      </div>
-      <div className="markdownResult">
-        {value &&
-        <MarkdownText value={value}/>
-        }
-      </div>
-      <div className="vgap"/>
-    </div>
-  )
-}
+                  autoFocus={autoFocus}
+                  builder={build()
+                    .width("100%")
+                    .paddingHorizontal("20px")
+                    .paddingVertical("10px")}/>
 
-const MarkdownText = ({value}: { value: string }) => {
+        <HStack halign={HAlign.LEFT}
+                valign={VAlign.STRETCH}
+                paddingLeft="20px"
+                paddingRight="20px"
+                gap="50px">
+
+          <VSeparator/>
+
+          {value &&
+          <MarkdownText value={value}
+                        builder={build()
+                          .width("100%")}/>
+          }
+        </HStack>
+
+        <Spacer height="50px"/>
+      </VStack>
+    )
+  }
+
+  return (
+    <>
+      <p className="markdownTitle">{title}</p>
+      <HStack halign={HAlign.STRETCH}
+              valign={VAlign.STRETCH}
+              paddingLeft="20px"
+              paddingRight="50px"
+              gap="50px">
+        <TextArea text={value}
+                  onApply={apply}
+                  onCancel={cancel}
+                  autoFocus={autoFocus}
+                  builder={build()
+                    .width("50%")
+                    .paddingHorizontal("20px")
+                    .paddingVertical("10px")}/>
+
+        <VSeparator/>
+
+        {value &&
+        <MarkdownText value={value}
+                      builder={build().width("50%")}/>
+        }
+      </HStack>
+
+      <Spacer height="50px"/>
+    </>
+  )
+
+})
+
+const MarkdownText = ({value, builder}: { value: string, builder: SelectorRuleBuilder }) => {
   console.log("new MarkdownText")
   //Use random key to force a new rendering of the code fragment in ReactMarkdown
-  const key = Math.random()
   useEffect(() => {
     console.log("--Prism.highlightAll")
     Prism.highlightAll()
-  })
-  return <ReactMarkdown key={key}>{value}</ReactMarkdown>
+  }, [value])
+  return <div className={"markdown " + builder?.className()}>
+    <ReactMarkdown key={value}>{value}</ReactMarkdown>
+  </div>
 }

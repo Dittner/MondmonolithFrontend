@@ -1,5 +1,6 @@
-import {DocsContext, InfoDialog, LoadStatus, YesNoDialog} from "../../DocsContext";
-import {Directory, Doc, DocLoadStatus, Page, PageBlock} from "../../domain/DomainModel";
+import {DocsContext, LoadStatus} from "../../DocsContext";
+import {InfoDialog, YesNoDialog} from "../../application/Application";
+import {Directory, Doc, DocLoadStatus} from "../../domain/DomainModel";
 import {action} from "mobx";
 import javaDemoDoc from "../../../resources/demoDocs/java.json"
 import jsDemoDoc from "../../../resources/demoDocs/js.json"
@@ -89,22 +90,6 @@ export class DemoDocsRepo implements DocsLoader {
     }
   }
 
-  private parseRawPages(rawPages: any): Page[] {
-    const res: Page[] = []
-    const sortedPages = rawPages ? [...rawPages].sort(this.sortByKey("title")) : []
-    sortedPages.forEach(p => {
-      const pageBlocks: PageBlock[] = []
-      p.blocks.forEach((b: any) => {
-        pageBlocks.push(new PageBlock(b.uid, b.data))
-      })
-      const page = new Page(p.uid, p.title)
-      page.init(pageBlocks)
-      res.push(page)
-    })
-    return res
-  }
-
-
   @action loadDocFromDisc(doc: File) {
     const onError = (title: string, msg: string): void => {
       this.context.app.infoDialog = new InfoDialog(title, msg)
@@ -134,11 +119,11 @@ export class DemoDocsRepo implements DocsLoader {
             this.context.dirs.push(dir)
           }
         } catch (e) {
-          onError("The file is damaged", `An error has occurred while parsing a file. Details: ${e}`)
+          onError("The file is damaged", `An error has occurred while reading a file.\n${e}`)
         }
 
       } catch (e) {
-        onError("The file is damaged", `Details: ${e}`)
+        onError("The file is damaged", `An error has occurred while parsing the json-file to object.\n${e}`)
       }
     }
 

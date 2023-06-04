@@ -7,11 +7,14 @@ import {DocBody} from "./docBody/DocBody";
 import {DocTopics} from "./docTopics/DocTopics";
 import "./style/code.css";
 import {Header} from "./header/Header";
-import {HAlign, HStack, VAlign} from "./common/Stack";
+import {HAlign, HStack, VAlign, VStack} from "./common/Stack";
+import {AppSize, LayoutLayer} from "../application/Application";
+import {build} from "../application/NoCSS";
 
 export const DocsView = observer(() => {
   console.log("DocsView init");
   const docsContext = useDocsContext()
+  const drawLayoutLines = false
 
   useEffect(() => {
     docsContext.docsLoader.fetchDirectories()
@@ -35,25 +38,183 @@ export const DocsView = observer(() => {
     }
   }, [pathname, hash, key]); // do this on route change
 
-  return (
-    <>
-      <ModalView/>
-      <div className="docsView">
-        <div className="header">
-          <Header/>
-        </div>
-        <div className={docsContext.app.isDocListShown ? "docList" : "docList hidden"}>
-          <DocList/>
-        </div>
-        <div className="docBody">
-          <DocBody/>
-        </div>
-        <div className="docTopics">
-          <DocTopics/>
-        </div>
-      </div>
+  const headerHeight = "50px"
 
-    </>
+  if (docsContext.app.size === AppSize.S) {
+    return (
+      <>
+        <Header builder={build()
+          .width("100vw")
+          .height(headerHeight)
+          .paddingHorizontal("20px")
+          .layer(LayoutLayer.HEADER) //z-Index
+          .fixed()}
+        />
+
+        <DocList builder={build()
+          .left(docsContext.app.isDocListShown ? "0" : "-350px")
+          .width("350px")
+          .height("100vh")
+          .layer(LayoutLayer.DOC_LIST)
+          .animate("left 0.5s")
+          .enableOwnScroller()
+          .fixed()
+        }/>
+
+        <DocBody builder={build()
+          .width("100vw")
+          .height("100%")
+          .top(headerHeight)
+          .absolute()
+        }/>
+
+        <ModalView/>
+
+        {drawLayoutLines &&
+        <>
+          <div className={"appLayout S " + build()
+            .width("100vw")
+            .height("1px")
+            .top(headerHeight)
+            .fixed()
+            .className()}
+          />
+
+          <div className={"appLayout S " + build()
+            .width("1px")
+            .height("100vh")
+            .left("350px")
+            .fixed()
+            .className()}
+          />
+        </>
+        }
+
+      </>
+    )
+  }
+
+  if (docsContext.app.size === AppSize.M) {
+    return (
+      <div>
+        <Header builder={build()
+          .width("70vw")
+          .height(headerHeight)
+          .left("30vw")
+          .layer(LayoutLayer.HEADER)
+          .fixed()}
+        />
+
+        <DocList builder={build()
+          .width("30vw")
+          .height("100vh")
+          .layer(LayoutLayer.DOC_LIST)
+          .enableOwnScroller()
+          .fixed()
+        }/>
+
+        <DocBody builder={build()
+          .width("70vw")
+          .height("100%")
+          .top(headerHeight)
+          .left("30vw")
+          .absolute()
+        }/>
+
+        <ModalView/>
+
+        {drawLayoutLines &&
+        <>
+          <div className={"appLayout M " + build()
+            .width("100vw")
+            .height("1px")
+            .top(headerHeight)
+            .fixed()
+            .className()}
+          />
+
+          <div className={"appLayout M " + build()
+            .width("1px")
+            .height("100vh")
+            .left("30vw")
+            .fixed()
+            .className()}
+          />
+        </>
+        }
+
+
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <Header builder={build()
+        .width("80vw")
+        .height(headerHeight)
+        .left("20vw")
+        .layer(LayoutLayer.HEADER)
+        .fixed()}
+      />
+
+      <DocList builder={build()
+        .width("20vw")
+        .height("100vh")
+        .layer(LayoutLayer.DOC_LIST)
+        .enableOwnScroller()
+        .fixed()
+      }/>
+
+      <DocBody builder={build()
+        .width("60vw")
+        .height("100%")
+        .top(headerHeight)
+        .left("20vw")
+        .absolute()
+      }/>
+
+      <DocTopics builder={build()
+        .width("20vw")
+        .height("100vh")
+        .left("80vw")
+        .top(headerHeight)
+        .enableOwnScroller()
+        .fixed()
+      }/>
+
+      <ModalView/>
+
+      {drawLayoutLines &&
+      <>
+        <div className={"appLayout L " + build()
+          .width("100vw")
+          .height("1px")
+          .top(headerHeight)
+          .fixed()
+          .className()}
+        />
+
+        <div className={"appLayout L " + build()
+          .width("1px")
+          .height("100vh")
+          .left("20vw")
+          .fixed()
+          .className()}
+        />
+
+        <div className={"appLayout L " + build()
+          .width("1px")
+          .height("100vh")
+          .left("80vw")
+          .fixed()
+          .className()}
+        />
+      </>
+      }
+
+
+    </div>
   )
 })
 
@@ -78,35 +239,47 @@ export const ModalView = observer(() => {
     }
   }
 
-  return <>
-    {app.yesNoDialog &&
-    <div className="modalView">
-      <div className="yesNoDialog">
-        <p>{app.yesNoDialog.text}</p>
+  if (!app.yesNoDialog && !app.infoDialog)
+    return <></>
 
-        <HStack halign={HAlign.CENTER} valign={VAlign.TOP} gap="50px">
-          <button onClick={cancel}
-                  className="btn">No
-          </button>
-          <button className="btn"
-                  onClick={apply}>Yes
-          </button>
-        </HStack>
-      </div>
-    </div>
+  return <VStack className={"modalView"}
+                 halign={HAlign.CENTER}
+                 valign={VAlign.CENTER}
+                 width="100%"
+                 height="100%"
+                 layer={LayoutLayer.MODAL}
+                 fixed>
+
+    {app.yesNoDialog &&
+    <VStack className="yesNoDialog"
+            halign={HAlign.STRETCH}
+            valign={VAlign.CENTER}
+            width="350px" padding="30px" gap="30px">
+      <p>{app.yesNoDialog.text}</p>
+
+      <HStack halign={HAlign.CENTER} valign={VAlign.TOP} gap="50px">
+        <button onClick={cancel}
+                className="btn">No
+        </button>
+        <button className="btn"
+                onClick={apply}>Yes
+        </button>
+      </HStack>
+    </VStack>
     }
 
     {app.infoDialog &&
-    <div className="modalView">
-      <div className="yesNoDialog">
-        <h2>{app.infoDialog.title}</h2>
-        <p>{app.infoDialog.text}</p>
+    <VStack className="yesNoDialog"
+            halign={HAlign.CENTER}
+            valign={VAlign.CENTER}
+            width="350px" padding="30px" gap="30px">
+      <h2>{app.infoDialog.title}</h2>
+      <p>{app.infoDialog.text}</p>
 
-        <button onClick={apply}
-                className="btn">OK
-        </button>
-      </div>
-    </div>
+      <button onClick={apply}
+              className="btn">OK
+      </button>
+    </VStack>
     }
-  </>
+  </VStack>
 })

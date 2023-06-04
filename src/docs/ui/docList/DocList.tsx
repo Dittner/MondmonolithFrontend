@@ -2,15 +2,18 @@ import './docList.css';
 import {NavLink} from "react-router-dom";
 import {ChangeEvent, useRef, useState} from "react";
 import {useDocsContext} from "../../../App";
-import {LoadStatus} from "../../DocsContext";
+import {AppSize} from "../../application/Application";
 import {observer} from "mobx-react";
 import {Directory, Doc} from "../../domain/DomainModel";
 import {SmallSpinner} from "../common/Loading";
-import {HAlign, HStack, VAlign} from "../common/Stack";
+import {HAlign, HStack, VAlign, VStack} from "../common/Stack";
 import {Input} from "../common/Input";
 import {Spacer} from "../common/Spacer";
+import {LoadStatus} from "../../DocsContext";
+import {HeaderVerSep} from "../header/Header";
+import {SelectorRuleBuilder} from "../../application/NoCSS";
 
-export const DocList = observer(() => {
+export const DocList = observer(({builder}: { builder?: SelectorRuleBuilder }) => {
   console.log("new DocList")
   const [isNewDocCreating, setIsNewDocCreating] = useState(false)
 
@@ -35,53 +38,60 @@ export const DocList = observer(() => {
     return <></>
   }
   return (
-    <div className='docListContainer'>
-      <HStack halign={HAlign.CENTER}
-              valign={VAlign.CENTER}
-              gap="0"
-              width="100%"
-              minHeight="50px"
-              paddingLeft="20px"
-              paddingRight="10px">
-        {docsContext.editTools.editMode &&
-        <>
-          <button className="btn createDoc"
-                  onClick={() => {
-                    setIsNewDocCreating(true)
-                  }}>New doc
-          </button>
+    <div className={"docList " + builder?.className()}>
+      <div className='docListContainer'>
+        <HStack halign={HAlign.CENTER}
+                valign={VAlign.CENTER}
+                gap="0"
+                width="100%"
+                minHeight="50px"
+                paddingLeft="20px"
+                paddingRight="10px">
+          {docsContext.editTools.editMode &&
+          <>
+            <button className="btn createDoc"
+                    onClick={() => {
+                      setIsNewDocCreating(true)
+                    }}>New doc
+            </button>
 
-          <p className="separator">{' | '}</p>
+            <HeaderVerSep/>
 
-          <DocPicker/>
-        </>
+            <DocPicker/>
+          </>
+          }
+
+          <Spacer/>
+
+          {docsContext.app.isDocListShown && docsContext.app.size === AppSize.S &&
+          <button className="icon-close withoutBg"
+                  onClick={hideDocList}/>
+          }
+        </HStack>
+
+        {isNewDocCreating &&
+        <DocEditForm doc={null}
+                     onCancel={onCancel}
+                     onApply={onApply}/>
         }
 
-        <Spacer/>
+        {docsContext.dirs.map(dir => {
+          return <ul key={dir.uid}>
+            <DirectoryView dir={dir}/>
+            {dir.docs.map(doc => {
+              return <DocLink key={doc.uid} doc={doc}/>
+            })}
+          </ul>
+        })}
+      </div>
 
-        <button className="icon-close withoutBg hideDocListBtn"
-                onClick={hideDocList}/>
-      </HStack>
-
-      {isNewDocCreating &&
-      <DocEditForm doc={null}
-                   onCancel={onCancel}
-                   onApply={onApply}/>
-      }
-
-      {docsContext.dirs.map(dir => {
-        return <ul key={dir.uid}>
-          <DirectoryView dir={dir}/>
-          {dir.docs.map(doc => {
-            return <DocLink key={doc.uid} doc={doc}/>
-          })}
-        </ul>
-      })}
     </div>
+
   )
 })
 
 const DocPicker = observer(() => {
+  const [value, setValue] = useState("")
   const docsContext = useDocsContext()
   const inputRef = useRef<HTMLInputElement | null>(null)
 
@@ -89,6 +99,7 @@ const DocPicker = observer(() => {
     if (e.target.files) {
       const f = e.target.files[0]
       docsContext.docsLoader.loadDocFromDisc(f)
+      setValue("")
     }
   }
 
@@ -101,7 +112,9 @@ const DocPicker = observer(() => {
             onClick={importDoc}>Import
     </button>
 
-    <input ref={inputRef} className="btn" type="file" onChange={handleFileChange} style={{display: 'none'}}/>
+    <input ref={inputRef} className="btn" type="file" onChange={handleFileChange} value={value}
+           style={{display: 'none'}}
+    />
   </>
 })
 
@@ -132,7 +145,7 @@ const DirectoryView = observer(({dir}: { dir: Directory }) => {
     <div className="dirContent">
       <p className="dirTitle">{dir.title}</p>
       {!dir.isStoring && docsContext.editTools.editMode &&
-      <button className="edit icon-edit"
+      <button className="edit icon-edit withoutBg"
               onClick={startEditing}/>
       }
     </div>
@@ -171,7 +184,7 @@ const DocLink = observer((props: any) => {
       <SmallSpinner/>
       }
       {!doc.isStoring && docsContext.editTools.editMode &&
-      <button className="edit icon-edit"
+      <button className="edit icon-edit withoutBg"
               onClick={startEditing}/>
       }
     </div>
@@ -195,21 +208,27 @@ const DocEditForm = (props: any) => {
   }
 
   return (
-    <div className='editForm'>
-      <Input type="text"
-             defaultValue={newDocTitle}
-             placeholder="Doc's title"
-             onChange={setNewDocTitle}
-             onSubmitted={apply}
-             autoFocus/>
-
-      <Input type="text"
-             defaultValue={newDirTitle}
-             placeholder="Directory"
-             onChange={setNewDirTitle}
-             onSubmitted={apply}/>
-
+    <VStack className="editForm"
+            halign={HAlign.STRETCH}
+            valign={VAlign.CENTER}
+            padding="20px">
       <HStack halign={HAlign.CENTER} valign={VAlign.CENTER}>
+        <Input type="text"
+               defaultValue={newDocTitle}
+               titel="Doc's title"
+               onChange={setNewDocTitle}
+               onSubmitted={apply}
+               autoFocus/>
+
+        <Input type="text"
+               defaultValue={newDirTitle}
+               titel="Directory"
+               onChange={setNewDirTitle}
+               onSubmitted={apply}/>
+      </HStack>
+
+
+      <HStack halign={HAlign.CENTER} valign={VAlign.CENTER} gap="50px">
         <button onClick={cancel}
                 className="btn">Cancel
         </button>
@@ -221,7 +240,8 @@ const DocEditForm = (props: any) => {
       {doc?.storeWithError &&
       <p className="errMsg">{doc.storeWithError}</p>
       }
-    </div>
+    </VStack>
+
   )
 }
 
@@ -242,18 +262,19 @@ const DirEditForm = (props: any) => {
   }
 
   return (
-    <div className='editForm'>
+    <VStack className="editForm"
+            halign={HAlign.STRETCH}
+            valign={VAlign.CENTER}
+            padding="20px">
+
       <Input type="text"
              defaultValue={title}
-             placeholder="Directory"
+             titel="Directory"
              onChange={setTitle}
              onSubmitted={apply}
              autoFocus/>
 
-      <HStack halign={HAlign.CENTER} valign={VAlign.CENTER}>
-        {dir.isStoring &&
-        <SmallSpinner/>
-        }
+      <HStack halign={HAlign.CENTER} valign={VAlign.CENTER} gap="50px">
         <button onClick={cancel}
                 className="btn">Cancel
         </button>
@@ -265,6 +286,6 @@ const DirEditForm = (props: any) => {
       {dir.storeWithError &&
       <p className="errMsg">{dir.storeWithError}</p>
       }
-    </div>
+    </VStack>
   )
 }

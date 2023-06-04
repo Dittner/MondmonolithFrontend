@@ -1,16 +1,20 @@
+import {buildAndGetClassName} from "../../application/NoCSS";
+import {LayoutLayer} from "../../application/Application";
+
 export enum VAlign {
   TOP = "TOP",
   CENTER = "CENTER",
   BASE = "BASE",
   BOTTOM = "BOTTOM",
+  STRETCH = "STRETCH",
 }
 
 export enum HAlign {
   LEFT = "LEFT",
   CENTER = "CENTER",
   RIGHT = "RIGHT",
+  STRETCH = "STRETCH",
 }
-
 
 interface StackProps {
   halign: HAlign,
@@ -19,38 +23,35 @@ interface StackProps {
   height?: string,
   minWidth?: string,
   minHeight?: string,
+  maxWidth?: string,
+  maxHeight?: string,
   gap?: string,
+  padding?: string,
   paddingLeft?: string,
   paddingRight?: string,
+  paddingHorizontal?: string,
+  paddingVertical?: string,
   paddingTop?: string,
   paddingBottom?: string,
-  children: any
+  fixed?: boolean,
+  enableOwnScroller?: boolean,
+  layer?: LayoutLayer,
+  className?: string,
+  children: any,
 }
 
-const buildStackStyle = (style: any, props: StackProps) => {
-  if (props.hasOwnProperty("width")) style["width"] = props.width
-  if (props.hasOwnProperty("height")) style["height"] = props.height
-  if (props.hasOwnProperty("minWidth")) style["minWidth"] = props.minWidth
-  if (props.hasOwnProperty("minHeight")) style["minHeight"] = props.minHeight
-  if (props.hasOwnProperty("gap")) style["gap"] = props.gap
-  if (props.hasOwnProperty("paddingLeft")) style["paddingLeft"] = props.paddingLeft
-  if (props.hasOwnProperty("paddingRight")) style["paddingRight"] = props.paddingRight
-  if (props.hasOwnProperty("paddingTop")) style["paddingTop"] = props.paddingTop
-  if (props.hasOwnProperty("paddingBottom")) style["paddingBottom"] = props.paddingBottom
-  return style
+const defVStackProps = {
+  "display": "flex",
+  "flexDirection": "column",
+  "alignItems": "flex-start",
+  "justifyContent": "center",
+  "width": "100%",
+  "gap": "10px",
+  "boxSizing": "border-box",
 }
 
 export const VStack = (props: StackProps) => {
-  const defStyle = {
-    "display": "flex",
-    "flexDirection": "column",
-    "alignItems": "flex-start",
-    "justifyContent": "center",
-    "width": "100%",
-    "gap": "10px",
-  }
-
-  const style = buildStackStyle(defStyle, props)
+  const style = {...defVStackProps, ...props}
 
   switch (props.halign) {
     case HAlign.LEFT:
@@ -62,8 +63,10 @@ export const VStack = (props: StackProps) => {
     case HAlign.RIGHT:
       style["alignItems"] = "flex-end";
       break;
+    case HAlign.STRETCH:
+      style["alignItems"] = "stretch";
+      break;
   }
-
 
   switch (props.valign) {
     case VAlign.TOP:
@@ -80,21 +83,24 @@ export const VStack = (props: StackProps) => {
       break;
   }
 
-  return <div style={style}>{props.children}</div>
+  if (props.hasOwnProperty("className"))
+    return <div className={props.className + " " + buildAndGetClassName(style)}>{props.children}</div>
+  else
+    return <div className={buildAndGetClassName(style)}>{props.children}</div>
+}
+
+const defHStackProps = {
+  "display": "flex",
+  "flexDirection": "row",
+  "alignItems": "flex-start",
+  "justifyContent": "center",
+  "height": "100%",
+  "gap": "10px",
+  "boxSizing": "border-box",
 }
 
 export const HStack = (props: StackProps) => {
-  const defStyle = {
-    "display": "flex",
-    "flexDirection": "row",
-    "alignItems": "flex-start",
-    "justifyContent": "center",
-    "height": "100%",
-    "gap": "10px",
-    "boxSizing": "border-box",
-  }
-
-  const style = buildStackStyle(defStyle, props)
+  const style = {...defHStackProps, ...props}
 
   switch (props.halign) {
     case HAlign.LEFT:
@@ -121,7 +127,13 @@ export const HStack = (props: StackProps) => {
     case VAlign.BOTTOM:
       style["alignItems"] = "flex-end";
       break;
+    case VAlign.STRETCH:
+      style["alignItems"] = "stretch";
+      break;
   }
 
-  return <div style={style}>{props.children}</div>
+  if (props.hasOwnProperty("className"))
+    return <div className={props.className + " " + buildAndGetClassName(style)}>{props.children}</div>
+  else
+    return <div className={buildAndGetClassName(style)}>{props.children}</div>
 }

@@ -5,17 +5,20 @@
   --LightGray: #DEDEDE;
   --Red: #E06C75;
   --Red25: #E06C7525;
+  --Red75: #E06C7575;
   --Yellow: #c29a5f;
   --Error: #ff4178;
   --Text: #c7d7e5;
   --TextDark: #76818d;
+  --TextDark75: #76818d75;
   --TextGreen: #a7c6d2;
   --TextBlue: #b1c5de;
-  --Header: #789ba9;
+  --PageTitle: #86b3c7;
   --DocListTextSelected: #d2e4f2;
   --PanelBg: #292f31;
   --AppBg: #23282a;
-  --DarkBg: #00000015;
+  --HeaderBg: #252a2c;
+  --DarkBg: #00000020;
   --CodeBg: #2e393f50;
   --CodeBlockBg: #2e393f20;
   --Border: #2e393f;
@@ -42,22 +45,6 @@
   background: #c1b79e;
 }
 
-.text-bold {
-  font-weight: 700;
-}
-
-.text-semi-bold {
-  font-weight: 600;
-}
-
-.text-medium {
-  font-weight: 500;
-}
-
-.text-regular {
-  font-weight: 400;
-}
-
 html {
   scroll-behavior: smooth;
   font-size: 16px;
@@ -71,6 +58,7 @@ body {
   color: var(--Text);
   background-color: var(--AppBg);
   outline: none;
+  overflow: overlay;
 }
 
 body, p, a, h1, h2, h3 {
@@ -100,6 +88,7 @@ p {
   font-size: 1rem;
   line-height: 1.7;
   font-weight: 450;
+
 }
 
 blockquote {
@@ -120,20 +109,26 @@ hr {
   border-width: 1px;
 }
 
-/* DOC VIEW LAYOUT */
+/******************************/
+/*--------- LAYOUT -----------*/
+/******************************/
 .header {
-  grid-area: headerMenu;
-  width: calc(100% - 20px);
-  display: flex;
-  align-items: center;
-  justify-content: stretch;
-  flex-direction: row;
-  position: sticky;
-  top: 0;
-  height: 50px;
-  padding-left: 10px;
-  padding-right: 10px;
   z-index: 1;
+}
+
+div.appLayout.S {
+  background-color: #eff901;
+  z-index: 100;
+}
+
+div.appLayout.M {
+  background-color: #00d3f9;
+  z-index: 100;
+}
+
+div.appLayout.L {
+  background-color: #b700f9;
+  z-index: 100;
 }
 
 .withBottomBorder {
@@ -141,140 +136,326 @@ hr {
 }
 
 .docList {
-  grid-area: docList;
   background-color: var(--PanelBg);
-  box-sizing: border-box;
-  position: sticky;
-  top: 0;
-  overflow: auto;
-  height: 100vh;
-  display: flex;
-  align-items: flex-start;
-  justify-content: right;
-}
-
-.docBody {
-  grid-area: docBody;
-  top: 0;
-  min-height: calc(100vh - 51px);
 }
 
 .docTopics {
-  grid-area: docTopics;
   border-left-width: 1px;
   border-left-style: solid;
   border-color: var(--Border);
-  position: sticky;
-  box-sizing: border-box;
-  overflow: auto;
-  top: 51px;
-  padding-top: 10px;
-  height: calc(100vh - 51px);
 }
 
-@media (max-width: 1200px) {
-  .docsView {
-    display: grid;
-    min-width: 750px;
-    grid-template-columns: repeat(1, 1fr);
-    grid-auto-rows: minmax(50px, auto);
-    grid-template-areas: "headerMenu" "docBody";
-  }
 
-  .docList {
-    position: fixed;
-    width: 300px;
-    z-index: 2;
-    box-shadow: 10px 0 20px #00000020;
-    left: 0;
-    transition: left 0.5s;
-  }
-
-  .docList.hidden {
-    left: -300px;
-    transition: left 0.5s;
-  }
-
-  .docTopics {
-    display: none;
-    position: absolute;
-  }
-
-  .showDocList {
-    display: inline-block;
-  }
-}
-
-@media (min-width: 1200px) and (max-width: 1500px) {
-  .docsView {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-auto-rows: minmax(50px, auto);
-    grid-template-areas: "docList headerMenu headerMenu headerMenu headerMenu" "docList docBody docBody docBody docBody";
-  }
-
-  .showDocList, .docTopics, .hideDocListBtn {
-    display: none;
-  }
-
-  .docList {
-    display: flex;
-  }
-}
-
-@media (min-width: 1500px) {
-  .docsView {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-auto-rows: minmax(50px, auto);
-    grid-template-areas: "docList headerMenu headerMenu headerMenu headerMenu" "docList docBody docBody docBody docTopics";
-  }
-
-  .showDocList, .hideDocListBtn {
-    display: none;
-  }
-
-  .docList, .docTopics {
-    display: flex;
-  }
-}
-
-/* *************** */
+/******************************/
+/*------- MODAL VIEW ---------*/
+/******************************/
 
 div.modalView {
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
   background-color: #00000050;
-  font-size: 100px;
-  z-index: 10;
 }
 
 div.yesNoDialog {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 30px;
-  width: 350px;
-  gap: 20px;
-  height: fit-content;
-  background-color: #333c3f;
+  background-color: #495655;
   box-shadow: 0 10px 20px #00000020;
   border-radius: 20px;
 }
 
 div.yesNoDialog p {
-  font-size: 1.25rem;
+  font-size: 1rem;
+  font-family: var(--font-family-mono);
   color: var(--Text);
+  white-space: pre-wrap;
+}
+
+div.yesNoDialog h2 {
   text-align: center;
 }
 
 div.yesNoDialog button {
   font-size: 1.25rem;
-  width: 33%;
+  min-width: 60px;
+}
+
+/******************************/
+/*--------- BUTTONS ---------*/
+/******************************/
+.btn {
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: var(--BtnWeight);
+}
+
+.btn,
+.btn:link,
+.btn:visited {
+  height: 30px;
+  width: min-content;
+  border: none;
+  background-color: transparent;
+  border-radius: 30px;
+  color: var(--BtnColor);
+  text-align: center;
+  text-decoration: none;
+  white-space: pre;
+  box-sizing: border-box;
+}
+
+.btn:hover {
+  color: var(--BtnHoverColor);
+}
+
+.btn:disabled {
+  color: var(--BtnDisabledColor);
+  cursor: not-allowed;
+}
+
+
+/******************************/
+/*--------- INPUTS ---------*/
+/******************************/
+
+div.input_container {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+div.input_container input[type=text],
+div.input_container input[type=password] {
+  width: 100%;
+  height: 45px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 1px;
+  margin: 0;
+  font-size: 1rem;
+  display: block;
+  background-color: var(--InputBg);
+  caret-color: var(--Red);
+  border: 1px solid var(--InputBg);
+  border-radius: unset;
+  color: var(--TextDark);
+  box-sizing: border-box;
+  outline: none;
+  transition: color 300ms;
+  vertical-align: bottom;
+}
+
+div.input_container input[type=text]:focus,
+div.input_container input[type=password]:focus {
+  color: var(--Text);
+  border: 1px solid var(--Border);
+  transition: color 300ms;
+}
+
+div.input_container input[type=text]:hover,
+div.input_container input[type=password]:hover {
+  border: 1px solid var(--Border);
+}
+
+p.input_title {
+  font-size: 9px;
+  color: var(--TextDark);
+  position: relative;
+  text-transform: uppercase;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--TextDark75);
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: var(--TextDark75);
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: var(--TextDark75);
+}
+
+/******************************/
+/*--------- TEXT AREA ---------*/
+/******************************/
+
+textarea {
+  font-family: var(--font-family-mono);
+  font-size: 1rem;
+  line-height: 1.6rem;
+  padding: 0;
+  margin: 0;
+  color: var(--TextGreen);
+  box-sizing: border-box;
+  border: none;
+  border-left: 5px solid var(--TextGreen);
+  border-radius: 10px;
+  background-color: var(--InputBg);
+  resize: none;
+  outline: none;
+  overflow: visible;
+  caret-color: var(--Red);
+  box-shadow: 1px 4px 4px #00000010 inset;
+  transition: border-left 300ms;
+}
+
+textarea:focus {
+  border-left: 5px solid var(--Red);
+  background-color: var(--InputBg);
+  transition: border-left 300ms;
+}
+
+/******************************/
+/*--------- LOADING ---------*/
+/******************************/
+
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.spinner {
+  height: 40px;
+  width: 40px;
+  pointer-events: none;
+}
+
+.smallSpinner {
+  height: 20px;
+  width: 20px;
+  margin: 5px;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spinner,
+  .smallSpinner {
+    animation: AppSpinnerAnimation infinite 1s linear;
+  }
+}
+
+@keyframes AppSpinnerAnimation {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+/******************************/
+/*--------- SPACER ---------*/
+/******************************/
+
+div.spacer {
+  flex-grow: 1;
+}
+
+/******************************/
+/*--------- SEPARATOR ---------*/
+/******************************/
+
+div.horSeparator {
+  background-color: var(--Border);
+}
+
+div.verSeparator {
+  background-color: var(--Border);
+}
+
+/******************************/
+/*--------- ICONS ---------*/
+/******************************/
+
+
+@font-face {
+  font-family: 'icons';
+  src: local("icons"), url("resources/fonts/icons.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icons' !important;
+  font-size: 1rem;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  background-color: transparent;
+  border: none;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button[class^="icon-"], button[class*=" icon-"] {
+  color: var(--Red);
+  padding: 0;
+  margin: 0;
+  background: var(--PanelBg);
+  border-radius: 4px;
+  min-width: 32px;
+  min-height: 32px;
+  white-space: pre;
+}
+
+button[class^="icon-"]:hover,
+button[class*=" icon-"]:hover {
+  background: var(--Border);
+  cursor: pointer;
+}
+button[class^="icon-"]:active,
+button[class*=" icon-"]:active {
+  color: var(--Text);
+  background: var(--Border);
+  cursor: pointer;
+}
+
+button[class^="icon-"]:disabled,
+button[class*=" icon-"]:disabled {
+  color: var(--TextDark);
+  background: none;
+  cursor: not-allowed;
+}
+
+button.withoutBg {
+  background: none;
+}
+
+.icon-close:before {
+  content: "\e907";
+}
+
+.icon-menu:before {
+  content: "\e905";
+}
+
+.icon-plus:before {
+  content: "\e906";
+}
+.icon-delete:before {
+  content: "\e900";
+}
+.icon-down:before {
+  content: "\e901";
+}
+.icon-edit:before {
+  content: "\e902";
+}
+.icon-search:before {
+  content: "\e903";
+}
+.icon-up:before {
+  content: "\e904";
 }

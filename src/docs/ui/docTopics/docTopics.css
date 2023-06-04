@@ -12,10 +12,10 @@
   font-family: var(--font-family-mono);
   width: 100%;
   text-decoration: none;
-  color: var(--Header);
+  color: var(--PageTitle);
   box-sizing: border-box;
 }
 
 .topicLink:hover {
-  text-decoration: underline;
+  color: var(--Text);
 }

@@ -1,5 +1,4 @@
 .docListContainer {
-  min-width: 200px;
   width: 100%;
   display: flex;
   align-items: flex-start;
@@ -37,6 +36,7 @@
 
 .docLink,
 .docLinkActive {
+  height: 50px;
   padding-left: 20px;
   align-items: center;
   display: flex;
@@ -88,18 +88,5 @@ p.errMsg {
 }
 
 .editForm {
-  width: calc(100% - 20px);
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  gap: 10px;
   background-color: var(--DarkBg);
-}
-
-.editForm * {
-  max-width: 250px;
-}
-
-.editForm button {
-  width: 33%;
 }

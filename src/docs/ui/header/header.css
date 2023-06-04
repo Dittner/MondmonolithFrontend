@@ -1,16 +1,10 @@
-
-div.tools {
-  height: 40px;
-  padding: 5px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: right;
-  gap: 5px;
+button.long {
+  min-width: 60px;
 }
 
 div.withBg {
-  background-color: var(--AppBg);
+  background-color: var(--HeaderBg);
+  border-bottom: 1px solid var(--Border);
 }
 
 /* Dropdown */
@@ -68,7 +62,7 @@ div.withBg {
   cursor: not-allowed;
 }
 
-.login fieldset{
+.login fieldset {
   border: none;
   padding: 0;
   margin: 0;
@@ -77,24 +71,19 @@ div.withBg {
   justify-content: right;
 }
 
-p.authWithError {
+p.error {
   font-size: 14px;
   color: var(--Error);
   text-align: center;
 }
 
-p.userName {
+p.textDark {
   color: var(--TextDark);
-  font-family: var(--font-family-mono);
-  white-space: pre;
-  font-size: 16px;
 }
 
-p.separator {
+p.mono {
   font-family: var(--font-family-mono);
-  color: var(--Border);
   white-space: pre;
-  font-size: 16px;
 }
 
 /* .switch */

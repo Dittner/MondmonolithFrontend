@@ -13,21 +13,22 @@ import {DocLoadStatus, Page, PageBlock} from "../../domain/DomainModel";
 import {LoadStatus} from "../../DocsContext";
 import {TextArea} from "../common/Input"
 import ReactMarkdown from "react-markdown";
+import {SelectorRuleBuilder} from "../../application/NoCSS";
 
-export const DocBody = () => {
+export const DocBody = ({builder}: { builder?: SelectorRuleBuilder }) => {
   return <Routes>
-    <Route path="/" element={<EmptyDoc/>}/>
-    <Route path=":docUID" element={<PageList/>}/>
+    <Route path="/" element={<EmptyDoc builder={builder}/>}/>
+    <Route path=":docUID" element={<PageList builder={builder}/>}/>
   </Routes>
 }
 
-const EmptyDoc = () => {
-  return <div className="emptyDoc">
+const EmptyDoc = ({builder}: { builder?: SelectorRuleBuilder }) => {
+  return <div className={"emptyDoc " + builder?.className()}>
     <p>No doc is selected</p>
   </div>
 }
 
-const PageList = observer(() => {
+const PageList = observer(({builder}: { builder?: SelectorRuleBuilder }) => {
   console.log("new PageList")
   const params = useParams()
 
@@ -54,15 +55,19 @@ const PageList = observer(() => {
   }
 
   if (doc?.loadStatus === DocLoadStatus.LOADING || docsContext.dirsLoadStatus === LoadStatus.LOADING) {
-    return <LoadingSpinner/>
+    return <div className={builder?.className()}>
+      <LoadingSpinner/>
+    </div>
   }
 
   if (!doc) {
-    return <p className="docNotFoundMsg">Doc not found</p>
+    return <div className={builder?.className()}>
+      <p className="docNotFoundMsg">Doc not found</p>
+    </div>
   }
 
   return (
-    <div>
+    <div className={builder?.className()}>
       {doc.pages.map(page => {
         return <PageView key={page.uid} page={page}/>
       })}

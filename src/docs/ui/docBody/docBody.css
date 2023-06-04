@@ -39,7 +39,7 @@
 }
 
 .docPageTitle {
-  color: var(--Header);
+  color: var(--PageTitle);
 }
 
 .docPageTitleSelectable:hover {

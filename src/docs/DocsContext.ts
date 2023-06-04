@@ -4,6 +4,7 @@ import {DomainService} from "./domain/DomainService";
 import {UUID} from "./infrastructure/UIDGenerator";
 import {DemoDocsRepo, DocsLoader} from "./infrastructure/loader/DocsLoader";
 import {DocsParser, DocsParserV1} from "./infrastructure/parser/DocsParser";
+import {Application} from "./application/Application";
 
 export enum LoadStatus {
   PENDING = "PENDING",
@@ -17,7 +18,7 @@ export class DocsContext {
   @observable readonly editTools: EditTools;
   @observable dirs: Directory[] = [];
   @observable dirsLoadStatus: LoadStatus = LoadStatus.PENDING
-  @observable readonly app: App
+  @observable readonly app: Application
   readonly docsParser: DocsParser
   readonly docsLoader: DocsLoader
   readonly domainService: DomainService
@@ -37,7 +38,8 @@ export class DocsContext {
     this.docsParser = new DocsParserV1()
     this.docsLoader = new DemoDocsRepo(this)
     this.domainService = new DomainService(this)
-    this.app = new App()
+    this.app = new Application()
+    this.app.subscribeToWindowResize()
     makeObservable(this)
   }
 
@@ -58,39 +60,5 @@ export class DocsContext {
     if (dirsLoadStatus) {
       this.dirsLoadStatus = dirsLoadStatus
     }
-  }
-}
-
-export class App {
-  readonly uid
-  @observable isDocListShown = false;
-  @observable yesNoDialog: YesNoDialog | undefined = undefined;
-  @observable infoDialog: InfoDialog | undefined = undefined;
-
-  constructor() {
-    this.uid = UUID()
-    makeObservable(this)
-  }
-}
-
-export class YesNoDialog {
-  readonly text: string;
-  readonly onApply: () => void;
-  readonly onCancel: (() => void) | undefined;
-
-  constructor(text: string, onApply: () => void, onCancel?: (() => void) | undefined) {
-    this.text = text
-    this.onApply = onApply
-    this.onCancel = onCancel
-  }
-}
-
-export class InfoDialog {
-  readonly title: string;
-  readonly text: string;
-
-  constructor(title: string, text: string) {
-    this.title = title
-    this.text = text
   }
 }

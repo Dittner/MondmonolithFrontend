@@ -1,7 +1,8 @@
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
+import {SelectorRuleBuilder} from "../../application/NoCSS";
 
 // @ts-ignore
-export const Input = ({type, defaultValue, placeholder, autoFocus = false, onChange, onSubmitted}) => {
+export const Input = ({type, defaultValue, titel, placeHolder = "", autoFocus = false, onChange, onSubmitted}) => {
   console.log("new Input")
   const onKeyDown = (e: any) => {
     //Enter key
@@ -13,8 +14,10 @@ export const Input = ({type, defaultValue, placeholder, autoFocus = false, onCha
 
   return (
     <div className="input_container">
+      <p className='input_title'>{titel}</p>
+
       <input className="input_field"
-             placeholder=" "
+             placeholder={placeHolder}
              autoCorrect="off"
              autoComplete="off"
              autoFocus={autoFocus}
@@ -22,7 +25,6 @@ export const Input = ({type, defaultValue, placeholder, autoFocus = false, onCha
              defaultValue={defaultValue}
              onChange={e => onChange(e.currentTarget.value)}
              onKeyDown={onKeyDown}/>
-      <p className='input_placeholder'>{placeholder}</p>
     </div>
   )
 }
@@ -31,10 +33,11 @@ interface TextAreaProps {
   text: string,
   onApply: (value: string) => void | undefined,
   onCancel: () => void | undefined
-  autoFocus?: boolean
+  autoFocus?: boolean,
+  builder?: SelectorRuleBuilder,
 }
 
-export const TextArea = ({text, onApply, onCancel, autoFocus}: TextAreaProps) => {
+export const TextArea = ({text, onApply, onCancel, autoFocus, builder}: TextAreaProps) => {
   const [value, setValue] = useState(text);
   const ta = useRef<HTMLTextAreaElement>(null);
 
@@ -66,7 +69,8 @@ export const TextArea = ({text, onApply, onCancel, autoFocus}: TextAreaProps) =>
     }
   }
 
-  return <textarea value={value}
+  return <textarea className={builder?.className()}
+                   value={value}
                    ref={ta}
                    rows={1}
                    spellCheck="false"

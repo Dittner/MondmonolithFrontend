@@ -3,20 +3,20 @@ import {NavLink, Route, Routes, useParams} from "react-router-dom";
 import {useDocsContext} from "../../../App";
 import {DocLoadStatus} from "../../domain/DomainModel";
 import {observer} from "mobx-react";
-import {SelectorRuleBuilder} from "../../application/NoCSS";
+import {stylable} from "../../application/NoCSS";
 
-export const DocTopics = ({builder}:{builder?:SelectorRuleBuilder}) => {
+export const DocTopics = stylable(() => {
   return <Routes>
-    <Route path="/" element={<EmptyDocTopicsView builder={builder}/>}/>
-    <Route path=":docUID" element={<DocTopicsView builder={builder}/>}/>
+    <Route path="/" element={<EmptyDocTopicsView/>}/>
+    <Route path=":docUID" element={<DocTopicsView/>}/>
   </Routes>
+})
+
+const EmptyDocTopicsView = () => {
+  return <div className={"docTopics"}/>
 }
 
-const EmptyDocTopicsView = ({builder}:{builder?:SelectorRuleBuilder}) => {
-  return <div className={"docTopics " + builder?.className()}/>
-}
-
-const DocTopicsView = observer(({builder}:{builder?:SelectorRuleBuilder}) => {
+const DocTopicsView = observer(() => {
   console.log("new DocTopicsView")
   const docsContext = useDocsContext()
   const params = useParams();
@@ -26,7 +26,7 @@ const DocTopicsView = observer(({builder}:{builder?:SelectorRuleBuilder}) => {
     return <></>
   }
   return (
-    <div className={"docTopics " + builder?.className()}>
+    <div className={"docTopics"}>
       <div className="docTopicsLinks">
         {doc.pages.map(page => {
           return <NavLink key={page.uid} className="topicLink" to={'#' + page.id}>{page.title}</NavLink>

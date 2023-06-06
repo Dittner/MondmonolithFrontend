@@ -1,20 +1,18 @@
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import {useLocation} from "react-router-dom";
 import {DocList} from "./docList/DocList";
 import {observer} from "mobx-react";
 import {useDocsContext} from "../../App";
 import {DocBody} from "./docBody/DocBody";
 import {DocTopics} from "./docTopics/DocTopics";
-import "./style/code.css";
 import {Header} from "./header/Header";
-import {HAlign, HStack, VAlign, VStack} from "./common/Stack";
+import {HAlign, HStack, StylableContainer, VAlign, VStack} from "../../docs/application/NoCSS";
 import {AppSize, LayoutLayer} from "../application/Application";
-import {build} from "../application/NoCSS";
 
 export const DocsView = observer(() => {
   console.log("DocsView init");
   const docsContext = useDocsContext()
-  const drawLayoutLines = false
+  const drawLayoutLines = true
 
   useEffect(() => {
     docsContext.docsLoader.fetchDirectories()
@@ -43,53 +41,43 @@ export const DocsView = observer(() => {
   if (docsContext.app.size === AppSize.S) {
     return (
       <>
-        <Header builder={build()
-          .width("100vw")
-          .height(headerHeight)
-          .paddingHorizontal("20px")
-          .layer(LayoutLayer.HEADER) //z-Index
-          .fixed()}
-        />
+        <Header width="100vw"
+                height={headerHeight}
+                top="0"
+                left="0"
+                layer={LayoutLayer.HEADER} //z-Index
+                fixed/>
 
-        <DocList builder={build()
-          .left(docsContext.app.isDocListShown ? "0" : "-350px")
-          .width("350px")
-          .height("100vh")
-          .layer(LayoutLayer.DOC_LIST)
-          .animate("left 0.5s")
-          .enableOwnScroller()
-          .fixed()
-        }/>
+        <DocList left={docsContext.app.isDocListShown ? "0" : "-350px"}
+                 width="350px"
+                 height="100vh"
+                 layer={LayoutLayer.DOC_LIST}
+                 animate="left 0.5s"
+                 enableOwnScroller
+                 fixed/>
 
-        <DocBody builder={build()
-          .width("100vw")
-          .height("100%")
-          .top(headerHeight)
-          .absolute()
-        }/>
+        <DocBody width="100vw"
+                 height="100%"
+                 top={headerHeight}
+                 absolute/>
 
         <ModalView/>
 
         {drawLayoutLines &&
         <>
-          <div className={"appLayout S " + build()
-            .width("100vw")
-            .height("1px")
-            .top(headerHeight)
-            .fixed()
-            .className()}
-          />
+          <StylableContainer className="appLayout S"
+                             width="100vw"
+                             height="1px"
+                             top={headerHeight}
+                             fixed/>
 
-          <div className={"appLayout S " + build()
-            .width("1px")
-            .height("100vh")
-            .left("350px")
-            .fixed()
-            .className()}
-          />
+          <StylableContainer className="appLayout S"
+                             width="1px"
+                             height="100vh"
+                             left="350px"
+                             fixed/>
         </>
         }
-
       </>
     )
   }
@@ -97,49 +85,40 @@ export const DocsView = observer(() => {
   if (docsContext.app.size === AppSize.M) {
     return (
       <div>
-        <Header builder={build()
-          .width("70vw")
-          .height(headerHeight)
-          .left("30vw")
-          .layer(LayoutLayer.HEADER)
-          .fixed()}
-        />
+        <Header width="70vw"
+                height={headerHeight}
+                left="30vw"
+                top="0"
+                layer={LayoutLayer.HEADER}
+                fixed/>
 
-        <DocList builder={build()
-          .width("30vw")
-          .height("100vh")
-          .layer(LayoutLayer.DOC_LIST)
-          .enableOwnScroller()
-          .fixed()
-        }/>
+        <DocList width="30vw"
+                 height="100vh"
+                 layer={LayoutLayer.DOC_LIST}
+                 enableOwnScroller
+                 fixed/>
 
-        <DocBody builder={build()
-          .width("70vw")
-          .height("100%")
-          .top(headerHeight)
-          .left("30vw")
-          .absolute()
-        }/>
+        <DocBody width="70vw"
+                 height="100%"
+                 top={headerHeight}
+                 left="30vw"
+                 absolute/>
 
         <ModalView/>
 
         {drawLayoutLines &&
         <>
-          <div className={"appLayout M " + build()
-            .width("100vw")
-            .height("1px")
-            .top(headerHeight)
-            .fixed()
-            .className()}
-          />
+          <StylableContainer className="appLayout M"
+                             width="100vw"
+                             height="1px"
+                             top={headerHeight}
+                             fixed/>
 
-          <div className={"appLayout M " + build()
-            .width("1px")
-            .height("100vh")
-            .left("30vw")
-            .fixed()
-            .className()}
-          />
+          <StylableContainer className="appLayout M"
+                             width="1px"
+                             height="100vh"
+                             left="30vw"
+                             fixed/>
         </>
         }
 
@@ -150,70 +129,55 @@ export const DocsView = observer(() => {
 
   return (
     <div>
-      <Header builder={build()
-        .width("80vw")
-        .height(headerHeight)
-        .left("20vw")
-        .layer(LayoutLayer.HEADER)
-        .fixed()}
-      />
+      <Header width="80vw"
+              height={headerHeight}
+              left="20vw"
+              top="0"
+              layer={LayoutLayer.HEADER}
+              fixed/>
 
-      <DocList builder={build()
-        .width("20vw")
-        .height("100vh")
-        .layer(LayoutLayer.DOC_LIST)
-        .enableOwnScroller()
-        .fixed()
-      }/>
+      <DocList width="20vw"
+               height="100vh"
+               layer={LayoutLayer.DOC_LIST}
+               enableOwnScroller
+               fixed/>
 
-      <DocBody builder={build()
-        .width("60vw")
-        .height("100%")
-        .top(headerHeight)
-        .left("20vw")
-        .absolute()
-      }/>
+      <DocBody width="60vw"
+               top={headerHeight}
+               bottom="0"
+               left="20vw"
+               absolute/>
 
-      <DocTopics builder={build()
-        .width("20vw")
-        .height("100vh")
-        .left("80vw")
-        .top(headerHeight)
-        .enableOwnScroller()
-        .fixed()
-      }/>
+      <DocTopics width="20vw"
+                 height="100vh"
+                 left="80vw"
+                 top={headerHeight}
+                 enableOwnScroller
+                 fixed/>
 
       <ModalView/>
 
       {drawLayoutLines &&
       <>
-        <div className={"appLayout L " + build()
-          .width("100vw")
-          .height("1px")
-          .top(headerHeight)
-          .fixed()
-          .className()}
-        />
+        <StylableContainer className="appLayout L"
+                           width="100vw"
+                           height="1px"
+                           top={headerHeight}
+                           fixed/>
 
-        <div className={"appLayout L " + build()
-          .width("1px")
-          .height("100vh")
-          .left("20vw")
-          .fixed()
-          .className()}
-        />
+        <StylableContainer className="appLayout L"
+                           width="1px"
+                           height="100vh"
+                           left="20vw"
+                           fixed/>
 
-        <div className={"appLayout L " + build()
-          .width("1px")
-          .height("100vh")
-          .left("80vw")
-          .fixed()
-          .className()}
-        />
+        <StylableContainer className="appLayout L"
+                           width="1px"
+                           height="100vh"
+                           left="80vw"
+                           fixed/>
       </>
       }
-
-
     </div>
   )
 })

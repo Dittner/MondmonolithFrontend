@@ -88,7 +88,6 @@ p {
   font-size: 1rem;
   line-height: 1.7;
   font-weight: 450;
-
 }
 
 blockquote {
@@ -135,16 +134,11 @@ div.appLayout.L {
   border-bottom: 1px solid var(--Border);
 }
 
-.docList {
-  background-color: var(--PanelBg);
-}
-
 .docTopics {
   border-left-width: 1px;
   border-left-style: solid;
   border-color: var(--Border);
 }
-
 
 /******************************/
 /*------- MODAL VIEW ---------*/
@@ -211,7 +205,6 @@ div.yesNoDialog button {
   cursor: not-allowed;
 }
 
-
 /******************************/
 /*--------- INPUTS ---------*/
 /******************************/
@@ -239,15 +232,14 @@ div.input_container input[type=password] {
   color: var(--TextDark);
   box-sizing: border-box;
   outline: none;
-  transition: color 300ms;
   vertical-align: bottom;
+  transition: border 300ms;
 }
 
 div.input_container input[type=text]:focus,
 div.input_container input[type=password]:focus {
   color: var(--Text);
   border: 1px solid var(--Border);
-  transition: color 300ms;
 }
 
 div.input_container input[type=text]:hover,
@@ -283,8 +275,9 @@ textarea {
   font-family: var(--font-family-mono);
   font-size: 1rem;
   line-height: 1.6rem;
-  padding: 0;
+  padding: inherit;
   margin: 0;
+  width: 100%;
   color: var(--TextGreen);
   box-sizing: border-box;
   border: none;

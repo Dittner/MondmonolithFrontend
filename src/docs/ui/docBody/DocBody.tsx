@@ -3,6 +3,7 @@ import {Route, Routes, useParams} from "react-router-dom";
 import {LoadingSpinner} from "../common/Loading";
 import {observer} from "mobx-react";
 import {useDocsContext} from "../../../App";
+import * as React from "react";
 import {useEffect} from "react";
 import Prism from "prismjs";
 import 'prismjs/components/prism-java';
@@ -13,26 +14,30 @@ import {DocLoadStatus, Page, PageBlock} from "../../domain/DomainModel";
 import {LoadStatus} from "../../DocsContext";
 import {TextArea} from "../common/Input"
 import ReactMarkdown from "react-markdown";
-import {SelectorRuleBuilder} from "../../application/NoCSS";
+import {HAlign, HStack, stylable, VAlign} from "../../application/NoCSS";
 
-export const DocBody = ({builder}: { builder?: SelectorRuleBuilder }) => {
+
+export const DocBody = stylable(() => {
   return <Routes>
-    <Route path="/" element={<EmptyDoc builder={builder}/>}/>
-    <Route path=":docUID" element={<PageList builder={builder}/>}/>
+    <Route path="/" element={<EmptyDoc/>}/>
+    <Route path=":docUID" element={<PageList/>}/>
   </Routes>
+})
+
+const EmptyDoc = () => {
+  return <HStack halign={HAlign.CENTER}
+                 valign={VAlign.CENTER}
+                 width="100%" height="100%">
+    <p className="textDark">No doc is selected</p>
+  </HStack>
 }
 
-const EmptyDoc = ({builder}: { builder?: SelectorRuleBuilder }) => {
-  return <div className={"emptyDoc " + builder?.className()}>
-    <p>No doc is selected</p>
-  </div>
-}
-
-const PageList = observer(({builder}: { builder?: SelectorRuleBuilder }) => {
+const PageList = observer(() => {
   console.log("new PageList")
   const params = useParams()
 
   const docsContext = useDocsContext()
+
   const doc = docsContext.findDoc(d => params.docUID === d.uid)
   console.log("PageList, doc = ", doc)
 
@@ -55,19 +60,15 @@ const PageList = observer(({builder}: { builder?: SelectorRuleBuilder }) => {
   }
 
   if (doc?.loadStatus === DocLoadStatus.LOADING || docsContext.dirsLoadStatus === LoadStatus.LOADING) {
-    return <div className={builder?.className()}>
-      <LoadingSpinner/>
-    </div>
+    return <LoadingSpinner/>
   }
 
   if (!doc) {
-    return <div className={builder?.className()}>
-      <p className="docNotFoundMsg">Doc not found</p>
-    </div>
+    return <p className="docNotFoundMsg">Doc not found</p>
   }
 
   return (
-    <div className={builder?.className()}>
+    <>
       {doc.pages.map(page => {
         return <PageView key={page.uid} page={page}/>
       })}
@@ -76,7 +77,7 @@ const PageList = observer(({builder}: { builder?: SelectorRuleBuilder }) => {
               className="btn"
               onClick={exportDocAsJSON}>Export as JSON
       </button>
-    </div>
+    </>
   )
 })
 
@@ -175,8 +176,9 @@ const PageBlockView = observer(({block}: { block: PageBlock }) => {
   }
 
   if (editTools.editMode && block.isEditing) {
-    return (
-      <PageBlockEditor block={block}/>
+    return (<>
+        <PageBlockEditor block={block}/>
+      </>
     )
   }
 

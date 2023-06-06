@@ -73,18 +73,6 @@
   padding-right: 15px;
 }
 
-div.emptyDoc {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
-
-div.emptyDoc p {
-  color: var(--TextDark);
-}
-
 #exportBtn {
   position: relative;
   left: 70px;

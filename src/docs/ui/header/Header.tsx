@@ -3,27 +3,26 @@ import './header.css';
 import {useDocsContext} from "../../../App";
 import {AuthStatus, Page, PageBlock} from "../../domain/DomainModel";
 import {observer} from "mobx-react";
-import {HAlign, HStack, VAlign, VStack} from "../common/Stack";
+import {HAlign, HStack, stylable, VAlign, VStack} from "../../../docs/application/NoCSS";
 import {Input} from "../common/Input";
 import {Route, Routes, useParams} from "react-router-dom";
 import {SmallSpinner} from "../common/Loading";
 import {AppSize, YesNoDialog} from "../../application/Application";
 import {Spacer} from "../common/Spacer";
 import {VSeparator} from "../common/Separator";
-import {SelectorRuleBuilder} from "../../application/NoCSS";
 
-export const Header = ({builder}: { builder?: SelectorRuleBuilder }) => {
+export const Header = stylable( () => {
   return <Routes>
-    <Route path="/" element={<HeaderView builder={builder}/>}/>
-    <Route path=":docUID" element={<HeaderView builder={builder}/>}/>
+    <Route path="/" element={<HeaderView/>}/>
+    <Route path=":docUID" element={<HeaderView/>}/>
   </Routes>
-}
+})
 
 export const HeaderVerSep = () => {
   return <VSeparator height="20px" marginHorizontal="15px"/>
 }
 
-export const HeaderView = observer(({builder}: { builder?: SelectorRuleBuilder }) => {
+export const HeaderView = observer(() => {
   console.log("new AuthPanel")
   const params = useParams()
   const docsContext = useDocsContext()
@@ -59,27 +58,25 @@ export const HeaderView = observer(({builder}: { builder?: SelectorRuleBuilder }
   let rootContClassName = ""
   if (editTools.editMode) rootContClassName = "withBg "
   else if (user.authStatus === AuthStatus.AUTHORIZED) rootContClassName = "withBottomBorder "
-  rootContClassName += builder?.className()
 
   return (
-    <div className={rootContClassName}>
+    <HStack className={rootContClassName} halign={HAlign.RIGHT}
+            valign={VAlign.CENTER}
+            height="100%"
+            gap="0"
+            paddingHorizontal="20px">
+      {user.authStatus === AuthStatus.AUTHORIZED &&
+      <>
 
-      <HStack halign={HAlign.RIGHT} valign={VAlign.CENTER} gap="0" paddingLeft="0" paddingRight="20px">
-        {user.authStatus === AuthStatus.AUTHORIZED &&
+        {app.size === AppSize.S &&
         <>
+          <button className="icon-menu long"
+                  onClick={showDocList}/>
 
-          {app.size === AppSize.S &&
-          <>
-            <button className="icon-menu long"
-                    onClick={showDocList}/>
-            <Spacer/>
-          </>
-          }
+          <Spacer/>
 
           {editTools.editMode &&
           <>
-            <Spacer width="70px"/>
-
             <button className="btn"
                     onClick={createPage}>New Page
             </button>
@@ -91,73 +88,113 @@ export const HeaderView = observer(({builder}: { builder?: SelectorRuleBuilder }
             <HeaderVerSep/>
           </>
           }
-
-          {app.size !== AppSize.S &&
-          <Spacer/>
-          }
-
-          <p className="textDark mono">{editTools.editMode ? "Edit mode: " : "Read mode: "}</p>
-          <label className="switch">
-            <input type="checkbox"
-                   checked={editTools.editMode}
-                   onChange={() => editTools.toggleEditMode()}/>
-            <span className="roundBtn"></span>
-          </label>
-
-          <HeaderVerSep/>
-
-          <p className="textDark mono">{user.login}</p>
-
-          <HeaderVerSep/>
-
-          <button className="btn"
-                  onClick={handleSignOut}>Sign out
-          </button>
         </>
         }
 
-        {user.authStatus !== AuthStatus.AUTHORIZED &&
+        {app.size === AppSize.M &&
         <>
+
           <Spacer/>
-          <DropDown className='loginDropDown' title='Sign in'>
-            <VStack halign={HAlign.CENTER} valign={VAlign.TOP} gap="5px">
-              <Input type="text"
-                     defaultValue={name}
-                     titel="Name"
-                     placeHolder="Enter your name"
-                     onChange={(value: string) => setName(value)}
-                     onSubmitted={handleSignIn}
-                     autoFocus/>
-              <Input type="password"
-                     defaultValue={pwd}
-                     titel="Password"
-                     placeHolder="Enter your password"
-                     onChange={(value: string) => setPwd(value)}
-                     onSubmitted={handleSignIn}/>
 
-              {user.authStatus !== AuthStatus.AUTHORIZING &&
-              <button className="btn"
-                      value="Submit"
-                      onClick={handleSignIn}>Submit
-              </button>
-              }
+          {editTools.editMode &&
+          <>
+            <button className="btn"
+                    onClick={createPage}>New Page
+            </button>
 
-              {user.authStatus === AuthStatus.AUTHORIZING &&
-              <SmallSpinner/>
-              }
+            <HeaderVerSep/>
 
-              {user.authWithError &&
-              <p className="error">{user.authWithError}</p>
-              }
+            <ToolsPanel/>
 
-            </VStack>
-
-          </DropDown>
+            <HeaderVerSep/>
+          </>
+          }
         </>
         }
-      </HStack>
 
-    </div>
+        {app.size === AppSize.L &&
+        <>
+
+          <Spacer width="20px"/>
+
+          {editTools.editMode &&
+          <>
+            <button className="btn"
+                    onClick={createPage}>New Page
+            </button>
+
+            <HeaderVerSep/>
+
+            <ToolsPanel/>
+
+            <Spacer/>
+          </>
+          }
+        </>
+        }
+
+        <p className="textDark mono">{editTools.editMode ? "Edit mode: " : "Read mode: "}</p>
+        <label className="switch">
+          <input type="checkbox"
+                 checked={editTools.editMode}
+                 onChange={() => editTools.toggleEditMode()}/>
+          <span className="roundBtn"></span>
+        </label>
+
+        <HeaderVerSep/>
+
+        <p className="textDark mono">{user.login}</p>
+
+        <HeaderVerSep/>
+
+        <button className="btn"
+                onClick={handleSignOut}>Sign out
+        </button>
+
+        {/*<Spacer width="20px"/>*/}
+      </>
+      }
+
+      {user.authStatus !== AuthStatus.AUTHORIZED &&
+      <>
+        <Spacer/>
+        <DropDown className='loginDropDown' title='Sign in'>
+          <VStack halign={HAlign.CENTER} valign={VAlign.TOP} gap="5px">
+            <Input type="text"
+                   defaultValue={name}
+                   titel="Name"
+                   placeHolder="Enter your name"
+                   onChange={(value: string) => setName(value)}
+                   onSubmitted={handleSignIn}
+                   autoFocus/>
+            <Input type="password"
+                   defaultValue={pwd}
+                   titel="Password"
+                   placeHolder="Enter your password"
+                   onChange={(value: string) => setPwd(value)}
+                   onSubmitted={handleSignIn}/>
+
+            {user.authStatus !== AuthStatus.AUTHORIZING &&
+            <button className="btn"
+                    value="Submit"
+                    onClick={handleSignIn}>Submit
+            </button>
+            }
+
+            {user.authStatus === AuthStatus.AUTHORIZING &&
+            <SmallSpinner/>
+            }
+
+            {user.authWithError &&
+            <p className="error">{user.authWithError}</p>
+            }
+
+          </VStack>
+
+        </DropDown>
+      </>
+      }
+    </HStack>
   )
 })
 
@@ -222,8 +259,6 @@ const ToolsPanel = observer(() => {
               valign={VAlign.CENTER}
               halign={HAlign.LEFT}
               height="50px" gap="4px">
-        <p className="textDark mono">Tools: </p>
-
         <button className="icon-plus long"
                 disabled={!editTools.selectedItem}
                 title="Add new Block"

@@ -6,14 +6,13 @@ import {AppSize} from "../../application/Application";
 import {observer} from "mobx-react";
 import {Directory, Doc} from "../../domain/DomainModel";
 import {SmallSpinner} from "../common/Loading";
-import {HAlign, HStack, VAlign, VStack} from "../common/Stack";
+import {HAlign, HStack, stylable, VAlign, VStack} from "../../../docs/application/NoCSS";
 import {Input} from "../common/Input";
 import {Spacer} from "../common/Spacer";
 import {LoadStatus} from "../../DocsContext";
 import {HeaderVerSep} from "../header/Header";
-import {SelectorRuleBuilder} from "../../application/NoCSS";
 
-export const DocList = observer(({builder}: { builder?: SelectorRuleBuilder }) => {
+export const DocList = observer(stylable((props: any) => {
   console.log("new DocList")
   const [isNewDocCreating, setIsNewDocCreating] = useState(false)
 
@@ -38,57 +37,56 @@ export const DocList = observer(({builder}: { builder?: SelectorRuleBuilder }) =
     return <></>
   }
   return (
-    <div className={"docList " + builder?.className()}>
-      <div className='docListContainer'>
-        <HStack halign={HAlign.CENTER}
-                valign={VAlign.CENTER}
-                gap="0"
-                width="100%"
-                minHeight="50px"
-                paddingLeft="20px"
-                paddingRight="10px">
-          {docsContext.editTools.editMode &&
-          <>
-            <button className="btn createDoc"
-                    onClick={() => {
-                      setIsNewDocCreating(true)
-                    }}>New doc
-            </button>
+    <VStack className='docListContainer'
+            valign={VAlign.TOP}
+            halign={HAlign.CENTER}
+            height="100%">
+      <HStack halign={HAlign.CENTER}
+              valign={VAlign.CENTER}
+              gap="0"
+              width="100%"
+              minHeight="50px"
+              paddingLeft="20px"
+              paddingRight="10px">
+        {docsContext.editTools.editMode &&
+        <>
+          <button className="btn createDoc"
+                  onClick={() => {
+                    setIsNewDocCreating(true)
+                  }}>New doc
+          </button>
 
-            <HeaderVerSep/>
+          <HeaderVerSep/>
 
-            <DocPicker/>
-          </>
-          }
-
-          <Spacer/>
-
-          {docsContext.app.isDocListShown && docsContext.app.size === AppSize.S &&
-          <button className="icon-close withoutBg"
-                  onClick={hideDocList}/>
-          }
-        </HStack>
-
-        {isNewDocCreating &&
-        <DocEditForm doc={null}
-                     onCancel={onCancel}
-                     onApply={onApply}/>
+          <DocPicker/>
+        </>
         }
 
-        {docsContext.dirs.map(dir => {
-          return <ul key={dir.uid}>
-            <DirectoryView dir={dir}/>
-            {dir.docs.map(doc => {
-              return <DocLink key={doc.uid} doc={doc}/>
-            })}
-          </ul>
-        })}
-      </div>
+        <Spacer/>
 
-    </div>
+        {docsContext.app.isDocListShown && docsContext.app.size === AppSize.S &&
+        <button className="icon-close withoutBg"
+                onClick={hideDocList}/>
+        }
+      </HStack>
 
+      {isNewDocCreating &&
+      <DocEditForm doc={null}
+                   onCancel={onCancel}
+                   onApply={onApply}/>
+      }
+
+      {docsContext.dirs.map(dir => {
+        return <ul key={dir.uid}>
+          <DirectoryView dir={dir}/>
+          {dir.docs.map(doc => {
+            return <DocLink key={doc.uid} doc={doc}/>
+          })}
+        </ul>
+      })}
+    </VStack>
   )
-})
+}))
 
 const DocPicker = observer(() => {
   const [value, setValue] = useState("")

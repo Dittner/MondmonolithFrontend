@@ -105,8 +105,9 @@ export class DemoDocsRepo implements DocsLoader {
           if (dir) {
             const duplicate = dir.docs.find(d => d.uid === doc.uid)
             if (duplicate) {
-              const msg = `The directory «${dir.title}» has the doc «${doc.title}» yet. Do you want to overwrite it?`
+              const msg = `The directory «${dir.title}» already has the doc «${doc.title}». Do you want to overwrite it?`
               const overwriteDoc = () => {
+                doc.loadStatus = DocLoadStatus.LOADED
                 dir.replaceWith(doc)
               }
               this.context.app.yesNoDialog = new YesNoDialog(msg, overwriteDoc)

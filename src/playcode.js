@@ -1,16 +1,14 @@
-"use strict";
-exports.__esModule = true;
-exports.run = void 0;
-var run = function () {
-    console.log("40 && 2 || 33", " = ", (40 && 2 || 33));
-    console.log("(4*2) && (3*6)", " = ", ((4 * 2) && (3 * 6)));
-    console.log("0 && 2", " = ", (0 && 2));
-    console.log("false && 0 && ''", " = ", (false && 0 && ''));
-    console.log("false || 0 || ''", " = ", (false || 0 || ''));
-    console.log("false && 1", " = ", (false && 1));
-    console.log("0 && 1", " = ", (0 && 1));
-    console.log("false || 0", " = ", (false || 0));
-    //console.log("", " = ", ())
-};
-exports.run = run;
-(0, exports.run)();
+const counter = () => {
+  let count = 0
+  return () => count++
+}
+
+let count = counter()
+console.log( count() ) //0
+console.log( count() ) //1
+console.log( count() ) //2
+
+count = counter()
+console.log( count() ) //0
+console.log( count() ) //1
+console.log( count() ) //2

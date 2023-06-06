@@ -10,12 +10,11 @@ import 'prismjs/components/prism-jsx';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-python';
 import {Header} from "../header/Header";
-import {HAlign, HStack, VAlign, VStack} from "../common/Stack";
+import {HAlign, HStack, stylable, VAlign, VStack} from "../../../docs/application/NoCSS";
 import {VSeparator} from "../common/Separator";
 import {Spacer} from "../common/Spacer";
 import {useDocsContext} from "../../../App";
 import {AppSize} from "../../application/Application";
-import {build, SelectorRuleBuilder} from "../../application/NoCSS";
 
 export const IntroView = observer(() => {
   console.log("new IntroView")
@@ -28,11 +27,10 @@ export const IntroView = observer(() => {
                  paddingLeft="20px"
                  paddingRight="20px">
 
-    <Header builder={build()
-      .width("100%")
-      .height("50px")
-      .top("0")
-      .fixed()}/>
+    <Header width="100%"
+            height="50px"
+            top="0"
+            fixed/>
 
     <div className="about">
       <span>{parse(aboutTxt)}</span>
@@ -150,10 +148,9 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
                   onApply={apply}
                   onCancel={cancel}
                   autoFocus={autoFocus}
-                  builder={build()
-                    .width("100%")
-                    .paddingHorizontal("20px")
-                    .paddingVertical("10px")}/>
+                  width="100%"
+                  paddingHorizontal="20px"
+                  paddingVertical="10px"/>
 
         <HStack halign={HAlign.LEFT}
                 valign={VAlign.STRETCH}
@@ -165,8 +162,7 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
 
           {value &&
           <MarkdownText value={value}
-                        builder={build()
-                          .width("100%")}/>
+                        width="100%"/>
           }
         </HStack>
 
@@ -187,16 +183,15 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
                   onApply={apply}
                   onCancel={cancel}
                   autoFocus={autoFocus}
-                  builder={build()
-                    .width("50%")
-                    .paddingHorizontal("20px")
-                    .paddingVertical("10px")}/>
+                  width="50%"
+                  paddingHorizontal="20px"
+                  paddingVertical="10px"/>
 
         <VSeparator/>
 
         {value &&
         <MarkdownText value={value}
-                      builder={build().width("50%")}/>
+                      width="50%"/>
         }
       </HStack>
 
@@ -206,14 +201,14 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
 
 })
 
-const MarkdownText = ({value, builder}: { value: string, builder: SelectorRuleBuilder }) => {
+const MarkdownText = stylable(({value}: { value: string }) => {
   console.log("new MarkdownText")
   //Use random key to force a new rendering of the code fragment in ReactMarkdown
   useEffect(() => {
     console.log("--Prism.highlightAll")
     Prism.highlightAll()
   }, [value])
-  return <div className={"markdown " + builder?.className()}>
+  return <div className="markdown">
     <ReactMarkdown key={value}>{value}</ReactMarkdown>
   </div>
-}
+})

@@ -64,6 +64,16 @@ export class EditTools {
   constructor() {
     this.uid = UUID()
     makeObservable(this)
+    document.addEventListener("keydown", this.onKeyDown.bind(this))
+  }
+
+  private onKeyDown = (e: any) => {
+    //Enter key
+    if (this.editMode && e.keyCode === 13 && this.selectedItem && !this.selectedItem.isEditing) {
+      e.preventDefault()
+      e.stopPropagation()
+      this.selectedItem.isEditing = true
+    }
   }
 
   @action toggleEditMode() {

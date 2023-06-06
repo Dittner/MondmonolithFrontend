@@ -1,10 +1,6 @@
 .docListContainer {
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
-  justify-content: left;
-  flex-direction: column;
-  padding: 0;
+  background-color: var(--PanelBg);
+  box-shadow: 0 10px 20px #00000020;
 }
 
 .docListContainer span {

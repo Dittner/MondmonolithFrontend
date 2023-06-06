@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {SelectorRuleBuilder} from "../../application/NoCSS";
+import {stylable} from "../../application/NoCSS";
 
 // @ts-ignore
 export const Input = ({type, defaultValue, titel, placeHolder = "", autoFocus = false, onChange, onSubmitted}) => {
@@ -34,10 +34,9 @@ interface TextAreaProps {
   onApply: (value: string) => void | undefined,
   onCancel: () => void | undefined
   autoFocus?: boolean,
-  builder?: SelectorRuleBuilder,
 }
 
-export const TextArea = ({text, onApply, onCancel, autoFocus, builder}: TextAreaProps) => {
+export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextAreaProps) => {
   const [value, setValue] = useState(text);
   const ta = useRef<HTMLTextAreaElement>(null);
 
@@ -47,6 +46,7 @@ export const TextArea = ({text, onApply, onCancel, autoFocus, builder}: TextArea
       ta.current.style.height = `${ta.current.scrollHeight + 5}px`;
     }
   }
+
   const onChange = (event: any) => {
     setValue(event.target.value)
     adjustScroller()
@@ -60,21 +60,22 @@ export const TextArea = ({text, onApply, onCancel, autoFocus, builder}: TextArea
     //Enter key
     if (e.keyCode === 13 && !e.shiftKey) {
       e.preventDefault()
+      e.stopPropagation()
       onApply(value)
     }
     //ESC key
     if (e.keyCode === 27) {
       e.preventDefault()
+      e.stopPropagation()
       onCancel()
     }
   }
 
-  return <textarea className={builder?.className()}
-                   value={value}
+  return <textarea value={value}
                    ref={ta}
-                   rows={1}
+                   rows={value.split(/\r\n|\r|\n/).length}
                    spellCheck="false"
                    onChange={onChange}
                    onKeyDown={onKeyDown}
                    autoFocus={autoFocus}/>
-}
+})

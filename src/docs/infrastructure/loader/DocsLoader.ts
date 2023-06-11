@@ -2,9 +2,6 @@ import {DocsContext, LoadStatus} from "../../DocsContext";
 import {InfoDialog, YesNoDialog} from "../../application/Application";
 import {Directory, Doc, DocLoadStatus} from "../../domain/DomainModel";
 import {action} from "mobx";
-import javaDemoDoc from "../../../resources/demoDocs/java.json"
-import jsDemoDoc from "../../../resources/demoDocs/js.json"
-import reactDemoDoc from "../../../resources/demoDocs/react.json"
 
 export interface DocsLoader {
   fetchDirectories(): void
@@ -21,6 +18,18 @@ export class DemoDocsRepo implements DocsLoader {
     this.context = context
   }
 
+  private loadJsonFile = async (url: string) => {
+    const response = await fetch(url);
+
+    if (response.ok) {
+      return await response.json()
+    } else {
+      const message = `An error has occurred: ${response.status}`;
+      throw new Error(message)
+    }
+  }
+
+
   public fetchDirectories() {
     console.log("fetchDirectories")
     if (this.context.dirsLoadStatus !== LoadStatus.PENDING) {
@@ -29,10 +38,23 @@ export class DemoDocsRepo implements DocsLoader {
 
     this.context.dirsLoadStatus = LoadStatus.LOADING
 
+    const rawDocs: any[] = []
+    this.loadJsonFile("/demo/java.json")
+      .then(value => {
+        rawDocs.push(value)
+      })
+    this.loadJsonFile("/demo/js.json")
+      .then(value => {
+        rawDocs.push(value)
+      })
+    this.loadJsonFile("/demo/react.json")
+      .then(value => {
+        rawDocs.push(value)
+      })
+
     console.log("--fetchDirectories, start fetching...")
 
     setTimeout(() => {
-      const rawDocs = [javaDemoDoc, jsDemoDoc, reactDemoDoc]
       this.context.send(this.parseRawDocs(rawDocs), LoadStatus.LOADED)
       console.log("fetchDirectories complete")
     }, 1000)
@@ -66,27 +88,36 @@ export class DemoDocsRepo implements DocsLoader {
       doc.loadStatus = DocLoadStatus.LOADING
       console.log("fetchDoc, start fetching...")
       let d: Doc
-      setTimeout(() => {
-        switch (docUID) {
-          case 'java':
-            d = this.context.docsParser.parseDoc(javaDemoDoc)
+      let docUrl = ""
+      switch (docUID) {
+        case 'java':
+          docUrl = "/demo/java.json"
+          break
+        case 'js':
+          docUrl = "/demo/js.json"
+          break
+        case 'react':
+          docUrl = "/demo/react.json"
+          break
+      }
+
+      if (docUrl) {
+        this.loadJsonFile(docUrl)
+          .then(value => {
+            d = this.context.docsParser.parseDoc(value)
             d.loadStatus = DocLoadStatus.LOADED
             doc.dir?.replaceWith(d)
-            break
-          case 'js':
-            d = this.context.docsParser.parseDoc(jsDemoDoc)
-            d.loadStatus = DocLoadStatus.LOADED
-            doc.dir?.replaceWith(d)
-            break
-          case 'react':
-            d = this.context.docsParser.parseDoc(reactDemoDoc)
-            d.loadStatus = DocLoadStatus.LOADED
-            doc.dir?.replaceWith(d)
-            break
-          default:
-            doc.loadStatus = DocLoadStatus.LOADED
-        }
-      }, 1000)
+          }, err => {
+            doc.loadWithError = "Loading of the file is failed. Details: " + err
+            doc.loadStatus = DocLoadStatus.HEADER_LOADED
+          })
+          .catch(err => {
+            doc.loadWithError = "Loading of the file is failed. Details: " + err
+            doc.loadStatus = DocLoadStatus.HEADER_LOADED
+          })
+      } else {
+        doc.loadStatus = DocLoadStatus.LOADED
+      }
     }
   }
 

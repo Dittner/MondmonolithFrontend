@@ -10,15 +10,15 @@ export enum LayoutLayer {
 }
 
 export enum AppSize {
+  XS = "ExtraShort",
   S = "Short",
   M = "Middle",
   L = "Large"
 }
 
-
 export class Application {
   readonly uid
-  @observable isDocListShown = true;
+  @observable isDocListShown = false;
   @observable yesNoDialog: YesNoDialog | undefined = undefined;
   @observable infoDialog: InfoDialog | undefined = undefined;
   @observable size = AppSize.S;
@@ -30,21 +30,21 @@ export class Application {
   }
 
   subscribeToWindowResize(): void {
-    window.addEventListener("resize", this.updateSize);
+    window.addEventListener("resize", this.updateSize.bind(this));
   }
 
-  private updateSize = () => {
-    if (this.size !== this.evaluateAppSize()) {
-      this.size = this.evaluateAppSize()
-      if (this.size !== AppSize.S)
-        this.isDocListShown = true
+  private updateSize(): void {
+    const evaluatedSize = this.evaluateAppSize()
+    if (this.size !== evaluatedSize) {
+      this.size = evaluatedSize
     }
   }
 
-  private evaluateAppSize = (): AppSize => {
+  private evaluateAppSize():AppSize {
     if (window.innerWidth > 1500) return AppSize.L
     if (window.innerWidth > 1200) return AppSize.M
-    return AppSize.S
+    if (window.innerWidth > 767) return AppSize.S
+    return AppSize.XS
   }
 }
 

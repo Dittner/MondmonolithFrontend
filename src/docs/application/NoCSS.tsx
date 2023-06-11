@@ -79,7 +79,9 @@ const RuleBuilder = () =>  {
   operator["width"] = (value:string) => {setValue("width", value)}
   operator["height"] = (value:string) => {setValue("height", value)}
   operator["minHeight"] = (value:string) => {setValue("min-height", value)}
+  operator["maxHeight"] = (value:string) => {setValue("max-height", value)}
   operator["minWidth"] = (value:string) => {setValue("min-width", value)}
+  operator["maxWidth"] = (value:string) => {setValue("max-width", value)}
   operator["left"] = (value:string) => {setValue("left", value)}
   operator["right"] = (value:string) => {setValue("right", value)}
   operator["top"] = (value:string) => {setValue("top", value)}
@@ -148,6 +150,9 @@ export const buildAndGetClassName = (props:any):string => {
     if(operator[k]) {
       operator[k](props[k])
     }
+    // else {
+    //   console.warn("  --NoCSS: Operator «" + k + "» not found!")
+    // }
   }
 
   return className()
@@ -178,20 +183,18 @@ export interface NoCSSComponentProps {
   layer?: LayoutLayer,
   animate?: string,
   className?: string,
-  parentClassName?: string,
   children?: any,
 }
 
 export const stylable = <T,X extends T & NoCSSComponentProps>(component: (componentProps:T) => JSX.Element): ((props: X) => JSX.Element) => {
   return ( props: X ) => {
     const className = buildAndGetClassName(props)
-    const extendedProps = Object.assign({"parentClassName": className}, props)
-    return <div className={props.className + " " + className}>{component(extendedProps)}</div>
+    return <div className={props.className ? props.className + " " + className : className}>{component(props)}</div>
   }
 }
 
 export const StylableContainer = stylable((props:any)=> {
-  return <div className={props.className}>{props.children}</div>
+  return props.className ? <div className={props.className}>{props.children}</div> : <div>{props.children}</div>
 })
 
 interface StackProps extends NoCSSComponentProps{
@@ -213,8 +216,6 @@ export enum HAlign {
   RIGHT = "RIGHT",
   STRETCH = "STRETCH",
 }
-
-
 
 const defVStackProps = {
   "display": "flex",

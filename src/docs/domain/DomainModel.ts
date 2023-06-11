@@ -1,5 +1,6 @@
 import {action, computed, makeObservable, observable} from 'mobx';
 import {UUID} from "../infrastructure/UIDGenerator";
+import {DocsContext} from "../DocsContext";
 
 export enum AuthStatus {
   SIGNED_OUT = "SIGNED_OUT",
@@ -20,6 +21,8 @@ export class User {
 
   constructor() {
     this.uid = UUID()
+    if (window.localStorage.getItem("authStatus") === "authorized")
+      this.authStatus = AuthStatus.AUTHORIZED
     makeObservable(this)
   }
 
@@ -39,6 +42,7 @@ export class User {
     setTimeout(() => {
       if (login === 'demo' && pwd === 'pwd') {
         this.authStatus = AuthStatus.AUTHORIZED
+        window.localStorage.setItem("authStatus", "authorized")
         this.login = login
         this.pwd = pwd
       } else {
@@ -52,6 +56,8 @@ export class User {
     console.log("signOut()")
     if (this.authStatus === AuthStatus.AUTHORIZED) {
       this.authStatus = AuthStatus.SIGNED_OUT
+      DocsContext.self.editTools.editMode = false
+      window.localStorage.setItem("authStatus", "signedOut")
     }
   }
 }
@@ -67,7 +73,7 @@ export class EditTools {
     document.addEventListener("keydown", this.onKeyDown.bind(this))
   }
 
-  private onKeyDown = (e: any) => {
+  private onKeyDown(e: any) {
     //Enter key
     if (this.editMode && e.keyCode === 13 && this.selectedItem && !this.selectedItem.isEditing) {
       e.preventDefault()
@@ -136,6 +142,7 @@ export class Doc implements Serializable {
   @observable isStoring: boolean = false
   @observable title: string
   @observable storeWithError: string = ""
+  @observable loadWithError: string = ""
   @observable loadStatus: DocLoadStatus = DocLoadStatus.HEADER_LOADED
   @observable dir: Directory | undefined
 
@@ -205,9 +212,9 @@ function filterCharacters() {
     const key = str
     const value = cache.get(key)
     if (value) return value
-    const res = key.toLowerCase().replace(/ |\./, '-').replace(notAllowedSymbols, '');
-    cache.set(key, res)
-    return res
+    const res = key.toLowerCase().replaceAll(/ |\./g, '-').replace(notAllowedSymbols, '');
+    cache.set(key, '#' + res)
+    return '#' + res
   }
 }
 
@@ -228,6 +235,8 @@ export class Page implements Serializable {
     this.uid = uid
     this.title = title
     makeObservable(this)
+
+
   }
 
   init(blocks: PageBlock[]): void {
@@ -299,9 +308,19 @@ export class Page implements Serializable {
 export class PageBlock implements Serializable {
   readonly uid: string
 
-  @observable text: string
+  @observable _text: string = ""
+  get text():string {return this._text}
+  set text(value:string) {
+    if(value !== this._text) {
+      this._text = value
+      this._estimatedRowNum = Math.max(value.length / 100, value.split(/\r\n|\r|\n/).length)
+    }
+  }
+
   @observable isEditing: boolean = false
   @observable page: Page | undefined
+  private _estimatedRowNum:number = 0
+  get estimatedRowNum():number {return this._estimatedRowNum}
 
   constructor(uid: string, text: string) {
     this.uid = uid

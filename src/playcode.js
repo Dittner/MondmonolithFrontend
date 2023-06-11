@@ -1,14 +1,17 @@
-const counter = () => {
-  let count = 0
-  return () => count++
+var fibonacci = {
+  [Symbol.iterator]: function*() {
+    var pre = 0, cur = 1
+    for (;;) {
+      var temp = pre
+      pre = cur
+      cur += temp
+      yield cur
+    }
+  }
 }
 
-let count = counter()
-console.log( count() ) //0
-console.log( count() ) //1
-console.log( count() ) //2
-
-count = counter()
-console.log( count() ) //0
-console.log( count() ) //1
-console.log( count() ) //2
+for (var value of fibonacci) {
+  if (value > 20)
+    break
+  console.log(value)
+}

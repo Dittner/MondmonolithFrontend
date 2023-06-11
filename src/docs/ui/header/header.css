@@ -1,7 +1,3 @@
-button.long {
-  min-width: 60px;
-}
-
 div.withBg {
   background-color: var(--HeaderBg);
   border-bottom: 1px solid var(--Border);

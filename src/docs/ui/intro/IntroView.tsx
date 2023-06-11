@@ -17,15 +17,16 @@ import {useDocsContext} from "../../../App";
 import {AppSize} from "../../application/Application";
 
 export const IntroView = observer(() => {
+  const {app} = useDocsContext()
   console.log("new IntroView")
 
   return <VStack halign={HAlign.CENTER}
                  valign={VAlign.CENTER}
                  gap="50px"
                  paddingTop="50px"
-                 paddingBottom="50px"
-                 paddingLeft="20px"
-                 paddingRight="20px">
+                 paddingBottom="20px"
+                 paddingLeft="15px"
+                 paddingRight="15px">
 
     <Header width="100%"
             height="50px"
@@ -33,7 +34,7 @@ export const IntroView = observer(() => {
             fixed/>
 
     <div className="about">
-      <span>{parse(aboutTxt)}</span>
+      <span>{parse(app.size === AppSize.XS ? aboutTxtXS : aboutTxt)}</span>
     </div>
 
     <div className="highlightFunc">
@@ -43,7 +44,10 @@ export const IntroView = observer(() => {
       <span>your_notes</span>
       <span className="token symbol">: [</span>
       <span className="token class">String</span>
-      <span className="token symbol">{"]) {...}"}</span>
+      <span className="token symbol">{"])"}</span>
+      {app.size !== AppSize.XS &&
+      <span className="token symbol">{"{...}"}</span>
+      }
     </div>
 
     <VStack halign={HAlign.STRETCH}
@@ -67,6 +71,18 @@ const aboutTxt = `/***
 *   to format notes and code fragments easily without   *   demo   |   1.0   |   2023
 *   having to write a plane text or HTML tags.          *   =========================
 *                                                       *
+***/
+`
+
+const aboutTxtXS = `/***
+*
+*  <b>Designed by developers for developers</b>
+*  This is a web-solution, that enables you to 
+*  make notes using a markdown-editor. Markdown
+*  helps to format notes and code fragments 
+*  easily without having to write a plane text
+*  or HTML tags.
+*                       
 ***/
 `
 
@@ -133,14 +149,13 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
     console.log("cancel")
   }
 
-  if (app.size === AppSize.S) {
+  if (app.size === AppSize.S || app.size === AppSize.XS) {
     return (
       <VStack halign={HAlign.STRETCH}
               valign={VAlign.TOP}
-              gap="5px"
+              gap="0"
               width="100%"
-              paddingLeft="20px"
-              paddingRight="20px">
+              paddingRight="15px">
 
         <p className="markdownTitle">{title}</p>
 
@@ -176,7 +191,6 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
       <p className="markdownTitle">{title}</p>
       <HStack halign={HAlign.STRETCH}
               valign={VAlign.STRETCH}
-              paddingLeft="20px"
               paddingRight="50px"
               gap="50px">
         <TextArea text={value}
@@ -184,7 +198,7 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
                   onCancel={cancel}
                   autoFocus={autoFocus}
                   width="50%"
-                  paddingHorizontal="20px"
+                  paddingLeft="20px"
                   paddingVertical="10px"/>
 
         <VSeparator/>

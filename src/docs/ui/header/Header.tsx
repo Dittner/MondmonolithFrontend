@@ -68,7 +68,7 @@ export const HeaderView = observer(() => {
       {user.authStatus === AuthStatus.AUTHORIZED &&
       <>
 
-        {app.size === AppSize.S &&
+        {(app.size === AppSize.S || app.size === AppSize.XS) &&
         <>
           <button className="icon-menu long"
                   onClick={showDocList}/>
@@ -115,7 +115,7 @@ export const HeaderView = observer(() => {
         {app.size === AppSize.L &&
         <>
 
-          <Spacer width="20px"/>
+          <Spacer width="50px"/>
 
           {editTools.editMode &&
           <>
@@ -133,7 +133,9 @@ export const HeaderView = observer(() => {
         </>
         }
 
+        {app.size !== AppSize.XS &&
         <p className="textDark mono">{editTools.editMode ? "Edit mode: " : "Read mode: "}</p>
+        }
         <label className="switch">
           <input type="checkbox"
                  checked={editTools.editMode}

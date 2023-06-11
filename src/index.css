@@ -1,7 +1,7 @@
 :root {
   color-scheme: dark;
   /* color palette */
-  --DarkGray: #3D3B48;
+  --Gray: #292f31;
   --LightGray: #DEDEDE;
   --Red: #E06C75;
   --Red25: #E06C7525;
@@ -12,6 +12,7 @@
   --TextDark: #76818d;
   --TextDark75: #76818d75;
   --TextGreen: #a7c6d2;
+  --TextDarkGreen: #596a70;
   --TextBlue: #b1c5de;
   --PageTitle: #86b3c7;
   --DocListTextSelected: #d2e4f2;
@@ -50,6 +51,25 @@ html {
   font-size: 16px;
 }
 
+@media screen and (max-width: 1000px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+
+@media screen and (max-width: 900px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  html {
+    font-size: 12px;
+  }
+}
+
 body {
   margin: 0 0;
   font-family: var(--font-family);
@@ -58,7 +78,8 @@ body {
   color: var(--Text);
   background-color: var(--AppBg);
   outline: none;
-  overflow: overlay;
+  overflow: auto;
+  box-sizing: border-box;
 }
 
 body, p, a, h1, h2, h3 {
@@ -109,6 +130,38 @@ hr {
 }
 
 /******************************/
+/*--------- SCROLLBAR -----------*/
+/******************************/
+
+.listScrollbar{
+  display: block;
+  width: 100%;
+  overflow: auto;
+}
+
+.listScrollbar::-webkit-scrollbar {
+  width: 16px;
+}
+
+.listScrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.listScrollbar::-webkit-scrollbar-thumb {
+  background: var(--Gray);
+  border-radius: 14px;
+  border: 4px solid transparent;
+  background-clip: content-box;
+}
+
+.listScrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--PageTitle);
+  border-radius: 14px;
+  border: 4px solid transparent;
+  background-clip: content-box;
+}
+
+/******************************/
 /*--------- LAYOUT -----------*/
 /******************************/
 .header {
@@ -132,12 +185,6 @@ div.appLayout.L {
 
 .withBottomBorder {
   border-bottom: 1px solid var(--Border);
-}
-
-.docTopics {
-  border-left-width: 1px;
-  border-left-style: solid;
-  border-color: var(--Border);
 }
 
 /******************************/
@@ -426,14 +473,42 @@ button.withoutBg {
   background: none;
 }
 
+button.withoutBg:hover {
+  background: none;
+  color: var(--Text);
+}
+
+button.long {
+  min-width: 60px;
+}
+
+@media screen and (max-width: 650px) {
+  button.long {
+    min-width: 32px;
+  }
+}
+
+button.big {
+  min-width: 60px;
+  min-height: 60px;
+  font-size: 1.25rem;
+}
+
+.icon-nextPage:before {
+  content: "\e909";
+}
+.icon-prevPage:before {
+  content: "\e90a";
+}
+.icon-scrollBack:before {
+  content: "\e908";
+}
 .icon-close:before {
   content: "\e907";
 }
-
 .icon-menu:before {
   content: "\e905";
 }
-
 .icon-plus:before {
   content: "\e906";
 }

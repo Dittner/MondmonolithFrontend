@@ -12,13 +12,17 @@ import {AppSize, LayoutLayer} from "../application/Application";
 export const DocsView = observer(() => {
   console.log("DocsView init");
   const docsContext = useDocsContext()
-  const drawLayoutLines = true
+  const drawLayoutLines = false
 
   useEffect(() => {
     docsContext.docsLoader.fetchDirectories()
   })
 
   const {pathname, hash, key} = useLocation()
+
+  useEffect(() => {
+    docsContext.app.isDocListShown = false
+  }, [pathname]);
 
   useEffect(() => {
     if (hash === '') {
@@ -38,70 +42,81 @@ export const DocsView = observer(() => {
 
   const headerHeight = "50px"
 
-  if (docsContext.app.size === AppSize.S) {
+  if (docsContext.app.size === AppSize.L) {
     return (
-      <>
-        <Header width="100vw"
+      <div>
+        <Header width="80%"
                 height={headerHeight}
+                left="20%"
                 top="0"
-                left="0"
-                layer={LayoutLayer.HEADER} //z-Index
+                layer={LayoutLayer.HEADER}
                 fixed/>
 
-        <DocList left={docsContext.app.isDocListShown ? "0" : "-350px"}
-                 width="350px"
+        <DocList width="20%"
                  height="100vh"
                  layer={LayoutLayer.DOC_LIST}
-                 animate="left 0.5s"
                  enableOwnScroller
                  fixed/>
 
-        <DocBody width="100vw"
-                 height="100%"
+        <DocBody width="60%"
                  top={headerHeight}
+                 bottom="0"
+                 left="20%"
                  absolute/>
 
+        <DocTopics width="20%"
+                   left="80%"
+                   top={headerHeight}
+                   bottom="0"
+                   enableOwnScroller
+                   fixed/>
         <ModalView/>
 
         {drawLayoutLines &&
         <>
-          <StylableContainer className="appLayout S"
+          <StylableContainer className="appLayout L"
                              width="100vw"
                              height="1px"
                              top={headerHeight}
                              fixed/>
 
-          <StylableContainer className="appLayout S"
+          <StylableContainer className="appLayout L"
                              width="1px"
                              height="100vh"
-                             left="350px"
+                             left="20vw"
+                             fixed/>
+
+          <StylableContainer className="appLayout L"
+                             width="1px"
+                             height="100vh"
+                             left="80vw"
                              fixed/>
         </>
         }
-      </>
+      </div>
     )
   }
 
   if (docsContext.app.size === AppSize.M) {
     return (
       <div>
-        <Header width="70vw"
+        <Header width="70%"
                 height={headerHeight}
-                left="30vw"
+                left="30%"
                 top="0"
                 layer={LayoutLayer.HEADER}
                 fixed/>
 
-        <DocList width="30vw"
+        <DocList width="30%"
                  height="100vh"
                  layer={LayoutLayer.DOC_LIST}
                  enableOwnScroller
                  fixed/>
 
-        <DocBody width="70vw"
+        <DocBody width="70%"
                  height="100%"
                  top={headerHeight}
-                 left="30vw"
+                 left="30%"
                  absolute/>
 
         <ModalView/>
@@ -128,58 +143,48 @@ export const DocsView = observer(() => {
   }
 
   return (
-    <div>
-      <Header width="80vw"
+    <>
+      <Header width="100%"
               height={headerHeight}
-              left="20vw"
               top="0"
-              layer={LayoutLayer.HEADER}
+              left="0"
+              layer={LayoutLayer.HEADER} //z-Index
               fixed/>
 
-      <DocList width="20vw"
+      <DocList left={docsContext.app.isDocListShown ? "0" : "-350px"}
+               width="350px"
                height="100vh"
                layer={LayoutLayer.DOC_LIST}
+               animate="left 0.5s"
                enableOwnScroller
                fixed/>
 
-      <DocBody width="60vw"
+      <DocBody width="100%"
                top={headerHeight}
                bottom="0"
-               left="20vw"
                absolute/>
-
-      <DocTopics width="20vw"
-                 height="100vh"
-                 left="80vw"
-                 top={headerHeight}
-                 enableOwnScroller
-                 fixed/>
 
       <ModalView/>
 
       {drawLayoutLines &&
       <>
-        <StylableContainer className="appLayout L"
+        <StylableContainer className="appLayout S"
                            width="100vw"
                            height="1px"
                            top={headerHeight}
                            fixed/>
 
-        <StylableContainer className="appLayout L"
+        <StylableContainer className="appLayout S"
                            width="1px"
                            height="100vh"
-                           left="20vw"
-                           fixed/>
-
-        <StylableContainer className="appLayout L"
-                           width="1px"
-                           height="100vh"
-                           left="80vw"
+                           left="350px"
                            fixed/>
       </>
       }
-    </div>
+    </>
   )
+
+
 })
 
 export const ModalView = observer(() => {

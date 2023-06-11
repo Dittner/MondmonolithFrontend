@@ -1,10 +1,16 @@
+.docTopics {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  border-left: 1px solid var(--Border);
+  box-sizing: border-box;
+}
 
 .docTopicsLinks {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   flex-direction: column;
-  margin-left: 10px;
   width: 100%;
 }
 

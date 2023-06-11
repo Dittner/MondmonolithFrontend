@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {stylable} from "../../application/NoCSS";
+import {useWindowSize} from "../../../App";
 
 // @ts-ignore
 export const Input = ({type, defaultValue, titel, placeHolder = "", autoFocus = false, onChange, onSubmitted}) => {
@@ -38,6 +39,8 @@ interface TextAreaProps {
 
 export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextAreaProps) => {
   const [value, setValue] = useState(text);
+  const [width, height] = useWindowSize();
+
   const ta = useRef<HTMLTextAreaElement>(null);
 
   const adjustScroller = () => {
@@ -55,6 +58,10 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextArea
   useEffect(() => {
     adjustScroller()
   })
+
+  useEffect(() => {
+    adjustScroller()
+  },[width, height])
 
   const onKeyDown = (e: any) => {
     //Enter key

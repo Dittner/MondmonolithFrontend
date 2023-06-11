@@ -1,10 +1,10 @@
 import './docBody.css';
-import {Route, Routes, useParams} from "react-router-dom";
+import {Route, Routes, useLocation, useParams} from "react-router-dom";
 import {LoadingSpinner} from "../common/Loading";
 import {observer} from "mobx-react";
 import {useDocsContext} from "../../../App";
 import * as React from "react";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import Prism from "prismjs";
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-jsx';
@@ -14,38 +14,82 @@ import {DocLoadStatus, Page, PageBlock} from "../../domain/DomainModel";
 import {LoadStatus} from "../../DocsContext";
 import {TextArea} from "../common/Input"
 import ReactMarkdown from "react-markdown";
-import {HAlign, HStack, stylable, VAlign} from "../../application/NoCSS";
+import {HAlign, HStack, stylable, VAlign, VStack} from "../../application/NoCSS";
+import {Spacer} from "../common/Spacer";
 
 
 export const DocBody = stylable(() => {
   return <Routes>
-    <Route path="/" element={<EmptyDoc/>}/>
+    <Route path="/" element={<EmptyDoc msg="No doc is selected"/>}/>
     <Route path=":docUID" element={<PageList/>}/>
   </Routes>
 })
 
-const EmptyDoc = () => {
+const EmptyDoc = ({msg}: { msg: string }) => {
   return <HStack halign={HAlign.CENTER}
                  valign={VAlign.CENTER}
                  width="100%" height="100%">
-    <p className="textDark">No doc is selected</p>
+    <p className="textDark">{msg}</p>
   </HStack>
 }
 
 const PageList = observer(() => {
   console.log("new PageList")
   const params = useParams()
-
+  const location = useLocation()
+  const [pagesSlice, setPagesSlice] = useState({start: 0, end: 0})
   const docsContext = useDocsContext()
 
   const doc = docsContext.findDoc(d => params.docUID === d.uid)
   console.log("PageList, doc = ", doc)
 
   useEffect(() => {
-    if (doc?.loadStatus === DocLoadStatus.HEADER_LOADED) {
+    if (doc?.loadStatus === DocLoadStatus.HEADER_LOADED && !doc?.loadWithError) {
       docsContext.docsLoader.fetchDoc(doc.uid)
     }
   })
+
+  useEffect(() => {
+    if (doc) {
+      let start = 0
+      if (location.hash) {
+        const isFirstLaunch = pagesSlice.end === 0
+        const pageIndex = doc.pages.findIndex(p => p.id === location.hash)
+        start = Math.max(isFirstLaunch ? pageIndex : pageIndex - 1, 0)
+      }
+
+      let end = 0
+      let rowsTotal = 0
+      for (let i = start; i < doc.pages.length; i++) {
+        end = i
+        const p = doc.pages[i]
+        rowsTotal += p.blocks.reduce((sum, block) => sum + block.estimatedRowNum, 0)
+
+        if (rowsTotal > 100) {
+          if (!location.hash) break
+          else if (location.hash && i > start) break
+        }
+      }
+      setPagesSlice({start, end})
+    }
+  }, [doc?.uid, doc?.pages.length, location.key])
+
+  const showPrevPage = () => {
+    if (pagesSlice.start > 0) {
+      const start = pagesSlice.start - 1
+      const end = pagesSlice.end - start > 3 ? pagesSlice.end - 1 : pagesSlice.end
+      setPagesSlice({start, end})
+    }
+  }
+
+  const showNextPage = () => {
+    if (doc && pagesSlice.end < (doc.pages.length - 1)) {
+      const end = pagesSlice.end + 1
+      const start = end - pagesSlice.start > 3 ? pagesSlice.start + 1 : pagesSlice.start
+      setPagesSlice({start, end})
+    }
+  }
+
 
   const exportDocAsJSON = () => {
     if (doc) {
@@ -64,26 +108,72 @@ const PageList = observer(() => {
   }
 
   if (!doc) {
-    return <p className="docNotFoundMsg">Doc not found</p>
+    return <EmptyDoc msg="Doc not found"/>
   }
 
-  return (
-    <>
-      {doc.pages.map(page => {
-        return <PageView key={page.uid} page={page}/>
-      })}
+  if (doc.loadWithError) {
+    return <EmptyDoc msg={doc.loadWithError}/>
+  }
 
-      <button id="exportBtn"
-              className="btn"
-              onClick={exportDocAsJSON}>Export as JSON
-      </button>
-    </>
+  let isFirstPageShown = pagesSlice.start === 0
+  let isLastPageShown = pagesSlice.end === (doc?.pages.length - 1)
+
+  return (
+    <VStack valign={VAlign.TOP} halign={HAlign.STRETCH} gap="0"
+            paddingHorizontal="70px"
+            paddingVertical="20px">
+      {!isFirstPageShown &&
+      <HStack halign={HAlign.CENTER} valign={VAlign.CENTER} gap="0">
+        <button className="prevNextBtn"
+                onClick={showPrevPage}>
+          <p className="icon icon-prevPage"/>
+          <p className="prevNextNtnTitle">Previous Page</p>
+        </button>
+      </HStack>
+      }
+
+      {doc.pages.length > 0 &&
+      doc.pages.slice(pagesSlice.start, pagesSlice.end + 1).map(page => {
+        return <PageView key={page.uid} page={page}/>
+      })
+      }
+
+      {!isLastPageShown &&
+      <HStack halign={HAlign.CENTER} valign={VAlign.CENTER}
+              gap="0">
+        <button className="prevNextBtn"
+                onClick={showNextPage}>
+          <p className="prevNextNtnTitle">Next Page</p>
+          <p className="icon icon-nextPage"/>
+        </button>
+      </HStack>
+      }
+
+      {doc.pages.length > 0 && isLastPageShown &&
+      <HStack halign={HAlign.STRETCH}
+              valign={VAlign.CENTER}>
+        <button id="exportBtn"
+                className="btn"
+                onClick={exportDocAsJSON}>Export as JSON
+        </button>
+
+        <Spacer/>
+
+        <button className="icon-scrollBack withoutBg big"
+                title="Scroll back"
+                onClick={e => {
+                  window.scrollTo(0, 0)
+                }}/>
+      </HStack>
+      }
+    </VStack>
   )
 })
 
 const PageView = observer(({page}: { page: Page }) => {
+  console.log("new PageView")
   return (
-    <div id={'#' + page.id} className="docPage">
+    <div id={page.id} className="docPage">
       <PageTitle page={page}/>
       {page.blocks.map(block => {
         return <PageBlockView key={block.uid} block={block}/>
@@ -132,9 +222,11 @@ const PageTitle = observer(({page}: { page: Page }) => {
 
 const PageTitleEditor = observer(({page}: { page: Page }) => {
   const apply = (value: string) => {
-    if (value) {
+    if (page.title !== value) {
       page.title = value
       page.isEditing = false
+    } else {
+      cancel()
     }
   }
 
@@ -152,8 +244,11 @@ const PageBlockView = observer(({block}: { block: PageBlock }) => {
   const isSelected = editTools.selectedItem === block
 
   useEffect(() => {
-    Prism.highlightAll()
-  })
+    if (!block.isEditing) {
+      console.log("new PageBlockView: Prism.highlightAll")
+      setTimeout(Prism.highlightAll, Math.random() * 500)
+    }
+  }, [block, block.text, block.isEditing])
 
   const selectBlock = (e: any) => {
     if (editTools.editMode && !isSelected) {
@@ -186,17 +281,30 @@ const PageBlockView = observer(({block}: { block: PageBlock }) => {
     <div className="blockContainer"
          onClick={selectBlock}
          onDoubleClick={editPage}>
-      <ReactMarkdown>{block.text}</ReactMarkdown>
+      <MemoizedMarkdown text={block.text}/>
       <div className={bgClassName}/>
     </div>
   )
 })
 
+function isMarkdownNotChanged(prev: any, next: any) {
+  console.log("isMarkdownNotChanged: ", (prev.text === next.text))
+  return prev.text === next.text
+}
+
+const Markdown = ({text}: { text: string }) => {
+  console.log("new Markdown");
+  return <ReactMarkdown>{text}</ReactMarkdown>
+}
+const MemoizedMarkdown = React.memo(Markdown, isMarkdownNotChanged)
+
 const PageBlockEditor = observer(({block}: { block: PageBlock }) => {
   const apply = (value: string) => {
-    if (value) {
+    if (block.text !== value) {
       block.text = value
       block.isEditing = false
+    } else {
+      cancel()
     }
   }
 

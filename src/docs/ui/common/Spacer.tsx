@@ -4,7 +4,7 @@ export const Spacer = ({width, height}:{width?:string, height?:string})=> {
   const style = {
     width: width,
     maxWidth: width,
-    minWWidth: width,
+    minWidth: width,
     height: height,
     maxHeight: height,
     minHeight: height,

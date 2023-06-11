@@ -13,7 +13,7 @@ export const DocTopics = stylable(() => {
 })
 
 const EmptyDocTopicsView = () => {
-  return <div className={"docTopics"}/>
+  return <div className="docTopics"/>
 }
 
 const DocTopicsView = observer(() => {
@@ -26,12 +26,13 @@ const DocTopicsView = observer(() => {
     return <></>
   }
   return (
-    <div className={"docTopics"}>
+    <div className="docTopics listScrollbar">
       <div className="docTopicsLinks">
         {doc.pages.map(page => {
-          return <NavLink key={page.uid} className="topicLink" to={'#' + page.id}>{page.title}</NavLink>
+          return <NavLink key={page.uid} className="topicLink" to={page.id}>{page.title}</NavLink>
         })}
       </div>
     </div>
   )
 })
+

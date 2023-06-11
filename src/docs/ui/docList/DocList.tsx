@@ -64,7 +64,7 @@ export const DocList = observer(stylable((props: any) => {
 
         <Spacer/>
 
-        {docsContext.app.isDocListShown && docsContext.app.size === AppSize.S &&
+        {docsContext.app.isDocListShown && (docsContext.app.size === AppSize.S || docsContext.app.size === AppSize.XS) &&
         <button className="icon-close withoutBg"
                 onClick={hideDocList}/>
         }

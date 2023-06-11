@@ -15,7 +15,9 @@ div.about {
   font-family: "ibm";
   color: var(--TextDark);
   white-space: pre;
-  margin: auto;
+  margin: -25px;
+  border: 25px solid #202527;
+  background: #202527;
 }
 
 div.highlightFunc {
@@ -29,9 +31,15 @@ div.highlightFunc {
   white-space: pre;
 }
 
+@media screen and (max-width: 480px) {
+  div.highlightFunc {
+    font-size: 1.5rem;
+  }
+}
+
 p.markdownSyntax {
   text-align: left;
-  padding-left: 25px;
+  padding-left: 45px;
   padding-bottom: 25px;
   font-size: 1.25rem;
   font-family: "ibm";
@@ -40,8 +48,7 @@ p.markdownSyntax {
 
 .markdownTitle {
   min-width: 150px;
-  margin-left: 25px;
-  margin-right: 20px;
+  padding-left: 45px;
   text-align: left;
   /*font-family: var(--font-family-mono);*/
   font-family: "ibm";

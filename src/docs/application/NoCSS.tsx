@@ -38,8 +38,9 @@ const RuleBuilder = () =>  {
   const notAllowedSymbolsInClassName = /[%. ]+/g;
   const classNameHash = new Map<string,string>()
 
-  const dynamicStyleSheet = new CSSStyleSheet();
-  document.adoptedStyleSheets = [dynamicStyleSheet];
+  //const dynamicStyleSheet = new CSSStyleSheet();
+  //document.adoptedStyleSheets = [dynamicStyleSheet];
+  const styleSheet = window.document.styleSheets[0];
 
   const operator: { [key: string]: (value:any)=>void } = Object.create(null)
 
@@ -56,7 +57,7 @@ const RuleBuilder = () =>  {
 
     const rule = '.' + className + style + '}';
     classNameHash.set(hashSum, className)
-    dynamicStyleSheet.insertRule(rule)
+    styleSheet.insertRule(rule)
 
     return className
   }

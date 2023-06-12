@@ -3,7 +3,6 @@ import {observer} from "mobx-react";
 import {TextArea} from "../common/Input";
 import React, {useEffect, useState} from "react";
 import ReactMarkdown from "react-markdown";
-import parse from 'html-react-parser';
 import Prism from "prismjs";
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-jsx';
@@ -34,7 +33,7 @@ export const IntroView = observer(() => {
             fixed/>
 
     <div className="about">
-      <span>{parse(app.size === AppSize.XS ? aboutTxtXS : aboutTxt)}</span>
+      <span>{app.size === AppSize.XS ? aboutTxtXS : aboutTxt}</span>
     </div>
 
     <div className="highlightFunc">
@@ -65,7 +64,7 @@ export const IntroView = observer(() => {
 
 const aboutTxt = `/***
 *                                                       *
-*   <b>Designed by developers for developers</b>               *   =========================
+*   Designed by developers for developers               *   =========================
 *   This is a web-solution, that enables you to make    *   MODE   |   VER   |   DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––––
 *   to format notes and code fragments easily without   *   demo   |   1.0   |   2023

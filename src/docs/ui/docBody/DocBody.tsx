@@ -37,7 +37,13 @@ const PageList = observer(() => {
   console.log("new PageList")
   const params = useParams()
   const location = useLocation()
-  const [pagesSlice, setPagesSlice] = useState({start: 0, end: 0})
+  const [pagesSlice, setPagesSlice] = useState(
+    {
+      start: 0,
+      end: 0,
+      isFirstPageShown: true,
+      isLastPageShown: true
+    })
   const docsContext = useDocsContext()
 
   const doc = docsContext.findDoc(d => params.docUID === d.uid)
@@ -52,7 +58,7 @@ const PageList = observer(() => {
   useEffect(() => {
     if (doc) {
       let start = 0
-      if (location.hash) {
+      if(doc.pages.length > 0 && !doc.pages[0].isEditing && location.hash) {
         const isFirstLaunch = pagesSlice.end === 0
         const pageIndex = doc.pages.findIndex(p => p.id === location.hash)
         start = Math.max(isFirstLaunch ? pageIndex : pageIndex - 1, 0)
@@ -70,15 +76,30 @@ const PageList = observer(() => {
           else if (location.hash && i > start) break
         }
       }
-      setPagesSlice({start, end})
+      const isFirstPageShown = start === 0
+      const isLastPageShown = doc && end === (doc.pages.length - 1)
+      setPagesSlice({start, end, isFirstPageShown, isLastPageShown})
     }
   }, [doc?.uid, doc?.pages.length, location.key])
 
   const showPrevPage = () => {
-    if (pagesSlice.start > 0) {
+    if (doc && pagesSlice.start > 0) {
       const start = pagesSlice.start - 1
       const end = pagesSlice.end - start > 3 ? pagesSlice.end - 1 : pagesSlice.end
-      setPagesSlice({start, end})
+
+      const isFirstPageShown = true
+      const isLastPageShown = end === (doc.pages.length - 1)
+      window.scrollTo(0, 1)
+
+      setTimeout(() => {
+        setPagesSlice({start, end, isFirstPageShown, isLastPageShown})
+      }, 10)
+
+
+        setTimeout(() => {
+          const isFirstPageShown = start === 0
+          setPagesSlice({start, end, isFirstPageShown, isLastPageShown})
+        }, 50)
     }
   }
 
@@ -86,7 +107,9 @@ const PageList = observer(() => {
     if (doc && pagesSlice.end < (doc.pages.length - 1)) {
       const end = pagesSlice.end + 1
       const start = end - pagesSlice.start > 3 ? pagesSlice.start + 1 : pagesSlice.start
-      setPagesSlice({start, end})
+      const isFirstPageShown = start === 0
+      const isLastPageShown = end === (doc.pages.length - 1)
+      setPagesSlice({start, end, isFirstPageShown, isLastPageShown})
     }
   }
 
@@ -103,6 +126,7 @@ const PageList = observer(() => {
     }
   }
 
+
   if (doc?.loadStatus === DocLoadStatus.LOADING || docsContext.dirsLoadStatus === LoadStatus.LOADING) {
     return <LoadingSpinner/>
   }
@@ -115,21 +139,17 @@ const PageList = observer(() => {
     return <EmptyDoc msg={doc.loadWithError}/>
   }
 
-  let isFirstPageShown = pagesSlice.start === 0
-  let isLastPageShown = pagesSlice.end === (doc?.pages.length - 1)
-
   return (
-    <VStack valign={VAlign.TOP} halign={HAlign.STRETCH} gap="0"
+    <VStack valign={VAlign.TOP} halign={HAlign.CENTER} gap="0"
             paddingHorizontal="70px"
             paddingVertical="20px">
-      {!isFirstPageShown &&
-      <HStack halign={HAlign.CENTER} valign={VAlign.CENTER} gap="0">
-        <button className="prevNextBtn"
-                onClick={showPrevPage}>
-          <p className="icon icon-prevPage"/>
-          <p className="prevNextNtnTitle">Previous Page</p>
-        </button>
-      </HStack>
+
+      {!pagesSlice.isFirstPageShown &&
+      <button className="prevNextBtn"
+              onClick={showPrevPage}>
+        <p className="icon icon-prevPage"/>
+        <p className="prevNextNtnTitle">Previous Page</p>
+      </button>
       }
 
       {doc.pages.length > 0 &&
@@ -138,20 +158,19 @@ const PageList = observer(() => {
       })
       }
 
-      {!isLastPageShown &&
-      <HStack halign={HAlign.CENTER} valign={VAlign.CENTER}
-              gap="0">
-        <button className="prevNextBtn"
-                onClick={showNextPage}>
-          <p className="prevNextNtnTitle">Next Page</p>
-          <p className="icon icon-nextPage"/>
-        </button>
-      </HStack>
+      {doc.pages.length > 0 && !pagesSlice.isLastPageShown &&
+
+      <button className="prevNextBtn"
+              onClick={showNextPage}>
+        <p className="prevNextNtnTitle">Next Page</p>
+        <p className="icon icon-nextPage"/>
+      </button>
       }
 
-      {doc.pages.length > 0 && isLastPageShown &&
+      {doc.pages.length > 0 && pagesSlice.isLastPageShown &&
       <HStack halign={HAlign.STRETCH}
-              valign={VAlign.CENTER}>
+              valign={VAlign.CENTER}
+              width="100%">
         <button id="exportBtn"
                 className="btn"
                 onClick={exportDocAsJSON}>Export as JSON
@@ -193,6 +212,7 @@ const PageTitle = observer(({page}: { page: Page }) => {
   }
 
   const editPage = (e: any) => {
+    e.preventDefault()
     e.stopPropagation()
     if (editTools.editMode && isSelected) {
       page.isEditing = true

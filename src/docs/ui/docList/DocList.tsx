@@ -34,12 +34,17 @@ export const DocList = observer(stylable((props: any) => {
   const docsContext = useDocsContext()
   console.log("DocList, dirs: ", docsContext.dirs)
   if (docsContext.dirsLoadStatus === LoadStatus.LOADING) {
-    return <></>
+    return <VStack className='docListContainer'
+                   valign={VAlign.TOP}
+                   halign={HAlign.CENTER}
+                   width="100%"
+                   height="100%"/>
   }
   return (
     <VStack className='docListContainer'
             valign={VAlign.TOP}
             halign={HAlign.CENTER}
+            width="100%"
             height="100%">
       <HStack halign={HAlign.CENTER}
               valign={VAlign.CENTER}
@@ -198,7 +203,7 @@ const DocEditForm = (props: any) => {
   const [newDocTitle, setNewDocTitle] = useState(doc?.title || '')
   const [newDirTitle, setNewDirTitle] = useState(doc?.dir?.title || '')
 
-  const apply = () => {
+  const apply = (e:any) => {
     onApply(newDocTitle, newDirTitle)
   }
   const cancel = () => {
@@ -252,7 +257,7 @@ const DirEditForm = (props: any) => {
 
   const [title, setTitle] = useState(dir.title || '');
 
-  const apply = () => {
+  const apply = (e:any) => {
     if (!dir.isStoring && title) onApply(title)
   }
   const cancel = () => {

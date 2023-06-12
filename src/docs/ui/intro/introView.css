@@ -15,7 +15,7 @@ div.about {
   font-family: "ibm";
   color: var(--TextDark);
   white-space: pre;
-  margin: -25px;
+  margin: -50px;
   border: 25px solid #202527;
   background: #202527;
 }

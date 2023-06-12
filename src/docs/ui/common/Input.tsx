@@ -9,6 +9,7 @@ export const Input = ({type, defaultValue, titel, placeHolder = "", autoFocus = 
     //Enter key
     if (e.keyCode === 13 && !e.shiftKey) {
       e.preventDefault()
+      e.stopPropagation()
       onSubmitted()
     }
   }

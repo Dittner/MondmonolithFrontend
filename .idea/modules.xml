@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/neualchemie.iml" filepath="$PROJECT_DIR$/.idea/neualchemie.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../mondmonolith/.idea/Mondmonolith.iml" filepath="$PROJECT_DIR$/../mondmonolith/.idea/Mondmonolith.iml" />
     </modules>
   </component>
 </project>

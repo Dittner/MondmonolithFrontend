@@ -39,7 +39,7 @@ div.highlightFunc {
 
 p.markdownSyntax {
   text-align: left;
-  padding-left: 45px;
+  padding-left: 25px;
   padding-bottom: 25px;
   font-size: 1.25rem;
   font-family: "ibm";
@@ -48,7 +48,7 @@ p.markdownSyntax {
 
 .markdownTitle {
   min-width: 150px;
-  padding-left: 45px;
+  padding-left: 25px;
   text-align: left;
   /*font-family: var(--font-family-mono);*/
   font-family: "ibm";

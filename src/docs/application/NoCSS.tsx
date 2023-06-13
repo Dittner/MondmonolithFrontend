@@ -38,8 +38,8 @@ const RuleBuilder = () =>  {
   const notAllowedSymbolsInClassName = /[%. ]+/g;
   const classNameHash = new Map<string,string>()
 
-  //const dynamicStyleSheet = new CSSStyleSheet();
-  //document.adoptedStyleSheets = [dynamicStyleSheet];
+  //const styleSheet = new CSSStyleSheet();
+  //document.adoptedStyleSheets = [styleSheet];
   const styleSheet = window.document.styleSheets[0];
 
   const operator: { [key: string]: (value:any)=>void } = Object.create(null)
@@ -159,7 +159,7 @@ export const buildAndGetClassName = (props:any):string => {
   return className()
 }
 
-export interface NoCSSComponentProps {
+export interface StylableComponentProps {
   width?: string,
   height?: string,
   minWidth?: string,
@@ -187,7 +187,7 @@ export interface NoCSSComponentProps {
   children?: any,
 }
 
-export const stylable = <T,X extends T & NoCSSComponentProps>(component: (componentProps:T) => JSX.Element): ((props: X) => JSX.Element) => {
+export const stylable = <T,X extends T & StylableComponentProps>(component: (componentProps:T) => JSX.Element): ((props: X) => JSX.Element) => {
   return ( props: X ) => {
     const className = buildAndGetClassName(props)
     return <div className={props.className ? props.className + " " + className : className}>{component(props)}</div>
@@ -198,7 +198,7 @@ export const StylableContainer = stylable((props:any)=> {
   return props.className ? <div className={props.className}>{props.children}</div> : <div>{props.children}</div>
 })
 
-interface StackProps extends NoCSSComponentProps{
+interface StackProps extends StylableComponentProps{
   halign: HAlign,
   valign: VAlign,
 }

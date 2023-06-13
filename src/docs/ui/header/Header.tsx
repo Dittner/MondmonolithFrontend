@@ -30,8 +30,8 @@ export const HeaderView = observer(() => {
 
   const doc = docsContext.findDoc(d => params.docUID === d.uid)
 
-  const [name, setName] = useState("demo")
-  const [pwd, setPwd] = useState("pwd")
+  const [name, setName] = useState(user.login)
+  const [pwd, setPwd] = useState(user.pwd)
 
   const showDocList = () => {
     app.isDocListShown = true

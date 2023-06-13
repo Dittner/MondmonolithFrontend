@@ -14,8 +14,8 @@ interface Serializable {
 
 export class User {
   readonly uid: string
-  @observable login: string = ""
-  @observable pwd: string = ""
+  @observable login: string = "demo"
+  @observable pwd: string = "pwd"
   @observable authStatus: AuthStatus = AuthStatus.SIGNED_OUT
   @observable authWithError: string = ""
 

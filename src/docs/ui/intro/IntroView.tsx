@@ -24,8 +24,7 @@ export const IntroView = observer(() => {
                  gap="50px"
                  paddingTop="50px"
                  paddingBottom="20px"
-                 paddingLeft="15px"
-                 paddingRight="15px">
+                 paddingHorizontal="40px">
 
     <Header width="100%"
             height="50px"
@@ -152,9 +151,8 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
     return (
       <VStack halign={HAlign.STRETCH}
               valign={VAlign.TOP}
-              gap="0"
-              width="100%"
-              paddingRight="15px">
+              gap="5px"
+              width="100%">
 
         <p className="markdownTitle">{title}</p>
 
@@ -162,9 +160,7 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
                   onApply={apply}
                   onCancel={cancel}
                   autoFocus={autoFocus}
-                  width="100%"
-                  paddingHorizontal="20px"
-                  paddingVertical="10px"/>
+                  width="100%"/>
 
         <HStack halign={HAlign.LEFT}
                 valign={VAlign.STRETCH}
@@ -190,15 +186,14 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
       <p className="markdownTitle">{title}</p>
       <HStack halign={HAlign.STRETCH}
               valign={VAlign.STRETCH}
-              paddingRight="50px"
               gap="50px">
+        {/*<Label text="Some Text"/>*/}
+
         <TextArea text={value}
                   onApply={apply}
                   onCancel={cancel}
                   autoFocus={autoFocus}
-                  width="50%"
-                  paddingLeft="20px"
-                  paddingVertical="10px"/>
+                  width="50%"/>
 
         <VSeparator/>
 
@@ -224,4 +219,8 @@ const MarkdownText = stylable(({value}: { value: string }) => {
   return <div className="markdown">
     <ReactMarkdown key={value}>{value}</ReactMarkdown>
   </div>
+})
+
+const Label = stylable(({text}: { text: String }) => {
+  return <p>{text}</p>
 })

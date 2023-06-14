@@ -23,8 +23,7 @@ export const IntroView = observer(() => {
                  valign={VAlign.CENTER}
                  gap="50px"
                  paddingTop="100px"
-                 paddingBottom="20px"
-                 paddingHorizontal="20px">
+                 paddingBottom="20px">
 
     <Header width="100%"
             height="50px"

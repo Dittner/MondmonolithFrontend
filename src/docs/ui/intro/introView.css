@@ -16,7 +16,7 @@ div.about {
   color: var(--TextDark);
   white-space: pre;
   margin: -50px;
-  border: 25px solid var(--AppBg);
+  border: 30px solid var(--AppBg);
   background: var(--AppBg);
 }
 
@@ -44,7 +44,7 @@ div.highlightFunc {
 }
 
 div.markdownContainer {
-  border: 20px solid var(--AppBg);
+  border: 40px solid var(--AppBg);
   background: var(--AppBg);
 }
 

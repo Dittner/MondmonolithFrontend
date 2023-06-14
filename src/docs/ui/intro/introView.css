@@ -16,8 +16,8 @@ div.about {
   color: var(--TextDark);
   white-space: pre;
   margin: -50px;
-  border: 25px solid #24292d;
-  background: #24292d;
+  border: 25px solid var(--AppBg);
+  background: var(--AppBg);
 }
 
 img.introHeaderImg {

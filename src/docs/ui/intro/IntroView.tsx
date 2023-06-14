@@ -31,7 +31,7 @@ export const IntroView = observer(() => {
             top="0"
             fixed/>
 
-    <img src="../introHeaderBg.jpg" className="introHeaderImg"/>
+    <img src={process.env.PUBLIC_URL + "/introHeaderBg.jpg"} className="introHeaderImg"/>
 
     <div className="about">
       <span>{app.size === AppSize.XS ? aboutTxtXS : aboutTxt}</span>

@@ -164,7 +164,7 @@ export const HeaderView = observer(() => {
           <VStack halign={HAlign.CENTER} valign={VAlign.TOP} gap="5px">
             <Input type="text"
                    defaultValue={name}
-                   titel="Name"
+                   titel="Login"
                    placeHolder="Enter your name"
                    onChange={(value: string) => setName(value)}
                    onSubmitted={handleSignIn}

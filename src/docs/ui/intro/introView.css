@@ -16,9 +16,21 @@ div.about {
   color: var(--TextDark);
   white-space: pre;
   margin: -50px;
-  border: 25px solid #202527;
-  background: #202527;
+  border: 25px solid #24292d;
+  background: #24292d;
 }
+
+img.introHeaderImg {
+  background-repeat: no-repeat;
+  position: fixed;
+  width: 1660px;
+  left: calc(50% - 830px);
+  top: 0;
+  margin: auto;
+  max-width: 1700px;
+  z-index: -1;
+}
+
 
 div.highlightFunc {
   margin: auto;
@@ -30,6 +42,12 @@ div.highlightFunc {
   color: var(--Text);
   white-space: pre;
 }
+
+div.markdownContainer {
+  border: 20px solid var(--AppBg);
+  background: var(--AppBg);
+}
+
 
 @media screen and (max-width: 480px) {
   div.highlightFunc {

@@ -22,18 +22,21 @@ export const IntroView = observer(() => {
   return <VStack halign={HAlign.CENTER}
                  valign={VAlign.CENTER}
                  gap="50px"
-                 paddingTop="50px"
+                 paddingTop="100px"
                  paddingBottom="20px"
-                 paddingHorizontal="40px">
+                 paddingHorizontal="20px">
 
     <Header width="100%"
             height="50px"
             top="0"
             fixed/>
 
+    <img src="/introHeaderBg.jpg" className="introHeaderImg"/>
+
     <div className="about">
       <span>{app.size === AppSize.XS ? aboutTxtXS : aboutTxt}</span>
     </div>
+    <Spacer height="120px"/>
 
     <div className="highlightFunc">
       <span className="token keyword">func </span>
@@ -48,7 +51,8 @@ export const IntroView = observer(() => {
       }
     </div>
 
-    <VStack halign={HAlign.STRETCH}
+
+    <VStack className="markdownContainer" halign={HAlign.STRETCH}
             valign={VAlign.TOP}
             maxWidth={"1700px"}>
       <p className="markdownSyntax">Examples of Markdown formatting</p>

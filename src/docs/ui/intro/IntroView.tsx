@@ -42,7 +42,7 @@ export const IntroView = observer(() => {
       <span className="token keyword">func </span>
       <span className="token function">highlight</span>
       <span className="token symbol">(</span>
-      <span>your_notes</span>
+      <span>yourNotes</span>
       <span className="token symbol">: [</span>
       <span className="token class">String</span>
       <span className="token symbol">{"])"}</span>

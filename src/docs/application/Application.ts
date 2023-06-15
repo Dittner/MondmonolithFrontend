@@ -27,6 +27,7 @@ export class Application {
     this.uid = UUID()
     this.size = this.evaluateAppSize()
     makeObservable(this)
+    console.log("isMobileDevice: "+this.isMobileDevice)
   }
 
   subscribeToWindowResize(): void {
@@ -45,6 +46,11 @@ export class Application {
     if (window.innerWidth > 1200) return AppSize.M
     if (window.innerWidth > 767) return AppSize.S
     return AppSize.XS
+  }
+
+  get isMobileDevice():boolean {
+    return ( 'ontouchstart' in window ) ||
+      ( navigator.maxTouchPoints > 0 );
   }
 }
 

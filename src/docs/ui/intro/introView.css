@@ -10,12 +10,17 @@
   color: #5391c0
 }
 
+div.introViewCont {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
 div.about {
   font-size: 1rem;
   font-family: "ibm";
   color: var(--TextDark);
   white-space: pre;
-  margin: -50px;
+  margin-top: -50px;
   border: 30px solid var(--AppBg);
   background: var(--AppBg);
 }
@@ -44,7 +49,7 @@ div.highlightFunc {
 }
 
 div.markdownContainer {
-  border: 40px solid var(--AppBg);
+  border: 30px solid var(--AppBg);
   background: var(--AppBg);
 }
 

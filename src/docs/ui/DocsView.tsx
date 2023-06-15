@@ -151,8 +151,8 @@ export const DocsView = observer(() => {
               layer={LayoutLayer.HEADER} //z-Index
               fixed/>
 
-      <DocList left={docsContext.app.isDocListShown ? "0" : "-350px"}
-               width="350px"
+      <DocList left={docsContext.app.isDocListShown ? "0" : "-300px"}
+               width="300px"
                height="100vh"
                layer={LayoutLayer.DOC_LIST}
                animate="left 0.5s"

@@ -314,3 +314,15 @@ export const HStack = (props: StackProps) => {
   else
     return <div className={buildAndGetClassName(style)}>{props.children}</div>
 }
+
+const defStackProps = {
+  "boxSizing": "border-box",
+}
+
+export const Stack = (props: StylableComponentProps) => {
+  const style = {...defStackProps, ...props}
+  if (props.hasOwnProperty("className"))
+    return <div className={props.className + " " + buildAndGetClassName(style)}>{props.children}</div>
+  else
+    return <div className={buildAndGetClassName(style)}>{props.children}</div>
+}

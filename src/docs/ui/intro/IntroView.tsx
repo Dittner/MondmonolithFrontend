@@ -19,7 +19,8 @@ export const IntroView = observer(() => {
   const {app} = useDocsContext()
   console.log("new IntroView")
 
-  return <VStack halign={HAlign.CENTER}
+  return <VStack className="introViewCont"
+                 halign={HAlign.CENTER}
                  valign={VAlign.CENTER}
                  gap="50px"
                  paddingTop="100px"
@@ -55,7 +56,7 @@ export const IntroView = observer(() => {
             valign={VAlign.TOP}
             maxWidth={"1700px"}>
       <p className="markdownSyntax">Examples of Markdown formatting</p>
-      <MarkdownEditor text={headings} title="0.Headings, font style" autoFocus/>
+      <MarkdownEditor text={headings} title="0.Headings, font style" autoFocus={!app.isMobileDevice}/>
       <MarkdownEditor text={blockquote} title="1.Blockquote"/>
       <MarkdownEditor text={code} title="2.Code"/>
       <MarkdownEditor text={lists} title="3.Lists"/>
@@ -77,7 +78,7 @@ const aboutTxt = `/***
 
 const aboutTxtXS = `/***
 *
-*  <b>Designed by developers for developers</b>
+*  Designed by developers for developers
 *  This is a web-solution, that enables you to 
 *  make notes using a markdown-editor. Markdown
 *  helps to format notes and code fragments 
@@ -108,7 +109,7 @@ const code = `## Memoization
 Memoization is an optimisation technique base on remembering results returned by
  a function called with same arguments, that uses a cache and a \`generateKey\` function.
  
-~~~javascript
+~~~js
 const memoize = (fn) => {
   const argKey = (x) => x.toString() + ':' + typeof x
   const generateKey = (args) => args.map(argKey).join('|')
@@ -167,11 +168,8 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
 
         <HStack halign={HAlign.LEFT}
                 valign={VAlign.STRETCH}
-                paddingLeft="20px"
-                paddingRight="20px"
-                gap="50px">
-
-          <VSeparator/>
+                paddingLeft="25px"
+                paddingRight="20px">
 
           {value &&
           <MarkdownText value={value}
@@ -222,8 +220,4 @@ const MarkdownText = stylable(({value}: { value: string }) => {
   return <div className="markdown">
     <ReactMarkdown key={value}>{value}</ReactMarkdown>
   </div>
-})
-
-const Label = stylable(({text}: { text: String }) => {
-  return <p>{text}</p>
 })

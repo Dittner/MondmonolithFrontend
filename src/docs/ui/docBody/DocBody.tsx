@@ -16,6 +16,7 @@ import {TextArea} from "../common/Input"
 import ReactMarkdown from "react-markdown";
 import {HAlign, HStack, stylable, VAlign, VStack} from "../../application/NoCSS";
 import {Spacer} from "../common/Spacer";
+import {AppSize} from "../../application/Application";
 
 
 export const DocBody = stylable(() => {
@@ -141,7 +142,7 @@ const PageList = observer(() => {
 
   return (
     <VStack valign={VAlign.TOP} halign={HAlign.CENTER} gap="0"
-            paddingHorizontal="70px"
+            paddingHorizontal={docsContext.app.size === AppSize.XS ? "32px" : "70px"}
             paddingVertical="20px">
 
       {!pagesSlice.isFirstPageShown &&

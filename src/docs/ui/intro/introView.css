@@ -20,7 +20,6 @@ div.about {
   font-family: "ibm";
   color: var(--TextDark);
   white-space: pre;
-  margin-top: -50px;
   border: 30px solid var(--AppBg);
   background: var(--AppBg);
 }

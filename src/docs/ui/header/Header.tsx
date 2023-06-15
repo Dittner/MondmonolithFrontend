@@ -11,7 +11,7 @@ import {AppSize, YesNoDialog} from "../../application/Application";
 import {Spacer} from "../common/Spacer";
 import {VSeparator} from "../common/Separator";
 
-export const Header = stylable( () => {
+export const Header = stylable(() => {
   return <Routes>
     <Route path="/" element={<HeaderView/>}/>
     <Route path=":docUID" element={<HeaderView/>}/>
@@ -19,7 +19,8 @@ export const Header = stylable( () => {
 })
 
 export const HeaderVerSep = () => {
-  return <VSeparator height="20px" marginHorizontal="15px"/>
+  const {app} = useDocsContext()
+  return <VSeparator marginHorizontal={app.size === AppSize.XS ? "10px" : "15px"} height="20px"/>
 }
 
 export const HeaderView = observer(() => {
@@ -145,9 +146,12 @@ export const HeaderView = observer(() => {
 
         <HeaderVerSep/>
 
-        <p className="textDark mono">{user.login}</p>
-
-        <HeaderVerSep/>
+        {app.size !== AppSize.XS &&
+        <>
+          <p className="textDark mono">{user.login}</p>
+          <HeaderVerSep/>
+        </>
+        }
 
         <button className="btn"
                 onClick={handleSignOut}>Sign out

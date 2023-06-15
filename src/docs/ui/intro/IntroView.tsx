@@ -19,11 +19,15 @@ export const IntroView = observer(() => {
   const {app} = useDocsContext()
   console.log("new IntroView")
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  })
+
   return <VStack className="introViewCont"
                  halign={HAlign.CENTER}
                  valign={VAlign.CENTER}
                  gap="30px"
-                 paddingTop="100px"
+                 paddingTop="25px"
                  paddingBottom="20px">
 
     <Header width="100%"
@@ -40,7 +44,7 @@ export const IntroView = observer(() => {
     </div>
 
     {app.size !== AppSize.XS &&
-    <Spacer height="120px"/>
+    <Spacer height="180px"/>
     }
 
     <div className="highlightFunc">
@@ -77,7 +81,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ==========================
 *   This is a web-solution, that enables you to make    *   MODE   |   VER   |   BUILD
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   demo   |   1.0   |   00014
+*   to format notes and code fragments easily without   *   demo   |   1.0   |   14
 *   having to write a plane text or HTML tags.          *   ==========================
 *                                                       *
 ***/
@@ -93,7 +97,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  ––––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |   VER: 1.0  |   BUILD: 00014
+*  MODE: demo  |   VER: 1.0  |   BUILD: 14
 *  ––––––––––––––––––––––––––––––––––––––––––
 *
 ***/

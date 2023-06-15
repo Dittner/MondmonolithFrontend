@@ -22,7 +22,7 @@ export const IntroView = observer(() => {
   return <VStack className="introViewCont"
                  halign={HAlign.CENTER}
                  valign={VAlign.CENTER}
-                 gap="50px"
+                 gap="30px"
                  paddingTop="100px"
                  paddingBottom="20px">
 
@@ -31,12 +31,17 @@ export const IntroView = observer(() => {
             top="0"
             fixed/>
 
+    {app.size !== AppSize.XS &&
     <img src="/headerBg.jpg" className="introHeaderImg"/>
+    }
 
     <div className="about">
       <span>{app.size === AppSize.XS ? aboutTxtXS : aboutTxt}</span>
     </div>
+
+    {app.size !== AppSize.XS &&
     <Spacer height="120px"/>
+    }
 
     <div className="highlightFunc">
       <span className="token keyword">func </span>
@@ -62,16 +67,18 @@ export const IntroView = observer(() => {
       <MarkdownEditor text={lists} title="3.Lists"/>
       <MarkdownEditor text={links} title="4.Links"/>
     </VStack>
+
+    <p className="mono textDark">{app.isMobileDevice ? 'Mobile' : 'Desktop'}</p>
   </VStack>
 })
 
 const aboutTxt = `/***
 *                                                       *
-*   Designed by developers for developers               *   =========================
-*   This is a web-solution, that enables you to make    *   MODE   |   VER   |   DATE
-*   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   demo   |   1.0   |   2023
-*   having to write a plane text or HTML tags.          *   =========================
+*   Designed by developers for developers               *   ==========================
+*   This is a web-solution, that enables you to make    *   MODE   |   VER   |   BUILD
+*   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––––
+*   to format notes and code fragments easily without   *   demo   |   1.0   |   00014
+*   having to write a plane text or HTML tags.          *   ==========================
 *                                                       *
 ***/
 `
@@ -84,7 +91,11 @@ const aboutTxtXS = `/***
 *  helps to format notes and code fragments 
 *  easily without having to write a plane text
 *  or HTML tags.
-*                       
+*
+*  ––––––––––––––––––––––––––––––––––––––––––
+*  MODE: demo  |   VER: 1.0  |   BUILD: 00014
+*  ––––––––––––––––––––––––––––––––––––––––––
+*
 ***/
 `
 

@@ -81,7 +81,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ==========================
 *   This is a web-solution, that enables you to make    *   MODE   |   VER   |   BUILD
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   demo   |   1.0   |   14
+*   to format notes and code fragments easily without   *   demo   |   1.0   |   15
 *   having to write a plane text or HTML tags.          *   ==========================
 *                                                       *
 ***/
@@ -97,7 +97,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  ––––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |   VER: 1.0  |   BUILD: 14
+*  MODE: demo  |   VER: 1.0  |   BUILD: 15
 *  ––––––––––––––––––––––––––––––––––––––––––
 *
 ***/

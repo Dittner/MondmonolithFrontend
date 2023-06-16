@@ -74,15 +74,9 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextArea
   useEffect(() => {
     const textArea = ta?.current
     if (autoFocus && textArea) {
-      if (ta && autoFocus) {
-        const timeout = setTimeout(() => {
-          textArea.focus()
-          textArea.setSelectionRange(text.length, text.length);
-        }, 1000)
-        return () => clearTimeout(timeout);
-      }
+      textArea.setSelectionRange(text.length, text.length)
     }
-  },[])
+  }, [])
 
   const onKeyDown = (e: any) => {
     //Enter key
@@ -99,10 +93,8 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextArea
     }
   }
 
-  return <textarea className={isFocused ? "focused" : ""} value={value}
-                   onFocus={() => setFocused(true)}
-                   onBlur={() => setFocused(false)}
-                   onMouseOut={() => setFocused(false)}
+  return <textarea value={value}
+                   autoFocus={autoFocus}
                    ref={ta}
                    rows={value.split(/\r\n|\r|\n/).length}
                    spellCheck="false"

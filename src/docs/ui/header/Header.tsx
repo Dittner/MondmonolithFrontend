@@ -232,13 +232,6 @@ const ToolsPanel = observer(() => {
     }
   }
 
-  const editBlockDown = (e: any) => {
-    e.stopPropagation()
-    if (editTools.editMode && selectedPageBlock) {
-      selectedPageBlock.isEditing = true
-    }
-  }
-
   const deleteBlock = (e: any) => {
     e.stopPropagation()
     if (editTools.editMode && selectedPage) {
@@ -272,10 +265,6 @@ const ToolsPanel = observer(() => {
               valign={VAlign.CENTER}
               halign={HAlign.LEFT}
               height="50px" gap="4px">
-        <button className="icon-edit long"
-                disabled={!editTools.selectedItem}
-                title="Edit Block"
-                onClick={editBlockDown}/>
         <button className="icon-plus long"
                 disabled={!editTools.selectedItem}
                 title="Add new Block"

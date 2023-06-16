@@ -351,7 +351,7 @@ textarea {
   transition: border-left 300ms;
 }
 
-textarea.focused {
+textarea:focus {
   border-left: 5px solid var(--Red);
   background-color: var(--InputBg);
   transition: border-left 300ms;

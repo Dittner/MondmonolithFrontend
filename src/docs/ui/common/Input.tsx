@@ -58,6 +58,10 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus, selectAll
   }
 
   useEffect(() => {
+    adjustScroller()
+  }, [width, height])
+
+  useEffect(() => {
     // const textArea = ta?.current
     // if (autoFocus && textArea) {
     //   textArea.focus()

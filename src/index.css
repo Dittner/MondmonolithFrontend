@@ -29,7 +29,7 @@
   --BtnColor: #E06C75;
   --BtnHoverColor: #c7d7e5;
   --BtnDisabledColor: #76818d;
-  --CodeLineHeight: 1.6;
+  --CodeLineHeight: 1.76;
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   --font-family-mono: Menlo, source-code-pro, Monaco, 'Courier New', monospace;
 }
@@ -344,8 +344,8 @@ textarea {
   border-left: 5px solid var(--TextGreen);
   background-color: var(--InputBg);
   resize: none;
-  /*outline: none;*/
-  /*overflow: visible;*/
+  outline: none;
+  overflow: visible;
   caret-color: var(--Red);
   box-shadow: 1px 4px 4px #00000010 inset;
   transition: border-left 300ms;

@@ -267,7 +267,7 @@ const PageBlockView = observer(({block}: { block: PageBlock }) => {
   useEffect(() => {
     if (!block.isEditing) {
       console.log("new PageBlockView: Prism.highlightAll")
-      setTimeout(Prism.highlightAll, Math.random() * 500)
+      setTimeout(Prism.highlightAll, Math.random() * 2500)
     }
   }, [block, block.text, block.isEditing])
 
@@ -302,22 +302,11 @@ const PageBlockView = observer(({block}: { block: PageBlock }) => {
     <div className="blockContainer"
          onClick={selectBlock}
          onDoubleClick={editPage}>
-      <MemoizedMarkdown text={block.text}/>
+      <ReactMarkdown className="reactMarkdown">{block.text}</ReactMarkdown>
       <div className={bgClassName}/>
     </div>
   )
 })
-
-function isMarkdownNotChanged(prev: any, next: any) {
-  console.log("isMarkdownNotChanged: ", (prev.text === next.text))
-  return prev.text === next.text
-}
-
-const Markdown = ({text}: { text: string }) => {
-  console.log("new Markdown");
-  return <ReactMarkdown>{text}</ReactMarkdown>
-}
-const MemoizedMarkdown = React.memo(Markdown, isMarkdownNotChanged)
 
 const PageBlockEditor = observer(({block}: { block: PageBlock }) => {
   const apply = (value: string) => {

@@ -21,14 +21,15 @@
   --HeaderBg: #252a2c;
   --DarkBg: #00000020;
   --CodeBg: #2e393f50;
-  --CodeBlockBg: #2e393f20;
-  --Border: #2e393f;
+  --CodeBlockBg: #2a343920;
+  --Border: #2a3439;
   --Pink: #a29cbe;
   --InputBg: #1f2528;
   --BtnWeight: 600;
   --BtnColor: #E06C75;
   --BtnHoverColor: #c7d7e5;
   --BtnDisabledColor: #76818d;
+  --CodeLineHeight: 1.6;
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   --font-family-mono: Menlo, source-code-pro, Monaco, 'Courier New', monospace;
 }
@@ -135,7 +136,7 @@ hr {
 /*--------- SCROLLBAR -----------*/
 /******************************/
 
-.listScrollbar{
+.listScrollbar {
   display: block;
   width: 100%;
   overflow: auto;
@@ -323,7 +324,7 @@ p.input_title {
 textarea {
   font-family: var(--font-family-mono);
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: var(--CodeLineHeight);
   padding-left: 20px;
   padding-right: 20px;
   padding-bottom: 10px;
@@ -464,6 +465,7 @@ button[class*=" icon-"]:hover {
   background: var(--Border);
   cursor: pointer;
 }
+
 button[class^="icon-"]:active,
 button[class*=" icon-"]:active {
   color: var(--Text);
@@ -487,6 +489,11 @@ button.withoutBg:hover {
   color: var(--Text);
 }
 
+button.withoutBorder,
+button.withoutBorder:hover {
+  border: none;
+}
+
 button.long {
   min-width: 60px;
 }
@@ -506,33 +513,43 @@ button.big {
 .icon-nextPage:before {
   content: "\e909";
 }
+
 .icon-prevPage:before {
   content: "\e90a";
 }
+
 .icon-scrollBack:before {
   content: "\e908";
 }
+
 .icon-close:before {
   content: "\e907";
 }
+
 .icon-menu:before {
   content: "\e905";
 }
+
 .icon-plus:before {
   content: "\e906";
 }
+
 .icon-delete:before {
   content: "\e900";
 }
+
 .icon-down:before {
   content: "\e901";
 }
+
 .icon-edit:before {
   content: "\e902";
 }
+
 .icon-search:before {
   content: "\e903";
 }
+
 .icon-up:before {
   content: "\e904";
 }

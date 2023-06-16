@@ -45,7 +45,7 @@
 
 .blockBgSelected,
 .blockContainer:hover .blockBg {
-  background-color: #283033;
+  background-color: var(--Border);
   position: absolute;
   top: 0;
   left: -30px;

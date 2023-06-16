@@ -36,9 +36,10 @@ interface TextAreaProps {
   onApply: (value: string) => void | undefined,
   onCancel: () => void | undefined
   autoFocus?: boolean,
+  selectAll?: boolean,
 }
 
-export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextAreaProps) => {
+export const TextArea = stylable(({text, onApply, onCancel, autoFocus, selectAll}: TextAreaProps) => {
   const [value, setValue] = useState(text);
   const [width, height] = useWindowSize();
 
@@ -57,12 +58,9 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextArea
   }
 
   useEffect(() => {
+    if (selectAll) ta?.current?.select()
     adjustScroller()
-  })
-
-  useEffect(() => {
-    adjustScroller()
-  },[width, height])
+  }, [width, height])
 
   const onKeyDown = (e: any) => {
     //Enter key

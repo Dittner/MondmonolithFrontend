@@ -256,7 +256,7 @@ const PageTitleEditor = observer(({page}: { page: Page }) => {
   }
 
   return (
-    <TextArea text={page.title} onApply={apply} onCancel={cancel} autoFocus/>
+    <TextArea text={page.title} onApply={apply} onCancel={cancel} autoFocus selectAll/>
   )
 })
 
@@ -334,6 +334,6 @@ const PageBlockEditor = observer(({block}: { block: PageBlock }) => {
   }
 
   return (
-    <TextArea text={block.text} onApply={apply} onCancel={cancel} autoFocus/>
+    <TextArea text={block.text} onApply={apply} onCancel={cancel} autoFocus selectAll/>
   )
 })

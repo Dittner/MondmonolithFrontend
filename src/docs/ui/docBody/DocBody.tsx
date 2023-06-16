@@ -256,7 +256,7 @@ const PageTitleEditor = observer(({page}: { page: Page }) => {
   }
 
   return (
-    <TextArea text={page.title} onApply={apply} onCancel={cancel} autoFocus selectAll/>
+    <TextArea text={page.title} onApply={apply} onCancel={cancel} autoFocus/>
   )
 })
 
@@ -267,7 +267,7 @@ const PageBlockView = observer(({block}: { block: PageBlock }) => {
   useEffect(() => {
     if (!block.isEditing) {
       console.log("new PageBlockView: Prism.highlightAll")
-      setTimeout(Prism.highlightAll, Math.random() * 2500)
+      setTimeout(Prism.highlightAll, Math.random() * 500)
     }
   }, [block, block.text, block.isEditing])
 
@@ -323,10 +323,9 @@ const PageBlockEditor = observer(({block}: { block: PageBlock }) => {
   }
 
   return (
-    <TextArea autoFocus
-              text={block.text}
+    <TextArea text={block.text}
               onApply={apply}
               onCancel={cancel}
-              selectAll/>
+              autoFocus/>
   )
 })

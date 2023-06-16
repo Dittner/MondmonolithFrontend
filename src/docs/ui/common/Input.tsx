@@ -66,7 +66,7 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus, selectAll
 
     if (selectAll && textArea) textArea.select()
     adjustScroller()
-  }, [width, height])
+  })
 
   const onKeyDown = (e: any) => {
     //Enter key

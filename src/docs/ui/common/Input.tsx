@@ -102,8 +102,6 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextArea
   return <textarea className={isFocused ? "focused" : ""} value={value}
                    onFocus={() => setFocused(true)}
                    onBlur={() => setFocused(false)}
-                   onTouchEnd={() => setFocused(false)}
-                   onTouchCancel={() => setFocused(false)}
                    onMouseOut={() => setFocused(false)}
                    ref={ta}
                    rows={value.split(/\r\n|\r|\n/).length}

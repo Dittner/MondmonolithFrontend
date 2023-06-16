@@ -344,8 +344,8 @@ textarea {
   border-left: 5px solid var(--TextGreen);
   background-color: var(--InputBg);
   resize: none;
-  outline: none;
-  overflow: visible;
+  /*outline: none;*/
+  /*overflow: visible;*/
   caret-color: var(--Red);
   box-shadow: 1px 4px 4px #00000010 inset;
   transition: border-left 300ms;

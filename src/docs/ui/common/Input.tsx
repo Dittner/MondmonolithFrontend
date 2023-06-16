@@ -15,9 +15,11 @@ export const Input = ({type, defaultValue, titel, placeHolder = "", autoFocus = 
     }
   }
 
-  const inputRef = useCallback((input:HTMLInputElement) => {
+  const inputRef = useCallback((input: HTMLInputElement) => {
     if (input && autoFocus) {
-      const timeout = setTimeout(()=> {input.focus()}, 0)
+      const timeout = setTimeout(() => {
+        input.focus()
+      }, 0)
       return () => clearTimeout(timeout);
     }
   }, []);
@@ -47,6 +49,7 @@ interface TextAreaProps {
 }
 
 export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextAreaProps) => {
+  const [isFocused, setFocused] = useState(false);
   const [value, setValue] = useState(text);
   const [width, height] = useWindowSize();
 
@@ -72,14 +75,14 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextArea
     const textArea = ta?.current
     if (autoFocus && textArea) {
       if (ta && autoFocus) {
-        const timeout = setTimeout(()=> {
+        const timeout = setTimeout(() => {
           textArea.focus()
           textArea.setSelectionRange(text.length, text.length);
         }, 1000)
         return () => clearTimeout(timeout);
       }
     }
-  })
+  },[])
 
   const onKeyDown = (e: any) => {
     //Enter key
@@ -96,7 +99,9 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextArea
     }
   }
 
-  return <textarea value={value}
+  return <textarea className={isFocused ? "focused" : ""} value={value}
+                   onFocus={() => setFocused(true)}
+                   onBlur={() => setFocused(false)}
                    ref={ta}
                    rows={value.split(/\r\n|\r|\n/).length}
                    spellCheck="false"

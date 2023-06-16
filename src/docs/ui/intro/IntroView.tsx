@@ -78,11 +78,11 @@ export const IntroView = observer(() => {
 
 const aboutTxt = `/***
 *                                                       *
-*   Designed by developers for developers               *   ========================
+*   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE
-*   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   demo  |  1.16  |  2023  
-*   having to write a plane text or HTML tags.          *   ========================
+*   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
+*   to format notes and code fragments easily without   *   demo  |  1.17  |  2023  
+*   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
 `
@@ -97,7 +97,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 1.16  |  DATE: 2023  
+*  MODE: demo  |  VER: 1.17  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/

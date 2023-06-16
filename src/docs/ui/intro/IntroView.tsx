@@ -27,7 +27,6 @@ export const IntroView = observer(() => {
                  halign={HAlign.CENTER}
                  valign={VAlign.CENTER}
                  gap="30px"
-                 paddingTop="25px"
                  paddingBottom="20px">
 
     <Header width="100%"
@@ -44,7 +43,7 @@ export const IntroView = observer(() => {
     </div>
 
     {app.size !== AppSize.XS &&
-    <Spacer height="180px"/>
+    <Spacer height="250px"/>
     }
 
     <div className="highlightFunc">

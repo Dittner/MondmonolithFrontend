@@ -56,25 +56,6 @@ html {
   text-size-adjust: 100%
 }
 
-@media screen and (max-width: 1000px) {
-  html {
-    font-size: 15px;
-  }
-}
-
-
-@media screen and (max-width: 900px) {
-  html {
-    font-size: 14px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  html {
-    font-size: 12px;
-  }
-}
-
 body {
   margin: 0 0;
   font-family: var(--font-family);

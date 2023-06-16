@@ -1,10 +1,11 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {stylable} from "../../application/NoCSS";
 import {useWindowSize} from "../../../App";
 
 // @ts-ignore
 export const Input = ({type, defaultValue, titel, placeHolder = "", autoFocus = false, onChange, onSubmitted}) => {
   console.log("new Input")
+
   const onKeyDown = (e: any) => {
     //Enter key
     if (e.keyCode === 13 && !e.shiftKey) {
@@ -14,15 +15,20 @@ export const Input = ({type, defaultValue, titel, placeHolder = "", autoFocus = 
     }
   }
 
+  const inputRef = useCallback((input:HTMLInputElement) => {
+    if (input && autoFocus) {
+      setTimeout(()=> {input.focus()}, 0)
+    }
+  }, []);
+
   return (
     <div className="input_container">
       <p className='input_title'>{titel}</p>
 
-      <input className="input_field"
+      <input ref={inputRef}
              placeholder={placeHolder}
              autoCorrect="off"
              autoComplete="off"
-             autoFocus={autoFocus}
              type={type}
              defaultValue={defaultValue}
              onChange={e => onChange(e.currentTarget.value)}
@@ -39,7 +45,7 @@ interface TextAreaProps {
   selectAll?: boolean,
 }
 
-export const TextArea = stylable(({text, onApply, onCancel, autoFocus, selectAll}: TextAreaProps) => {
+export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextAreaProps) => {
   const [value, setValue] = useState(text);
   const [width, height] = useWindowSize();
 
@@ -64,11 +70,11 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus, selectAll
   useEffect(() => {
     const textArea = ta?.current
     if (autoFocus && textArea) {
-      textArea.focus()
-      if (selectAll) textArea.select()
-      else if (text.length > 0) textArea.setSelectionRange(text.length, text.length);
+      if (ta && autoFocus) {
+        setTimeout(()=> {textArea.focus()}, 0)
+        if (text.length > 0) textArea.setSelectionRange(text.length, text.length);
+      }
     }
-    adjustScroller()
   })
 
   const onKeyDown = (e: any) => {

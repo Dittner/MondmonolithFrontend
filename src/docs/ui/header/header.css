@@ -58,15 +58,6 @@ div.withBg {
   cursor: not-allowed;
 }
 
-.login fieldset {
-  border: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: right;
-}
-
 p.error {
   font-size: 14px;
   color: var(--Error);

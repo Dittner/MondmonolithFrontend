@@ -172,7 +172,7 @@ export const HeaderView = observer(() => {
                    placeHolder="Enter your name"
                    onChange={(value: string) => setName(value)}
                    onSubmitted={handleSignIn}
-                   autoFocus/>
+                   />
             <Input type="password"
                    defaultValue={pwd}
                    titel="Password"

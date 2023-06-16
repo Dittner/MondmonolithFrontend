@@ -17,7 +17,8 @@ export const Input = ({type, defaultValue, titel, placeHolder = "", autoFocus = 
 
   const inputRef = useCallback((input:HTMLInputElement) => {
     if (input && autoFocus) {
-      setTimeout(()=> {input.focus()}, 0)
+      const timeout = setTimeout(()=> {input.focus()}, 0)
+      return () => clearTimeout(timeout);
     }
   }, []);
 
@@ -71,8 +72,9 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextArea
     const textArea = ta?.current
     if (autoFocus && textArea) {
       if (ta && autoFocus) {
-        setTimeout(()=> {textArea.focus()}, 0)
+        const timeout = setTimeout(()=> {textArea.focus()}, 1000)
         if (text.length > 0) textArea.setSelectionRange(text.length, text.length);
+        return () => clearTimeout(timeout);
       }
     }
   })

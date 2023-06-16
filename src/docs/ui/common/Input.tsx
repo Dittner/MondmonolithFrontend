@@ -62,13 +62,12 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus, selectAll
   }, [width, height])
 
   useEffect(() => {
-    // const textArea = ta?.current
-    // if (autoFocus && textArea) {
-    //   textArea.focus()
-    //   if (!selectAll && text.length > 0) textArea.setSelectionRange(text.length, text.length);
-    // }
-    //
-    // if (selectAll && textArea) textArea.select()
+    const textArea = ta?.current
+    if (autoFocus && textArea) {
+      textArea.focus()
+      if (selectAll) textArea.select()
+      else if (text.length > 0) textArea.setSelectionRange(text.length, text.length);
+    }
     adjustScroller()
   })
 
@@ -92,6 +91,5 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus, selectAll
                    rows={value.split(/\r\n|\r|\n/).length}
                    spellCheck="false"
                    onChange={onChange}
-                   onKeyDown={onKeyDown}
-                   autoFocus={autoFocus}/>
+                   onKeyDown={onKeyDown}/>
 })

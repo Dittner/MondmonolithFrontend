@@ -58,13 +58,13 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus, selectAll
   }
 
   useEffect(() => {
-    const textArea = ta?.current
-    if (autoFocus && textArea) {
-      textArea.focus()
-      if (!selectAll && text.length > 0) textArea.setSelectionRange(text.length, text.length);
-    }
-
-    if (selectAll && textArea) textArea.select()
+    // const textArea = ta?.current
+    // if (autoFocus && textArea) {
+    //   textArea.focus()
+    //   if (!selectAll && text.length > 0) textArea.setSelectionRange(text.length, text.length);
+    // }
+    //
+    // if (selectAll && textArea) textArea.select()
     adjustScroller()
   })
 

@@ -323,7 +323,7 @@ p.input_title {
 textarea {
   font-family: var(--font-family-mono);
   font-size: 1rem;
-  line-height: 1.6rem;
+  line-height: 1.6;
   padding-left: 20px;
   padding-right: 20px;
   padding-bottom: 10px;

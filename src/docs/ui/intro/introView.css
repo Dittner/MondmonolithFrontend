@@ -78,3 +78,10 @@ p.markdownSyntax {
   font-size: 1.25rem;
   /*text-transform: uppercase;*/
 }
+
+p.release {
+  font-family: var(--font-family-mono);
+  white-space: pre;
+  color: var(--TextDark);
+  font-size: 10px;
+}

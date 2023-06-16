@@ -44,7 +44,7 @@ export const DocsView = observer(() => {
 
   if (docsContext.app.size === AppSize.L) {
     return (
-      <div>
+      <>
         <Header width="80%"
                 height={headerHeight}
                 left="20%"
@@ -54,6 +54,7 @@ export const DocsView = observer(() => {
 
         <DocList width="20%"
                  height="100vh"
+                 left="0"
                  layer={LayoutLayer.DOC_LIST}
                  enableOwnScroller
                  fixed/>
@@ -93,13 +94,13 @@ export const DocsView = observer(() => {
                              fixed/>
         </>
         }
-      </div>
+      </>
     )
   }
 
   if (docsContext.app.size === AppSize.M) {
     return (
-      <div>
+      <>
         <Header width="70%"
                 height={headerHeight}
                 left="30%"
@@ -138,7 +139,7 @@ export const DocsView = observer(() => {
         }
 
 
-      </div>
+      </>
     )
   }
 

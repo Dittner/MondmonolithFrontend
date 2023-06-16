@@ -110,6 +110,7 @@ const RuleBuilder = () =>  {
   operator["layer"] = (value:LayoutLayer) => {setValue("z-index", value)}
   operator["fixed"] = (value:boolean) => {setValue("position", "fixed")}
   operator["absolute"] = (value:boolean) => {setValue("position", "absolute")}
+  operator["relative"] = (value:boolean) => {setValue("position", "relative")}
   operator["enableOwnScroller"] = (value:boolean) => {setValue("overflow", "auto")}
 
   operator["boxSizing"] = (value:string) => {
@@ -180,6 +181,7 @@ export interface StylableComponentProps {
   paddingBottom?: string,
   fixed?: boolean,
   absolute?: boolean,
+  relative?: boolean,
   enableOwnScroller?: boolean,
   layer?: LayoutLayer,
   animate?: string,

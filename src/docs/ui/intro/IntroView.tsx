@@ -72,17 +72,17 @@ export const IntroView = observer(() => {
       <MarkdownEditor text={links} title="4.Links"/>
     </VStack>
 
-    <p className="mono textDark">{app.isMobileDevice ? 'Mobile' : 'Desktop'}</p>
+    <p className="release">{app.isMobileDevice ? 'Mobile mode' : 'Desktop mode'}</p>
   </VStack>
 })
 
 const aboutTxt = `/***
 *                                                       *
-*   Designed by developers for developers               *   ==========================
-*   This is a web-solution, that enables you to make    *   MODE   |   VER   |   BUILD
-*   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   demo   |   1.0   |   15
-*   having to write a plane text or HTML tags.          *   ==========================
+*   Designed by developers for developers               *   ========================
+*   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE
+*   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
+*   to format notes and code fragments easily without   *   demo  |  1.16  |  2023  
+*   having to write a plane text or HTML tags.          *   ========================
 *                                                       *
 ***/
 `
@@ -96,9 +96,9 @@ const aboutTxtXS = `/***
 *  easily without having to write a plane text
 *  or HTML tags.
 *
-*  ––––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |   VER: 1.0  |   BUILD: 15
-*  ––––––––––––––––––––––––––––––––––––––––––
+*  –––––––––––––––––––––––––––––––––––––––––
+*  MODE: demo  |  VER: 1.16  |  DATE: 2023  
+*  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/
 `

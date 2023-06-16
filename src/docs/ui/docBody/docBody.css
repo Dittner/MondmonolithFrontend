@@ -38,13 +38,7 @@
   color: var(--PageTitle);
 }
 
-.docPageTitleSelectable:hover {
-  background-color: #283033;
-  border-radius: 10px;
-}
-
-.blockBgSelected,
-.blockContainer:hover .blockBg {
+.blockBgSelected {
   background-color: var(--Border);
   position: absolute;
   top: 0;
@@ -53,6 +47,24 @@
   bottom: 0;
   border-radius: 10px;
   z-index: -1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .docPageTitleSelectable:hover {
+    background-color: #283033;
+    border-radius: 10px;
+  }
+
+  .blockContainer:hover .blockBg {
+    background-color: var(--Border);
+    position: absolute;
+    top: 0;
+    left: -30px;
+    right: -30px;
+    bottom: 0;
+    border-radius: 10px;
+    z-index: -1;
+  }
 }
 
 .blockBgSelected {

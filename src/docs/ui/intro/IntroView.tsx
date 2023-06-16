@@ -64,7 +64,7 @@ export const IntroView = observer(() => {
             valign={VAlign.TOP}
             maxWidth={"1700px"}>
       <p className="markdownSyntax">Examples of Markdown formatting</p>
-      <MarkdownEditor text={headings} title="0.Headings, font style" autoFocus={!app.isMobileDevice}/>
+      <MarkdownEditor text={headings} title="0.Headings, font style"/>
       <MarkdownEditor text={blockquote} title="1.Blockquote"/>
       <MarkdownEditor text={code} title="2.Code"/>
       <MarkdownEditor text={lists} title="3.Lists"/>
@@ -80,7 +80,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  1.25  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  1.26  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -96,7 +96,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 1.25  |  DATE: 2023  
+*  MODE: demo  |  VER: 1.26  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/

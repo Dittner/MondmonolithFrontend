@@ -52,6 +52,8 @@ html {
   font-size: 16px;
   max-width: 100%;
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%
 }
 
 @media screen and (max-width: 1000px) {

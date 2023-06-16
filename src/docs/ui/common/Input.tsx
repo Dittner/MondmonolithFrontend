@@ -77,7 +77,7 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextArea
       if (ta && autoFocus) {
         const timeout = setTimeout(() => {
           textArea.focus()
-          textArea.setSelectionRange(text.length, text.length);
+          // textArea.setSelectionRange(text.length, text.length);
         }, 1000)
         return () => clearTimeout(timeout);
       }
@@ -100,6 +100,7 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextArea
   }
 
   return <textarea className={isFocused ? "focused" : ""} value={value}
+                   autoFocus={autoFocus}
                    onFocus={() => setFocused(true)}
                    onBlur={() => setFocused(false)}
                    ref={ta}

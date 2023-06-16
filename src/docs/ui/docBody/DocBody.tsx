@@ -323,6 +323,10 @@ const PageBlockEditor = observer(({block}: { block: PageBlock }) => {
   }
 
   return (
-    <TextArea text={block.text} onApply={apply} onCancel={cancel} autoFocus selectAll/>
+    <TextArea autoFocus
+              text={block.text}
+              onApply={apply}
+              onCancel={cancel}
+              selectAll/>
   )
 })

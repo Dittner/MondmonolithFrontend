@@ -14,7 +14,7 @@ import {DocLoadStatus, Page, PageBlock} from "../../domain/DomainModel";
 import {LoadStatus} from "../../DocsContext";
 import {TextArea} from "../common/Input"
 import ReactMarkdown from "react-markdown";
-import {HAlign, HStack, stylable, VAlign, VStack} from "../../application/NoCSS";
+import {HStack, stylable, VStack} from "../../application/NoCSS";
 import {Spacer} from "../common/Spacer";
 import {AppSize} from "../../application/Application";
 
@@ -27,8 +27,8 @@ export const DocBody = stylable(() => {
 })
 
 const EmptyDoc = ({msg}: { msg: string }) => {
-  return <HStack halign={HAlign.CENTER}
-                 valign={VAlign.CENTER}
+  return <HStack halign="center"
+                 valign="center"
                  width="100%" height="100%">
     <p className="textDark">{msg}</p>
   </HStack>
@@ -141,7 +141,7 @@ const PageList = observer(() => {
   }
 
   return (
-    <VStack valign={VAlign.TOP} halign={HAlign.CENTER} gap="0"
+    <VStack valign="top" halign="center" gap="0"
             paddingHorizontal={docsContext.app.size === AppSize.XS ? "32px" : "70px"}
             paddingVertical="20px">
 
@@ -169,8 +169,8 @@ const PageList = observer(() => {
       }
 
       {doc.pages.length > 0 && pagesSlice.isLastPageShown &&
-      <HStack halign={HAlign.STRETCH}
-              valign={VAlign.CENTER}
+      <HStack halign="stretch"
+              valign="center"
               width="100%">
         <button id="exportBtn"
                 className="btn"

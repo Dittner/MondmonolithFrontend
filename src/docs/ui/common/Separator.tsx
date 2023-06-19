@@ -1,4 +1,4 @@
-import {buildAndGetClassName} from "../../application/NoCSS";
+import {buildClassName} from "../../application/NoCSS";
 
 export const HSeparator = ({width, marginHorizontal, marginVertical}: { width?: string, marginHorizontal?: string, marginVertical?: string }) => {
   const style = {
@@ -10,7 +10,7 @@ export const HSeparator = ({width, marginHorizontal, marginVertical}: { width?: 
     marginTop: marginVertical,
     marginBottom: marginVertical
   }
-  return <div className={"horSeparator " + buildAndGetClassName(style)}/>
+  return <div className={"horSeparator " + buildClassName(style)}/>
 }
 
 export const VSeparator = ({height, marginHorizontal, marginVertical}: { height?: string, marginHorizontal?: string, marginVertical?: string }) => {
@@ -23,5 +23,5 @@ export const VSeparator = ({height, marginHorizontal, marginVertical}: { height?
     marginTop: marginVertical,
     marginBottom: marginVertical
   }
-  return <div className={"verSeparator " + buildAndGetClassName(style)}/>
+  return <div className={"verSeparator " + buildClassName(style)}/>
 }

@@ -1,17 +1,15 @@
-var fibonacci = {
-  [Symbol.iterator]: function*() {
-    var pre = 0, cur = 1
-    for (;;) {
-      var temp = pre
-      pre = cur
-      cur += temp
-      yield cur
-    }
+function Person(firstName) {
+  this.firstName = firstName
+
+  this.sayName = function () {
+    return (`I'm ${this.firstName}.`)
   }
 }
 
-for (var value of fibonacci) {
-  if (value > 20)
-    break
-  console.log(value)
-}
+const ann = new Person('Ann');
+const bob = new Person('Bob');
+const tom = Person('Tom');
+
+console.log(ann.sayName())
+console.log(bob.sayName())
+//console.log(tom.sayName())

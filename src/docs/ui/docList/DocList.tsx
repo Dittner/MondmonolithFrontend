@@ -6,7 +6,7 @@ import {AppSize} from "../../application/Application";
 import {observer} from "mobx-react";
 import {Directory, Doc} from "../../domain/DomainModel";
 import {SmallSpinner} from "../common/Loading";
-import {HAlign, HStack, stylable, VAlign, VStack} from "../../../docs/application/NoCSS";
+import {HStack, stylable, VStack} from "../../../docs/application/NoCSS";
 import {Input} from "../common/Input";
 import {Spacer} from "../common/Spacer";
 import {LoadStatus} from "../../DocsContext";
@@ -35,19 +35,19 @@ export const DocList = observer(stylable((props: any) => {
   console.log("DocList, dirs: ", docsContext.dirs)
   if (docsContext.dirsLoadStatus === LoadStatus.LOADING) {
     return <VStack className='docListContainer'
-                   valign={VAlign.TOP}
-                   halign={HAlign.CENTER}
+                   valign="top"
+                   halign="center"
                    width="100%"
                    height="100%"/>
   }
   return (
     <VStack className='docListContainer'
-            valign={VAlign.TOP}
-            halign={HAlign.CENTER}
+            valign="top"
+            halign="center"
             width="100%"
             height="100%">
-      <HStack halign={HAlign.CENTER}
-              valign={VAlign.CENTER}
+      <HStack halign="center"
+              valign="center"
               gap="0"
               width="100%"
               minHeight="50px"
@@ -212,10 +212,10 @@ const DocEditForm = (props: any) => {
 
   return (
     <VStack className="editForm"
-            halign={HAlign.STRETCH}
-            valign={VAlign.CENTER}
+            halign="stretch"
+            valign="center"
             padding="20px">
-      <HStack halign={HAlign.CENTER} valign={VAlign.CENTER}>
+      <HStack halign="center" valign="center">
         <Input type="text"
                defaultValue={newDocTitle}
                titel="Doc's title"
@@ -231,7 +231,7 @@ const DocEditForm = (props: any) => {
       </HStack>
 
 
-      <HStack halign={HAlign.CENTER} valign={VAlign.CENTER} gap="50px">
+      <HStack halign="center" valign="center" gap="50px">
         <button onClick={cancel}
                 className="btn">Cancel
         </button>
@@ -266,8 +266,8 @@ const DirEditForm = (props: any) => {
 
   return (
     <VStack className="editForm"
-            halign={HAlign.STRETCH}
-            valign={VAlign.CENTER}
+            halign="stretch"
+            valign="center"
             padding="20px">
 
       <Input type="text"
@@ -277,7 +277,7 @@ const DirEditForm = (props: any) => {
              onSubmitted={apply}
              autoFocus/>
 
-      <HStack halign={HAlign.CENTER} valign={VAlign.CENTER} gap="50px">
+      <HStack halign="center" valign="center" gap="50px">
         <button onClick={cancel}
                 className="btn">Cancel
         </button>

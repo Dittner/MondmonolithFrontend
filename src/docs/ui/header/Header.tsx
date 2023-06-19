@@ -3,7 +3,7 @@ import './header.css';
 import {useDocsContext} from "../../../App";
 import {AuthStatus, Page, PageBlock} from "../../domain/DomainModel";
 import {observer} from "mobx-react";
-import {HAlign, HStack, stylable, VAlign, VStack} from "../../../docs/application/NoCSS";
+import {HStack, stylable, VStack} from "../../../docs/application/NoCSS";
 import {Input} from "../common/Input";
 import {Route, Routes, useParams} from "react-router-dom";
 import {SmallSpinner} from "../common/Loading";
@@ -61,8 +61,9 @@ export const HeaderView = observer(() => {
   else if (user.authStatus === AuthStatus.AUTHORIZED) rootContClassName = "withBottomBorder "
 
   return (
-    <HStack className={rootContClassName} halign={HAlign.RIGHT}
-            valign={VAlign.CENTER}
+    <HStack className={rootContClassName}
+            halign="right"
+            valign="center"
             height="100%"
             gap="0"
             paddingHorizontal="20px">
@@ -165,7 +166,7 @@ export const HeaderView = observer(() => {
       <>
         <Spacer/>
         <DropDown className='loginDropDown' title='Sign in'>
-          <VStack halign={HAlign.CENTER} valign={VAlign.TOP} gap="5px">
+          <VStack halign="center" valign="top" gap="5px">
             <Input type="text"
                    defaultValue={name}
                    titel="Login"
@@ -262,8 +263,8 @@ const ToolsPanel = observer(() => {
   if (editTools.editMode)
     return (
       <HStack className="tools"
-              valign={VAlign.CENTER}
-              halign={HAlign.LEFT}
+              valign="center"
+              halign="left"
               height="50px" gap="4px">
         <button className="icon-plus long"
                 disabled={!editTools.selectedItem}

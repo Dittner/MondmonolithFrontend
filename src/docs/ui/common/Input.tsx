@@ -71,13 +71,6 @@ export const TextArea = stylable(({text, onApply, onCancel, autoFocus}: TextArea
     adjustScroller()
   }, [width, height])
 
-  useEffect(() => {
-    const textArea = ta?.current
-    if (autoFocus && textArea) {
-      textArea.setSelectionRange(text.length, text.length)
-    }
-  }, [])
-
   const onKeyDown = (e: any) => {
     //Enter key
     if (e.keyCode === 13 && !e.shiftKey) {

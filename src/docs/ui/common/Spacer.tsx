@@ -1,4 +1,4 @@
-import {buildAndGetClassName} from "../../application/NoCSS";
+import {buildClassName} from "../../application/NoCSS";
 
 export const Spacer = ({width, height}:{width?:string, height?:string})=> {
   const style = {
@@ -10,5 +10,5 @@ export const Spacer = ({width, height}:{width?:string, height?:string})=> {
     minHeight: height,
   }
 
-  return <div className={"spacer " + buildAndGetClassName(style)}/>
+  return <div className={"spacer " + buildClassName(style)}/>
 }

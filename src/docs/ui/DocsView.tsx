@@ -6,7 +6,7 @@ import {useDocsContext} from "../../App";
 import {DocBody} from "./docBody/DocBody";
 import {DocTopics} from "./docTopics/DocTopics";
 import {Header} from "./header/Header";
-import {HAlign, HStack, StylableContainer, VAlign, VStack} from "../../docs/application/NoCSS";
+import {HStack, StylableContainer, VStack} from "../../docs/application/NoCSS";
 import {AppSize, LayoutLayer} from "../application/Application";
 
 export const DocsView = observer(() => {
@@ -213,8 +213,8 @@ export const ModalView = observer(() => {
     return <></>
 
   return <VStack className={"modalView"}
-                 halign={HAlign.CENTER}
-                 valign={VAlign.CENTER}
+                 halign="center"
+                 valign="center"
                  width="100%"
                  height="100%"
                  layer={LayoutLayer.MODAL}
@@ -222,12 +222,12 @@ export const ModalView = observer(() => {
 
     {app.yesNoDialog &&
     <VStack className="yesNoDialog"
-            halign={HAlign.STRETCH}
-            valign={VAlign.CENTER}
+            halign="stretch"
+            valign="center"
             width="350px" padding="30px" gap="30px">
       <p>{app.yesNoDialog.text}</p>
 
-      <HStack halign={HAlign.CENTER} valign={VAlign.TOP} gap="50px">
+      <HStack halign="center" valign="top" gap="50px">
         <button onClick={cancel}
                 className="btn">No
         </button>
@@ -240,8 +240,8 @@ export const ModalView = observer(() => {
 
     {app.infoDialog &&
     <VStack className="yesNoDialog"
-            halign={HAlign.CENTER}
-            valign={VAlign.CENTER}
+            halign="center"
+            valign="center"
             width="350px" padding="30px" gap="30px">
       <h2>{app.infoDialog.title}</h2>
       <p>{app.infoDialog.text}</p>

@@ -9,7 +9,7 @@ import 'prismjs/components/prism-jsx';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-python';
 import {Header} from "../header/Header";
-import {HAlign, HStack, stylable, VAlign, VStack} from "../../../docs/application/NoCSS";
+import {HStack, stylable, VStack} from "../../../docs/application/NoCSS";
 import {VSeparator} from "../common/Separator";
 import {Spacer} from "../common/Spacer";
 import {useDocsContext} from "../../../App";
@@ -24,8 +24,8 @@ export const IntroView = observer(() => {
   })
 
   return <VStack className="introViewCont"
-                 halign={HAlign.CENTER}
-                 valign={VAlign.CENTER}
+                 halign="center"
+                 valign="center"
                  gap="30px"
                  paddingBottom="20px">
 
@@ -60,9 +60,10 @@ export const IntroView = observer(() => {
     </div>
 
 
-    <VStack className="markdownContainer" halign={HAlign.STRETCH}
-            valign={VAlign.TOP}
-            maxWidth={"1700px"}>
+    <VStack className="markdownContainer"
+            halign="stretch"
+            valign="top"
+            maxWidth="1700px">
       <p className="markdownSyntax">Examples of Markdown formatting</p>
       <MarkdownEditor text={headings} title="0.Headings, font style"/>
       <MarkdownEditor text={blockquote} title="1.Blockquote"/>
@@ -167,8 +168,8 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
 
   if (app.size === AppSize.S || app.size === AppSize.XS) {
     return (
-      <VStack halign={HAlign.STRETCH}
-              valign={VAlign.TOP}
+      <VStack halign="stretch"
+              valign="top"
               gap="5px"
               width="100%">
 
@@ -180,8 +181,8 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
                   autoFocus={autoFocus}
                   width="100%"/>
 
-        <HStack halign={HAlign.LEFT}
-                valign={VAlign.STRETCH}
+        <HStack halign="left"
+                valign="stretch"
                 paddingLeft="25px"
                 paddingRight="20px">
 
@@ -199,8 +200,8 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
   return (
     <>
       <p className="markdownTitle">{title}</p>
-      <HStack halign={HAlign.STRETCH}
-              valign={VAlign.STRETCH}
+      <HStack halign="stretch"
+              valign="stretch"
               gap="50px">
         {/*<Label text="Some Text"/>*/}
 

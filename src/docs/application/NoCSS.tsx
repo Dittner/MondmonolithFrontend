@@ -2,37 +2,37 @@ import {LayoutLayer} from "./Application";
 import * as React from "react";
 
 const abbreviations:{[prop: string]:string} = {
-  "align-items": "a_",
-  "bottom": "b_",
-  "box-sizing": "s_",
-  "display" : "d_",
-  "flex-direction" : "f_",
-  "gap" : "g_",
-  "height": "h_",
-  "justify-content": "j_",
-  "left": "l_",
-  "margin-left": "ml_",
-  "margin-right": "mr_",
-  "margin-top": "mt_",
-  "margin-bottom": "mb_",
-  "max-height": "mah_",
-  "max-width": "maw_",
-  "min-height": "mih_",
-  "min-width": "miw_",
-  "overflow": "o_",
-  "padding-left": "pl_",
-  "padding-right": "pr_",
-  "padding-top": "pt_",
-  "padding-bottom": "pb_",
-  "position": "p_",
-  "right": "r_",
-  "top": "t_",
-  "transition": "tr_",
-  "width": "w_",
-  "z-index": "z_",
+  "align-items": "A",
+  "bottom": "B",
+  "box-sizing": "S",
+  "display" : "D",
+  "flex-direction" : "F",
+  "gap" : "G",
+  "height": "H",
+  "justify-content": "J",
+  "left": "L",
+  "margin-left": "ML",
+  "margin-right": "MR",
+  "margin-top": "MT",
+  "margin-bottom": "MB",
+  "max-height": "MAH",
+  "max-width": "MAW",
+  "min-height": "MIH",
+  "min-width": "MIW",
+  "overflow": "O",
+  "padding-left": "PL",
+  "padding-right": "PR",
+  "padding-top": "PT",
+  "padding-bottom": "PB",
+  "position": "P",
+  "right": "R",
+  "top": "T",
+  "transition": "TR",
+  "width": "W",
+  "z-index": "Z",
 }
 
-const RuleBuilder = () =>  {
+const RuleBuilder = ():[()=>void, { [key: string]: (value:any)=>void }, ()=>string] =>  {
   let hashSum:string = ""
   let style = ""
   const notAllowedSymbolsInClassName = /[%. ]+/g;
@@ -73,7 +73,7 @@ const RuleBuilder = () =>  {
     if(appendToClassName) {
       if(!abbreviations.hasOwnProperty(key))
         throw new Error("SelectorRuleBuilder:: No abbreviation for tag: " + key)
-      hashSum += abbreviations[key] + value + "-"
+      hashSum += abbreviations[key] + value
     }
   }
 
@@ -131,22 +131,22 @@ const RuleBuilder = () =>  {
 
   operator["animate"] = (value:string) => {setValue("transition", value)}
 
-  return ():[()=>void, { [key: string]: (value:any)=>void }, ()=>string] => [clear, operator, className]
+  return [clear, operator, className]
 }
 
 let selectorsCount = 0
 
-const buildRule = RuleBuilder()
+const ruleBuilder = RuleBuilder()
 
-export const buildAndGetClassName = (props:any):string => {
-  const [clear, operator, className] = buildRule()
+const sortKeys = (a: string, b: string) => {
+  if (a < b) return -1;
+  if (a > b) return 1;
+  return 0
+}
+
+export const buildClassName = (props:any):string => {
+  const [clear, operator, className] = ruleBuilder
   clear()
-
-  const sortKeys = (a: string, b: string) => {
-      if (a < b) return -1;
-      if (a > b) return 1;
-      return 0
-  }
 
   for (let k of [...Object.keys(props)].sort(sortKeys)) {
     if(operator[k]) {
@@ -156,7 +156,6 @@ export const buildAndGetClassName = (props:any):string => {
     //   console.warn("  --NoCSS: Operator «" + k + "» not found!")
     // }
   }
-
   return className()
 }
 
@@ -191,7 +190,7 @@ export interface StylableComponentProps {
 
 export const stylable = <T,X extends T & StylableComponentProps>(component: (componentProps:T) => JSX.Element): ((props: X) => JSX.Element) => {
   return ( props: X ) => {
-    const className = buildAndGetClassName(props)
+    const className = buildClassName(props)
     return <div className={props.className ? props.className + " " + className : className}>{component(props)}</div>
   }
 }
@@ -201,23 +200,8 @@ export const StylableContainer = stylable((props:any)=> {
 })
 
 interface StackProps extends StylableComponentProps{
-  halign: HAlign,
-  valign: VAlign,
-}
-
-export enum VAlign {
-  TOP = "TOP",
-  CENTER = "CENTER",
-  BASE = "BASE",
-  BOTTOM = "BOTTOM",
-  STRETCH = "STRETCH",
-}
-
-export enum HAlign {
-  LEFT = "LEFT",
-  CENTER = "CENTER",
-  RIGHT = "RIGHT",
-  STRETCH = "STRETCH",
+  halign: 'left' | 'right' | "center" | 'stretch',
+  valign: 'top' | "center" | 'base' | 'bottom' | 'stretch',
 }
 
 const defVStackProps = {
@@ -234,39 +218,39 @@ export const VStack = (props: StackProps) => {
   const style = {...defVStackProps, ...props}
 
   switch (props.halign) {
-    case HAlign.LEFT:
+    case 'left':
       style["alignItems"] = "flex-start";
       break;
-    case HAlign.CENTER:
+    case "center":
       style["alignItems"] = "center";
       break;
-    case HAlign.RIGHT:
+    case 'right':
       style["alignItems"] = "flex-end";
       break;
-    case HAlign.STRETCH:
+    case 'stretch':
       style["alignItems"] = "stretch";
       break;
   }
 
   switch (props.valign) {
-    case VAlign.TOP:
+    case 'top':
       style["justifyContent"] = "flex-start";
       break;
-    case VAlign.CENTER:
+    case "center":
       style["justifyContent"] = "center";
       break;
-    case VAlign.BASE:
+    case 'base':
       style["alignItems"] = "baseline";
       break;
-    case VAlign.BOTTOM:
+    case 'bottom':
       style["justifyContent"] = "flex-end";
       break;
   }
 
   if (props.hasOwnProperty("className"))
-    return <div className={props.className + " " + buildAndGetClassName(style)}>{props.children}</div>
+    return <div className={props.className + " " + buildClassName(style)}>{props.children}</div>
   else
-    return <div className={buildAndGetClassName(style)}>{props.children}</div>
+    return <div className={buildClassName(style)}>{props.children}</div>
 }
 
 const defHStackProps = {
@@ -282,39 +266,39 @@ export const HStack = (props: StackProps) => {
   const style = {...defHStackProps, ...props}
 
   switch (props.halign) {
-    case HAlign.LEFT:
+    case 'left':
       style["justifyContent"] = "flex-start";
       break;
-    case HAlign.CENTER:
+    case "center":
       style["justifyContent"] = "center";
       break;
-    case HAlign.RIGHT:
+    case 'right':
       style["justifyContent"] = "flex-end";
       break;
   }
 
   switch (props.valign) {
-    case VAlign.TOP:
+    case 'top':
       style["alignItems"] = "flex-start";
       break;
-    case VAlign.CENTER:
+    case "center":
       style["alignItems"] = "center";
       break;
-    case VAlign.BASE:
+    case 'base':
       style["alignItems"] = "baseline";
       break;
-    case VAlign.BOTTOM:
+    case 'bottom':
       style["alignItems"] = "flex-end";
       break;
-    case VAlign.STRETCH:
+    case 'stretch':
       style["alignItems"] = "stretch";
       break;
   }
 
   if (props.hasOwnProperty("className"))
-    return <div className={props.className + " " + buildAndGetClassName(style)}>{props.children}</div>
+    return <div className={props.className + " " + buildClassName(style)}>{props.children}</div>
   else
-    return <div className={buildAndGetClassName(style)}>{props.children}</div>
+    return <div className={buildClassName(style)}>{props.children}</div>
 }
 
 const defStackProps = {
@@ -324,7 +308,7 @@ const defStackProps = {
 export const Stack = (props: StylableComponentProps) => {
   const style = {...defStackProps, ...props}
   if (props.hasOwnProperty("className"))
-    return <div className={props.className + " " + buildAndGetClassName(style)}>{props.children}</div>
+    return <div className={props.className + " " + buildClassName(style)}>{props.children}</div>
   else
-    return <div className={buildAndGetClassName(style)}>{props.children}</div>
+    return <div className={buildClassName(style)}>{props.children}</div>
 }

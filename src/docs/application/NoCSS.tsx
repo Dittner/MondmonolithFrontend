@@ -3,10 +3,23 @@ import * as React from "react";
 
 const abbreviations:{[prop: string]:string} = {
   "align-items": "A",
+  "background-color": "BG",
+  "border": "BO",
+  "border-left": "BL",
+  "border-right": "BR",
+  "border-top": "BT",
+  "border-bottom": "BB",
+  "border-radius": "BRA",
   "bottom": "B",
   "box-sizing": "S",
+  "box-shadow": "BS",
+  "caret-color": "CC",
+  "color": "C",
   "display" : "D",
   "flex-direction" : "F",
+  "font-family" : "FF",
+  "font-size" : "FS",
+  "font-weight" : "FW",
   "gap" : "G",
   "height": "H",
   "justify-content": "J",
@@ -19,6 +32,7 @@ const abbreviations:{[prop: string]:string} = {
   "max-width": "MAW",
   "min-height": "MIH",
   "min-width": "MIW",
+  "opacity": "OP",
   "overflow": "O",
   "padding-left": "PL",
   "padding-right": "PR",
@@ -26,17 +40,25 @@ const abbreviations:{[prop: string]:string} = {
   "padding-bottom": "PB",
   "position": "P",
   "right": "R",
+  "text-align": "TA",
+  "text-decoration": "TD",
+  "text-transform": "TR",
   "top": "T",
-  "transition": "TR",
+  "transition": "TN",
+  "white-space": "WS",
   "width": "W",
   "z-index": "Z",
 }
 
-const RuleBuilder = ():[()=>void, { [key: string]: (value:any)=>void }, ()=>string] =>  {
+const RuleBuilder = ():[()=>void, { [key: string]: (value:any)=>void }, ()=>string, (parentSelector:string, childSelector:string)=>void] =>  {
   let hashSum:string = ""
   let style = ""
-  const notAllowedSymbolsInClassName = /[%. ]+/g;
+  let state:"normal"|"hover"|"focus" = "normal"
+  let focusStyle = ""
+  let hoverStyle = ""
+  const notAllowedSymbolsInClassName = /[%. #]+/g;
   const classNameHash = new Map<string,string>()
+  const isMobileDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
   //const styleSheet = new CSSStyleSheet();
   //document.adoptedStyleSheets = [styleSheet];
@@ -59,20 +81,59 @@ const RuleBuilder = ():[()=>void, { [key: string]: (value:any)=>void }, ()=>stri
     classNameHash.set(hashSum, className)
     styleSheet.insertRule(rule)
 
+    if(hoverStyle) {
+      const rule = '.' + className + (isMobileDevice ? ":active{" : ":hover{") + hoverStyle + '}';
+      styleSheet.insertRule(rule)
+    }
+
+    if(focusStyle) {
+      const rule = '.' + className + ":focus{" + focusStyle + '}';
+      styleSheet.insertRule(rule)
+    }
+
     return className
+  }
+
+  const addRule = (parentSelector:string, childSelector:string):void => {
+    if(!hashSum) return
+
+    const selector = parentSelector + ' ' + childSelector
+    if(classNameHash.has(selector)) return
+
+    console.log("  --new selectorName: ", selector)
+    console.log("  --selectorsCount: ", ++selectorsCount)
+
+    const rule = '.' + selector + style + '}';
+    classNameHash.set(selector, parentSelector)
+    styleSheet.insertRule(rule)
+
+    if(hoverStyle) {
+      const rule = '.' + selector + (isMobileDevice ? ":active{" : ":hover{") + hoverStyle + '}';
+      styleSheet.insertRule(rule)
+    }
+
+    if(focusStyle) {
+      const rule = '.' + selector + ":focus{" + focusStyle + '}';
+      styleSheet.insertRule(rule)
+    }
   }
 
   const clear = ():void => {
     hashSum = ""
+    focusStyle = ""
+    hoverStyle = ""
+    state = "normal"
     style = "{box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;"
   }
 
   const setValue = (key:string, value:string, appendToClassName:boolean = true) => {
-    style += key + ':' + value + ';'
+    if(state === "focus") focusStyle += key + ':' + value + ';'
+    else if(state === "hover") hoverStyle += key + ':' + value + ';'
+    else style += key + ':' + value + ';'
 
     if(appendToClassName) {
       if(!abbreviations.hasOwnProperty(key))
-        throw new Error("SelectorRuleBuilder:: No abbreviation for tag: " + key)
+        throw new Error("SelectorRuleBuilder.setValue:: No abbreviation for tag: " + key)
       hashSum += abbreviations[key] + value
     }
   }
@@ -129,9 +190,57 @@ const RuleBuilder = ():[()=>void, { [key: string]: (value:any)=>void }, ()=>stri
   operator["marginTop"] = (value:string) => {setValue("margin-top", value)}
   operator["marginBottom"] = (value:string) => {setValue("margin-bottom", value)}
 
+  operator["bgColor"] = (value:string) => {setValue("background-color", value)}
+  operator["border"] = (value:string | [string, string, string]) => {setValue("border", Array.isArray(value) ? value.join(' ') : value)}
+  operator["borderLeft"] = (value:string | [string, string, string]) => {setValue("border-left", Array.isArray(value) ? value.join(' ') : value)}
+  operator["borderRight"] = (value:string | [string, string, string]) => {setValue("border-right", Array.isArray(value) ? value.join(' ') : value)}
+  operator["borderTop"] = (value:string | [string, string, string]) => {setValue("border-top", Array.isArray(value) ? value.join(' ') : value)}
+  operator["borderBottom"] = (value:string | [string, string, string]) => {setValue("border-bottom", Array.isArray(value) ? value.join(' ') : value)}
+  operator["cornerRadius"] = (value:string) => {setValue("border-radius", value)}
+  operator["opacity"] = (value:string) => {setValue("opacity", value)}
+  operator["shadow"] = (value:string) => {setValue("box-shadow", value)}
+
+  operator["fontFamily"] = (value:string) => {setValue("font-family", value)}
+  operator["fontSize"] = (value:string) => {setValue("font-size", value)}
+  operator["fontWeight"] = (value:string) => {setValue("font-weight", value)}
+  operator["textColor"] = (value:string) => {setValue("color", value)}
+  operator["textAlign"] = (value:string) => {setValue("text-align", value)}
+  operator["textDecoration"] = (value:string) => {setValue("text-decoration", value)}
+  operator["textTransform"] = (value:string) => {setValue("text-transform", value)}
+  operator["whiteSpace"] = (value:string) => {setValue("white-space", value)}
+  operator["caretColor"] = (value:string) => {setValue("caret-color", value)}
+
   operator["animate"] = (value:string) => {setValue("transition", value)}
 
-  return [clear, operator, className]
+  //HOVER
+  operator["hoverState"] = (fillPropsFunc:(state:StylableComponentProps)=>void) => {
+    const hoverStateProps:any = {}
+    fillPropsFunc(hoverStateProps)
+    state = "hover"
+    hashSum += "HOVER"
+    for (let k of [...Object.keys(hoverStateProps)].sort(sortKeys)) {
+      if(operator[k]) {
+        operator[k](hoverStateProps[k])
+      }
+    }
+    state = "normal"
+  }
+
+  //FOCUS
+  operator["focusState"] = (fillPropsFunc:(state:StylableComponentProps)=>void) => {
+    const focusStateProps:any = {}
+    fillPropsFunc(focusStateProps)
+    state = "focus"
+    hashSum += "FOCUS"
+    for (let k of [...Object.keys(focusStateProps)].sort(sortKeys)) {
+      if(operator[k]) {
+        operator[k](focusStateProps[k])
+      }
+    }
+    state = "normal"
+  }
+
+  return [clear, operator, className, addRule]
 }
 
 let selectorsCount = 0
@@ -159,7 +268,21 @@ export const buildClassName = (props:any):string => {
   return className()
 }
 
+export const buildRule = (props:any, parentSelector:string, childSelector:string):void => {
+  const [clear, operator, className, addRule] = ruleBuilder
+  clear()
+
+  for (let k of [...Object.keys(props)].sort(sortKeys)) {
+    if(operator[k]) {
+      operator[k](props[k])
+    }
+  }
+  addRule(parentSelector, childSelector)
+}
+
 export interface StylableComponentProps {
+  id?: string,
+  key?: string,
   width?: string,
   height?: string,
   minWidth?: string,
@@ -184,131 +307,25 @@ export interface StylableComponentProps {
   enableOwnScroller?: boolean,
   layer?: LayoutLayer,
   animate?: string,
+  textColor?: string,
+  bgColor?: string,
+  border?: string | [string, string, string],
+  borderLeft?: string | [string, string, string],
+  borderRight?: string | [string, string, string],
+  borderTop?: string | [string, string, string],
+  borderBottom?: string | [string, string, string],
+  cornerRadius?: string,
+  opacity?: string,
+  shadow?: string,
+  visible?: boolean,
   className?: string,
   children?: any,
+  hoverState?: (state:StylableComponentProps) => void,
 }
 
 export const stylable = <T,X extends T & StylableComponentProps>(component: (componentProps:T) => JSX.Element): ((props: X) => JSX.Element) => {
   return ( props: X ) => {
     const className = buildClassName(props)
-    return <div className={props.className ? props.className + " " + className : className}>{component(props)}</div>
+    return <div key={props.key} id={props.id} className={props.className ? props.className + " " + className : className}>{component(props)}</div>
   }
-}
-
-export const StylableContainer = stylable((props:any)=> {
-  return props.className ? <div className={props.className}>{props.children}</div> : <div>{props.children}</div>
-})
-
-interface StackProps extends StylableComponentProps{
-  halign: 'left' | 'right' | "center" | 'stretch',
-  valign: 'top' | "center" | 'base' | 'bottom' | 'stretch',
-}
-
-const defVStackProps = {
-  "display": "flex",
-  "flexDirection": "column",
-  "alignItems": "flex-start",
-  "justifyContent": "center",
-  "width": "100%",
-  "gap": "10px",
-  "boxSizing": "border-box",
-}
-
-export const VStack = (props: StackProps) => {
-  const style = {...defVStackProps, ...props}
-
-  switch (props.halign) {
-    case 'left':
-      style["alignItems"] = "flex-start";
-      break;
-    case "center":
-      style["alignItems"] = "center";
-      break;
-    case 'right':
-      style["alignItems"] = "flex-end";
-      break;
-    case 'stretch':
-      style["alignItems"] = "stretch";
-      break;
-  }
-
-  switch (props.valign) {
-    case 'top':
-      style["justifyContent"] = "flex-start";
-      break;
-    case "center":
-      style["justifyContent"] = "center";
-      break;
-    case 'base':
-      style["alignItems"] = "baseline";
-      break;
-    case 'bottom':
-      style["justifyContent"] = "flex-end";
-      break;
-  }
-
-  if (props.hasOwnProperty("className"))
-    return <div className={props.className + " " + buildClassName(style)}>{props.children}</div>
-  else
-    return <div className={buildClassName(style)}>{props.children}</div>
-}
-
-const defHStackProps = {
-  "display": "flex",
-  "flexDirection": "row",
-  "alignItems": "flex-start",
-  "justifyContent": "center",
-  "gap": "10px",
-  "boxSizing": "border-box",
-}
-
-export const HStack = (props: StackProps) => {
-  const style = {...defHStackProps, ...props}
-
-  switch (props.halign) {
-    case 'left':
-      style["justifyContent"] = "flex-start";
-      break;
-    case "center":
-      style["justifyContent"] = "center";
-      break;
-    case 'right':
-      style["justifyContent"] = "flex-end";
-      break;
-  }
-
-  switch (props.valign) {
-    case 'top':
-      style["alignItems"] = "flex-start";
-      break;
-    case "center":
-      style["alignItems"] = "center";
-      break;
-    case 'base':
-      style["alignItems"] = "baseline";
-      break;
-    case 'bottom':
-      style["alignItems"] = "flex-end";
-      break;
-    case 'stretch':
-      style["alignItems"] = "stretch";
-      break;
-  }
-
-  if (props.hasOwnProperty("className"))
-    return <div className={props.className + " " + buildClassName(style)}>{props.children}</div>
-  else
-    return <div className={buildClassName(style)}>{props.children}</div>
-}
-
-const defStackProps = {
-  "boxSizing": "border-box",
-}
-
-export const Stack = (props: StylableComponentProps) => {
-  const style = {...defStackProps, ...props}
-  if (props.hasOwnProperty("className"))
-    return <div className={props.className + " " + buildClassName(style)}>{props.children}</div>
-  else
-    return <div className={buildClassName(style)}>{props.children}</div>
 }

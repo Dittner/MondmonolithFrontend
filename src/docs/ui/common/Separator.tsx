@@ -1,6 +1,7 @@
 import {buildClassName} from "../../application/NoCSS";
+import {Theme} from "../../application/ThemeManager";
 
-export const HSeparator = ({width, marginHorizontal, marginVertical}: { width?: string, marginHorizontal?: string, marginVertical?: string }) => {
+export const HSeparator = ({theme, width, marginHorizontal, marginVertical}: { theme:Theme, width?: string, marginHorizontal?: string, marginVertical?: string }) => {
   const style = {
     width: width,
     height: "1px",
@@ -8,12 +9,13 @@ export const HSeparator = ({width, marginHorizontal, marginVertical}: { width?: 
     marginLeft: marginHorizontal,
     marginRight: marginHorizontal,
     marginTop: marginVertical,
-    marginBottom: marginVertical
+    marginBottom: marginVertical,
+    bgColor: theme.border,
   }
-  return <div className={"horSeparator " + buildClassName(style)}/>
+  return <div className={buildClassName(style)}/>
 }
 
-export const VSeparator = ({height, marginHorizontal, marginVertical}: { height?: string, marginHorizontal?: string, marginVertical?: string }) => {
+export const VSeparator = ({theme, height, marginHorizontal, marginVertical}: { theme:Theme, height?: string, marginHorizontal?: string, marginVertical?: string }) => {
   const style = {
     height: height,
     width: "1px",
@@ -21,7 +23,8 @@ export const VSeparator = ({height, marginHorizontal, marginVertical}: { height?
     marginLeft: marginHorizontal,
     marginRight: marginHorizontal,
     marginTop: marginVertical,
-    marginBottom: marginVertical
+    marginBottom: marginVertical,
+    bgColor: theme.border,
   }
-  return <div className={"verSeparator " + buildClassName(style)}/>
+  return <div className={buildClassName(style)}/>
 }

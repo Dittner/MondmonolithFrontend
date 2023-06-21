@@ -2,7 +2,7 @@ import {BrowserRouter as Router, Navigate, Route, Routes} from 'react-router-dom
 import {DocsView} from "./docs/ui/DocsView";
 import {DocsContext} from "./docs/DocsContext";
 import React, {useLayoutEffect, useState} from 'react';
-import {IntroView} from "./docs/ui/intro/IntroView";
+import {IntroView} from "./docs/ui/IntroView";
 import {observer} from "mobx-react";
 import {AuthStatus} from "./docs/domain/DomainModel";
 

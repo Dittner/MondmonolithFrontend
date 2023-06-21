@@ -1,34 +1,33 @@
 :root {
-  color-scheme: dark;
-  /* color palette */
-  --Gray: #292f31;
-  --LightGray: #DEDEDE;
-  --Red: #E06C75;
-  --Red25: #E06C7525;
-  --Red75: #E06C7575;
-  --Yellow: #c29a5f;
-  --Error: #ff4178;
-  --Text: #c7d7e5;
-  --TextDark: #76818d;
-  --TextDark75: #76818d75;
-  --TextGreen: #a7c6d2;
-  --TextDarkGreen: #596a70;
-  --TextBlue: #b1c5de;
-  --PageTitle: #86b3c7;
-  --DocListTextSelected: #d2e4f2;
-  --PanelBg: #292f31;
-  --AppBg: #23282a;
-  --HeaderBg: #252a2c;
-  --DarkBg: #00000020;
-  --CodeBg: #2e393f50;
-  --CodeBlockBg: #2a343920;
-  --Border: #2a3439;
-  --Pink: #a29cbe;
-  --InputBg: #1f2528;
-  --BtnWeight: 600;
-  --BtnColor: #E06C75;
-  --BtnHoverColor: #c7d7e5;
-  --BtnDisabledColor: #76818d;
+  /*!* color palette *!*/
+  /*--Gray: #292f31;*/
+  /*--LightGray: #DEDEDE;*/
+  /*--Red: #E06C75;*/
+  /*--Red25: #E06C7525;*/
+  /*--Red75: #E06C7575;*/
+  /*--Yellow: #c29a5f;*/
+  /*--Error: #ff4178;*/
+  /*--Text: #c7d7e5;*/
+  /*--TextDark: #76818d;*/
+  /*--TextDark75: #76818d75;*/
+  /*--TextGreen: #a7c6d2;*/
+  /*--TextDarkGreen: #596a70;*/
+  /*--TextBlue: #b1c5de;*/
+  /*--PageTitle: #86b3c7;*/
+  /*--DocListTextSelected: #d2e4f2;*/
+  /*--PanelBg: #292f31;*/
+  /*--AppBg: #23282a;*/
+  /*--HeaderBg: #252a2c;*/
+  /*--DarkBg: #00000020;*/
+  /*--CodeBg: #2e393f50;*/
+  /*--CodeBlockBg: #2a343920;*/
+  /*--Border: #2a3439;*/
+  /*--Pink: #a29cbe;*/
+  /*--InputBg: #1f2528;*/
+  /*--BtnWeight: 600;*/
+  /*--BtnColor: #E06C75;*/
+  /*--BtnHoverColor: #c7d7e5;*/
+  /*--BtnDisabledColor: #76818d;*/
   --CodeLineHeight: 1.76;
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   --font-family-mono: Menlo, source-code-pro, Monaco, 'Courier New', monospace;
@@ -47,10 +46,14 @@
   background: #c1b79e;
 }
 
+.ibm {
+  font-family: "ibm";
+}
+
 html {
+  color-scheme: light;
   scroll-behavior: smooth;
   font-size: 16px;
-  overflow-x: hidden;
 }
 
 @media screen and (max-width: 1000px) {
@@ -58,7 +61,6 @@ html {
     font-size: 15px;
   }
 }
-
 
 @media screen and (max-width: 900px) {
   html {
@@ -77,32 +79,37 @@ body {
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: var(--Text);
-  background-color: var(--AppBg);
   outline: none;
-  overflow: auto;
   box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
-body, p, a, h1, h2, h3 {
+
+body, p, a, h1, h2, h3, blockquote {
   margin: 0;
   padding: 0;
-  text-decoration: 0;
+  text-decoration: none;
 }
 
-h1 {
+h1, .h1 {
   font-size: 3rem;
   font-weight: 300;
 }
 
-h2 {
+h2, .h2 {
   font-size: 2rem;
   font-weight: 400;
 }
 
-h3 {
+h3, .h3 {
   font-size: 1.5rem;
   font-weight: 400;
+}
+
+h4, .h4 {
+  font-size: 1.25rem;
+  font-weight: 500;
 }
 
 div,
@@ -110,25 +117,45 @@ p {
   font-family: var(--font-family);
   font-size: 1rem;
   line-height: 1.7;
-  font-weight: 450;
+  font-weight: 500;
 }
 
-blockquote {
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-  border-left: 5px solid #4c5157;
-  margin: 10px 0;
-  padding: 20px;
-  background-color: #2d3034;
-  color: #9aa8bb;
+.mono {
+  font-family: var(--font-family-mono);
+}
+
+.notSelectable {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 
 hr {
   display: block;
   margin: 0;
-  color: var(--Border);
+  color: #2a3439;
   border-style: inset;
   border-width: 1px;
+}
+
+/******************************/
+/*--------- INTRO VIEW--------*/
+/******************************/
+
+img.introHeaderImg {
+  background-repeat: no-repeat;
+  position: fixed;
+  width: 1660px;
+  left: calc(50% - 830px);
+  top: 0;
+  margin: auto;
+  max-width: 1660px;
+}
+
+@media screen and (max-width: 480px) {
+  div.highlightFunc {
+    font-size: 1.5rem;
+  }
 }
 
 /******************************/
@@ -150,14 +177,14 @@ hr {
 }
 
 .listScrollbar::-webkit-scrollbar-thumb {
-  background: var(--Gray);
+  background: #292f31;
   border-radius: 14px;
   border: 4px solid transparent;
   background-clip: content-box;
 }
 
 .listScrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--PageTitle);
+  background: #86b3c7;
   border-radius: 14px;
   border: 4px solid transparent;
   background-clip: content-box;
@@ -185,173 +212,29 @@ div.appLayout.L {
   z-index: 100;
 }
 
-.withBottomBorder {
-  border-bottom: 1px solid var(--Border);
-}
-
-/******************************/
-/*------- MODAL VIEW ---------*/
-/******************************/
-
-div.modalView {
-  background-color: #00000050;
-}
-
-div.yesNoDialog {
-  background-color: #495655;
-  box-shadow: 0 10px 20px #00000020;
-  border-radius: 20px;
-}
-
-div.yesNoDialog p {
-  font-size: 1rem;
-  font-family: var(--font-family-mono);
-  color: var(--Text);
-  white-space: pre-wrap;
-}
-
-div.yesNoDialog h2 {
-  text-align: center;
-}
-
-div.yesNoDialog button {
-  font-size: 1.25rem;
-  min-width: 60px;
-}
-
-/******************************/
-/*--------- BUTTONS ---------*/
-/******************************/
-.btn {
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: var(--BtnWeight);
-}
-
-.btn,
-.btn:link,
-.btn:visited {
-  height: 30px;
-  width: min-content;
-  border: none;
-  background-color: transparent;
-  border-radius: 30px;
-  color: var(--BtnColor);
-  text-align: center;
-  text-decoration: none;
-  white-space: pre;
-  box-sizing: border-box;
-}
-
-.btn:hover {
-  color: var(--BtnHoverColor);
-}
-
-.btn:disabled {
-  color: var(--BtnDisabledColor);
-  cursor: not-allowed;
-}
-
 /******************************/
 /*--------- INPUTS ---------*/
 /******************************/
 
-div.input_container {
-  position: relative;
-  box-sizing: border-box;
-  width: 100%;
-}
-
-div.input_container input[type=text],
-div.input_container input[type=password] {
-  width: 100%;
-  height: 45px;
-  padding-left: 12px;
-  padding-right: 12px;
-  padding-top: 1px;
-  margin: 0;
+input[type=text],
+input[type=password] {
   font-size: 1rem;
-  display: block;
-  background-color: var(--InputBg);
-  caret-color: var(--Red);
-  border: 1px solid var(--InputBg);
   border-radius: unset;
-  color: var(--TextDark);
-  box-sizing: border-box;
   outline: none;
-  vertical-align: bottom;
-  transition: border 300ms;
+  border-width: 1px;
+  border-color: transparent;
 }
-
-div.input_container input[type=text]:focus,
-div.input_container input[type=password]:focus {
-  color: var(--Text);
-  border: 1px solid var(--Border);
-}
-
-div.input_container input[type=text]:hover,
-div.input_container input[type=password]:hover {
-  border: 1px solid var(--Border);
-}
-
-p.input_title {
-  font-size: 9px;
-  color: var(--TextDark);
-  position: relative;
-  text-transform: uppercase;
-}
-
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: var(--TextDark75);
-  opacity: 1; /* Firefox */
-}
-
-:-ms-input-placeholder { /* Internet Explorer 10-11 */
-  color: var(--TextDark75);
-}
-
-::-ms-input-placeholder { /* Microsoft Edge */
-  color: var(--TextDark75);
-}
-
-/******************************/
-/*--------- TEXT AREA ---------*/
-/******************************/
 
 textarea {
-  font-family: var(--font-family-mono);
   font-size: 1rem;
   line-height: var(--CodeLineHeight);
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-bottom: 10px;
   margin: 0;
   width: 100%;
-  color: var(--TextGreen);
   box-sizing: border-box;
-  border-radius: 10px;
-  border-bottom: none;
-  border-top: none;
-  border-right: none;
-  border-bottom-right-radius: 0;
-  border-top-right-radius: 0;
-  background: none;
-  border-left: 5px solid var(--TextGreen);
-  background-color: var(--InputBg);
   resize: none;
   outline: none;
   overflow: visible;
-  caret-color: var(--Red);
-  box-shadow: 1px 4px 4px #00000010 inset;
-  transition: border-left 300ms;
-}
-
-textarea:focus {
-  border-left: 5px solid var(--Red);
-  background-color: var(--InputBg);
-  transition: border-left 300ms;
+  box-shadow: 1px 3px 3px #00000005 inset;
 }
 
 /******************************/
@@ -406,21 +289,36 @@ div.spacer {
 }
 
 /******************************/
-/*--------- SEPARATOR ---------*/
+/*--------- BUTTON ---------*/
 /******************************/
 
-div.horSeparator {
-  background-color: var(--Border);
+button {
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: var(--font-family);
+  font-weight: 500;
+  border: none;
+  min-width: 40px;
+  min-height: 32px;
+  border-radius: 4px;
+  background: none;
+  text-align: center;
+  text-decoration: none;
+  white-space: pre;
+  box-sizing: border-box;
 }
 
-div.verSeparator {
-  background-color: var(--Border);
+@media screen and (max-width: 480px) {
+  button {
+    min-width: 32px;
+  }
 }
 
-/******************************/
-/*--------- ICONS ---------*/
-/******************************/
-
+button:disabled {
+  cursor: not-allowed;
+}
 
 @font-face {
   font-family: 'icons';
@@ -440,115 +338,50 @@ div.verSeparator {
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-  background-color: transparent;
-  border: none;
 
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-button[class^="icon-"], button[class*=" icon-"] {
-  color: var(--Red);
-  padding: 0;
-  margin: 0;
-  background: var(--PanelBg);
-  border-radius: 4px;
-  min-width: 32px;
-  min-height: 32px;
-  white-space: pre;
-}
-
-button[class^="icon-"]:hover,
-button[class*=" icon-"]:hover {
-  background: var(--Border);
-  cursor: pointer;
-}
-
-button[class^="icon-"]:active,
-button[class*=" icon-"]:active {
-  color: var(--Text);
-  background: var(--Border);
-  cursor: pointer;
-}
-
-button[class^="icon-"]:disabled,
-button[class*=" icon-"]:disabled {
-  color: var(--TextDark);
-  background: none;
-  cursor: not-allowed;
-}
-
-button.withoutBg {
-  background: none;
-}
-
-button.withoutBg:hover {
-  background: none;
-  color: var(--Text);
-}
-
-button.withoutBorder,
-button.withoutBorder:hover {
-  border: none;
-}
-
-button.long {
-  min-width: 60px;
-}
-
-@media screen and (max-width: 650px) {
-  button.long {
-    min-width: 32px;
-  }
-}
-
-button.big {
-  min-width: 60px;
-  min-height: 60px;
+.icon-moon:before {
   font-size: 1.25rem;
+  content: "\e90b";
 }
-
-.icon-nextPage:before {
-  content: "\e909";
+.icon-sun:before {
+  font-size: 1.25rem;
+  content: "\e90c";
 }
-
-.icon-prevPage:before {
-  content: "\e90a";
-}
-
-.icon-scrollBack:before {
-  content: "\e908";
-}
-
-.icon-close:before {
-  content: "\e907";
-}
-
-.icon-menu:before {
-  content: "\e905";
-}
-
-.icon-plus:before {
-  content: "\e906";
-}
-
-.icon-delete:before {
-  content: "\e900";
-}
-
 .icon-down:before {
   content: "\e901";
 }
-
+.icon-up:before {
+  content: "\e904";
+}
+.icon-scrollBack:before {
+  content: "\e908";
+}
+.icon-nextPage:before {
+  content: "\e909";
+}
+.icon-prevPage:before {
+  content: "\e90a";
+}
+.icon-close:before {
+  content: "\e907";
+}
+.icon-menu:before {
+  content: "\e905";
+}
+.icon-plus:before {
+  content: "\e906";
+}
+.icon-delete:before {
+  content: "\e900";
+}
 .icon-edit:before {
   content: "\e902";
 }
-
 .icon-search:before {
   content: "\e903";
-}
-
-.icon-up:before {
-  content: "\e904";
 }

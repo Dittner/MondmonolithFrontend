@@ -1,27 +1,27 @@
 import React, {useEffect} from "react";
 import {useLocation} from "react-router-dom";
-import {DocList} from "./docList/DocList";
+import {DocList} from "./DocList";
 import {observer} from "mobx-react";
 import {useDocsContext} from "../../App";
-import {DocBody} from "./docBody/DocBody";
-import {DocTopics} from "./docTopics/DocTopics";
-import {Header} from "./header/Header";
-import {HStack, StylableContainer, VStack} from "../../docs/application/NoCSS";
+import {DocBody} from "./DocBody";
+import {DocTopics} from "./DocTopics";
+import {Header} from "./Header";
 import {AppSize, LayoutLayer} from "../application/Application";
+import {HStack, Label, RedButton, StylableContainer, VStack} from "../application/NoCSSComponents";
 
 export const DocsView = observer(() => {
   console.log("DocsView init");
-  const docsContext = useDocsContext()
+  const {docsLoader, app} = useDocsContext()
   const drawLayoutLines = false
 
   useEffect(() => {
-    docsContext.docsLoader.fetchDirectories()
+    docsLoader.fetchDirectories()
   })
 
   const {pathname, hash, key} = useLocation()
 
   useEffect(() => {
-    docsContext.app.isDocListShown = false
+    app.isDocListShown = false
   }, [pathname]);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export const DocsView = observer(() => {
 
   const headerHeight = "50px"
 
-  if (docsContext.app.size === AppSize.L) {
+  if (app.size === AppSize.L) {
     return (
       <>
         <Header width="80%"
@@ -70,6 +70,7 @@ export const DocsView = observer(() => {
                    top={headerHeight}
                    bottom="0"
                    enableOwnScroller
+                   borderLeft={["1px", "solid", app.theme.border]}
                    fixed/>
         <ModalView/>
 
@@ -98,7 +99,7 @@ export const DocsView = observer(() => {
     )
   }
 
-  if (docsContext.app.size === AppSize.M) {
+  if (app.size === AppSize.M) {
     return (
       <>
         <Header width="70%"
@@ -152,7 +153,7 @@ export const DocsView = observer(() => {
               layer={LayoutLayer.HEADER} //z-Index
               fixed/>
 
-      <DocList left={docsContext.app.isDocListShown ? "0" : "-300px"}
+      <DocList left={app.isDocListShown ? "0" : "-300px"}
                width="300px"
                height="100vh"
                layer={LayoutLayer.DOC_LIST}
@@ -212,31 +213,39 @@ export const ModalView = observer(() => {
   if (!app.yesNoDialog && !app.infoDialog)
     return <></>
 
-  return <VStack className={"modalView"}
-                 halign="center"
+  return <VStack halign="center"
                  valign="center"
                  width="100%"
                  height="100%"
+                 bgColor="#00000050"
                  layer={LayoutLayer.MODAL}
                  fixed>
 
-    {app.yesNoDialog &&
-    <VStack className="yesNoDialog"
+    <VStack visible={app.yesNoDialog !== undefined}
             halign="stretch"
             valign="center"
+            bgColor={app.theme.modalWindowBg}
+            cornerRadius="20px"
+            shadow="0 10px 20px #00000020"
             width="350px" padding="30px" gap="30px">
-      <p>{app.yesNoDialog.text}</p>
+
+      <Label className="mono"
+             title={app.yesNoDialog?.text}
+             whiteSpace="pre-wrap"
+             textColor={app.theme.text}/>
 
       <HStack halign="center" valign="top" gap="50px">
-        <button onClick={cancel}
-                className="btn">No
-        </button>
-        <button className="btn"
-                onClick={apply}>Yes
-        </button>
+        <RedButton title="No"
+                   theme={app.theme}
+                   hideBg
+                   onClick={cancel}/>
+
+        <RedButton title="Yes"
+                   theme={app.theme}
+                   hideBg
+                   onClick={apply}/>
       </HStack>
     </VStack>
-    }
 
     {app.infoDialog &&
     <VStack className="yesNoDialog"

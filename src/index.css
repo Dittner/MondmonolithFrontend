@@ -143,6 +143,11 @@ hr {
 /*--------- INTRO VIEW--------*/
 /******************************/
 
+.introViewCont {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
 img.introHeaderImg {
   background-repeat: no-repeat;
   position: fixed;
@@ -349,40 +354,52 @@ button:disabled {
   font-size: 1.25rem;
   content: "\e90b";
 }
+
 .icon-sun:before {
   font-size: 1.25rem;
   content: "\e90c";
 }
+
 .icon-down:before {
   content: "\e901";
 }
+
 .icon-up:before {
   content: "\e904";
 }
+
 .icon-scrollBack:before {
   content: "\e908";
 }
+
 .icon-nextPage:before {
   content: "\e909";
 }
+
 .icon-prevPage:before {
   content: "\e90a";
 }
+
 .icon-close:before {
   content: "\e907";
 }
+
 .icon-menu:before {
   content: "\e905";
 }
+
 .icon-plus:before {
   content: "\e906";
 }
+
 .icon-delete:before {
   content: "\e900";
 }
+
 .icon-edit:before {
   content: "\e902";
 }
+
 .icon-search:before {
   content: "\e903";
 }

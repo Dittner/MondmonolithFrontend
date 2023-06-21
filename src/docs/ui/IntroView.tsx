@@ -18,8 +18,8 @@ export const IntroView = observer(() => {
   const {app} = useDocsContext()
   console.log("new IntroView")
 
-  return <VStack width="100vw"
-                 maxWidth="100vw"
+  return <VStack className="introViewCont"
+                 width="100%"
                  height="100%"
                  halign="center"
                  valign="center"
@@ -105,7 +105,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER  |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.2  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.3  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -121,7 +121,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.2  |  DATE: 2023  
+*  MODE: demo  |  VER: 2.3  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/

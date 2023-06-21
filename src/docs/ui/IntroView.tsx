@@ -35,7 +35,7 @@ export const IntroView = observer(() => {
             layer={LayoutLayer.HEADER}
             fixed/>
 
-    <StylableContainer left="10px" top="10px" fixed
+    <StylableContainer left="10px" top="5px" fixed
                         layer={LayoutLayer.HEADER}>
       <IconButton icon={app.theme.isDark ? "moon" : "sun"}
                   hideBg
@@ -104,7 +104,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER  |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.0  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.1  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -120,7 +120,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.0  |  DATE: 2023  
+*  MODE: demo  |  VER: 2.1  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/

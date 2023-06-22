@@ -161,43 +161,19 @@ export const HeaderView = observer(() => {
                   shadow="0 5px 5px #00000020">
             <Input type="text"
                    text={name}
+                   theme={app.theme}
                    title="Login"
                    placeHolder="Enter your name"
-                   width="100%"
-                   height="35px"
-                   caretColor={app.theme.caretColor}
-                   textColor={app.theme.text75}
-                   bgColor={app.theme.inputBg}
-                   padding="5px"
                    onChange={(value: string) => setName(value)}
-                   onSubmitted={handleSignIn}
-                   focusState={state => {
-                     state.textColor = app.theme.text
-                     state.border = ["1px", "solid", app.theme.border]
-                   }}
-                   hoverState={state => {
-                     state.border = ["1px", "solid", app.theme.border]
-                   }}
-            />
+                   onSubmitted={handleSignIn}/>
+
             <Input type="password"
                    text={pwd}
-                   width="100%"
-                   height="35px"
+                   theme={app.theme}
                    title="Password"
                    placeHolder="Enter your password"
-                   caretColor={app.theme.caretColor}
-                   textColor={app.theme.text75}
-                   bgColor={app.theme.inputBg}
-                   padding="5px"
                    onChange={(value: string) => setPwd(value)}
-                   onSubmitted={handleSignIn}
-                   focusState={state => {
-                     state.textColor = app.theme.text
-                     state.border = ["1px", "solid", app.theme.border]
-                   }}
-                   hoverState={state => {
-                     state.border = ["1px", "solid", app.theme.border]
-                   }}/>
+                   onSubmitted={handleSignIn}/>
 
             {user.authStatus !== AuthStatus.AUTHORIZING &&
 

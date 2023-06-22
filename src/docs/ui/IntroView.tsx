@@ -18,6 +18,8 @@ export const IntroView = observer(() => {
   const {app} = useDocsContext()
   console.log("new IntroView")
 
+  const bgColor = app.theme.appBg + "99"
+
   return <VStack className="introViewCont"
                  width="100%"
                  height="100%"
@@ -26,9 +28,8 @@ export const IntroView = observer(() => {
                  gap="30px"
                  paddingBottom="20px">
 
-    {app.size !== AppSize.XS &&
     <img src={app.theme.isDark ? "/headerBg.jpg" : "/headerBg-light.jpg"} className="introHeaderImg"/>
-    }
+
 
     <Header width="100%"
             height="50px"
@@ -47,15 +48,12 @@ export const IntroView = observer(() => {
 
     <Label className="mono"
            whiteSpace="pre"
+           padding="30px"
            title={app.size === AppSize.XS ? aboutTxtXS : aboutTxt}
            textColor={app.theme.text75}
-           bgColor={app.theme.appBg}
-           border={["30px", "solid", app.theme.appBg]}
+           bgColor={bgColor}
            layer={LayoutLayer.ONE}/>
 
-    {app.size !== AppSize.XS &&
-    <Spacer height="250px"/>
-    }
 
     <Label className={app.theme.isDark ? "ibm h2" : "ibm h2 light"}
            whiteSpace="pre"
@@ -73,12 +71,13 @@ export const IntroView = observer(() => {
       }
     </Label>
 
+    <Spacer height="250px"/>
 
     <VStack halign="stretch"
             valign="top"
             maxWidth="1700px"
-            bgColor={app.theme.appBg}
-            border={["30px", "solid", app.theme.appBg]}
+            bgColor={bgColor}
+            padding="30px"
             layer={LayoutLayer.ONE}>
       <Label className="ibm h4"
              title="Examples of Markdown formatting"
@@ -96,7 +95,8 @@ export const IntroView = observer(() => {
     <Label className="mono"
            title={app.isMobileDevice ? 'Mobile mode' : 'Desktop mode'}
            fontSize="10px"
-           textColor={app.theme.text75}/>
+           textColor={app.theme.text75}
+           layer={LayoutLayer.ONE}/>
   </VStack>
 })
 
@@ -105,7 +105,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER  |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.3  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.4  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -121,7 +121,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.3  |  DATE: 2023  
+*  MODE: demo  |  VER: 2.4  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/
@@ -207,22 +207,12 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
 
         <TextArea className="mono"
                   text={value}
-                  textColor={app.theme.textGreen}
+                  theme={app.theme}
                   paddingHorizontal="20px"
                   paddingBottom="10px"
-                  border="none"
-                  borderLeft={["6px", "solid", app.theme.inputBorder]}
-                  cornerRadius="10px"
-                  bgColor={app.theme.inputBg}
-                  caretColor={app.theme.caretColor}
-                  animate="border-left 300ms"
                   onApply={apply}
                   onCancel={cancel}
-                  autoFocus={autoFocus}
-                  width="100%"
-                  focusState={state => {
-                    state.borderLeft = ["6px", "solid", app.theme.inputBorderFocused]
-                  }}/>
+                  autoFocus={autoFocus}/>
 
         <HStack halign="left"
                 valign="stretch"
@@ -254,22 +244,13 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
               gap="50px">
         <TextArea className="mono"
                   text={value}
-                  textColor={app.theme.textGreen}
+                  theme={app.theme}
                   paddingHorizontal="20px"
                   paddingBottom="10px"
-                  cornerRadius="10px"
-                  bgColor={app.theme.inputBg}
-                  caretColor={app.theme.caretColor}
-                  animate="border-left 300ms"
                   onApply={apply}
                   onCancel={cancel}
                   autoFocus={autoFocus}
-                  width="50%"
-                  border="none"
-                  borderLeft={["6px", "solid", app.theme.inputBorder]}
-                  focusState={state => {
-                    state.borderLeft = ["6px", "solid", app.theme.inputBorderFocused]
-                  }}/>
+                  width="50%"/>
 
         <VSeparator theme={app.theme}/>
 

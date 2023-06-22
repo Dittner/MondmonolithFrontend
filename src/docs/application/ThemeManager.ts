@@ -5,7 +5,7 @@ const DARK_THEME_RED = "#E06C75"
 const LIGHT_THEME_RED = "#b44553"
 const DARK_THEME_WHITE = "#c7d7e5"
 const LIGHT_THEME_WHITE = "#dbe0e4"
-const BLACK = "#23282a"
+const DARK_THEME_APP_BG = "#23282a"
 
 export interface Theme {
   id: string,
@@ -15,6 +15,7 @@ export interface Theme {
   white25: string,
   yellow: string,
   appBg: string,
+  transparent: string,
   panelBg: string,
   modalWindowBg: string,
   text: string,
@@ -55,18 +56,19 @@ export class ThemeManager {
     white: DARK_THEME_WHITE,
     white25: "#ffffff10",
     yellow: "#c29a5f",
-    appBg: BLACK,
-    panelBg: "#292f31",
+    appBg: DARK_THEME_APP_BG,
+    transparent: "0",
+    panelBg: "#2e3437",
     modalWindowBg: "#495655",
     text: DARK_THEME_WHITE,
     text75: "#76818d",
     textGreen: "#a7c6d2",
     textGreen75: "#a7c6d275",
     pageTitle: "#86b3c7",
-    inputBg: "#1f2528",
+    inputBg: "#262e32",
     inputBorder: "#a7c6d2",
-    inputBorderFocused: DARK_THEME_RED,
-    border: "#2a3439",
+    inputBorderFocused: "#46575f",
+    border: "#323e44",
     pageSelection: "#2a3439",
     docSelection: "#00000020",
     caretColor: DARK_THEME_RED,
@@ -119,16 +121,17 @@ export class ThemeManager {
     white25: "#ffffff20",
     yellow: "#6f838d",
     appBg: LIGHT_THEME_WHITE,
+    transparent: "0",
     panelBg: "#e0e5e9",
     modalWindowBg: "#d0d4d8",
-    text: BLACK,
+    text: DARK_THEME_APP_BG,
     text75: "#687278",
     textGreen: "#2c363c",
     textGreen75: "#2c363c75",
     pageTitle: "#396a88",
     inputBg: "#cbd3db",
     inputBorder: "#757b7d",
-    inputBorderFocused: LIGHT_THEME_RED,
+    inputBorderFocused: "#768a91",
     border: "#c4d1d7",
     pageSelection: "#c4d1d7",
     docSelection: "#c4d1d7",
@@ -159,9 +162,9 @@ export class ThemeManager {
 
     const blockquoteProps: StylableComponentProps = {
       textColor: "#9da1a9",
-      bgColor: "#cbd0da",
+      bgColor: "#dcdcd7",
       padding: "20px",
-      borderLeft: "5px solid #9da1a9",
+      borderLeft: "5px solid #c1c1bd",
     }
     buildRule(blockquoteProps, theme.id, "blockquote")
   }

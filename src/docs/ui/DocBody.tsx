@@ -321,16 +321,9 @@ const PageTitleEditor = observer(({page}: { page: Page }) => {
     <TextArea key={page.uid}
               className="mono"
               text={page.title}
-              width="100%"
-              textColor={app.theme.textGreen}
+              theme={app.theme}
               paddingHorizontal="26px"
               paddingTop="12px"
-              border="none"
-              borderLeft={["6px", "solid", app.theme.inputBorder]}
-              cornerRadius="10px"
-              bgColor={app.theme.inputBg}
-              caretColor={app.theme.caretColor}
-              animate="border-left 300ms"
               onApply={apply}
               onCancel={cancel}
               autoFocus
@@ -435,22 +428,12 @@ const PageBlockEditor = observer(({block}: { block: PageBlock }) => {
   return (
     <TextArea key={block.uid}
               text={block.text}
+              theme={app.theme}
               className="mono"
-              width="100%"
-              textColor={app.theme.textGreen}
               paddingHorizontal="26px"
               paddingTop="12px"
-              border="none"
-              borderLeft={["6px", "solid", app.theme.inputBorder]}
-              cornerRadius="10px"
-              bgColor={app.theme.inputBg}
-              caretColor={app.theme.caretColor}
-              animate="border-left 300ms"
               onApply={apply}
               onCancel={cancel}
-              autoFocus
-              focusState={state => {
-                state.borderLeft = ["6px", "solid", app.theme.inputBorderFocused]
-              }}/>
+              autoFocus/>
   )
 })

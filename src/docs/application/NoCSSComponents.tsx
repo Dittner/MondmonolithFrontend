@@ -180,6 +180,7 @@ export const Label = (props: LabelProps) => {
 
 interface InputProps extends StylableComponentProps {
   type: "text" | "number" | "password" | "email",
+  theme: Theme,
   text?: string,
   title?: string,
   caretColor?: string,
@@ -190,20 +191,40 @@ interface InputProps extends StylableComponentProps {
   focusState?: (state: StylableComponentProps) => void,
 }
 
+const defInputProps = (theme: Theme): any => {
+  return {
+    "width": "100%",
+    "height": "35px",
+    "caretColor": theme.caretColor,
+    "textColor": theme.text75,
+    "bgColor": theme.inputBg,
+    "padding": "5px",
+    "border": ["1px", "solid", theme.inputBorder],
+    "focusState": (state: StylableComponentProps) => {
+      state.textColor = theme.text
+      state.border = ["1px", "solid", theme.inputBorderFocused]
+    },
+    "hoverState": (state: StylableComponentProps) => {
+      state.border = ["1px", "solid", theme.inputBorderFocused]
+    }
+  }
+}
+
 export const Input = (props: InputProps) => {
   console.log("new Input")
+  const customProps = {...defInputProps(props.theme), ...props}
 
   const onKeyDown = (e: any) => {
     //Enter key
     if (e.keyCode === 13 && !e.shiftKey) {
       e.preventDefault()
       e.stopPropagation()
-      props.onSubmitted && props.onSubmitted()
+      customProps.onSubmitted && customProps.onSubmitted()
     }
   }
 
   const inputRef = useCallback((input: HTMLInputElement) => {
-    if (input && props.autoFocus) {
+    if (input && customProps.autoFocus) {
       const timeout = setTimeout(() => {
         input.focus()
       }, 0)
@@ -211,26 +232,26 @@ export const Input = (props: InputProps) => {
     }
   }, []);
 
-  const className = props.hasOwnProperty("className") ? props.className + " " + buildClassName(props) : buildClassName(props)
+  const className = customProps.hasOwnProperty("className") ? customProps.className + " " + buildClassName(customProps) : buildClassName(customProps)
 
   return (
     <VStack halign="left" valign="top" gap="0"
             width="100%">
       <Label fontSize="9px"
-             title={props.title || "TITLE"}
+             title={customProps.title || "TITLE"}
              width="100%"
              textTransform="uppercase"
              textColor="#888888"/>
 
       <input ref={inputRef}
              className={className}
-             placeholder={props.placeHolder}
+             placeholder={customProps.placeHolder}
              autoCorrect="off"
              autoComplete="off"
-             type={props.type}
-             defaultValue={props.text}
+             type={customProps.type}
+             defaultValue={customProps.text}
              onChange={e => {
-               props.onChange && props.onChange(e.currentTarget.value)
+               customProps.onChange && customProps.onChange(e.currentTarget.value)
              }}
              onKeyDown={onKeyDown}/>
     </VStack>
@@ -238,6 +259,7 @@ export const Input = (props: InputProps) => {
 }
 
 interface TextAreaProps extends StylableComponentProps {
+  theme: Theme,
   text?: string,
   caretColor?: string,
   onApply?: (value: string) => void | undefined,
@@ -247,7 +269,24 @@ interface TextAreaProps extends StylableComponentProps {
   focusState?: (state: StylableComponentProps) => void,
 }
 
+const defTextAreaProps = (theme: Theme): any => {
+  return {
+    "width": "100%",
+    "caretColor": theme.caretColor,
+    "textColor": theme.textGreen,
+    "bgColor": theme.inputBg,
+    "border": "none",
+    "cornerRadius": "10px",
+    "animate": "border-left 300ms",
+    "borderLeft": ["6px", "solid", theme.inputBorder],
+    "focusState": (state: StylableComponentProps) => {
+      state.borderLeft = ["6px", "solid", theme.red]
+    }
+  }
+}
+
 export const TextArea = (props: TextAreaProps) => {
+  const customProps = {...defTextAreaProps(props.theme), ...props}
   const [value, setValue] = useState(props.text || "");
   const [width, height] = useWindowSize();
 
@@ -284,11 +323,11 @@ export const TextArea = (props: TextAreaProps) => {
     }
   }
 
-  const className = props.hasOwnProperty("className") ? props.className + " " + buildClassName(props) : buildClassName(props)
+  const className = props.hasOwnProperty("className") ? props.className + " " + buildClassName(customProps) : buildClassName(customProps)
 
   return <textarea className={className}
                    value={value}
-                   autoFocus={props.autoFocus}
+                   autoFocus={customProps.autoFocus}
                    ref={ta}
                    rows={value.split(/\r\n|\r|\n/).length}
                    spellCheck="false"
@@ -334,7 +373,7 @@ export const RedButton = (props: RedButtonProps) => {
   if (props.hasOwnProperty("visible") && !props.visible) return <></>
 
   const isSelected = props.hasOwnProperty("isSelected") && props.isSelected
-  if(props.theme.isDark) {
+  if (props.theme.isDark) {
     if (props.hideBg) {
       return <Button title={props.title}
                      textColor={isSelected ? props.theme.white : props.theme.red}

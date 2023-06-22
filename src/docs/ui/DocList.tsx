@@ -263,43 +263,18 @@ const DocEditForm = observer((props: any) => {
       <HStack halign="center" valign="center">
         <Input type="text"
                text={newDocTitle}
+               theme={app.theme}
                title="Doc's title"
-               width="100%"
-               height="35px"
-               caretColor={app.theme.caretColor}
-               textColor={app.theme.text75}
-               bgColor={app.theme.inputBg}
-               padding="5px"
                onSubmitted={apply}
                onChange={setNewDocTitle}
-               autoFocus
-               focusState={state => {
-                 state.textColor = app.theme.text
-                 state.border = ["1px", "solid", app.theme.border]
-               }}
-               hoverState={state => {
-                 state.border = ["1px", "solid", app.theme.border]
-               }}/>
+               autoFocus/>
 
         <Input type="text"
                text={newDirTitle}
                title="Directory"
-               width="100%"
-               height="35px"
-               caretColor={app.theme.caretColor}
-               textColor={app.theme.text75}
-               bgColor={app.theme.inputBg}
-               padding="5px"
+               theme={app.theme}
                onSubmitted={apply}
-               onChange={setNewDirTitle}
-               autoFocus
-               focusState={state => {
-                 state.textColor = app.theme.text
-                 state.border = ["1px", "solid", app.theme.border]
-               }}
-               hoverState={state => {
-                 state.border = ["1px", "solid", app.theme.border]
-               }}/>
+               onChange={setNewDirTitle}/>
       </HStack>
 
 
@@ -351,23 +326,11 @@ const DirEditForm = observer((props: any) => {
 
       <Input type="text"
              text={title}
+             theme={app.theme}
              title="Directory"
-             width="100%"
-             height="35px"
-             caretColor={app.theme.caretColor}
-             textColor={app.theme.text75}
-             bgColor={app.theme.inputBg}
-             padding="5px"
              onSubmitted={apply}
              onChange={setTitle}
              autoFocus
-             focusState={state => {
-               state.textColor = app.theme.text
-               state.border = ["1px", "solid", app.theme.border]
-             }}
-             hoverState={state => {
-               state.border = ["1px", "solid", app.theme.border]
-             }}
       />
 
       <HStack halign="center" valign="center" gap="50px">

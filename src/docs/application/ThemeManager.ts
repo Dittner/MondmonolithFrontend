@@ -58,7 +58,7 @@ export class ThemeManager {
     yellow: "#c29a5f",
     appBg: DARK_THEME_APP_BG,
     transparent: "0",
-    panelBg: "#2e3437",
+    panelBg: "#2c3436",
     modalWindowBg: "#495655",
     text: DARK_THEME_WHITE,
     text75: "#76818d",

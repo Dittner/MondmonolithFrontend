@@ -1,5 +1,5 @@
 import {observer} from "mobx-react";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import ReactMarkdown from "react-markdown";
 import Prism from "prismjs";
 import 'prismjs/components/prism-java';
@@ -14,9 +14,27 @@ import {useDocsContext} from "../../App";
 import {AppSize, LayoutLayer} from "../application/Application";
 import {HStack, IconButton, Label, StylableContainer, TextArea, VStack} from "../application/NoCSSComponents";
 
+function useWindowPosition(limit: number = -1): number {
+  const [scrollPosition, setPosition] = useState(window.scrollY)
+  useLayoutEffect(() => {
+    const handler = () => {
+      let updatePosition = limit === -1
+      updatePosition = updatePosition || (scrollPosition < limit && window.scrollY > limit && scrollPosition !== window.scrollY)
+      updatePosition = updatePosition || (scrollPosition > limit && window.scrollY < limit && scrollPosition !== window.scrollY)
+      if (updatePosition) setPosition(window.scrollY)
+    }
+    window.addEventListener('scroll', handler);
+    return () => {
+      window.removeEventListener('scroll', handler);
+    }
+  }, [scrollPosition]);
+  return scrollPosition;
+}
+
 export const IntroView = observer(() => {
   const {app} = useDocsContext()
-  console.log("new IntroView")
+  const scrollPosition = useWindowPosition(250)
+  console.log("new IntroView, scrollPosition: ", scrollPosition)
 
   const bgColor = app.theme.appBg + "99"
 
@@ -28,7 +46,8 @@ export const IntroView = observer(() => {
                  gap="30px"
                  paddingBottom="20px">
 
-    <img src={app.theme.isDark ? "/headerBg.jpg" : "/headerBg-light.jpg"} className="introHeaderImg"/>
+    <img src={app.theme.isDark ? "/headerBg.jpg" : "/headerBg-light.jpg"}
+         className={scrollPosition > 250 ? "introHeaderImg absolute" : "introHeaderImg fixed"}/>
 
 
     <Header width="100%"
@@ -38,7 +57,7 @@ export const IntroView = observer(() => {
             fixed/>
 
     <StylableContainer left="10px" top="5px" fixed
-                        layer={LayoutLayer.HEADER}>
+                       layer={LayoutLayer.HEADER}>
       <IconButton icon={app.theme.isDark ? "moon" : "sun"}
                   hideBg
                   popUp="Switch a theme"
@@ -105,7 +124,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER  |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.4  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.5  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -121,7 +140,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.4  |  DATE: 2023  
+*  MODE: demo  |  VER: 2.5  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/

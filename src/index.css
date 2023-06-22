@@ -150,12 +150,17 @@ hr {
 
 img.introHeaderImg {
   background-repeat: no-repeat;
-  position: fixed;
-  width: 1660px;
-  left: calc(50% - 830px);
+  width: 2000px;
   top: 0;
-  margin: auto;
-  max-width: 1660px;
+  max-width: 2000px;
+}
+
+img.introHeaderImg.absolute {
+  top: 250px;
+  position: absolute;
+}
+img.introHeaderImg.fixed {
+  position: fixed;
 }
 
 @media screen and (max-width: 480px) {

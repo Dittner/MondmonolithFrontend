@@ -33,7 +33,7 @@ function useWindowPosition(limit: number = -1): number {
 
 export const IntroView = observer(() => {
   const {app} = useDocsContext()
-  const scrollPosition = useWindowPosition(250)
+  const scrollPosition = useWindowPosition(400)
   console.log("new IntroView, scrollPosition: ", scrollPosition)
 
   const bgColor = app.theme.appBg + "99"
@@ -47,7 +47,7 @@ export const IntroView = observer(() => {
                  paddingBottom="20px">
 
     <img src={app.theme.isDark ? "/headerBg.jpg" : "/headerBg-light.jpg"}
-         className={scrollPosition > 250 ? "introHeaderImg absolute" : "introHeaderImg fixed"}/>
+         className={scrollPosition > 400 ? "introHeaderImg absolute" : "introHeaderImg fixed"}/>
 
 
     <Header width="100%"
@@ -124,7 +124,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER  |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.5  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.6  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/

@@ -146,6 +146,7 @@ hr {
 .introViewCont {
   max-width: 100vw;
   overflow-x: hidden;
+  z-index: 1;
 }
 
 img.introHeaderImg {
@@ -153,10 +154,12 @@ img.introHeaderImg {
   width: 2000px;
   top: 0;
   max-width: 2000px;
+  left: calc(50% - 1000px);
+  margin: auto;
 }
 
 img.introHeaderImg.absolute {
-  top: 250px;
+  top: 400px;
   position: absolute;
 }
 img.introHeaderImg.fixed {

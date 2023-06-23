@@ -204,9 +204,6 @@ const defInputProps = (theme: Theme): any => {
       state.textColor = theme.text
       state.border = ["1px", "solid", theme.inputBorderFocused]
     },
-    "hoverState": (state: StylableComponentProps) => {
-      state.border = ["1px", "solid", theme.inputBorderFocused]
-    }
   }
 }
 
@@ -594,14 +591,112 @@ export const Image = (props: ImageProps) => {
   if (props.hasOwnProperty("visible") && !props.visible) return <></>
   const className = props.hasOwnProperty("className") ? props.className + " " + buildClassName(props) : buildClassName(props)
 
-  const imgClassName = buildClassName({
-    width: props.width,
-    height: props.height,
-  } as StylableComponentProps)
+  let imgClassName = undefined
+  if (props.hasOwnProperty("width") || props.hasOwnProperty("height")) {
+    const style: StylableComponentProps = {}
+    if (props.hasOwnProperty("width")) style.width = props.width
+    if (props.hasOwnProperty("height")) style.height = props.height
+    imgClassName = buildClassName(style)
+  }
 
   return (
     <HStack className={className} valign={props.valign} halign={props.halign}>
       <img className={imgClassName} src={props.src}/>
     </HStack>
   )
+}
+
+/*
+*
+* Separator
+*
+* */
+
+interface HSeparatorProps {
+  theme: Theme,
+  visible?: boolean,
+  width?: string,
+  marginHorizontal?: string,
+  marginVertical?: string,
+}
+
+export const HSeparator = (props: HSeparatorProps) => {
+  if (props.visible === false) return <></>
+
+  const style: any = {}
+  if (props.width !== undefined) style.width = props.width
+  if (props.marginHorizontal !== undefined) {
+    style.marginLeft = props.marginHorizontal
+    style.marginRight = props.marginHorizontal
+  }
+  if (props.marginVertical !== undefined) {
+    style.marginTop = props.marginVertical
+    style.marginBottom = props.marginVertical
+  }
+  style.bgColor = props.theme.border
+  style.height = "1px"
+  style.maxHeight = "1px"
+
+  return <div className={buildClassName(style)}/>
+}
+
+interface VSeparatorProps {
+  theme: Theme,
+  visible?: boolean,
+  height?: string,
+  marginHorizontal?: string,
+  marginVertical?: string,
+}
+
+export const VSeparator = (props: VSeparatorProps) => {
+  if (props.visible === false) return <></>
+
+  const style: any = {}
+  if (props.height !== undefined) style.height = props.height
+  if (props.marginHorizontal !== undefined) {
+    style.marginLeft = props.marginHorizontal
+    style.marginRight = props.marginHorizontal
+  }
+  if (props.marginVertical !== undefined) {
+    style.marginTop = props.marginVertical
+    style.marginBottom = props.marginVertical
+  }
+  style.bgColor = props.theme.border
+  style.width = "1px"
+  style.maxWidth = "1px"
+
+  return <div className={buildClassName(style)}/>
+}
+
+/*
+*
+* Spacer
+*
+* */
+
+interface SpacerProps {
+  width?: string,
+  height?: string,
+  visible?: boolean,
+}
+
+export const Spacer = ({width, height, visible = true}: SpacerProps) => {
+  if (visible === false) return <></>
+
+  const style: any = {}
+  style.flexGrow = 1;
+
+  if (width !== undefined) {
+    style.width = width
+    style.minWidth = width
+    style.maxWidth = width
+  }
+
+  if (height !== undefined) {
+    style.height = height
+    style.minHeight = height
+    style.maxHeight = height
+  }
+
+  return <div className={"spacer " + buildClassName(style)}/>
 }

@@ -13,7 +13,6 @@ import {DocLoadStatus, Page, PageBlock} from "../domain/DomainModel";
 import {LoadStatus} from "../DocsContext";
 import ReactMarkdown from "react-markdown";
 import {stylable} from "../application/NoCSS";
-import {Spacer} from "./common/Spacer";
 import {AppSize} from "../application/Application";
 import {
   Button,
@@ -21,6 +20,7 @@ import {
   IconButton,
   Label,
   RedButton,
+  Spacer,
   StylableContainer,
   TextArea,
   VStack

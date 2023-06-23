@@ -6,8 +6,6 @@ import {stylable} from "../application/NoCSS";
 import {Route, Routes, useParams} from "react-router-dom";
 import {SmallSpinner} from "./common/Loading";
 import {AppSize, YesNoDialog} from "../application/Application";
-import {Spacer} from "./common/Spacer";
-import {VSeparator} from "./common/Separator";
 import {
   DropDownContainer,
   HStack,
@@ -15,7 +13,9 @@ import {
   Input,
   Label,
   RedButton,
+  Spacer,
   Switch,
+  VSeparator,
   VStack
 } from "../application/NoCSSComponents";
 

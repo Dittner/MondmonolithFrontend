@@ -18,6 +18,7 @@ const abbreviations:{[prop: string]:string} = {
   "cursor": "CU",
   "display" : "D",
   "flex-direction" : "F",
+  "flex-grow" : "FG",
   "font-family" : "FF",
   "font-size" : "FS",
   "font-weight" : "FW",
@@ -62,13 +63,14 @@ const RuleBuilder = ():[()=>void, { [key: string]: (value:any)=>void }, ()=>stri
   const classNameHash = new Map<string,string>()
   const isMobileDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
+  //Creating of dynamic stylesheets are enabled only in Chrome (23.06.2023)
   //const styleSheet = new CSSStyleSheet();
   //document.adoptedStyleSheets = [styleSheet];
   const styleSheet = window.document.styleSheets[0];
 
   const operator: { [key: string]: (value:any)=>void } = Object.create(null)
 
-  const className = ():string => {
+  const getClassName = ():string => {
     if(!hashSum) return ""
 
     if(classNameHash.has(hashSum))
@@ -76,8 +78,7 @@ const RuleBuilder = ():[()=>void, { [key: string]: (value:any)=>void }, ()=>stri
 
     const className = hashSum.replace(notAllowedSymbolsInClassName, 'x')
 
-    console.log("  --new selectorName: ", className)
-    console.log("  --selectorsCount: ", ++selectorsCount)
+    console.log("--new selector #" + (++selectorsCount) + ": ", className)
 
     const rule = '.' + className + style + '}';
     classNameHash.set(hashSum, className)
@@ -102,8 +103,7 @@ const RuleBuilder = ():[()=>void, { [key: string]: (value:any)=>void }, ()=>stri
     const selector = parentSelector + ' ' + childSelector
     if(classNameHash.has(selector)) return
 
-    console.log("  --new selectorName: ", selector)
-    console.log("  --selectorsCount: ", ++selectorsCount)
+    console.log("--new selector #" + (++selectorsCount) + ": ", selector)
 
     const rule = '.' + selector + style + '}';
     classNameHash.set(selector, parentSelector)
@@ -129,6 +129,10 @@ const RuleBuilder = ():[()=>void, { [key: string]: (value:any)=>void }, ()=>stri
   }
 
   const setValue = (key:string, value:string, appendToClassName:boolean = true) => {
+    if(value === undefined) {
+      console.warn("NoCSS::setValue: undefined value was found for key: ", key)
+    }
+
     if(state === "focus") focusStyle += key + ':' + value + ';'
     else if(state === "hover") hoverStyle += key + ':' + value + ';'
     else style += key + ':' + value + ';'
@@ -188,6 +192,7 @@ const RuleBuilder = ():[()=>void, { [key: string]: (value:any)=>void }, ()=>stri
   operator["display"] = (value:string) => {setValue("display", value)}
   operator["gap"] = (value:string) => {setValue("gap", value)}
   operator["flexDirection"] = (value:string) => {setValue("flex-direction", value)}
+  operator["flexGrow"] = (value:string) => {setValue("flex-grow", value)}
   operator["alignItems"] = (value:string) => {setValue("align-items", value)}
   operator["justifyContent"] = (value:string) => {setValue("justify-content", value)}
   operator["marginLeft"] = (value:string) => {setValue("margin-left", value)}
@@ -245,7 +250,7 @@ const RuleBuilder = ():[()=>void, { [key: string]: (value:any)=>void }, ()=>stri
     state = "normal"
   }
 
-  return [clear, operator, className, addRule]
+  return [clear, operator, getClassName, addRule]
 }
 
 let selectorsCount = 0

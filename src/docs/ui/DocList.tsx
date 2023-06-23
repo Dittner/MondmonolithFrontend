@@ -6,10 +6,18 @@ import {AppSize} from "../application/Application";
 import {observer} from "mobx-react";
 import {Directory, Doc} from "../domain/DomainModel";
 import {stylable} from "../application/NoCSS";
-import {Spacer} from "./common/Spacer";
 import {LoadStatus} from "../DocsContext";
 import {HeaderVerSep} from "./Header";
-import {HStack, IconButton, Input, Label, RedButton, StylableContainer, VStack} from "../application/NoCSSComponents";
+import {
+  HStack,
+  IconButton,
+  Input,
+  Label,
+  RedButton,
+  Spacer,
+  StylableContainer,
+  VStack
+} from "../application/NoCSSComponents";
 
 export const DocList = observer(stylable(() => {
   console.log("new DocList")

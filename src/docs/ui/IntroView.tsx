@@ -8,11 +8,19 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-python';
 import {Header} from "./Header";
 import {stylable} from "../application/NoCSS";
-import {VSeparator} from "./common/Separator";
-import {Spacer} from "./common/Spacer";
 import {useDocsContext} from "../../App";
 import {AppSize, LayoutLayer} from "../application/Application";
-import {HStack, IconButton, Image, Label, StylableContainer, TextArea, VStack} from "../application/NoCSSComponents";
+import {
+  HStack,
+  IconButton,
+  Image,
+  Label,
+  Spacer,
+  StylableContainer,
+  TextArea,
+  VSeparator,
+  VStack
+} from "../application/NoCSSComponents";
 
 function useWindowPosition(limit: number = -1): number {
   const [scrollPosition, setPosition] = useState(window.scrollY)
@@ -137,7 +145,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.11  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.12  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -153,7 +161,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.11  |  DATE: 2023  
+*  MODE: demo  |  VER: 2.12  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/

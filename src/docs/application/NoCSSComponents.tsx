@@ -594,8 +594,7 @@ export const Image = (props: ImageProps) => {
   const className = props.hasOwnProperty("className") ? props.className + " " + buildClassName(props) : buildClassName(props)
   return (
     <HStack className={className} valign={props.valign} halign={props.halign}>
-      <img
-        src={props.src}/>
+      <img src={props.src}/>
     </HStack>
   )
 }

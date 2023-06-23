@@ -175,7 +175,7 @@ const RuleBuilder = ():[()=>void, { [key: string]: (value:any)=>void }, ()=>stri
   operator["absolute"] = (value:boolean) => {value && setValue("position", "absolute")}
   operator["relative"] = (value:boolean) => {value && setValue("position", "relative")}
   operator["enableOwnScroller"] = (value:boolean) => {value && setValue("overflow", "auto")}
-  operator["disableHorizontalScroll"] = (value:boolean) => {value && setValue("overflow-x", "false")}
+  operator["disableHorizontalScroll"] = (value:boolean) => {value && setValue("overflow-x", "hidden")}
   operator["disabled"] = (value:boolean) => {value && setValue("cursor", "not-allowed")}
 
   operator["boxSizing"] = (value:string) => {

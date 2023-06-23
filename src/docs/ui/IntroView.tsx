@@ -50,6 +50,7 @@ export const IntroView = observer(() => {
 
     <Image src={app.theme.isDark ? "/headerBg.jpg" : "/headerBg-light.jpg"}
            maxWidth="100%"
+           disableHorizontalScroll
            halign="center" valign="top"
            top={scrollPosition > 400 ? "400px" : "0"}
            absolute={scrollPosition > 400}
@@ -127,9 +128,9 @@ export const IntroView = observer(() => {
 const aboutTxt = `/***
 *                                                       *
 *   Designed by developers for developers               *   ======================== 
-*   This is a web-solution, that enables you to make    *   MODE  |  VER  |  DATE
+*   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.9  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.10  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -145,7 +146,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.9  |  DATE: 2023  
+*  MODE: demo  |  VER: 2.10  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/

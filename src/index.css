@@ -47,7 +47,7 @@
 }
 
 .ibm {
-  font-family: "ibm";
+  font-family: "ibm", var(--font-family-mono);
 }
 
 html {
@@ -139,39 +139,6 @@ hr {
   color: #2a3439;
   border-style: inset;
   border-width: 1px;
-}
-
-/******************************/
-/*--------- INTRO VIEW--------*/
-/******************************/
-
-.introViewCont {
-  overflow-x: hidden;
-  z-index: 1;
-}
-
-img.introHeaderImg {
-  background-repeat: no-repeat;
-  width: 2000px;
-  top: 0;
-  max-width: 2000px;
-  left: calc(50vw - 1000px);
-  margin: auto;
-  overflow-x: hidden;
-}
-
-img.introHeaderImg.absolute {
-  top: 400px;
-  position: absolute;
-}
-img.introHeaderImg.fixed {
-  position: fixed;
-}
-
-@media screen and (max-width: 480px) {
-  div.highlightFunc {
-    font-size: 1.5rem;
-  }
 }
 
 /******************************/
@@ -330,10 +297,6 @@ button {
   button {
     min-width: 32px;
   }
-}
-
-button:disabled {
-  cursor: not-allowed;
 }
 
 @font-face {

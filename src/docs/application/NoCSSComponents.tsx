@@ -355,8 +355,10 @@ export const Button = (props: ButtonProps) => {
   return <button className={className}
                  title={props.popUp}
                  onClick={(e) => {
-                   e.stopPropagation()
-                   props.onClick && props.onClick()
+                   if (!props.disabled) {
+                     e.stopPropagation()
+                     props.onClick && props.onClick()
+                   }
                  }}>{props.title || props.children}</button>
 }
 
@@ -364,6 +366,7 @@ interface RedButtonProps {
   title: string,
   theme: Theme,
   visible?: boolean,
+  disabled?: boolean,
   isSelected?: boolean,
   hideBg?: boolean,
   onClick?: () => void,
@@ -371,6 +374,13 @@ interface RedButtonProps {
 
 export const RedButton = (props: RedButtonProps) => {
   if (props.hasOwnProperty("visible") && !props.visible) return <></>
+
+  if (props.disabled) {
+    return <Button title={props.title}
+                   textColor={props.theme.text75}
+                   paddingHorizontal="10px"
+                   disabled/>
+  }
 
   const isSelected = props.hasOwnProperty("isSelected") && props.isSelected
   if (props.theme.isDark) {
@@ -467,12 +477,20 @@ interface IconButtonProps {
   theme: Theme,
   popUp: string,
   visible?: boolean,
+  disabled?: boolean,
   hideBg?: boolean,
   onClick?: () => void,
 }
 
 export const IconButton = observer((props: IconButtonProps) => {
   if (props.hasOwnProperty("visible") && !props.visible) return <></>
+
+  if (props.disabled) {
+    return <Button className={"icon-" + props.icon}
+                   popUp={props.popUp}
+                   textColor={props.theme.text75}
+                   disabled/>
+  }
 
   if (props.theme.isDark) {
     if (props.hideBg) {
@@ -550,8 +568,7 @@ export const DropDownContainer = (props: DropDownProps) => {
 
   if (props.isOpened) {
     const p = {"absolute": "true", "top": "50px", ...props}
-
-    const className = p.hasOwnProperty("className") ? p.className + " " + buildClassName(p) : buildClassName(props)
+    const className = p.hasOwnProperty("className") ? p.className + " " + buildClassName(p) : buildClassName(p)
     return (
       <div className={className}
            onMouseDown={e => e.stopPropagation()}>
@@ -561,4 +578,24 @@ export const DropDownContainer = (props: DropDownProps) => {
   } else {
     return <></>
   }
+}
+
+/*
+*
+* Image
+*
+* */
+
+interface ImageProps extends StackProps {
+  src: string,
+}
+
+export const Image = (props: ImageProps) => {
+  const className = props.hasOwnProperty("className") ? props.className + " " + buildClassName(props) : buildClassName(props)
+  return (
+    <HStack className={className} valign={props.valign} halign={props.halign}>
+      <img
+        src={props.src}/>
+    </HStack>
+  )
 }

@@ -147,8 +147,8 @@ export const HeaderView = observer(() => {
                    isSelected={isDropDownOpened}
                    hideBg
                    onClick={() => {
-          setIsDropDown(!isDropDownOpened)
-        }}/>
+                     setIsDropDown(!isDropDownOpened)
+                   }}/>
 
         <DropDownContainer isOpened={isDropDownOpened} onClose={() =>
           setIsDropDown(false)}
@@ -263,22 +263,26 @@ const ToolsPanel = observer(() => {
         <IconButton icon="plus"
                     popUp="Add new Block"
                     theme={app.theme}
-                    onClick={createBlock}/>
+                    onClick={createBlock}
+                    disabled={!selectedPage && !selectedPageBlock}/>
 
         <IconButton icon="up"
                     popUp="Move Block up"
                     theme={app.theme}
-                    onClick={moveBlockUp}/>
+                    onClick={moveBlockUp}
+                    disabled={!selectedPageBlock}/>
 
         <IconButton icon="down"
                     popUp="Move Block down"
                     theme={app.theme}
-                    onClick={moveBlockDown}/>
+                    onClick={moveBlockDown}
+                    disabled={!selectedPageBlock}/>
 
         <IconButton icon="delete"
                     popUp="Delete Block"
                     theme={app.theme}
-                    onClick={deleteBlock}/>
+                    onClick={deleteBlock}
+                    disabled={!selectedPage && !selectedPageBlock}/>
 
       </HStack>
     )

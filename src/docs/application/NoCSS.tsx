@@ -15,6 +15,7 @@ const abbreviations:{[prop: string]:string} = {
   "box-shadow": "BS",
   "caret-color": "CC",
   "color": "C",
+  "cursor": "CU",
   "display" : "D",
   "flex-direction" : "F",
   "font-family" : "FF",
@@ -34,6 +35,7 @@ const abbreviations:{[prop: string]:string} = {
   "min-width": "MIW",
   "opacity": "OP",
   "overflow": "O",
+  "overflow-x": "OX",
   "padding-left": "PL",
   "padding-right": "PR",
   "padding-top": "PT",
@@ -169,10 +171,12 @@ const RuleBuilder = ():[()=>void, { [key: string]: (value:any)=>void }, ()=>stri
   }
 
   operator["layer"] = (value:LayoutLayer) => {setValue("z-index", value)}
-  operator["fixed"] = (value:boolean) => {setValue("position", "fixed")}
-  operator["absolute"] = (value:boolean) => {setValue("position", "absolute")}
-  operator["relative"] = (value:boolean) => {setValue("position", "relative")}
-  operator["enableOwnScroller"] = (value:boolean) => {setValue("overflow", "auto")}
+  operator["fixed"] = (value:boolean) => {value && setValue("position", "fixed")}
+  operator["absolute"] = (value:boolean) => {value && setValue("position", "absolute")}
+  operator["relative"] = (value:boolean) => {value && setValue("position", "relative")}
+  operator["enableOwnScroller"] = (value:boolean) => {value && setValue("overflow", "auto")}
+  operator["disableHorizontalScroll"] = (value:boolean) => {value && setValue("overflow-x", "false")}
+  operator["disabled"] = (value:boolean) => {value && setValue("cursor", "not-allowed")}
 
   operator["boxSizing"] = (value:string) => {
     setValue("box-sizing", value)
@@ -305,6 +309,8 @@ export interface StylableComponentProps {
   absolute?: boolean,
   relative?: boolean,
   enableOwnScroller?: boolean,
+  disableHorizontalScroll?: boolean,
+  disabled?: boolean,
   layer?: LayoutLayer,
   animate?: string,
   textColor?: string,

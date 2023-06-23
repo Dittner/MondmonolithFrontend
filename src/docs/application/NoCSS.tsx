@@ -175,6 +175,7 @@ const RuleBuilder = ():[()=>void, { [key: string]: (value:any)=>void }, ()=>stri
   operator["absolute"] = (value:boolean) => {value && setValue("position", "absolute")}
   operator["relative"] = (value:boolean) => {value && setValue("position", "relative")}
   operator["enableOwnScroller"] = (value:boolean) => {value && setValue("overflow", "auto")}
+  operator["disableScroll"] = (value:boolean) => {value && setValue("overflow", "hidden")}
   operator["disableHorizontalScroll"] = (value:boolean) => {value && setValue("overflow-x", "hidden")}
   operator["disabled"] = (value:boolean) => {value && setValue("cursor", "not-allowed")}
 
@@ -309,6 +310,7 @@ export interface StylableComponentProps {
   absolute?: boolean,
   relative?: boolean,
   enableOwnScroller?: boolean,
+  disableScroll?: boolean,
   disableHorizontalScroll?: boolean,
   disabled?: boolean,
   layer?: LayoutLayer,

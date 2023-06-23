@@ -591,10 +591,17 @@ interface ImageProps extends StackProps {
 }
 
 export const Image = (props: ImageProps) => {
+  if (props.hasOwnProperty("visible") && !props.visible) return <></>
   const className = props.hasOwnProperty("className") ? props.className + " " + buildClassName(props) : buildClassName(props)
+
+  const imgClassName = buildClassName({
+    width: props.width,
+    height: props.height,
+  } as StylableComponentProps)
+
   return (
     <HStack className={className} valign={props.valign} halign={props.halign}>
-      <img src={props.src}/>
+      <img className={imgClassName} src={props.src}/>
     </HStack>
   )
 }

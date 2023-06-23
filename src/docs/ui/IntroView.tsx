@@ -32,14 +32,14 @@ function useWindowPosition(limit: number = -1): number {
 }
 
 export const IntroView = observer(() => {
+  const SCROLL_POS_LIMIT = 400
   const {app} = useDocsContext()
-  const scrollPosition = useWindowPosition(400)
+  const scrollPosition = useWindowPosition(SCROLL_POS_LIMIT)
   console.log("new IntroView, scrollPosition: ", scrollPosition)
 
   const bgColor = app.theme.appBg + "99"
 
-  return <VStack className="introViewCont"
-                 maxWidth="100%"
+  return <VStack maxWidth="100%"
                  width="100%"
                  height="100%"
                  halign="center"
@@ -50,11 +50,12 @@ export const IntroView = observer(() => {
 
     <Image src={app.theme.isDark ? "/headerBg.jpg" : "/headerBg-light.jpg"}
            maxWidth="100%"
+           visible={app.size === AppSize.L || app.size === AppSize.M}
            disableHorizontalScroll
            halign="center" valign="top"
-           top={scrollPosition > 400 ? "400px" : "0"}
-           absolute={scrollPosition > 400}
-           fixed={scrollPosition <= 400}/>
+           top={scrollPosition > SCROLL_POS_LIMIT ? SCROLL_POS_LIMIT + "px" : "0"}
+           absolute={scrollPosition > SCROLL_POS_LIMIT}
+           fixed={scrollPosition <= SCROLL_POS_LIMIT}/>
 
     <Header width="100%"
             height="50px"
@@ -71,6 +72,13 @@ export const IntroView = observer(() => {
                   onClick={() => app.switchTheme()}/>
     </StylableContainer>
 
+    <Image src={app.theme.isDark ? "/headerBg.jpg" : "/headerBg-light.jpg"}
+           maxWidth="100%"
+           width="100%"
+           visible={app.size === AppSize.XS || app.size === AppSize.S}
+           disableScroll
+           halign="center" valign="top"/>
+
     <Label className="mono"
            whiteSpace="pre"
            padding="30px"
@@ -79,8 +87,7 @@ export const IntroView = observer(() => {
            bgColor={bgColor}
            layer={LayoutLayer.ONE}/>
 
-
-    <Label className={app.theme.isDark ? "ibm h2" : "ibm h2 light"}
+    <Label className={app.theme.isDark ? app.size === AppSize.XS ? "ibm h3" : "ibm h2" : app.size === AppSize.XS ? "ibm h3 light" : "ibm h2 light"}
            whiteSpace="pre"
            paddingVertical="30px"
            layer={LayoutLayer.ONE}>
@@ -96,7 +103,7 @@ export const IntroView = observer(() => {
       }
     </Label>
 
-    <Spacer height="250px"/>
+    <Spacer visible={app.size === AppSize.L || app.size === AppSize.M} height="250px"/>
 
     <VStack halign="stretch"
             valign="top"
@@ -130,7 +137,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.10  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.11  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -146,7 +153,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.10  |  DATE: 2023  
+*  MODE: demo  |  VER: 2.11  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/

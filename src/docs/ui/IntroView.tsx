@@ -145,7 +145,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.12  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.13  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -161,7 +161,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.12  |  DATE: 2023  
+*  MODE: demo  |  VER: 2.13  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/
@@ -249,7 +249,7 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
                   text={value}
                   theme={app.theme}
                   paddingHorizontal="20px"
-                  paddingBottom="10px"
+                  paddingVertical="10px"
                   onApply={apply}
                   onCancel={cancel}
                   autoFocus={autoFocus}/>
@@ -286,7 +286,7 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
                   text={value}
                   theme={app.theme}
                   paddingHorizontal="20px"
-                  paddingBottom="10px"
+                  paddingVertical="10px"
                   onApply={apply}
                   onCancel={cancel}
                   autoFocus={autoFocus}

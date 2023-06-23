@@ -323,7 +323,7 @@ const PageTitleEditor = observer(({page}: { page: Page }) => {
               text={page.title}
               theme={app.theme}
               paddingHorizontal="26px"
-              paddingTop="12px"
+              paddingTop="10px"
               onApply={apply}
               onCancel={cancel}
               autoFocus
@@ -431,7 +431,7 @@ const PageBlockEditor = observer(({block}: { block: PageBlock }) => {
               theme={app.theme}
               className="mono"
               paddingHorizontal="26px"
-              paddingTop="12px"
+              paddingTop="10px"
               onApply={apply}
               onCancel={cancel}
               autoFocus/>

@@ -271,13 +271,13 @@ const defTextAreaProps = (theme: Theme): any => {
     "width": "100%",
     "caretColor": theme.caretColor,
     "textColor": theme.textGreen,
-    "bgColor": theme.inputBg,
-    "border": "none",
+    "border": ["1px", "solid", theme.border],
     "cornerRadius": "10px",
     "animate": "border-left 300ms",
     "borderLeft": ["6px", "solid", theme.inputBorder],
     "focusState": (state: StylableComponentProps) => {
       state.borderLeft = ["6px", "solid", theme.red]
+      state.bgColor = theme.inputBg
     }
   }
 }

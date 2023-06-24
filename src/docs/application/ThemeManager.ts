@@ -129,13 +129,13 @@ export class ThemeManager {
     textGreen: "#2c363c",
     textGreen75: "#2c363c75",
     pageTitle: "#396a88",
-    inputBg: "#cbd3db",
+    inputBg: "#d3d9dd",
     inputBorder: "#757b7d",
     inputBorderFocused: "#768a91",
     border: "#c4d1d7",
     pageSelection: "#c4d1d7",
     docSelection: "#c4d1d7",
-    caretColor: "#000",
+    caretColor: LIGHT_THEME_RED,
     error: "#914058",
   }
 
@@ -162,9 +162,9 @@ export class ThemeManager {
 
     const blockquoteProps: StylableComponentProps = {
       textColor: "#9da1a9",
-      bgColor: "#dcdcd7",
+      bgColor: "#d0d2d4",
       padding: "20px",
-      borderLeft: "5px solid #c1c1bd",
+      borderLeft: "5px solid #afb0b2",
     }
     buildRule(blockquoteProps, theme.id, "blockquote")
   }

@@ -326,10 +326,7 @@ const PageTitleEditor = observer(({page}: { page: Page }) => {
               paddingTop="10px"
               onApply={apply}
               onCancel={cancel}
-              autoFocus
-              focusState={state => {
-                state.borderLeft = ["6px", "solid", app.theme.inputBorderFocused]
-              }}/>
+              autoFocus/>
   )
 })
 

@@ -107,7 +107,7 @@ export const IntroView = observer(() => {
       <span className="token class">String</span>
       <span className="token symbol">{"])"}</span>
       {app.size !== AppSize.XS &&
-      <span className="token symbol">{"{...}"}</span>
+      <span className="token symbol">{" {...}"}</span>
       }
     </Label>
 
@@ -145,7 +145,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.14  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.15  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -161,7 +161,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.14  |  DATE: 2023  
+*  MODE: demo  |  VER: 2.15  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/

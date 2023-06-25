@@ -209,6 +209,7 @@ textarea {
   width: 100%;
   box-sizing: border-box;
   background: none;
+  border: none;
   resize: none;
   outline: none;
   overflow: visible;

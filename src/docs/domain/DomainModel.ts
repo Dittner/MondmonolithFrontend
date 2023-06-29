@@ -1,6 +1,5 @@
-import {action, computed, makeObservable, observable} from 'mobx';
+import {action, computed, makeObservable, observable, runInAction} from 'mobx';
 import {UUID} from "../infrastructure/UIDGenerator";
-import {DocsContext} from "../DocsContext";
 
 export enum AuthStatus {
   SIGNED_OUT = "SIGNED_OUT",
@@ -39,24 +38,23 @@ export class User {
 
     this.authStatus = AuthStatus.AUTHORIZING
     this.authWithError = ""
-    setTimeout(() => {
-      if (login === 'demo' && pwd === 'pwd') {
-        this.authStatus = AuthStatus.AUTHORIZED
-        window.localStorage.setItem("authStatus", "authorized")
-        this.login = login
-        this.pwd = pwd
-      } else {
-        this.authWithError = "Invalid login or password!"
-        this.authStatus = AuthStatus.SIGNED_OUT
-      }
-    }, 1000)
+    setTimeout(()=> runInAction(() => {
+        if (login === 'demo' && pwd === 'pwd') {
+          this.authStatus = AuthStatus.AUTHORIZED
+          window.localStorage.setItem("authStatus", "authorized")
+          this.login = login
+          this.pwd = pwd
+        } else {
+          this.authWithError = "Invalid login or password!"
+          this.authStatus = AuthStatus.SIGNED_OUT
+        }
+      }), 1000)
   }
 
   @action signOut() {
     console.log("signOut()")
     if (this.authStatus === AuthStatus.AUTHORIZED) {
       this.authStatus = AuthStatus.SIGNED_OUT
-      DocsContext.self.editTools.editMode = false
       window.localStorage.setItem("authStatus", "signedOut")
     }
   }
@@ -200,6 +198,11 @@ export class Doc implements Serializable {
   @action destroy(): void {
     this.dir = undefined
     this.pages.forEach(p => p.destroy())
+  }
+
+  @action send(storeWithError:string, loadStatus:DocLoadStatus): void {
+    this.storeWithError = storeWithError
+    this.loadStatus = loadStatus
   }
 }
 

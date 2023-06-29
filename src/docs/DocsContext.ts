@@ -1,5 +1,5 @@
-import {action, makeObservable, observable} from 'mobx';
-import {Directory, Doc, EditTools, User} from "./domain/DomainModel";
+import {action, autorun, makeObservable, observable} from 'mobx';
+import {AuthStatus, Directory, Doc, EditTools, User} from "./domain/DomainModel";
 import {DomainService} from "./domain/DomainService";
 import {UUID} from "./infrastructure/UIDGenerator";
 import {DemoDocsRepo, DocsLoader} from "./infrastructure/loader/DocsLoader";
@@ -41,6 +41,13 @@ export class DocsContext {
     this.app = new Application()
     this.app.subscribeToWindowResize()
     makeObservable(this)
+
+    autorun(() => {
+      if (this.user.authStatus === AuthStatus.SIGNED_OUT) {
+        this.editTools.editMode = false
+        this.editTools.selectedItem = undefined
+      }
+    })
   }
 
   findDoc(predicate: (doc: Doc) => boolean): Doc | undefined {

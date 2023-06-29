@@ -1,7 +1,6 @@
 import webpack from "webpack";
 import path from "path";
 import type {Configuration as DevServerConfiguration} from "webpack-dev-server";
-
 import HTMLWebpackPlugin from "html-webpack-plugin";
 import FileManagerPlugin from "filemanager-webpack-plugin";
 
@@ -88,11 +87,10 @@ function buildLoaders(options: BuildOptions): webpack.RuleSetRule[] {
     test: /\.(png|jpg|jpeg|gif)$/i,
     type: 'asset/resource',
   }
-  const svgLoader =
-    {
-      test: /\.svg$/,
-      type: 'asset/resource',
-    }
+  const svgLoader = {
+    test: /\.svg$/,
+    type: 'asset/resource',
+  }
 
   const cssLoader = {
     test: /\.css$/,

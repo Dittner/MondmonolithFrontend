@@ -24,7 +24,7 @@ export default (env: BuildEnv) => {
     mode: mode,
     port: env.port || 9000,
     isDev: mode === 'development',
-    outputDir: mode === 'development' ? 'build' : 'production'
+    outputDir: 'build'
   }
 
   console.log("BuildConfig:: mode=", options.mode, ", port=", options.port)

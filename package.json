@@ -18,10 +18,9 @@
   },
   "scripts": {
     "server": "webpack serve --env mode=development port=3000",
-    "dev": "webpack --env mode=development",
+    "build": "webpack --env mode=development",
     "prod": "webpack --env mode=production",
     "start": "react-scripts start",
-    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "stop": "react-scripts stop"

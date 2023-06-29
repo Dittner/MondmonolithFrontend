@@ -279,7 +279,7 @@ export const buildClassName = (props:any):string => {
 }
 
 export const buildRule = (props:any, parentSelector:string, childSelector:string):void => {
-  const [clear, operator, className, addRule] = ruleBuilder
+  const [clear, operator, _, addRule] = ruleBuilder
   clear()
 
   for (let k of [...Object.keys(props)].sort(sortKeys)) {

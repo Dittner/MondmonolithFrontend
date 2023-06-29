@@ -1,32 +1,30 @@
-import {BrowserRouter as Router, Navigate, Route, Routes} from 'react-router-dom';
-import {DocsView} from "./docs/ui/DocsView";
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import {DocsContext} from "./docs/DocsContext";
-import React, {useLayoutEffect, useState} from 'react';
-import {IntroView} from "./docs/ui/IntroView";
+import React, {lazy, Suspense, useLayoutEffect, useState} from 'react';
 import {observer} from "mobx-react";
 import {AuthStatus} from "./docs/domain/DomainModel";
+import {LoadingSpinner} from "./docs/ui/common/Loading";
 
 const docsContext = React.createContext(DocsContext.init())
 export const useDocsContext = () => React.useContext(docsContext);
 
-
+export const DocsViewAsync = lazy(() => import('./docs/ui/DocsView').then((module) => ({default: module.DocsView})))
+export const IntroViewAsync = lazy(() => import('./docs/ui/IntroView').then((module) => ({default: module.IntroView})))
 
 export const App = observer(() => {
   const docsContext = useDocsContext()
   const isUserAuthorized = docsContext.user.authStatus === AuthStatus.AUTHORIZED
   return (
-    <Router>
-      <Routes>
-        <Route path="/docs/*" element={ isUserAuthorized ? <DocsView/> : <IntroView/> }/>
-        <Route path="*" element={isUserAuthorized ? (<Navigate replace to="/docs"/>) : (<IntroView/>)}/>
-      </Routes>
-    </Router>
+    <BrowserRouter>
+      <Suspense fallback={<LoadingSpinner/>}>
+        <Routes>
+          <Route path="/docs/*" element={isUserAuthorized ? <DocsViewAsync/> : <IntroViewAsync/>}/>
+          <Route path="*" element={isUserAuthorized ? (<Navigate replace to="/docs"/>) : (<IntroViewAsync/>)}/>
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
   )
 })
-
-function NotFound() {
-  return <p>There's nothing here: 404!</p>;
-}
 
 export function useWindowSize() {
   const [size, setSize] = useState([0, 0]);
@@ -34,6 +32,7 @@ export function useWindowSize() {
     function updateSize() {
       setSize([window.innerWidth, window.innerHeight]);
     }
+
     window.addEventListener('resize', updateSize);
     updateSize();
     return () => window.removeEventListener('resize', updateSize);

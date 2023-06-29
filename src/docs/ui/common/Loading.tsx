@@ -1,11 +1,12 @@
-import spinner from '../../../resources/SVG/spinner.svg';
-import smallSpinner from '../../../resources/SVG/smallSpinner.svg';
+import spinner from '../../../resources/images/spinner.svg';
+import smallSpinner from '../../../resources/images/smallSpinner.svg';
+import {VStack} from "../../application/NoCSSComponents";
 
 export const LoadingSpinner = () => {
   return (
-    <div className="spinnerContainer">
+    <VStack halign="center" valign="center" width="100%" height="90vh">
       <img src={spinner} className="spinner" alt="spinner"/>
-    </div>
+    </VStack>
   )
 }
 

@@ -12,10 +12,10 @@ export enum LayoutLayer {
 }
 
 export enum AppSize {
-  XS = "ExtraShort",
-  S = "Short",
-  M = "Middle",
-  L = "Large"
+  XS = "XS",
+  S = "S",
+  M = "M",
+  L = "L"
 }
 
 export class Application {

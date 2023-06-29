@@ -45,23 +45,13 @@ export const HeaderView = observer(() => {
 
   const doc = docsContext.findDoc(d => params.docUID === d.uid)
 
-  const [name, setName] = useState(user.login)
-  const [pwd, setPwd] = useState(user.pwd)
 
   const showDocList = () => {
     app.isDocListShown = true
   }
 
-  const handleSignIn = () => {
-    if (user.authStatus === AuthStatus.SIGNED_OUT) {
-      user.signIn(name, pwd)
-    }
-  }
-
   const handleSignOut = () => {
     if (user.authStatus === AuthStatus.AUTHORIZED) {
-      setName("demo")
-      setPwd("pwd")
       user.signOut()
       window.scrollTo(0, 0)
     }
@@ -82,124 +72,138 @@ export const HeaderView = observer(() => {
             paddingHorizontal="10px">
 
       {user.authStatus === AuthStatus.AUTHORIZED &&
-      <>
-
-        {(app.size === AppSize.S || app.size === AppSize.XS) &&
         <>
 
-          <IconButton icon="menu"
-                      popUp="Open Doc's List"
-                      theme={app.theme}
-                      onClick={showDocList}/>
+          {(app.size === AppSize.S || app.size === AppSize.XS) &&
+            <>
+
+              <IconButton icon="menu"
+                          popUp="Open Doc's List"
+                          theme={app.theme}
+                          onClick={showDocList}/>
+
+              <HeaderVerSep/>
+            </>
+          }
+
+          {editTools.editMode &&
+            <>
+              <RedButton title="New Page"
+                         theme={app.theme}
+                         onClick={createPage}
+                         hideBg/>
+
+              <Spacer width="10px"/>
+
+              <ToolsPanel/>
+            </>}
+
+          <Spacer/>
+
+          <Label className="mono"
+                 whiteSpace="pre"
+                 visible={app.size !== AppSize.XS}
+                 title={editTools.editMode ? "Edit mode: " : "Read mode: "}
+                 textColor={app.theme.text75}/>
+
+          <Switch theme={app.theme} isSelected={editTools.editMode} onClick={() =>
+            editTools.toggleEditMode()}/>
 
           <HeaderVerSep/>
-        </>
-        }
 
-        {editTools.editMode &&
-        <>
-          <RedButton title="New Page"
+          <Label className="mono"
+                 visible={app.size !== AppSize.XS}
+                 title={user.login}
+                 textColor={app.theme.text75}/>
+
+          <HeaderVerSep visible={app.size !== AppSize.XS}/>
+
+
+          <RedButton title="Sign out"
+                     hideBg
                      theme={app.theme}
-                     onClick={createPage}
-                     hideBg/>
-
-          <Spacer width="10px"/>
-
-          <ToolsPanel/>
-        </>}
-
-        <Spacer/>
-
-        <Label className="mono"
-               whiteSpace="pre"
-               visible={app.size !== AppSize.XS}
-               title={editTools.editMode ? "Edit mode: " : "Read mode: "}
-               textColor={app.theme.text75}/>
-
-        <Switch theme={app.theme} isSelected={editTools.editMode} onClick={() =>
-          editTools.toggleEditMode()}/>
-
-        <HeaderVerSep/>
-
-        <Label className="mono"
-               visible={app.size !== AppSize.XS}
-               title={user.login}
-               textColor={app.theme.text75}/>
-
-        <HeaderVerSep visible={app.size !== AppSize.XS}/>
-
-
-        <RedButton title="Sign out"
-                   hideBg
-                   theme={app.theme}
-                   onClick={handleSignOut}/>
-      </>
+                     onClick={handleSignOut}/>
+        </>
       }
 
 
       {user.authStatus !== AuthStatus.AUTHORIZED &&
-      <>
+        <>
 
-        <Spacer/>
+          <Spacer/>
 
-        <RedButton title="Sign in"
-                   theme={app.theme}
-                   isSelected={isDropDownOpened}
-                   hideBg
-                   onClick={() => {
-                     setIsDropDown(!isDropDownOpened)
-                   }}/>
+          <RedButton title="Sign in"
+                     theme={app.theme}
+                     isSelected={isDropDownOpened}
+                     hideBg
+                     onClick={() => {
+                       setIsDropDown(!isDropDownOpened)
+                     }}/>
 
-        <DropDownContainer isOpened={isDropDownOpened} onClose={() =>
-          setIsDropDown(false)}
-                           bgColor={app.theme.panelBg}
-                           minWidth="250px"
-                           top="50px"
-                           absolute>
-          <VStack halign="center" valign="top" gap="10px"
-                  padding="20px"
-                  shadow="0 5px 5px #00000020">
-            <Input type="text"
-                   text={name}
-                   theme={app.theme}
-                   title="Login"
-                   placeHolder="Enter your name"
-                   onChange={(value: string) => setName(value)}
-                   onSubmitted={handleSignIn}/>
-
-            <Input type="password"
-                   text={pwd}
-                   theme={app.theme}
-                   title="Password"
-                   placeHolder="Enter your password"
-                   onChange={(value: string) => setPwd(value)}
-                   onSubmitted={handleSignIn}/>
-
-            {user.authStatus !== AuthStatus.AUTHORIZING &&
-
-            <RedButton title="Submit"
-                       hideBg
-                       theme={app.theme}
-                       onClick={handleSignIn}/>
-
-            }
-
-            {user.authStatus === AuthStatus.AUTHORIZING &&
-            <SmallSpinner/>
-            }
-
-            {user.authWithError &&
-            <Label fontSize="14px"
-                   title={user.authWithError}
-                   textColor={app.theme.error}/>
-            }
-          </VStack>
-
-        </DropDownContainer>
-      </>
+          <AuthDropDown isDropDownOpened={isDropDownOpened}
+                        onClose={() => setIsDropDown(false)}/>
+        </>
       }
     </HStack>
   )
+})
+
+const AuthDropDown = observer(({isDropDownOpened, onClose}: { isDropDownOpened: boolean, onClose: () => void }) => {
+  const {user, app} = useDocsContext()
+  const [name, setName] = useState(user.login)
+  const [pwd, setPwd] = useState(user.pwd)
+
+  const handleSignIn = () => {
+    if (user.authStatus === AuthStatus.SIGNED_OUT) {
+      user.signIn(name, pwd)
+    }
+  }
+
+  return <DropDownContainer isOpened={isDropDownOpened} onClose={onClose}
+                            bgColor={app.theme.panelBg}
+                            minWidth="250px"
+                            top="50px"
+                            absolute>
+    <VStack halign="center" valign="top" gap="10px"
+            padding="20px"
+            shadow="0 5px 5px #00000020">
+      <Input type="text"
+             text={name}
+             theme={app.theme}
+             title="Login"
+             placeHolder="Enter your name"
+             onChange={(value: string) => setName(value)}
+             onSubmitted={handleSignIn}/>
+
+      <Input type="password"
+             text={pwd}
+             theme={app.theme}
+             title="Password"
+             placeHolder="Enter your password"
+             onChange={(value: string) => setPwd(value)}
+             onSubmitted={handleSignIn}/>
+
+      {user.authStatus !== AuthStatus.AUTHORIZING &&
+
+        <RedButton title="Submit"
+                   hideBg
+                   theme={app.theme}
+                   onClick={handleSignIn}/>
+
+      }
+
+      {user.authStatus === AuthStatus.AUTHORIZING &&
+        <SmallSpinner/>
+      }
+
+      {user.authWithError &&
+        <Label fontSize="14px"
+               title={user.authWithError}
+               textColor={app.theme.error}/>
+      }
+    </VStack>
+
+  </DropDownContainer>
 })
 
 const ToolsPanel = observer(() => {

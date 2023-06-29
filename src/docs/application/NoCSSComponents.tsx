@@ -13,6 +13,7 @@ import {observer} from "mobx-react";
 
 interface ClickableComponentProps extends StylableComponentProps {
   onClick?: (e: any) => void,
+  onMouseDown?: (e: any) => void,
   onDoubleClick?: (e: any) => void,
 }
 
@@ -67,12 +68,14 @@ export const VStack = (props: StackProps) => {
   if (props.hasOwnProperty("className"))
     return <div id={props.id}
                 className={props.className + " " + buildClassName(style)}
+                onMouseDown={props.onMouseDown}
                 onClick={props.onClick}
                 onDoubleClick={props.onDoubleClick}>
       {props.children}</div>
   else
     return <div id={props.id}
                 className={buildClassName(style)}
+                onMouseDown={props.onMouseDown}
                 onClick={props.onClick}
                 onDoubleClick={props.onDoubleClick}>
       {props.children}</div>
@@ -124,6 +127,7 @@ export const HStack = (props: StackProps) => {
     return <div id={props.id}
                 className={props.className + " " + buildClassName(style)}
                 onClick={props.onClick}
+                onMouseDown={props.onMouseDown}
                 onDoubleClick={props.onDoubleClick}>
       {props.children}
     </div>
@@ -131,6 +135,7 @@ export const HStack = (props: StackProps) => {
     return <div id={props.id}
                 className={buildClassName(style)}
                 onClick={props.onClick}
+                onMouseDown={props.onMouseDown}
                 onDoubleClick={props.onDoubleClick}>
       {props.children}</div>
 }
@@ -142,6 +147,7 @@ export const StylableContainer = (props: ClickableComponentProps) => {
               key={props.key}
               className={className}
               onClick={props.onClick}
+              onMouseDown={props.onMouseDown}
               onDoubleClick={props.onDoubleClick}>
     {props.children}
   </div>
@@ -227,7 +233,7 @@ export const Input = (props: InputProps) => {
       }, 0)
       return () => clearTimeout(timeout);
     }
-  }, []);
+  }, [customProps.autoFocus]);
 
   const className = customProps.hasOwnProperty("className") ? customProps.className + " " + buildClassName(customProps) : buildClassName(customProps)
 

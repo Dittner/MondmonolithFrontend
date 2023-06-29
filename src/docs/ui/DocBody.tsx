@@ -7,6 +7,7 @@ import {useEffect, useState} from "react";
 import Prism from "prismjs";
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-jsx';
+import 'prismjs/components/prism-tsx';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-python';
 import {DocLoadStatus, Page, PageBlock} from "../domain/DomainModel";
@@ -263,7 +264,6 @@ const PageTitle = observer(({page}: { page: Page }) => {
                            bgColor={app.theme.pageSelection}
                            borderLeft={["6px", "solid", app.theme.yellow]}
                            cornerRadius="10px"
-                           onClick={selectTitle}
                            onDoubleClick={editPage}>
           <Label className="h1"
                  textColor={app.theme.pageTitle}
@@ -278,8 +278,7 @@ const PageTitle = observer(({page}: { page: Page }) => {
                               paddingRight="10px"
                               paddingLeft="30px"
                               width="100%"
-                              onClick={selectTitle}
-                              onDoubleClick={editPage}
+                              onMouseDown={selectTitle}
                               hoverState={state => {
                     state.bgColor = app.theme.pageSelection
                     state.cornerRadius = "10px"
@@ -386,8 +385,7 @@ const PageBlockView = observer(({block}: { block: PageBlock }) => {
                               paddingHorizontal="30px"
                               paddingVertical="5px"
                               width="100%"
-                              onClick={selectBlock}
-                              onDoubleClick={editPage}
+                              onMouseDown={selectBlock}
                               hoverState={state => {
                     state.bgColor = app.theme.pageSelection
                     state.cornerRadius = "10px"

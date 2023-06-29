@@ -35,7 +35,7 @@ function useWindowPosition(limit: number = -1): number {
     return () => {
       window.removeEventListener('scroll', handler);
     }
-  }, [scrollPosition]);
+  }, [scrollPosition, limit]);
   return scrollPosition;
 }
 
@@ -56,14 +56,16 @@ export const IntroView = observer(() => {
                  paddingBottom="20px"
                  disableHorizontalScroll>
 
-    <Image src={app.theme.isDark ? "/headerBg.jpg" : "/headerBg-light.jpg"}
-           maxWidth="100%"
-           visible={app.size === AppSize.L || app.size === AppSize.M}
-           disableHorizontalScroll
-           halign="center" valign="top"
-           top={scrollPosition > SCROLL_POS_LIMIT ? SCROLL_POS_LIMIT + "px" : "0"}
-           absolute={scrollPosition > SCROLL_POS_LIMIT}
-           fixed={scrollPosition <= SCROLL_POS_LIMIT}/>
+    {(app.size === AppSize.L || app.size === AppSize.M) &&
+      <Image
+        src={app.theme.isDark ? "/headerBg.jpg" : "/headerBg-light.jpg"}
+        maxWidth="100%"
+        disableHorizontalScroll
+        halign="center" valign="top"
+        top={scrollPosition > SCROLL_POS_LIMIT ? SCROLL_POS_LIMIT + "px" : "0"}
+        absolute={scrollPosition > SCROLL_POS_LIMIT}
+        fixed={scrollPosition <= SCROLL_POS_LIMIT}/>
+    }
 
     <Header width="100%"
             height="50px"
@@ -79,13 +81,14 @@ export const IntroView = observer(() => {
                   theme={app.theme}
                   onClick={() => app.switchTheme()}/>
     </StylableContainer>
-
-    <Image src={app.theme.isDark ? "/headerBg.jpg" : "/headerBg-light.jpg"}
-           maxWidth="100%"
-           width="100%"
-           visible={app.size === AppSize.XS || app.size === AppSize.S}
-           disableScroll
-           halign="center" valign="top"/>
+    {(app.size === AppSize.XS || app.size === AppSize.S) &&
+      <Image
+        src={app.theme.isDark ? "/headerBg.jpg" : "/headerBg-light.jpg"}
+        maxWidth="100%"
+        width="100%"
+        disableScroll
+        halign="center" valign="top"/>
+    }
 
     <Label className="mono"
            whiteSpace="pre"
@@ -95,10 +98,11 @@ export const IntroView = observer(() => {
            bgColor={bgColor}
            layer={LayoutLayer.ONE}/>
 
-    <Label className={app.theme.isDark ? app.size === AppSize.XS ? "ibm h3" : "ibm h2" : app.size === AppSize.XS ? "ibm h3 light" : "ibm h2 light"}
-           whiteSpace="pre"
-           paddingVertical="30px"
-           layer={LayoutLayer.ONE}>
+    <Label
+      className={app.theme.isDark ? app.size === AppSize.XS ? "ibm h3" : "ibm h2" : app.size === AppSize.XS ? "ibm h3 light" : "ibm h2 light"}
+      whiteSpace="pre"
+      paddingVertical="30px"
+      layer={LayoutLayer.ONE}>
       <span className="token keyword">func </span>
       <span className="token function">highlight</span>
       <span className="token symbol">(</span>
@@ -107,7 +111,7 @@ export const IntroView = observer(() => {
       <span className="token class">String</span>
       <span className="token symbol">{"])"}</span>
       {app.size !== AppSize.XS &&
-      <span className="token symbol">{" {...}"}</span>
+        <span className="token symbol">{" {...}"}</span>
       }
     </Label>
 
@@ -133,7 +137,7 @@ export const IntroView = observer(() => {
     </VStack>
 
     <Label className="mono"
-           title={app.isMobileDevice ? 'Mobile mode' : 'Desktop mode'}
+           title={(app.isMobileDevice ? 'Mobile ' : 'Desktop ') + app.size}
            fontSize="10px"
            textColor={app.theme.text75}
            layer={LayoutLayer.ONE}/>
@@ -145,7 +149,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.15  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.16  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -161,7 +165,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.15  |  DATE: 2023  
+*  MODE: demo  |  VER: 2.16  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/
@@ -260,8 +264,8 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
                 paddingRight="20px">
 
           {value &&
-          <MarkdownText value={value}
-                        width="100%"/>
+            <MarkdownText value={value}
+                          width="100%"/>
           }
         </HStack>
 
@@ -295,8 +299,8 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
         <VSeparator theme={app.theme}/>
 
         {value &&
-        <MarkdownText value={value}
-                      width="50%"/>
+          <MarkdownText value={value}
+                        width="50%"/>
         }
       </HStack>
 

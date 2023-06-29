@@ -58,7 +58,7 @@ export class ThemeManager {
     yellow: "#c29a5f",
     appBg: DARK_THEME_APP_BG,
     transparent: "0",
-    panelBg: "#2c3436",
+    panelBg: "#2e363b",
     modalWindowBg: "#495655",
     text: DARK_THEME_WHITE,
     text75: "#76818d",
@@ -122,7 +122,7 @@ export class ThemeManager {
     yellow: "#6f838d",
     appBg: LIGHT_THEME_WHITE,
     transparent: "0",
-    panelBg: "#e0e5e9",
+    panelBg: "#e5eaee",
     modalWindowBg: "#d0d4d8",
     text: DARK_THEME_APP_BG,
     text75: "#687278",
@@ -169,41 +169,3 @@ export class ThemeManager {
     buildRule(blockquoteProps, theme.id, "blockquote")
   }
 }
-
-/*
-*
-* :root {
-  color-scheme: dark;
---Gray: #292f31;
---LightGray: #DEDEDE;
---Red: #E06C75;
---Red25: #E06C7525;
---Red75: #E06C7575;
---Yellow: #c29a5f;
---Error: #ff4178;
---Text: #c7d7e5;
---TextDark: #76818d;
---TextDark75: #76818d75;
---TextGreen: #a7c6d2;
---TextDarkGreen: #596a70;
---TextBlue: #b1c5de;
---PageTitle: #86b3c7;
---DocListTextSelected: #d2e4f2;
---PanelBg: #292f31;
---AppBg: #23282a;
---HeaderBg: #252a2c;
---DarkBg: #00000020;
---CodeBg: #2e393f50;
---CodeBlockBg: #2a343920;
---Border: #2a3439;
---Pink: #a29cbe;
---InputBg: #1f2528;
---BtnWeight: 600;
---BtnColor: #E06C75;
---BtnHoverColor: #c7d7e5;
---BtnDisabledColor: #76818d;
---CodeLineHeight: 1.76;
---font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
---font-family-mono: Menlo, source-code-pro, Monaco, 'Courier New', monospace;
-}
-*/

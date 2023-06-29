@@ -18,7 +18,8 @@
   },
   "scripts": {
     "server": "webpack serve --env mode=development port=3000",
-    "build": "webpack --env mode=development",
+    "dev": "webpack --env mode=development",
+    "build": "webpack --env mode=production",
     "prod": "webpack --env mode=production",
     "start": "react-scripts start",
     "test": "react-scripts test",

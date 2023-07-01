@@ -1,15 +1,15 @@
-import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
-import {DocsContext} from "./docs/DocsContext";
-import React, {lazy, Suspense, useLayoutEffect, useState} from 'react';
-import {observer} from "mobx-react";
-import {AuthStatus} from "./docs/domain/DomainModel";
-import {LoadingSpinner} from "./docs/ui/common/Loading";
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { DocsContext } from './docs/DocsContext'
+import React, { lazy, Suspense, useLayoutEffect, useState } from 'react'
+import { observer } from 'mobx-react'
+import { AuthStatus } from './docs/domain/DomainModel'
+import { LoadingSpinner } from './docs/ui/common/Loading'
 
 const docsContext = React.createContext(DocsContext.init())
-export const useDocsContext = () => React.useContext(docsContext);
+export const useDocsContext = () => React.useContext(docsContext)
 
-export const DocsViewAsync = lazy(() => import('./docs/ui/DocsView').then((module) => ({default: module.DocsView})))
-export const IntroViewAsync = lazy(() => import('./docs/ui/IntroView').then((module) => ({default: module.IntroView})))
+export const LazyDocsPage = lazy(async() => await import('./docs/ui/DocsPage').then((module) => ({ default: module.DocsPage })))
+export const LazyIntroPage = lazy(async() => await import('./docs/ui/IntroPage').then((module) => ({ default: module.IntroPage })))
 
 export const App = observer(() => {
   const docsContext = useDocsContext()
@@ -18,8 +18,8 @@ export const App = observer(() => {
     <BrowserRouter>
       <Suspense fallback={<LoadingSpinner/>}>
         <Routes>
-          <Route path="/docs/*" element={isUserAuthorized ? <DocsViewAsync/> : <IntroViewAsync/>}/>
-          <Route path="*" element={isUserAuthorized ? (<Navigate replace to="/docs"/>) : (<IntroViewAsync/>)}/>
+          <Route path="/docs/*" element={isUserAuthorized ? <LazyDocsPage/> : <LazyIntroPage/>}/>
+          <Route path="*" element={isUserAuthorized ? (<Navigate replace to="/docs"/>) : (<LazyIntroPage/>)}/>
         </Routes>
       </Suspense>
     </BrowserRouter>
@@ -27,15 +27,15 @@ export const App = observer(() => {
 })
 
 export function useWindowSize() {
-  const [size, setSize] = useState([0, 0]);
+  const [size, setSize] = useState([0, 0])
   useLayoutEffect(() => {
     function updateSize() {
-      setSize([window.innerWidth, window.innerHeight]);
+      setSize([window.innerWidth, window.innerHeight])
     }
 
-    window.addEventListener('resize', updateSize);
-    updateSize();
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
-  return size;
+    window.addEventListener('resize', updateSize)
+    updateSize()
+    return () => { window.removeEventListener('resize', updateSize) }
+  }, [])
+  return size
 }

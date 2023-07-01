@@ -1,37 +1,36 @@
-import {DocsContext, LoadStatus} from "../../DocsContext";
-import {InfoDialog, YesNoDialog} from "../../application/Application";
-import {Directory, Doc, DocLoadStatus} from "../../domain/DomainModel";
-import {action, runInAction} from "mobx";
+import { type DocsContext, LoadStatus } from '../../DocsContext'
+import { InfoDialog, YesNoDialog } from '../../application/Application'
+import { Directory, Doc, DocLoadStatus } from '../../domain/DomainModel'
+import { action, runInAction } from 'mobx'
 
 export interface DocsLoader {
-  fetchDirectories(): void
+  fetchDirectories: () => void
 
-  fetchDoc(docUID: string): void
+  fetchDoc: (docUID: string) => void
 
-  loadDocFromDisc(doc: File): void
+  loadDocFromDisc: (doc: File) => void
 }
 
 export class DemoDocsRepo implements DocsLoader {
-  private context: DocsContext
+  private readonly context: DocsContext
 
   constructor(context: DocsContext) {
     this.context = context
   }
 
-  private loadJsonFile = async (url: string) => {
-    const response = await fetch(url);
+  private readonly loadJsonFile = async(url: string) => {
+    const response = await fetch(url)
 
     if (response.ok) {
       return await response.json()
     } else {
-      const message = `An error has occurred: ${response.status}`;
+      const message = `An error has occurred: ${response.status}`
       throw new Error(message)
     }
   }
 
-
   public fetchDirectories() {
-    console.log("fetchDirectories")
+    console.log('fetchDirectories')
     if (this.context.dirsLoadStatus !== LoadStatus.PENDING) {
       return
     }
@@ -41,30 +40,30 @@ export class DemoDocsRepo implements DocsLoader {
     })
 
     const rawDocs: any[] = []
-    this.loadJsonFile("/demo/java.json")
+    this.loadJsonFile('/demo/java.json')
       .then(value => {
         rawDocs.push(value)
       })
-    this.loadJsonFile("/demo/js.json")
+    this.loadJsonFile('/demo/js.json')
       .then(value => {
         rawDocs.push(value)
       })
-    this.loadJsonFile("/demo/react.json")
+    this.loadJsonFile('/demo/react.json')
       .then(value => {
         rawDocs.push(value)
       })
 
-    console.log("--fetchDirectories, start fetching...")
+    console.log('--fetchDirectories, start fetching...')
 
     setTimeout(() => {
       this.context.send(this.parseRawDocs(rawDocs), LoadStatus.LOADED)
-      console.log("fetchDirectories complete")
+      console.log('fetchDirectories complete')
     }, 1000)
   }
 
   private parseRawDocs(rawDocs: any): Directory[] {
-    const res: { [dirUID: string]: Directory } = {}
-    const sortedDocs = rawDocs ? [...rawDocs].sort(this.sortByKey("title")) : []
+    const res: Record<string, Directory> = {}
+    const sortedDocs = rawDocs ? [...rawDocs].sort(this.sortByKey('title')) : []
     sortedDocs.forEach(d => {
       if (!res[d.directory]) {
         res[d.directory] = new Directory(d.directory, d.directory)
@@ -76,31 +75,31 @@ export class DemoDocsRepo implements DocsLoader {
 
   sortByKey(key: string) {
     return (a: any, b: any) => {
-      if (a[key] < b[key]) return -1;
-      if (a[key] > b[key]) return 1;
+      if (a[key] < b[key]) return -1
+      if (a[key] > b[key]) return 1
       return 0
     }
   }
 
   public fetchDoc(docUID: string) {
-    console.log("fetchDoc, id =", docUID)
+    console.log('fetchDoc, id =', docUID)
     const doc = this.context.findDoc(d => d.uid === docUID)
 
     if (doc && doc?.loadStatus === DocLoadStatus.HEADER_LOADED) {
-      doc.send("", DocLoadStatus.LOADING)
+      doc.send('', DocLoadStatus.LOADING)
 
-      console.log("fetchDoc, start fetching...")
+      console.log('fetchDoc, start fetching...')
       let d: Doc
-      let docUrl = ""
+      let docUrl = ''
       switch (docUID) {
         case 'java':
-          docUrl = "/demo/java.json"
+          docUrl = '/demo/java.json'
           break
         case 'js':
-          docUrl = "/demo/js.json"
+          docUrl = '/demo/js.json'
           break
         case 'react':
-          docUrl = "/demo/react.json"
+          docUrl = '/demo/react.json'
           break
       }
 
@@ -108,13 +107,13 @@ export class DemoDocsRepo implements DocsLoader {
         this.loadJsonFile(docUrl)
           .then(value => {
             d = this.context.docsParser.parseDoc(value)
-            d.send("", DocLoadStatus.LOADED)
+            d.send('', DocLoadStatus.LOADED)
             doc.dir?.replaceWith(d)
           }, err => {
-            doc.send("Loading of the file is failed. Details: " + err, DocLoadStatus.HEADER_LOADED)
+            doc.send('Loading of the file is failed. Details: ' + err, DocLoadStatus.HEADER_LOADED)
           })
           .catch(err => {
-            doc.send("Loading of the file is failed. Details: " + err, DocLoadStatus.HEADER_LOADED)
+            doc.send('Loading of the file is failed. Details: ' + err, DocLoadStatus.HEADER_LOADED)
           })
       } else {
         doc.loadStatus = DocLoadStatus.LOADED
@@ -139,7 +138,7 @@ export class DemoDocsRepo implements DocsLoader {
             if (duplicate) {
               const msg = `The directory «${dir.title}» already has the doc «${doc.title}». Do you want to overwrite it?`
               const overwriteDoc = () => {
-                doc.send("", DocLoadStatus.LOADED)
+                doc.send('', DocLoadStatus.LOADED)
                 dir.replaceWith(doc)
               }
               this.context.app.yesNoDialog = new YesNoDialog(msg, overwriteDoc)
@@ -151,22 +150,20 @@ export class DemoDocsRepo implements DocsLoader {
             dir.add(doc)
             this.context.dirs.push(dir)
           }
-        } catch (e) {
-          onError("The file is damaged", `An error has occurred while reading a file.\n${e}`)
+        } catch (e: any) {
+          onError('The file is damaged', `An error has occurred while reading a file.\n${e}`)
         }
-
-      } catch (e) {
-        onError("The file is damaged", `An error has occurred while parsing the json-file to object.\n${e}`)
+      } catch (e: any) {
+        onError('The file is damaged', `An error has occurred while parsing the json-file to object.\n${e}`)
       }
     }
 
-    if (doc.type !== "application/json") {
-      onError("Invalid file", "The extension of the selected file should be json")
-
+    if (doc.type !== 'application/json') {
+      onError('Invalid file', 'The extension of the selected file should be json')
     } else {
       doc.text()
-        .then(text => onComplete(text))
-        .catch(err => onError("The Loading a file is failed", `Details: ${err}`))
+        .then(text => { onComplete(text) })
+        .catch(err => { onError('The Loading a file is failed', `Details: ${err}`) })
     }
   }
 }

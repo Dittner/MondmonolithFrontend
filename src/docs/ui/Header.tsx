@@ -1,11 +1,11 @@
-import {useState} from "react";
-import {useDocsContext} from "../../App";
-import {AuthStatus, Page, PageBlock} from "../domain/DomainModel";
-import {observer} from "mobx-react";
-import {stylable} from "../application/NoCSS";
-import {Route, Routes, useParams} from "react-router-dom";
-import {SmallSpinner} from "./common/Loading";
-import {AppSize, YesNoDialog} from "../application/Application";
+import { useState } from 'react'
+import { useDocsContext } from '../../App'
+import { AuthStatus, Page, PageBlock } from '../domain/DomainModel'
+import { observer } from 'mobx-react'
+import { stylable } from '../application/NoCSS'
+import { Route, Routes, useParams } from 'react-router-dom'
+import { SmallSpinner } from './common/Loading'
+import { AppSize, YesNoDialog } from '../application/Application'
 import {
   DropDownContainer,
   HStack,
@@ -17,7 +17,7 @@ import {
   Switch,
   VSeparator,
   VStack
-} from "../application/NoCSSComponents";
+} from '../application/NoCSSComponents'
 
 export const Header = stylable(() => {
   return <Routes>
@@ -26,8 +26,8 @@ export const Header = stylable(() => {
   </Routes>
 })
 
-export const HeaderVerSep = ({visible = true}: { visible?: boolean }) => {
-  const {app} = useDocsContext()
+export const HeaderVerSep = ({ visible = true }: { visible?: boolean }) => {
+  const { app } = useDocsContext()
 
   if (!visible) return <></>
 
@@ -37,17 +37,16 @@ export const HeaderVerSep = ({visible = true}: { visible?: boolean }) => {
 }
 
 export const HeaderView = observer(() => {
-  console.log("new AuthPanel")
+  console.log('new AuthPanel')
   const [isDropDownOpened, setIsDropDown] = useState(false)
   const params = useParams()
   const docsContext = useDocsContext()
-  const {user, editTools, app} = docsContext
+  const { user, editTools, app } = docsContext
 
   const doc = docsContext.findDoc(d => params.docUID === d.uid)
 
-
   const showDocList = () => {
-    app.isDocListShown = true
+    app.showDocList()
   }
 
   const handleSignOut = () => {
@@ -67,8 +66,8 @@ export const HeaderView = observer(() => {
             width="100%"
             height="50px"
             gap="0"
-            bgColor={editTools.editMode ? app.theme.appBg : "0"}
-            borderBottom={user.authStatus === AuthStatus.AUTHORIZED ? ["1px", "solid", app.theme.border] : "none"}
+            bgColor={editTools.editMode ? app.theme.appBg : '0'}
+            borderBottom={user.authStatus === AuthStatus.AUTHORIZED ? ['1px', 'solid', app.theme.border] : 'none'}
             paddingHorizontal="10px">
 
       {user.authStatus === AuthStatus.AUTHORIZED &&
@@ -103,11 +102,10 @@ export const HeaderView = observer(() => {
           <Label className="mono"
                  whiteSpace="pre"
                  visible={app.size !== AppSize.XS}
-                 title={editTools.editMode ? "Edit mode: " : "Read mode: "}
+                 title={editTools.editMode ? 'Edit mode: ' : 'Read mode: '}
                  textColor={app.theme.text75}/>
 
-          <Switch theme={app.theme} isSelected={editTools.editMode} onClick={() =>
-            editTools.toggleEditMode()}/>
+          <Switch theme={app.theme} isSelected={editTools.editMode} onClick={() => { editTools.toggleEditMode() }}/>
 
           <HeaderVerSep/>
 
@@ -118,14 +116,12 @@ export const HeaderView = observer(() => {
 
           <HeaderVerSep visible={app.size !== AppSize.XS}/>
 
-
           <RedButton title="Sign out"
                      hideBg
                      theme={app.theme}
                      onClick={handleSignOut}/>
         </>
       }
-
 
       {user.authStatus !== AuthStatus.AUTHORIZED &&
         <>
@@ -141,15 +137,15 @@ export const HeaderView = observer(() => {
                      }}/>
 
           <AuthDropDown isDropDownOpened={isDropDownOpened}
-                        onClose={() => setIsDropDown(false)}/>
+                        onClose={() => { setIsDropDown(false) }}/>
         </>
       }
     </HStack>
   )
 })
 
-const AuthDropDown = observer(({isDropDownOpened, onClose}: { isDropDownOpened: boolean, onClose: () => void }) => {
-  const {user, app} = useDocsContext()
+const AuthDropDown = observer(({ isDropDownOpened, onClose }: { isDropDownOpened: boolean, onClose: () => void }) => {
+  const { user, app } = useDocsContext()
   const [name, setName] = useState(user.login)
   const [pwd, setPwd] = useState(user.pwd)
 
@@ -172,7 +168,7 @@ const AuthDropDown = observer(({isDropDownOpened, onClose}: { isDropDownOpened: 
              theme={app.theme}
              title="Login"
              placeHolder="Enter your name"
-             onChange={(value: string) => setName(value)}
+             onChange={(value: string) => { setName(value) }}
              onSubmitted={handleSignIn}/>
 
       <Input type="password"
@@ -180,7 +176,7 @@ const AuthDropDown = observer(({isDropDownOpened, onClose}: { isDropDownOpened: 
              theme={app.theme}
              title="Password"
              placeHolder="Enter your password"
-             onChange={(value: string) => setPwd(value)}
+             onChange={(value: string) => { setPwd(value) }}
              onSubmitted={handleSignIn}/>
 
       {user.authStatus !== AuthStatus.AUTHORIZING &&
@@ -207,9 +203,9 @@ const AuthDropDown = observer(({isDropDownOpened, onClose}: { isDropDownOpened: 
 })
 
 const ToolsPanel = observer(() => {
-  const {editTools, app} = useDocsContext()
-  const selectedPage = editTools.selectedItem instanceof Page && editTools.selectedItem as Page
-  const selectedPageBlock = editTools.selectedItem instanceof PageBlock && editTools.selectedItem as PageBlock
+  const { editTools, app } = useDocsContext()
+  const selectedPage = editTools.selectedItem instanceof Page && editTools.selectedItem
+  const selectedPageBlock = editTools.selectedItem instanceof PageBlock && editTools.selectedItem
   const createBlock = () => {
     if (editTools.editMode && selectedPage) {
       selectedPage.createAndAddBlock()
@@ -237,8 +233,7 @@ const ToolsPanel = observer(() => {
         `Are you sure you want to remove the page «${selectedPage.title}» with its content?`,
         () => {
           selectedPage.isEditing = false
-          if (selectedPage === editTools.selectedItem)
-            editTools.selectedItem = undefined
+          if (selectedPage === editTools.selectedItem) { editTools.select(undefined) }
 
           selectedPage.doc?.deletePage(selectedPage)
         }
@@ -248,8 +243,7 @@ const ToolsPanel = observer(() => {
         "Are you sure you want to remove the selected page's block?",
         () => {
           selectedPageBlock.isEditing = false
-          if (selectedPageBlock === editTools.selectedItem)
-            editTools.selectedItem = undefined
+          if (selectedPageBlock === editTools.selectedItem) { editTools.select(undefined) }
 
           selectedPageBlock.page?.deleteBlock(selectedPageBlock)
         }
@@ -257,7 +251,7 @@ const ToolsPanel = observer(() => {
     }
   }
 
-  if (editTools.editMode)
+  if (editTools.editMode) {
     return (
       <HStack className="tools"
               valign="center"
@@ -290,6 +284,6 @@ const ToolsPanel = observer(() => {
 
       </HStack>
     )
+  }
   return <></>
 })
-

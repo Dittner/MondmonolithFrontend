@@ -1,15 +1,15 @@
-import {observer} from "mobx-react";
-import React, {useEffect, useLayoutEffect, useState} from "react";
-import ReactMarkdown from "react-markdown";
-import Prism from "prismjs";
-import 'prismjs/components/prism-java';
-import 'prismjs/components/prism-jsx';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-python';
-import {Header} from "./Header";
-import {stylable} from "../application/NoCSS";
-import {useDocsContext} from "../../App";
-import {AppSize, LayoutLayer} from "../application/Application";
+import { observer } from 'mobx-react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import Prism from 'prismjs'
+import 'prismjs/components/prism-java'
+import 'prismjs/components/prism-jsx'
+import 'prismjs/components/prism-javascript'
+import 'prismjs/components/prism-python'
+import { Header } from './Header'
+import { stylable } from '../application/NoCSS'
+import { useDocsContext } from '../../App'
+import { AppSize, LayoutLayer } from '../application/Application'
 import {
   HStack,
   IconButton,
@@ -20,7 +20,7 @@ import {
   TextArea,
   VSeparator,
   VStack
-} from "../application/NoCSSComponents";
+} from '../application/NoCSSComponents'
 
 function useWindowPosition(limit: number = -1): number {
   const [scrollPosition, setPosition] = useState(window.scrollY)
@@ -31,21 +31,21 @@ function useWindowPosition(limit: number = -1): number {
       updatePosition = updatePosition || (scrollPosition > limit && window.scrollY < limit && scrollPosition !== window.scrollY)
       if (updatePosition) setPosition(window.scrollY)
     }
-    window.addEventListener('scroll', handler);
+    window.addEventListener('scroll', handler)
     return () => {
-      window.removeEventListener('scroll', handler);
+      window.removeEventListener('scroll', handler)
     }
-  }, [scrollPosition, limit]);
-  return scrollPosition;
+  }, [scrollPosition, limit])
+  return scrollPosition
 }
 
-export const IntroView = observer(() => {
+export const IntroPage = observer(() => {
   const SCROLL_POS_LIMIT = 400
-  const {app} = useDocsContext()
+  const { app } = useDocsContext()
   const scrollPosition = useWindowPosition(SCROLL_POS_LIMIT)
-  console.log("new IntroView, scrollPosition: ", scrollPosition)
+  console.log('new IntroView, scrollPosition: ', scrollPosition)
 
-  const bgColor = app.theme.appBg + "99"
+  const bgColor = app.theme.appBg + '99'
 
   return <VStack maxWidth="100%"
                  width="100%"
@@ -58,11 +58,11 @@ export const IntroView = observer(() => {
 
     {(app.size === AppSize.L || app.size === AppSize.M) &&
       <Image
-        src={app.theme.isDark ? "/headerBg.jpg" : "/headerBg-light.jpg"}
+        src={app.theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
         maxWidth="100%"
         disableHorizontalScroll
         halign="center" valign="top"
-        top={scrollPosition > SCROLL_POS_LIMIT ? SCROLL_POS_LIMIT + "px" : "0"}
+        top={scrollPosition > SCROLL_POS_LIMIT ? SCROLL_POS_LIMIT + 'px' : '0'}
         absolute={scrollPosition > SCROLL_POS_LIMIT}
         fixed={scrollPosition <= SCROLL_POS_LIMIT}/>
     }
@@ -75,15 +75,15 @@ export const IntroView = observer(() => {
 
     <StylableContainer left="10px" top="5px" fixed
                        layer={LayoutLayer.HEADER}>
-      <IconButton icon={app.theme.isDark ? "moon" : "sun"}
+      <IconButton icon={app.theme.isDark ? 'moon' : 'sun'}
                   hideBg
                   popUp="Switch a theme"
                   theme={app.theme}
-                  onClick={() => app.switchTheme()}/>
+                  onClick={() => { app.switchTheme() }}/>
     </StylableContainer>
     {(app.size === AppSize.XS || app.size === AppSize.S) &&
       <Image
-        src={app.theme.isDark ? "/headerBg.jpg" : "/headerBg-light.jpg"}
+        src={app.theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
         maxWidth="100%"
         width="100%"
         disableScroll
@@ -99,7 +99,7 @@ export const IntroView = observer(() => {
            layer={LayoutLayer.ONE}/>
 
     <Label
-      className={app.theme.isDark ? app.size === AppSize.XS ? "ibm h3" : "ibm h2" : app.size === AppSize.XS ? "ibm h3 light" : "ibm h2 light"}
+      className={app.theme.isDark ? app.size === AppSize.XS ? 'ibm h3' : 'ibm h2' : app.size === AppSize.XS ? 'ibm h3 light' : 'ibm h2 light'}
       whiteSpace="pre"
       paddingVertical="30px"
       layer={LayoutLayer.ONE}>
@@ -109,9 +109,9 @@ export const IntroView = observer(() => {
       <span className="token def">yourNotes</span>
       <span className="token symbol">: [</span>
       <span className="token class">String</span>
-      <span className="token symbol">{"])"}</span>
+      <span className="token symbol">{'])'}</span>
       {app.size !== AppSize.XS &&
-        <span className="token symbol">{" {...}"}</span>
+        <span className="token symbol">{' {...}'}</span>
       }
     </Label>
 
@@ -149,7 +149,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.17  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.19  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -165,7 +165,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.17  |  DATE: 2023  
+*  MODE: demo  |  VER: 2.19  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/
@@ -220,9 +220,9 @@ const links = `## Much more info:
 * [React-Markdown](https://remarkjs.github.io/react-markdown/)
 * [Markdown basic syntax](https://www.markdownguide.org/basic-syntax/)`
 
-const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title: string, autoFocus?: boolean }) => {
-  const {app} = useDocsContext()
-  console.log("new MarkdownEditor")
+const MarkdownEditor = observer(({ text, title, autoFocus }: { text: string, title: string, autoFocus?: boolean }) => {
+  const { app } = useDocsContext()
+  console.log('new MarkdownEditor')
   const [value, setValue] = useState(text)
   const apply = (newValue: string) => {
     if (value !== newValue) {
@@ -231,7 +231,7 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
   }
 
   const cancel = () => {
-    console.log("cancel")
+    console.log('cancel')
   }
 
   if (app.size === AppSize.S || app.size === AppSize.XS) {
@@ -307,17 +307,16 @@ const MarkdownEditor = observer(({text, title, autoFocus}: { text: string, title
       <Spacer height="50px"/>
     </>
   )
-
 })
 
-const MarkdownText = stylable(({value}: { value: string }) => {
-  const {app} = useDocsContext()
-  console.log("new MarkdownText")
+const MarkdownText = stylable(({ value }: { value: string }) => {
+  const { app } = useDocsContext()
+  console.log('new MarkdownText')
   useEffect(() => {
-    console.log("--Prism.highlightAll")
+    console.log('--Prism.highlightAll')
     Prism.highlightAll()
   }, [value])
   return <div className={app.theme.id}>
-    <ReactMarkdown className={app.theme.isDark ? "dark" : "light"} key={value}>{value}</ReactMarkdown>
+    <ReactMarkdown className={app.theme.isDark ? 'dark' : 'light'} key={value}>{value}</ReactMarkdown>
   </div>
 })

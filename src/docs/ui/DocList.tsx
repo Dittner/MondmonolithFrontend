@@ -1,13 +1,13 @@
-import {useLocation, useNavigate} from "react-router-dom";
-import * as React from "react";
-import {ChangeEvent, useRef, useState} from "react";
-import {useDocsContext} from "../../App";
-import {AppSize} from "../application/Application";
-import {observer} from "mobx-react";
-import {Directory, Doc} from "../domain/DomainModel";
-import {stylable} from "../application/NoCSS";
-import {LoadStatus} from "../DocsContext";
-import {HeaderVerSep} from "./Header";
+import { useLocation, useNavigate } from 'react-router-dom'
+import * as React from 'react'
+import { type ChangeEvent, useRef, useState } from 'react'
+import { useDocsContext } from '../../App'
+import { AppSize } from '../application/Application'
+import { observer } from 'mobx-react'
+import { type Directory, type Doc } from '../domain/DomainModel'
+import { stylable } from '../application/NoCSS'
+import { LoadStatus } from '../DocsContext'
+import { HeaderVerSep } from './Header'
 import {
   HStack,
   IconButton,
@@ -17,13 +17,13 @@ import {
   Spacer,
   StylableContainer,
   VStack
-} from "../application/NoCSSComponents";
+} from '../application/NoCSSComponents'
 
 export const DocList = observer(stylable(() => {
-  console.log("new DocList")
+  console.log('new DocList')
   const [isNewDocCreating, setIsNewDocCreating] = useState(false)
   const docsContext = useDocsContext()
-  const {app, domainService} = docsContext
+  const { app, domainService } = docsContext
 
   const onCancel = () => {
     setIsNewDocCreating(false)
@@ -37,7 +37,7 @@ export const DocList = observer(stylable(() => {
   }
 
   const hideDocList = () => {
-    app.isDocListShown = false
+    app.hideDocList()
   }
 
   if (docsContext.dirsLoadStatus === LoadStatus.LOADING) {
@@ -60,11 +60,11 @@ export const DocList = observer(stylable(() => {
               paddingLeft="10px"
               paddingRight="10px">
 
-        <IconButton icon={app.theme.isDark ? "moon" : "sun"}
+        <IconButton icon={app.theme.isDark ? 'moon' : 'sun'}
                     hideBg
                     popUp="Switch a theme"
                     theme={app.theme}
-                    onClick={() => app.switchTheme()}/>
+                    onClick={() => { app.switchTheme() }}/>
 
         {docsContext.editTools.editMode &&
         <>
@@ -106,20 +106,20 @@ export const DocList = observer(stylable(() => {
 }))
 
 const DocPicker = observer(() => {
-  const [value, setValue] = useState("")
-  const {docsLoader, app} = useDocsContext()
+  const [value, setValue] = useState('')
+  const { docsLoader, app } = useDocsContext()
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const f = e.target.files[0]
       docsLoader.loadDocFromDisc(f)
-      setValue("")
+      setValue('')
     }
   }
 
   const importDoc = () => {
-    inputRef.current?.click();
+    inputRef.current?.click()
   }
 
   return <>
@@ -129,14 +129,13 @@ const DocPicker = observer(() => {
                onClick={importDoc}/>
 
     <input ref={inputRef} className="btn" type="file" onChange={handleFileChange} value={value}
-           style={{display: 'none'}}
+           style={{ display: 'none' }}
     />
   </>
 })
 
-
-const DirectoryView = observer(({dir}: { dir: Directory }) => {
-  const {domainService, app, editTools} = useDocsContext()
+const DirectoryView = observer(({ dir }: { dir: Directory }) => {
+  const { domainService, app, editTools } = useDocsContext()
 
   const onApply = (title: string) => {
     domainService.updateDirTitle(dir, title)
@@ -147,8 +146,7 @@ const DirectoryView = observer(({dir}: { dir: Directory }) => {
   }
 
   const startEditing = () => {
-    if (!dir.isStoring && editTools.editMode)
-      dir.isEditing = true
+    if (!dir.isStoring && editTools.editMode) { dir.isEditing = true }
   }
 
   if (editTools.editMode && dir.isEditing) {
@@ -190,10 +188,10 @@ const DirectoryView = observer(({dir}: { dir: Directory }) => {
 
 const DocLink = observer((props: any) => {
   const doc = props.doc as Doc
-  const {app, domainService, editTools} = useDocsContext()
+  const { app, domainService, editTools } = useDocsContext()
   const navigate = useNavigate()
   const location = useLocation()
-  const isDocSelected = location.pathname === "/docs/" + doc.uid
+  const isDocSelected = location.pathname === '/docs/' + doc.uid
 
   const onApply = (newDocTitle: string, newDirTitle: string) => {
     domainService.updateDocHeader(doc, newDocTitle, newDirTitle)
@@ -204,8 +202,7 @@ const DocLink = observer((props: any) => {
   }
 
   const startEditing = () => {
-    if (!doc.isStoring && editTools.editMode && isDocSelected)
-      doc.isEditing = true
+    if (!doc.isStoring && editTools.editMode && isDocSelected) { doc.isEditing = true }
   }
 
   const openDoc = () => {
@@ -237,7 +234,7 @@ const DocLink = observer((props: any) => {
 
       <Label className="notSelectable"
              title={isDocSelected ? doc.title + ' ' : doc.title}
-             fontWeight={isDocSelected ? "700" : "500"}
+             fontWeight={isDocSelected ? '700' : '500'}
              textAlign="left"
              width="100%"/>
     </HStack>
@@ -245,14 +242,14 @@ const DocLink = observer((props: any) => {
 })
 
 const DocEditForm = observer((props: any) => {
-  const {app} = useDocsContext()
+  const { app } = useDocsContext()
   const doc = props.doc as Doc | undefined
   const onCancel = props.onCancel as () => void
   const onApply = props.onApply as (docTitle: string, dirTitle: string) => void
-  console.log("new DocEditForm")
+  console.log('new DocEditForm')
 
-  const [newDocTitle, setNewDocTitle] = useState(doc?.title || '')
-  const [newDirTitle, setNewDirTitle] = useState(doc?.dir?.title || '')
+  const [newDocTitle, setNewDocTitle] = useState(doc?.title ?? '')
+  const [newDirTitle, setNewDirTitle] = useState(doc?.dir?.title ?? '')
 
   const apply = () => {
     onApply(newDocTitle, newDirTitle)
@@ -267,7 +264,7 @@ const DocEditForm = observer((props: any) => {
             valign="center"
             padding="20px"
             bgColor={app.theme.white25}
-            borderBottom={["1px", "solid", app.theme.appBg]}>
+            borderBottom={['1px', 'solid', app.theme.appBg]}>
       <HStack halign="center" valign="center">
         <Input type="text"
                text={newDocTitle}
@@ -285,7 +282,6 @@ const DocEditForm = observer((props: any) => {
                onChange={setNewDirTitle}/>
       </HStack>
 
-
       <HStack halign="center" valign="center" gap="50px">
         <RedButton title="Cancel"
                    theme={app.theme}
@@ -298,7 +294,7 @@ const DocEditForm = observer((props: any) => {
                    onClick={apply}/>
       </HStack>
 
-      <Label visible={doc?.storeWithError !== ""}
+      <Label visible={doc?.storeWithError !== ''}
              title={doc?.storeWithError}
              textColor={app.theme.error}/>
     </VStack>
@@ -307,18 +303,16 @@ const DocEditForm = observer((props: any) => {
 })
 
 const DirEditForm = observer((props: any) => {
-  console.log("new DirEditForm")
-  const {app} = useDocsContext()
+  console.log('new DirEditForm')
+  const { app } = useDocsContext()
   const dir = props.dir as Directory
   const onCancel = props.onCancel as () => void
   const onApply = props.onApply as (title: string) => void
 
-
-  const [title, setTitle] = useState(dir.title || '');
+  const [title, setTitle] = useState(dir.title || '')
 
   const apply = () => {
-    if (!dir.isStoring && title)
-      onApply(title)
+    if (!dir.isStoring && title) { onApply(title) }
   }
   const cancel = () => {
     onCancel()
@@ -330,7 +324,7 @@ const DirEditForm = observer((props: any) => {
             valign="center"
             padding="20px"
             bgColor={app.theme.white25}
-            borderBottom={["1px", "solid", app.theme.appBg]}>
+            borderBottom={['1px', 'solid', app.theme.appBg]}>
 
       <Input type="text"
              text={title}
@@ -353,7 +347,7 @@ const DirEditForm = observer((props: any) => {
                    onClick={apply}/>
       </HStack>
 
-      <Label visible={dir?.storeWithError !== ""}
+      <Label visible={dir?.storeWithError !== ''}
              title={dir?.storeWithError}
              textColor={app.theme.error}/>
     </VStack>

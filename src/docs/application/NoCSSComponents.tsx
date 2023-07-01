@@ -1,9 +1,9 @@
-import * as React from "react";
-import {useCallback, useEffect, useRef, useState} from "react";
-import {useWindowSize} from "../../App";
-import {buildClassName, StylableComponentProps} from "./NoCSS";
-import {Theme} from "./ThemeManager";
-import {observer} from "mobx-react";
+import * as React from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useWindowSize } from '../../App'
+import { buildClassName, type StylableComponentProps } from './NoCSS'
+import { type Theme } from './ThemeManager'
+import { observer } from 'mobx-react'
 
 /*
 *
@@ -12,137 +12,139 @@ import {observer} from "mobx-react";
 * */
 
 interface ClickableComponentProps extends StylableComponentProps {
-  onClick?: (e: any) => void,
-  onMouseDown?: (e: any) => void,
-  onDoubleClick?: (e: any) => void,
+  onClick?: (e: any) => void
+  onMouseDown?: (e: any) => void
+  onDoubleClick?: (e: any) => void
 }
 
 interface StackProps extends ClickableComponentProps {
-  halign: 'left' | 'right' | "center" | 'stretch',
-  valign: 'top' | "center" | 'base' | 'bottom' | 'stretch',
+  halign: 'left' | 'right' | 'center' | 'stretch'
+  valign: 'top' | 'center' | 'base' | 'bottom' | 'stretch'
 }
 
 const defVStackProps = {
-  "display": "flex",
-  "flexDirection": "column",
-  "alignItems": "flex-start",
-  "justifyContent": "center",
-  "width": "100%",
-  "gap": "10px",
-  "boxSizing": "border-box",
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'center',
+  width: '100%',
+  gap: '10px',
+  boxSizing: 'border-box'
 }
 
 export const VStack = (props: StackProps) => {
-  const style = {...defVStackProps, ...props}
+  const style = { ...defVStackProps, ...props }
 
   switch (props.halign) {
     case 'left':
-      style["alignItems"] = "flex-start";
-      break;
-    case "center":
-      style["alignItems"] = "center";
-      break;
+      style.alignItems = 'flex-start'
+      break
+    case 'center':
+      style.alignItems = 'center'
+      break
     case 'right':
-      style["alignItems"] = "flex-end";
-      break;
+      style.alignItems = 'flex-end'
+      break
     case 'stretch':
-      style["alignItems"] = "stretch";
-      break;
+      style.alignItems = 'stretch'
+      break
   }
 
   switch (props.valign) {
     case 'top':
-      style["justifyContent"] = "flex-start";
-      break;
-    case "center":
-      style["justifyContent"] = "center";
-      break;
+      style.justifyContent = 'flex-start'
+      break
+    case 'center':
+      style.justifyContent = 'center'
+      break
     case 'base':
-      style["alignItems"] = "baseline";
-      break;
+      style.alignItems = 'baseline'
+      break
     case 'bottom':
-      style["justifyContent"] = "flex-end";
-      break;
+      style.justifyContent = 'flex-end'
+      break
   }
 
-  if (props.hasOwnProperty("className"))
+  if ('className' in props) {
     return <div id={props.id}
-                className={props.className + " " + buildClassName(style)}
+                className={props.className + ' ' + buildClassName(style)}
                 onMouseDown={props.onMouseDown}
                 onClick={props.onClick}
                 onDoubleClick={props.onDoubleClick}>
       {props.children}</div>
-  else
+  } else {
     return <div id={props.id}
                 className={buildClassName(style)}
                 onMouseDown={props.onMouseDown}
                 onClick={props.onClick}
                 onDoubleClick={props.onDoubleClick}>
       {props.children}</div>
+  }
 }
 
 const defHStackProps = {
-  "display": "flex",
-  "flexDirection": "row",
-  "alignItems": "flex-start",
-  "justifyContent": "center",
-  "gap": "10px",
-  "boxSizing": "border-box",
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'flex-start',
+  justifyContent: 'center',
+  gap: '10px',
+  boxSizing: 'border-box'
 }
 
 export const HStack = (props: StackProps) => {
-  const style = {...defHStackProps, ...props}
+  const style = { ...defHStackProps, ...props }
 
   switch (props.halign) {
     case 'left':
-      style["justifyContent"] = "flex-start";
-      break;
-    case "center":
-      style["justifyContent"] = "center";
-      break;
+      style.justifyContent = 'flex-start'
+      break
+    case 'center':
+      style.justifyContent = 'center'
+      break
     case 'right':
-      style["justifyContent"] = "flex-end";
-      break;
+      style.justifyContent = 'flex-end'
+      break
   }
 
   switch (props.valign) {
     case 'top':
-      style["alignItems"] = "flex-start";
-      break;
-    case "center":
-      style["alignItems"] = "center";
-      break;
+      style.alignItems = 'flex-start'
+      break
+    case 'center':
+      style.alignItems = 'center'
+      break
     case 'base':
-      style["alignItems"] = "baseline";
-      break;
+      style.alignItems = 'baseline'
+      break
     case 'bottom':
-      style["alignItems"] = "flex-end";
-      break;
+      style.alignItems = 'flex-end'
+      break
     case 'stretch':
-      style["alignItems"] = "stretch";
-      break;
+      style.alignItems = 'stretch'
+      break
   }
 
-  if (props.hasOwnProperty("className"))
+  if ('className' in props) {
     return <div id={props.id}
-                className={props.className + " " + buildClassName(style)}
+                className={props.className + ' ' + buildClassName(style)}
                 onClick={props.onClick}
                 onMouseDown={props.onMouseDown}
                 onDoubleClick={props.onDoubleClick}>
       {props.children}
     </div>
-  else
+  } else {
     return <div id={props.id}
                 className={buildClassName(style)}
                 onClick={props.onClick}
                 onMouseDown={props.onMouseDown}
                 onDoubleClick={props.onDoubleClick}>
       {props.children}</div>
+  }
 }
 
 export const StylableContainer = (props: ClickableComponentProps) => {
-  const style = {"boxSizing": "border-box", ...props}
-  const className = props.hasOwnProperty("className") ? props.className + " " + buildClassName(style) : buildClassName(style)
+  const style = { boxSizing: 'border-box', ...props }
+  const className = 'className' in props ? props.className + ' ' + buildClassName(style) : buildClassName(style)
   return <div id={props.id}
               key={props.key}
               className={className}
@@ -160,22 +162,21 @@ export const StylableContainer = (props: ClickableComponentProps) => {
 * */
 
 export interface LabelProps extends StylableComponentProps {
-  fontFamily?: string,
-  fontSize?: string,
-  fontWeight?: string,
-  title?: string,
-  textAlign?: "left" | "right" | "center",
-  textDecoration?: "none" | "underline",
-  whiteSpace?: "normal" | "pre" | "pre-wrap" | "nowrap"
-  textTransform?: "none" | "uppercase" | "capitalize" | "lowercase"
+  fontFamily?: string
+  fontSize?: string
+  fontWeight?: string
+  title?: string
+  textAlign?: 'left' | 'right' | 'center'
+  textDecoration?: 'none' | 'underline'
+  whiteSpace?: 'normal' | 'pre' | 'pre-wrap' | 'nowrap'
+  textTransform?: 'none' | 'uppercase' | 'capitalize' | 'lowercase'
 }
 
 export const Label = (props: LabelProps) => {
-  if (props.hasOwnProperty("visible") && !props.visible) return <></>
+  if ('visible' in props && !props.visible) return <></>
 
-  if (props.hasOwnProperty("className"))
-    return <p className={props.className + " " + buildClassName(props)}>{props.title || props.children}</p>
-  return <p className={buildClassName(props)}>{props.title || props.children}</p>
+  if ('className' in props) { return <p className={props.className + ' ' + buildClassName(props)}>{props.title ?? props.children}</p> }
+  return <p className={buildClassName(props)}>{props.title ?? props.children}</p>
 }
 
 /*
@@ -185,44 +186,44 @@ export const Label = (props: LabelProps) => {
 * */
 
 interface InputProps extends StylableComponentProps {
-  type: "text" | "number" | "password" | "email",
-  theme: Theme,
-  text?: string,
-  title?: string,
-  caretColor?: string,
-  placeHolder?: string,
-  onChange?: (value: string) => void | undefined,
-  onSubmitted?: () => void | undefined
-  autoFocus?: boolean,
-  focusState?: (state: StylableComponentProps) => void,
+  type: 'text' | 'number' | 'password' | 'email'
+  theme: Theme
+  text?: string
+  title?: string
+  caretColor?: string
+  placeHolder?: string
+  onChange?: ((value: string) => void) | undefined
+  onSubmitted?: (() => void) | undefined
+  autoFocus?: boolean
+  focusState?: (state: StylableComponentProps) => void
 }
 
 const defInputProps = (theme: Theme): any => {
   return {
-    "width": "100%",
-    "height": "35px",
-    "caretColor": theme.caretColor,
-    "textColor": theme.text75,
-    "bgColor": theme.inputBg,
-    "padding": "5px",
-    "border": ["1px", "solid", theme.inputBorder],
-    "focusState": (state: StylableComponentProps) => {
+    width: '100%',
+    height: '35px',
+    caretColor: theme.caretColor,
+    textColor: theme.text75,
+    bgColor: theme.inputBg,
+    padding: '5px',
+    border: ['1px', 'solid', theme.inputBorder],
+    focusState: (state: StylableComponentProps) => {
       state.textColor = theme.text
-      state.border = ["1px", "solid", theme.inputBorderFocused]
-    },
+      state.border = ['1px', 'solid', theme.inputBorderFocused]
+    }
   }
 }
 
 export const Input = (props: InputProps) => {
-  console.log("new Input")
-  const customProps = {...defInputProps(props.theme), ...props}
+  console.log('new Input')
+  const customProps = { ...defInputProps(props.theme), ...props }
 
   const onKeyDown = (e: any) => {
-    //Enter key
+    // Enter key
     if (e.keyCode === 13 && !e.shiftKey) {
       e.preventDefault()
       e.stopPropagation()
-      customProps.onSubmitted && customProps.onSubmitted()
+      customProps.onSubmitted?.()
     }
   }
 
@@ -231,17 +232,17 @@ export const Input = (props: InputProps) => {
       const timeout = setTimeout(() => {
         input.focus()
       }, 0)
-      return () => clearTimeout(timeout);
+      return () => { clearTimeout(timeout) }
     }
-  }, [customProps.autoFocus]);
+  }, [customProps.autoFocus])
 
-  const className = customProps.hasOwnProperty("className") ? customProps.className + " " + buildClassName(customProps) : buildClassName(customProps)
+  const className = 'className' in customProps ? customProps.className + ' ' + buildClassName(customProps) : buildClassName(customProps)
 
   return (
     <VStack halign="left" valign="top" gap="0"
             width="100%">
       <Label fontSize="9px"
-             title={customProps.title || "TITLE"}
+             title={customProps.title || 'TITLE'}
              width="100%"
              textTransform="uppercase"
              textColor="#888888"/>
@@ -254,7 +255,7 @@ export const Input = (props: InputProps) => {
              type={customProps.type}
              defaultValue={customProps.text}
              onChange={e => {
-               customProps.onChange && customProps.onChange(e.currentTarget.value)
+               customProps.onChange?.(e.currentTarget.value)
              }}
              onKeyDown={onKeyDown}/>
     </VStack>
@@ -262,43 +263,43 @@ export const Input = (props: InputProps) => {
 }
 
 interface TextAreaProps extends StylableComponentProps {
-  theme: Theme,
-  text?: string,
-  caretColor?: string,
-  onApply?: (value: string) => void | undefined,
-  onCancel?: () => void | undefined
-  autoFocus?: boolean,
-  selectAll?: boolean,
-  focusState?: (state: StylableComponentProps) => void,
+  theme: Theme
+  text?: string
+  caretColor?: string
+  onApply?: ((value: string) => void) | undefined
+  onCancel?: (() => void) | undefined
+  autoFocus?: boolean
+  selectAll?: boolean
+  focusState?: (state: StylableComponentProps) => void
 }
 
 const defTextAreaProps = (theme: Theme): any => {
   return {
-    "width": "100%",
-    "caretColor": theme.caretColor,
-    "textColor": theme.textGreen,
-    "border": ["1px", "solid", theme.border],
-    "cornerRadius": "10px",
-    "animate": "border-left 300ms",
-    "borderLeft": ["6px", "solid", theme.inputBorder],
-    "focusState": (state: StylableComponentProps) => {
-      state.borderLeft = ["6px", "solid", theme.red]
+    width: '100%',
+    caretColor: theme.caretColor,
+    textColor: theme.textGreen,
+    border: ['1px', 'solid', theme.border],
+    cornerRadius: '10px',
+    animate: 'border-left 300ms',
+    borderLeft: ['6px', 'solid', theme.inputBorder],
+    focusState: (state: StylableComponentProps) => {
+      state.borderLeft = ['6px', 'solid', theme.red]
       state.bgColor = theme.inputBg
     }
   }
 }
 
 export const TextArea = (props: TextAreaProps) => {
-  const customProps = {...defTextAreaProps(props.theme), ...props}
-  const [value, setValue] = useState(props.text || "");
-  const [width, height] = useWindowSize();
+  const customProps = { ...defTextAreaProps(props.theme), ...props }
+  const [value, setValue] = useState(props.text ?? '')
+  const [width, height] = useWindowSize()
 
-  const ta = useRef<HTMLTextAreaElement>(null);
+  const ta = useRef<HTMLTextAreaElement>(null)
 
   const adjustScroller = () => {
-    if (ta && ta.current) {
-      ta.current.style.height = "inherit";
-      ta.current.style.height = `${ta.current.scrollHeight + 5}px`;
+    if (ta?.current) {
+      ta.current.style.height = 'inherit'
+      ta.current.style.height = `${ta.current.scrollHeight + 5}px`
     }
   }
 
@@ -312,21 +313,21 @@ export const TextArea = (props: TextAreaProps) => {
   }, [width, height])
 
   const onKeyDown = (e: any) => {
-    //Enter key
+    // Enter key
     if (e.keyCode === 13 && !e.shiftKey) {
       e.preventDefault()
       e.stopPropagation()
-      props.onApply && props.onApply(value)
+      props.onApply?.(value)
     }
-    //ESC key
+    // ESC key
     if (e.keyCode === 27) {
       e.preventDefault()
       e.stopPropagation()
-      props.onCancel && props.onCancel()
+      props.onCancel?.()
     }
   }
 
-  const className = props.hasOwnProperty("className") ? props.className + " " + buildClassName(customProps) : buildClassName(customProps)
+  const className = 'className' in props ? props.className + ' ' + buildClassName(customProps) : buildClassName(customProps)
 
   return <textarea className={className}
                    value={value}
@@ -345,38 +346,38 @@ export const TextArea = (props: TextAreaProps) => {
 * */
 
 interface ButtonProps extends StylableComponentProps {
-  title?: string,
-  popUp?: string,
-  onClick?: () => void,
+  title?: string
+  popUp?: string
+  onClick?: () => void
 }
 
 export const Button = (props: ButtonProps) => {
-  if (props.hasOwnProperty("visible") && !props.visible) return <></>
+  if ('visible' in props && !props.visible) return <></>
 
-  const className = props.hasOwnProperty("className") ? props.className + " " + buildClassName(props) : buildClassName(props)
+  const className = 'className' in props ? props.className + ' ' + buildClassName(props) : buildClassName(props)
 
   return <button className={className}
                  title={props.popUp}
                  onClick={(e) => {
                    if (!props.disabled) {
                      e.stopPropagation()
-                     props.onClick && props.onClick()
+                     props.onClick?.()
                    }
-                 }}>{props.title || props.children}</button>
+                 }}>{props.title ?? props.children}</button>
 }
 
 interface RedButtonProps {
-  title: string,
-  theme: Theme,
-  visible?: boolean,
-  disabled?: boolean,
-  isSelected?: boolean,
-  hideBg?: boolean,
-  onClick?: () => void,
+  title: string
+  theme: Theme
+  visible?: boolean
+  disabled?: boolean
+  isSelected?: boolean
+  hideBg?: boolean
+  onClick?: () => void
 }
 
 export const RedButton = (props: RedButtonProps) => {
-  if (props.hasOwnProperty("visible") && !props.visible) return <></>
+  if ('visible' in props && !props.visible) return <></>
 
   if (props.disabled) {
     return <Button title={props.title}
@@ -385,7 +386,7 @@ export const RedButton = (props: RedButtonProps) => {
                    disabled/>
   }
 
-  const isSelected = props.hasOwnProperty("isSelected") && props.isSelected
+  const isSelected = 'isSelected' in props && props.isSelected
   if (props.theme.isDark) {
     if (props.hideBg) {
       return <Button title={props.title}
@@ -410,7 +411,7 @@ export const RedButton = (props: RedButtonProps) => {
   if (props.hideBg) {
     return <Button title={props.title}
                    textColor={isSelected ? props.theme.white : props.theme.red}
-                   bgColor={isSelected ? props.theme.red : "0"}
+                   bgColor={isSelected ? props.theme.red : '0'}
                    paddingHorizontal="10px"
                    hoverState={state => {
                      state.textColor = props.theme.white
@@ -423,20 +424,20 @@ export const RedButton = (props: RedButtonProps) => {
                  textColor={props.theme.white}
                  bgColor={props.theme.red}
                  paddingHorizontal="10px"
-                 opacity={isSelected ? "100%" : "85%"}
+                 opacity={isSelected ? '100%' : '85%'}
                  hoverState={state => {
-                   state.opacity = "100%"
+                   state.opacity = '100%'
                  }
                  }
                  onClick={props.onClick}/>
 }
 
-export const Switch = ({theme, isSelected, onClick}: { theme: Theme, isSelected: boolean, onClick: () => void }) => {
+export const Switch = ({ theme, isSelected, onClick }: { theme: Theme, isSelected: boolean, onClick: () => void }) => {
   return <StylableContainer width="40px"
                             height="24px">
     <Button title=""
             border="none"
-            bgColor={isSelected ? theme.red : "#727a86"}
+            bgColor={isSelected ? theme.red : '#727a86'}
             width="40px"
             height="24px"
             minHeight="24px"
@@ -453,43 +454,42 @@ export const Switch = ({theme, isSelected, onClick}: { theme: Theme, isSelected:
             cornerRadius="20px"
             bgColor={theme.appBg}
             top="2px"
-            left={isSelected ? "18px" : "2px"}
+            left={isSelected ? '18px' : '2px'}
             animate="left 300ms"
             relative
             onClick={onClick}/>
   </StylableContainer>
 }
 
-
 type IconType =
-  "sun"
-  | "moon"
-  | "down"
-  | "up"
-  | "scrollBack"
-  | "nextPage"
-  | "prevPage"
-  | "close"
-  | "menu"
-  | "plus"
-  | "delete"
-  | "edit"
+  'sun'
+  | 'moon'
+  | 'down'
+  | 'up'
+  | 'scrollBack'
+  | 'nextPage'
+  | 'prevPage'
+  | 'close'
+  | 'menu'
+  | 'plus'
+  | 'delete'
+  | 'edit'
 
 interface IconButtonProps {
-  icon: IconType,
-  theme: Theme,
-  popUp: string,
-  visible?: boolean,
-  disabled?: boolean,
-  hideBg?: boolean,
-  onClick?: () => void,
+  icon: IconType
+  theme: Theme
+  popUp: string
+  visible?: boolean
+  disabled?: boolean
+  hideBg?: boolean
+  onClick?: () => void
 }
 
 export const IconButton = observer((props: IconButtonProps) => {
-  if (props.hasOwnProperty("visible") && !props.visible) return <></>
+  if ('visible' in props && !props.visible) return <></>
 
   if (props.disabled) {
-    return <Button className={"icon-" + props.icon}
+    return <Button className={'icon-' + props.icon}
                    popUp={props.popUp}
                    textColor={props.theme.text75}
                    disabled/>
@@ -497,7 +497,7 @@ export const IconButton = observer((props: IconButtonProps) => {
 
   if (props.theme.isDark) {
     if (props.hideBg) {
-      return <Button className={"icon-" + props.icon}
+      return <Button className={'icon-' + props.icon}
                      popUp={props.popUp}
                      textColor={props.theme.red}
                      hoverState={state => {
@@ -506,7 +506,7 @@ export const IconButton = observer((props: IconButtonProps) => {
                      onClick={props.onClick}/>
     }
 
-    return <Button className={"icon-" + props.icon}
+    return <Button className={'icon-' + props.icon}
                    popUp={props.popUp}
                    textColor={props.theme.red}
                    bgColor={props.theme.border}
@@ -517,7 +517,7 @@ export const IconButton = observer((props: IconButtonProps) => {
   }
 
   if (props.hideBg) {
-    return <Button className={"icon-" + props.icon}
+    return <Button className={'icon-' + props.icon}
                    popUp={props.popUp}
                    textColor={props.theme.red}
                    hoverState={state => {
@@ -528,17 +528,16 @@ export const IconButton = observer((props: IconButtonProps) => {
                    onClick={props.onClick}/>
   }
 
-  return <Button className={"icon-" + props.icon}
+  return <Button className={'icon-' + props.icon}
                  popUp={props.popUp}
                  textColor={props.theme.white}
                  bgColor={props.theme.red}
                  opacity="85%"
                  hoverState={state => {
-                   state.opacity = "100%"
+                   state.opacity = '100%'
                  }}
                  onClick={props.onClick}/>
 })
-
 
 /*
 *
@@ -547,14 +546,14 @@ export const IconButton = observer((props: IconButtonProps) => {
 * */
 
 interface DropDownProps extends StylableComponentProps {
-  isOpened: boolean,
-  onClose: () => void | undefined
+  isOpened: boolean
+  onClose?: (() => void) | undefined
 }
 
 export const DropDownContainer = (props: DropDownProps) => {
   useEffect(() => {
     const close = () => {
-      props.onClose && props.onClose()
+      props.onClose?.()
       window.removeEventListener('mousedown', close)
     }
 
@@ -570,11 +569,11 @@ export const DropDownContainer = (props: DropDownProps) => {
   }, [props.isOpened])
 
   if (props.isOpened) {
-    const p = {"absolute": "true", "top": "50px", ...props}
-    const className = p.hasOwnProperty("className") ? p.className + " " + buildClassName(p) : buildClassName(p)
+    const p = { absolute: 'true', top: '50px', ...props }
+    const className = 'className' in p ? p.className + ' ' + buildClassName(p) : buildClassName(p)
     return (
       <div className={className}
-           onMouseDown={e => e.stopPropagation()}>
+           onMouseDown={e => { e.stopPropagation() }}>
         {props.children}
       </div>
     )
@@ -590,18 +589,18 @@ export const DropDownContainer = (props: DropDownProps) => {
 * */
 
 interface ImageProps extends StackProps {
-  src: string,
+  src: string
 }
 
 export const Image = (props: ImageProps) => {
-  if (props.hasOwnProperty("visible") && !props.visible) return <></>
-  const className = props.hasOwnProperty("className") ? props.className + " " + buildClassName(props) : buildClassName(props)
+  if ('visible' in props && !props.visible) return <></>
+  const className = 'className' in props ? props.className + ' ' + buildClassName(props) : buildClassName(props)
 
-  let imgClassName = undefined
-  if (props.hasOwnProperty("width") || props.hasOwnProperty("height")) {
+  let imgClassName
+  if ('width' in props || 'height' in props) {
     const style: StylableComponentProps = {}
-    if (props.hasOwnProperty("width")) style.width = props.width
-    if (props.hasOwnProperty("height")) style.height = props.height
+    if ('width' in props) style.width = props.width
+    if ('height' in props) style.height = props.height
     imgClassName = buildClassName(style)
   }
 
@@ -619,11 +618,11 @@ export const Image = (props: ImageProps) => {
 * */
 
 interface HSeparatorProps {
-  theme: Theme,
-  visible?: boolean,
-  width?: string,
-  marginHorizontal?: string,
-  marginVertical?: string,
+  theme: Theme
+  visible?: boolean
+  width?: string
+  marginHorizontal?: string
+  marginVertical?: string
 }
 
 export const HSeparator = (props: HSeparatorProps) => {
@@ -640,18 +639,18 @@ export const HSeparator = (props: HSeparatorProps) => {
     style.marginBottom = props.marginVertical
   }
   style.bgColor = props.theme.border
-  style.height = "1px"
-  style.maxHeight = "1px"
+  style.height = '1px'
+  style.maxHeight = '1px'
 
   return <div className={buildClassName(style)}/>
 }
 
 interface VSeparatorProps {
-  theme: Theme,
-  visible?: boolean,
-  height?: string,
-  marginHorizontal?: string,
-  marginVertical?: string,
+  theme: Theme
+  visible?: boolean
+  height?: string
+  marginHorizontal?: string
+  marginVertical?: string
 }
 
 export const VSeparator = (props: VSeparatorProps) => {
@@ -668,8 +667,8 @@ export const VSeparator = (props: VSeparatorProps) => {
     style.marginBottom = props.marginVertical
   }
   style.bgColor = props.theme.border
-  style.width = "1px"
-  style.maxWidth = "1px"
+  style.width = '1px'
+  style.maxWidth = '1px'
 
   return <div className={buildClassName(style)}/>
 }
@@ -681,16 +680,16 @@ export const VSeparator = (props: VSeparatorProps) => {
 * */
 
 interface SpacerProps {
-  width?: string,
-  height?: string,
-  visible?: boolean,
+  width?: string
+  height?: string
+  visible?: boolean
 }
 
-export const Spacer = ({width, height, visible = true}: SpacerProps) => {
-  if (visible === false) return <></>
+export const Spacer = ({ width, height, visible = true }: SpacerProps) => {
+  if (!visible) return <></>
 
   const style: any = {}
-  style.flexGrow = 1;
+  style.flexGrow = 1
 
   if (width !== undefined) {
     style.width = width
@@ -704,5 +703,5 @@ export const Spacer = ({width, height, visible = true}: SpacerProps) => {
     style.maxHeight = height
   }
 
-  return <div className={"spacer " + buildClassName(style)}/>
+  return <div className={'spacer ' + buildClassName(style)}/>
 }

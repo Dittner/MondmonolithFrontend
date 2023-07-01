@@ -1,46 +1,46 @@
-import React, {useEffect} from "react";
-import {useLocation} from "react-router-dom";
-import {DocList} from "./DocList";
-import {observer} from "mobx-react";
-import {useDocsContext} from "../../App";
-import {DocBody} from "./DocBody";
-import {DocTopics} from "./DocTopics";
-import {Header} from "./Header";
-import {AppSize, LayoutLayer} from "../application/Application";
-import {HStack, Label, RedButton, StylableContainer, VStack} from "../application/NoCSSComponents";
+import React, { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+import { DocList } from './DocList'
+import { observer } from 'mobx-react'
+import { useDocsContext } from '../../App'
+import { DocBody } from './DocBody'
+import { DocTopics } from './DocTopics'
+import { Header } from './Header'
+import { AppSize, LayoutLayer } from '../application/Application'
+import { HStack, Label, RedButton, StylableContainer, VStack } from '../application/NoCSSComponents'
 
-export const DocsView = observer(() => {
-  console.log("DocsView init");
-  const {docsLoader, app} = useDocsContext()
+export const DocsPage = observer(() => {
+  console.log('DocsView init')
+  const { docsLoader, app } = useDocsContext()
   const drawLayoutLines = false
 
   useEffect(() => {
     docsLoader.fetchDirectories()
   })
 
-  const {pathname, hash, key} = useLocation()
+  const { pathname, hash, key } = useLocation()
 
   useEffect(() => {
-    app.isDocListShown = false
-  }, [pathname]);
+    app.hideDocList()
+  }, [pathname])
 
   useEffect(() => {
     if (hash === '') {
-      window.scrollTo(0, 0);
+      window.scrollTo(0, 0)
     } else {
       setTimeout(() => {
-        const element = document.getElementById(hash);
+        const element = document.getElementById(hash)
         if (element) {
           const elementPos = Math.round(element.getBoundingClientRect().top + document.documentElement.scrollTop)
-          //element.scrollIntoView();
-          console.log("elementPos=", elementPos);
-          window.scrollTo(0, elementPos < 100 ? 0 : elementPos - 50);
+          // element.scrollIntoView();
+          console.log('elementPos=', elementPos)
+          window.scrollTo(0, elementPos < 100 ? 0 : elementPos - 50)
         }
       }, 0)
     }
-  }, [pathname, hash, key]); // do this on route change
+  }, [pathname, hash, key]) // do this on route change
 
-  const headerHeight = "50px"
+  const headerHeight = '50px'
 
   if (app.size === AppSize.L) {
     return (
@@ -70,7 +70,7 @@ export const DocsView = observer(() => {
                    top={headerHeight}
                    bottom="0"
                    enableOwnScroller
-                   borderLeft={["1px", "solid", app.theme.border]}
+                   borderLeft={['1px', 'solid', app.theme.border]}
                    fixed/>
         <ModalView/>
 
@@ -139,7 +139,6 @@ export const DocsView = observer(() => {
         </>
         }
 
-
       </>
     )
   }
@@ -150,10 +149,10 @@ export const DocsView = observer(() => {
               height={headerHeight}
               top="0"
               left="0"
-              layer={LayoutLayer.HEADER} //z-Index
+              layer={LayoutLayer.HEADER} // z-Index
               fixed/>
 
-      <DocList left={app.isDocListShown ? "0" : "-300px"}
+      <DocList left={app.isDocListShown ? '0' : '-300px'}
                width="300px"
                height="100vh"
                layer={LayoutLayer.DOC_LIST}
@@ -185,14 +184,12 @@ export const DocsView = observer(() => {
       }
     </>
   )
-
-
 })
 
 export const ModalView = observer(() => {
-  console.log("new ModalView")
+  console.log('new ModalView')
 
-  const {app} = useDocsContext()
+  const { app } = useDocsContext()
 
   const apply = () => {
     if (app.infoDialog) {
@@ -210,8 +207,7 @@ export const ModalView = observer(() => {
     }
   }
 
-  if (!app.yesNoDialog && !app.infoDialog)
-    return <></>
+  if (!app.yesNoDialog && !app.infoDialog) { return <></> }
 
   return <VStack halign="center"
                  valign="center"

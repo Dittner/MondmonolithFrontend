@@ -1,11 +1,10 @@
-import {DocsContext} from "../DocsContext";
-import {Directory, Doc} from "./DomainModel";
-import {UUID} from "../infrastructure/UIDGenerator";
-import {action} from "mobx";
-
+import { type DocsContext } from '../DocsContext'
+import { Directory, Doc } from './DomainModel'
+import { UUID } from '../infrastructure/UIDGenerator'
+import { action } from 'mobx'
 
 export class DomainService {
-  private context: DocsContext
+  private readonly context: DocsContext
 
   constructor(context: DocsContext) {
     this.context = context
@@ -36,8 +35,7 @@ export class DomainService {
       while (dir.docs.length > 0) {
         const removingDoc = dir.docs[0]
         const doc = dir.remove(removingDoc)
-        if (doc)
-          destDir.add(doc)
+        if (doc) { destDir.add(doc) }
       }
     } else {
       dir.title = newDirTitle

@@ -1,61 +1,62 @@
-import {action, computed, makeObservable, observable, runInAction} from 'mobx';
-import {UUID} from "../infrastructure/UIDGenerator";
+import { action, computed, makeObservable, observable, runInAction } from 'mobx'
+import { UUID } from '../infrastructure/UIDGenerator'
 
 export enum AuthStatus {
-  SIGNED_OUT = "SIGNED_OUT",
-  AUTHORIZING = "AUTHORIZING",
-  AUTHORIZED = "AUTHORIZED",
+  SIGNED_OUT = 'SIGNED_OUT',
+  AUTHORIZING = 'AUTHORIZING',
+  AUTHORIZED = 'AUTHORIZED',
 }
 
 interface Serializable {
-  serialize(): Object
+  serialize: () => any
 }
 
 export class User {
   readonly uid: string
-  @observable login: string = "demo"
-  @observable pwd: string = "pwd"
+  @observable login: string = 'demo'
+  @observable pwd: string = 'pwd'
   @observable authStatus: AuthStatus = AuthStatus.SIGNED_OUT
-  @observable authWithError: string = ""
+  @observable authWithError: string = ''
 
   constructor() {
     this.uid = UUID()
-    if (window.localStorage.getItem("authStatus") === "authorized")
-      this.authStatus = AuthStatus.AUTHORIZED
+    if (window.localStorage.getItem('authStatus') === 'authorized') { this.authStatus = AuthStatus.AUTHORIZED }
     makeObservable(this)
   }
 
   @action signIn(login: string, pwd: string) {
-    console.log("signIn()")
+    console.log('signIn()')
     if (!login) {
-      this.authWithError = "Login is not filled!"
+      this.authWithError = 'Login is not filled!'
       return
     }
     if (!pwd) {
-      this.authWithError = "Password is not filled!"
+      this.authWithError = 'Password is not filled!'
       return
     }
 
     this.authStatus = AuthStatus.AUTHORIZING
-    this.authWithError = ""
-    setTimeout(()=> runInAction(() => {
+    this.authWithError = ''
+    setTimeout(() => {
+      runInAction(() => {
         if (login === 'demo' && pwd === 'pwd') {
           this.authStatus = AuthStatus.AUTHORIZED
-          window.localStorage.setItem("authStatus", "authorized")
+          window.localStorage.setItem('authStatus', 'authorized')
           this.login = login
           this.pwd = pwd
         } else {
-          this.authWithError = "Invalid login or password!"
+          this.authWithError = 'Invalid login or password!'
           this.authStatus = AuthStatus.SIGNED_OUT
         }
-      }), 1000)
+      })
+    }, 1000)
   }
 
   @action signOut() {
-    console.log("signOut()")
+    console.log('signOut()')
     if (this.authStatus === AuthStatus.AUTHORIZED) {
       this.authStatus = AuthStatus.SIGNED_OUT
-      window.localStorage.setItem("authStatus", "signedOut")
+      window.localStorage.setItem('authStatus', 'signedOut')
     }
   }
 }
@@ -68,11 +69,11 @@ export class EditTools {
   constructor() {
     this.uid = UUID()
     makeObservable(this)
-    document.addEventListener("keydown", this.onKeyDown.bind(this))
+    document.addEventListener('keydown', this.onKeyDown.bind(this))
   }
 
   private onKeyDown(e: any) {
-    //Enter key
+    // Enter key
     if (this.editMode && e.keyCode === 13 && this.selectedItem && !this.selectedItem.isEditing) {
       e.preventDefault()
       e.stopPropagation()
@@ -83,6 +84,10 @@ export class EditTools {
   @action toggleEditMode() {
     this.editMode = !this.editMode
   }
+
+  @action select(item: Page | PageBlock | undefined) {
+    this.selectedItem = item
+  }
 }
 
 export class Directory {
@@ -90,8 +95,8 @@ export class Directory {
   @observable title: string
   @observable isEditing: boolean = false
   @observable isStoring: boolean = false
-  @observable storeWithError: string = ""
-  @observable readonly docs: Doc[] = [];
+  @observable storeWithError: string = ''
+  @observable readonly docs: Doc[] = []
 
   constructor(uid: string, title: string) {
     this.uid = uid
@@ -129,9 +134,9 @@ export class Directory {
 }
 
 export enum DocLoadStatus {
-  HEADER_LOADED = "HEADER_LOADED",
-  LOADING = "LOADING",
-  LOADED = "LOADED",
+  HEADER_LOADED = 'HEADER_LOADED',
+  LOADING = 'LOADING',
+  LOADED = 'LOADED',
 }
 
 export class Doc implements Serializable {
@@ -139,8 +144,8 @@ export class Doc implements Serializable {
   @observable isEditing: boolean = false
   @observable isStoring: boolean = false
   @observable title: string
-  @observable storeWithError: string = ""
-  @observable loadWithError: string = ""
+  @observable storeWithError: string = ''
+  @observable loadWithError: string = ''
   @observable loadStatus: DocLoadStatus = DocLoadStatus.HEADER_LOADED
   @observable dir: Directory | undefined
 
@@ -157,12 +162,12 @@ export class Doc implements Serializable {
 
   init(pages: Page[]): void {
     if (this.pages.length === 0) {
-      this._pages = pages.sort(sortByKey("title"))
+      this._pages = pages.sort(sortByKey('title'))
       this._pages.forEach(p => p.doc = this)
     }
   }
 
-  serialize(): Object {
+  serialize(): any {
     return {
       uid: this.uid,
       title: this.title,
@@ -181,7 +186,7 @@ export class Doc implements Serializable {
   }
 
   @action createPage(): void {
-    const p = new Page(UUID(), "TITLE")
+    const p = new Page(UUID(), 'TITLE')
     p.doc = this
     p.isEditing = true
     this.pages.unshift(p)
@@ -197,10 +202,10 @@ export class Doc implements Serializable {
 
   @action destroy(): void {
     this.dir = undefined
-    this.pages.forEach(p => p.destroy())
+    this.pages.forEach(p => { p.destroy() })
   }
 
-  @action send(storeWithError:string, loadStatus:DocLoadStatus): void {
+  @action send(storeWithError: string, loadStatus: DocLoadStatus): void {
     this.storeWithError = storeWithError
     this.loadStatus = loadStatus
   }
@@ -210,12 +215,12 @@ const strToHashId = filterCharacters()
 
 function filterCharacters() {
   const cache = new Map<string, string>()
-  const notAllowedSymbols = /[^a-z0-9а-я\-_]+/g;
+  const notAllowedSymbols = /[^a-z0-9а-я\-_]+/g
   return (str: string) => {
     const key = str
     const value = cache.get(key)
     if (value) return value
-    const res = key.toLowerCase().replaceAll(/ |\./g, '-').replace(notAllowedSymbols, '');
+    const res = key.toLowerCase().replaceAll(/ |\./g, '-').replace(notAllowedSymbols, '')
     cache.set(key, '#' + res)
     return '#' + res
   }
@@ -225,7 +230,7 @@ export class Page implements Serializable {
   readonly uid: string
   @observable isStoring: boolean = false
   @observable title: string
-  @observable storeWithError: string = ""
+  @observable storeWithError: string = ''
   @observable doc: Doc | undefined
   @observable isEditing: boolean = false
 
@@ -238,8 +243,6 @@ export class Page implements Serializable {
     this.uid = uid
     this.title = title
     makeObservable(this)
-
-
   }
 
   init(blocks: PageBlock[]): void {
@@ -249,7 +252,7 @@ export class Page implements Serializable {
     }
   }
 
-  serialize(): Object {
+  serialize(): any {
     return {
       uid: this.uid,
       title: this.title,
@@ -267,7 +270,7 @@ export class Page implements Serializable {
   }
 
   @action createAndAddBlock(atIndex: number = 0): void {
-    const block = new PageBlock(UUID(), "_New Block_")
+    const block = new PageBlock(UUID(), '_New Block_')
     block.page = this
     if (atIndex === 0) {
       this.blocks.unshift(block)
@@ -304,17 +307,17 @@ export class Page implements Serializable {
 
   @action destroy(): void {
     this.doc = undefined
-    this.blocks.forEach(b => b.destroy())
+    this.blocks.forEach(b => { b.destroy() })
   }
 }
 
 export class PageBlock implements Serializable {
   readonly uid: string
 
-  @observable _text: string = ""
-  get text():string {return this._text}
-  set text(value:string) {
-    if(value !== this._text) {
+  @observable _text: string = ''
+  get text(): string { return this._text }
+  set text(value: string) {
+    if (value !== this._text) {
       this._text = value
       this._estimatedRowNum = Math.max(value.length / 100, value.split(/\r\n|\r|\n/).length)
     }
@@ -322,8 +325,8 @@ export class PageBlock implements Serializable {
 
   @observable isEditing: boolean = false
   @observable page: Page | undefined
-  private _estimatedRowNum:number = 0
-  get estimatedRowNum():number {return this._estimatedRowNum}
+  private _estimatedRowNum: number = 0
+  get estimatedRowNum(): number { return this._estimatedRowNum }
 
   constructor(uid: string, text: string) {
     this.uid = uid
@@ -331,8 +334,8 @@ export class PageBlock implements Serializable {
     makeObservable(this)
   }
 
-  serialize(): Object {
-    return {uid: this.uid, text: this.text}
+  serialize(): any {
+    return { uid: this.uid, text: this.text }
   }
 
   @action destroy(): void {
@@ -342,8 +345,8 @@ export class PageBlock implements Serializable {
 
 const sortByKey = (key: string) => {
   return (a: any, b: any) => {
-    if (a[key] < b[key]) return -1;
-    if (a[key] > b[key]) return 1;
+    if (a[key] < b[key]) return -1
+    if (a[key] > b[key]) return 1
     return 0
   }
 }

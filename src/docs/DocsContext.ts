@@ -1,22 +1,22 @@
-import {action, autorun, makeObservable, observable} from 'mobx';
-import {AuthStatus, Directory, Doc, EditTools, User} from "./domain/DomainModel";
-import {DomainService} from "./domain/DomainService";
-import {UUID} from "./infrastructure/UIDGenerator";
-import {DemoDocsRepo, DocsLoader} from "./infrastructure/loader/DocsLoader";
-import {DocsParser, DocsParserV1} from "./infrastructure/parser/DocsParser";
-import {Application} from "./application/Application";
+import { action, autorun, makeObservable, observable } from 'mobx'
+import { AuthStatus, type Directory, type Doc, EditTools, User } from './domain/DomainModel'
+import { DomainService } from './domain/DomainService'
+import { UUID } from './infrastructure/UIDGenerator'
+import { DemoDocsRepo, type DocsLoader } from './infrastructure/loader/DocsLoader'
+import { type DocsParser, DocsParserV1 } from './infrastructure/parser/DocsParser'
+import { Application } from './application/Application'
 
 export enum LoadStatus {
-  PENDING = "PENDING",
-  LOADING = "LOADING",
-  LOADED = "LOADED",
+  PENDING = 'PENDING',
+  LOADING = 'LOADING',
+  LOADED = 'LOADED',
 }
 
 export class DocsContext {
   readonly uid = UUID()
-  @observable readonly user: User;
-  @observable readonly editTools: EditTools;
-  @observable dirs: Directory[] = [];
+  @observable readonly user: User
+  @observable readonly editTools: EditTools
+  @observable dirs: Directory[] = []
   @observable dirsLoadStatus: LoadStatus = LoadStatus.PENDING
   @observable readonly app: Application
   readonly docsParser: DocsParser
@@ -26,7 +26,7 @@ export class DocsContext {
   static self: DocsContext
 
   static init() {
-    if (!DocsContext.self) {
+    if (DocsContext.self === undefined) {
       DocsContext.self = new DocsContext()
     }
     return DocsContext.self
@@ -45,23 +45,22 @@ export class DocsContext {
     autorun(() => {
       if (this.user.authStatus === AuthStatus.SIGNED_OUT) {
         this.editTools.editMode = false
-        this.editTools.selectedItem = undefined
+        this.editTools.select(undefined)
       }
     })
   }
 
   findDoc(predicate: (doc: Doc) => boolean): Doc | undefined {
-    for (let dir of Object.values(this.dirs)) {
-      for (let doc of Object.values(dir.docs)) {
-        if (predicate(doc))
-          return doc
+    for (const dir of Object.values(this.dirs)) {
+      for (const doc of Object.values(dir.docs)) {
+        if (predicate(doc)) { return doc }
       }
     }
     return undefined
   }
 
   @action send(dirs?: Directory[], dirsLoadStatus?: LoadStatus) {
-    if (dirs) {
+    if (dirs != null) {
       this.dirs = dirs
     }
     if (dirsLoadStatus) {

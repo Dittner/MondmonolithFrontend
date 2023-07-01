@@ -1,33 +1,33 @@
-import webpack from "webpack";
-import path from "path";
-import type {Configuration as DevServerConfiguration} from "webpack-dev-server";
-import HTMLWebpackPlugin from "html-webpack-plugin";
-import FileManagerPlugin from "filemanager-webpack-plugin";
+import webpack from 'webpack'
+import path from 'path'
+import type { Configuration as DevServerConfiguration } from 'webpack-dev-server'
+import HTMLWebpackPlugin from 'html-webpack-plugin'
+import FileManagerPlugin from 'filemanager-webpack-plugin'
 
-type BuildMode = 'production' | 'development';
+type BuildMode = 'production' | 'development'
 
 interface BuildEnv {
-  mode: BuildMode;
-  port: number;
+  mode: BuildMode
+  port: number
 }
 
 interface BuildOptions {
-  mode: BuildMode;
-  port: number;
-  isDev: boolean;
-  outputDir: string;
+  mode: BuildMode
+  port: number
+  isDev: boolean
+  outputDir: string
 }
 
 export default (env: BuildEnv) => {
   const mode = env.mode || 'development'
   const options: BuildOptions = {
-    mode: mode,
+    mode,
     port: env.port || 9000,
     isDev: mode === 'development',
     outputDir: 'build'
   }
 
-  console.log("BuildConfig:: mode=", options.mode, ", port=", options.port)
+  console.log('BuildConfig:: mode=', options.mode, ', port=', options.port)
 
   return buildConfig(options)
 }
@@ -38,34 +38,35 @@ function buildConfig(options: BuildOptions): webpack.Configuration {
     path: path.resolve(__dirname, options.outputDir),
     assetModuleFilename: path.join('images', '[name].[contenthash][ext]'),
     clean: true,
-    publicPath: "/"
+    publicPath: '/'
   }
 
   return {
     mode: options.mode,
     entry: path.resolve(__dirname, 'src', 'index.tsx'),
-    output: output,
-    module: {rules: buildLoaders(options)},
+    output,
+    module: { rules: buildLoaders(options) },
     plugins: buildPlugins(options),
     resolve: {
-      extensions: ['.tsx', '.ts', '.js'],
+      extensions: ['.tsx', '.ts', '.js']
     },
     devtool: options.isDev ? 'inline-source-map' : undefined,
-    devServer: options.isDev ? buildDevServer(options) : undefined,
+    devServer: options.isDev ? buildDevServer(options) : undefined
   }
 }
 
 function buildDevServer(options: BuildOptions): DevServerConfiguration {
   return {
     static: {
-      directory: path.join(__dirname, 'public'),
+      directory: path.join(__dirname, 'public')
     },
     watchFiles: path.join(__dirname, 'src'),
     open: true,
+    hot: true,
     historyApiFallback: {
       index: '/'
     },
-    port: options.port,
+    port: options.port
   }
 }
 
@@ -74,22 +75,22 @@ function buildLoaders(options: BuildOptions): webpack.RuleSetRule[] {
     test: /\.m?js$/,
     enforce: 'pre',
     use: ['source-map-loader', 'babel-loader'],
-    exclude: /node_modules/,
+    exclude: /node_modules/
   }
 
   const tsxLoader = {
     test: /\.tsx?$/,
     use: 'ts-loader',
-    exclude: /node_modules/,
+    exclude: /node_modules/
   }
 
   const imgLoader = {
     test: /\.(png|jpg|jpeg|gif)$/i,
-    type: 'asset/resource',
+    type: 'asset/resource'
   }
   const svgLoader = {
     test: /\.svg$/,
-    type: 'asset/resource',
+    type: 'asset/resource'
   }
 
   const cssLoader = {
@@ -97,16 +98,18 @@ function buildLoaders(options: BuildOptions): webpack.RuleSetRule[] {
     use: options.isDev ? ['style-loader', 'css-loader'] : ['style-loader', 'css-loader', 'postcss-loader']
   }
 
-  return options.isDev ? [tsxLoader, imgLoader, svgLoader, cssLoader] :
-    [jsLoader, tsxLoader, imgLoader, svgLoader, cssLoader]
+  return options.isDev
+    ? [tsxLoader, imgLoader, svgLoader, cssLoader]
+    : [jsLoader, tsxLoader, imgLoader, svgLoader, cssLoader]
 }
 
 function buildPlugins(options: BuildOptions): webpack.WebpackPluginInstance[] {
   const res = [
     new HTMLWebpackPlugin({
       template: path.resolve(__dirname, 'public', 'indexTemplate.html'),
-      filename: 'index.html',
+      filename: 'index.html'
     }),
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.ProgressPlugin()
   ]
 
@@ -114,18 +117,18 @@ function buildPlugins(options: BuildOptions): webpack.WebpackPluginInstance[] {
     res.push(new FileManagerPlugin({
       events: {
         onStart: {
-          delete: [options.outputDir],
+          delete: [options.outputDir]
         },
         onEnd: {
           copy: [
             {
               source: path.join(__dirname, 'public'),
-              destination: options.outputDir,
+              destination: options.outputDir
             }
-          ],
-        },
-      },
-    }),)
+          ]
+        }
+      }
+    }))
   }
   return res
 }

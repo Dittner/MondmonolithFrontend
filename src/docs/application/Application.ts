@@ -1,31 +1,31 @@
-import {makeObservable, observable} from "mobx";
-import {UUID} from "../infrastructure/UIDGenerator";
-import {Theme, ThemeManager} from "./ThemeManager";
+import { action, makeObservable, observable } from 'mobx'
+import { UUID } from '../infrastructure/UIDGenerator'
+import { type Theme, ThemeManager } from './ThemeManager'
 
 export enum LayoutLayer {
-  ZERO = "0",
-  ONE = "1",
-  HEADER = "10",
-  DOC_LIST = "20",
-  POPUP = "30",
-  MODAL = "40",
+  ZERO = '0',
+  ONE = '1',
+  HEADER = '10',
+  DOC_LIST = '20',
+  POPUP = '30',
+  MODAL = '40',
 }
 
 export enum AppSize {
-  XS = "XS",
-  S = "S",
-  M = "M",
-  L = "L"
+  XS = 'XS',
+  S = 'S',
+  M = 'M',
+  L = 'L'
 }
 
 export class Application {
   readonly uid
-  @observable isDocListShown = false;
-  @observable yesNoDialog: YesNoDialog | undefined = undefined;
-  @observable infoDialog: InfoDialog | undefined = undefined;
-  @observable size = AppSize.S;
-  @observable theme: Theme;
-  public readonly isMobileDevice: boolean;
+  @observable isDocListShown = false
+  @observable yesNoDialog: YesNoDialog | undefined = undefined
+  @observable infoDialog: InfoDialog | undefined = undefined
+  @observable size = AppSize.S
+  @observable theme: Theme
+  public readonly isMobileDevice: boolean
 
   private readonly themeManager: ThemeManager
 
@@ -33,9 +33,9 @@ export class Application {
     this.uid = UUID()
     this.size = this.evaluateAppSize()
     this.themeManager = new ThemeManager()
-    this.isMobileDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    this.isMobileDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0)
 
-    if (window.localStorage.getItem("theme") === "dark") {
+    if (window.localStorage.getItem('theme') === 'dark') {
       this.theme = this.themeManager.darkTheme
       this.setUpDarkTheme()
     } else {
@@ -44,32 +44,40 @@ export class Application {
     }
 
     makeObservable(this)
-    console.log("isMobileDevice: " + this.isMobileDevice)
-    console.log("localStorage, theme: " + window.localStorage.getItem("theme"))
+    console.log('isMobileDevice: ' + this.isMobileDevice)
+    console.log('localStorage, theme: ' + window.localStorage.getItem('theme'))
+  }
+
+  @action showDocList() {
+    this.isDocListShown = true
+  }
+
+  @action hideDocList() {
+    this.isDocListShown = false
   }
 
   subscribeToWindowResize(): void {
-    window.addEventListener("resize", this.updateSize.bind(this));
+    window.addEventListener('resize', this.updateSize.bind(this))
   }
 
   setUpLightTheme() {
     this.theme = this.themeManager.lightTheme
-    const html = document.querySelector('html');
+    const html = document.querySelector('html')
     if (html) {
-      html.style.colorScheme = "light"
+      html.style.colorScheme = 'light'
       html.style.backgroundColor = this.theme.appBg
     }
-    window.localStorage.setItem("theme", "light");
+    window.localStorage.setItem('theme', 'light')
   }
 
   setUpDarkTheme() {
     this.theme = this.themeManager.darkTheme
-    const html = document.querySelector('html');
+    const html = document.querySelector('html')
     if (html) {
-      html.style.colorScheme = "dark"
+      html.style.colorScheme = 'dark'
       html.style.backgroundColor = this.theme.appBg
     }
-    window.localStorage.setItem("theme", "dark");
+    window.localStorage.setItem('theme', 'dark')
   }
 
   switchTheme(): void {
@@ -77,7 +85,7 @@ export class Application {
     else this.setUpDarkTheme()
   }
 
-  private updateSize(): void {
+  @action private updateSize(): void {
     const evaluatedSize = this.evaluateAppSize()
     if (this.size !== evaluatedSize) {
       this.size = evaluatedSize
@@ -92,11 +100,10 @@ export class Application {
   }
 }
 
-
 export class YesNoDialog {
-  readonly text: string;
-  readonly onApply: () => void;
-  readonly onCancel: (() => void) | undefined;
+  readonly text: string
+  readonly onApply: () => void
+  readonly onCancel: (() => void) | undefined
 
   constructor(text: string, onApply: () => void, onCancel?: (() => void) | undefined) {
     this.text = text
@@ -106,8 +113,8 @@ export class YesNoDialog {
 }
 
 export class InfoDialog {
-  readonly title: string;
-  readonly text: string;
+  readonly title: string
+  readonly text: string
 
   constructor(title: string, text: string) {
     this.title = title

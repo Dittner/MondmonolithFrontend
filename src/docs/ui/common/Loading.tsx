@@ -1,6 +1,6 @@
-import spinner from '../../../resources/images/spinner.svg';
-import smallSpinner from '../../../resources/images/smallSpinner.svg';
-import {VStack} from "../../application/NoCSSComponents";
+import spinner from '../../../resources/images/spinner.svg'
+import smallSpinner from '../../../resources/images/smallSpinner.svg'
+import { VStack } from '../../application/NoCSSComponents'
 
 export const LoadingSpinner = () => {
   return (
@@ -13,5 +13,5 @@ export const LoadingSpinner = () => {
 export const SmallSpinner = () => {
   return (
     <img src={smallSpinner} className="smallSpinner" alt="spinner"/>
-  );
+  )
 }

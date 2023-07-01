@@ -37,7 +37,7 @@
     "isolatedModules": true,
     "noEmit": false,
     "jsx": "react-jsx",
-    "baseUrl": "."
+    //"baseUrl": "."
   },
   "ts-node": {
     "compilerOptions": {

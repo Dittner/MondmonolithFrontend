@@ -52,6 +52,7 @@ export const DocList = observer(stylable(() => {
             width="100%"
             height="100%"
             bgColor={app.theme.panelBg}>
+
       <HStack halign="center"
               valign="center"
               gap="0"
@@ -64,22 +65,24 @@ export const DocList = observer(stylable(() => {
                     hideBg
                     popUp="Switch a theme"
                     theme={app.theme}
-                    onClick={() => { app.switchTheme() }}/>
+                    onClick={() => {
+                      app.switchTheme()
+                    }}/>
 
         {docsContext.editTools.editMode &&
-        <>
+          <>
 
-          <RedButton title="New doc"
-                     theme={app.theme}
-                     hideBg
-                     onClick={() => {
-                       setIsNewDocCreating(true)
-                     }}/>
+            <RedButton title="New doc"
+                       theme={app.theme}
+                       hideBg
+                       onClick={() => {
+                         setIsNewDocCreating(true)
+                       }}/>
 
-          <HeaderVerSep/>
+            <HeaderVerSep/>
 
-          <DocPicker/>
-        </>
+            <DocPicker/>
+          </>
         }
 
         <Spacer/>
@@ -93,9 +96,9 @@ export const DocList = observer(stylable(() => {
       </HStack>
 
       {isNewDocCreating &&
-      <DocEditForm doc={null}
-                   onCancel={onCancel}
-                   onApply={onApply}/>
+        <DocEditForm doc={null}
+                     onCancel={onCancel}
+                     onApply={onApply}/>
       }
 
       {docsContext.dirs.map(dir => {
@@ -146,7 +149,9 @@ const DirectoryView = observer(({ dir }: { dir: Directory }) => {
   }
 
   const startEditing = () => {
-    if (!dir.isStoring && editTools.editMode) { dir.isEditing = true }
+    if (!dir.isStoring && editTools.editMode) {
+      dir.isEditing = true
+    }
   }
 
   if (editTools.editMode && dir.isEditing) {
@@ -202,7 +207,9 @@ const DocLink = observer((props: any) => {
   }
 
   const startEditing = () => {
-    if (!doc.isStoring && editTools.editMode && isDocSelected) { doc.isEditing = true }
+    if (!doc.isStoring && editTools.editMode && isDocSelected) {
+      doc.isEditing = true
+    }
   }
 
   const openDoc = () => {
@@ -311,7 +318,9 @@ const DirEditForm = observer((props: any) => {
   const [title, setTitle] = useState(dir.title || '')
 
   const apply = () => {
-    if (!dir.isStoring && title) { onApply(title) }
+    if (!dir.isStoring && title) {
+      onApply(title)
+    }
   }
   const cancel = () => {
     onCancel()

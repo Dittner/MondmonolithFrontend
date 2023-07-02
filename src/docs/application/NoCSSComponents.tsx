@@ -175,7 +175,9 @@ export interface LabelProps extends StylableComponentProps {
 export const Label = (props: LabelProps) => {
   if ('visible' in props && !props.visible) return <></>
 
-  if ('className' in props) { return <p className={props.className + ' ' + buildClassName(props)}>{props.text ?? props.children}</p> }
+  if ('className' in props) {
+    return <p className={props.className + ' ' + buildClassName(props)}>{props.text ?? props.children}</p>
+  }
   return <p className={buildClassName(props)}>{props.text ?? props.children}</p>
 }
 
@@ -229,10 +231,9 @@ export const Input = (props: InputProps) => {
 
   const inputRef = useCallback((input: HTMLInputElement) => {
     if (input && customProps.autoFocus) {
-      const timeout = setTimeout(() => {
+      setTimeout(() => {
         input.focus()
       }, 0)
-      return () => { clearTimeout(timeout) }
     }
   }, [customProps.autoFocus])
 
@@ -435,31 +436,25 @@ export const RedButton = (props: RedButtonProps) => {
 }
 
 export const Switch = ({ theme, isSelected, onClick }: { theme: Theme, isSelected: boolean, onClick: () => void }) => {
-  return <StylableContainer width="40px"
-                            height="24px">
-    <Button title=""
-            border="none"
-            bgColor={isSelected ? theme.red : '#727a86'}
-            width="40px"
-            height="24px"
-            minHeight="24px"
-            cornerRadius="24px"
-            absolute
-            animate="background-color 300ms"
-            onClick={onClick}/>
+  const btnWidth = '34px'
+  const btnHeight = '22px'
+  const thumbDiameter = '16px'
+  return <StylableContainer width={btnWidth}
+                            height={btnHeight}
+                            bgColor={isSelected ? theme.red : '#727a86'}
+                            cornerRadius={btnHeight}
+                            animate="background-color 300ms"
+                            btnCursor
+                            onClick={onClick}>
 
-    <Button title=""
-            width="20px"
-            height="20px"
-            minWidth="20px"
-            minHeight="20px"
-            cornerRadius="20px"
-            bgColor={theme.appBg}
-            top="2px"
-            left={isSelected ? '18px' : '2px'}
-            animate="left 300ms"
-            relative
-            onClick={onClick}/>
+    <StylableContainer width={thumbDiameter}
+                       height={thumbDiameter}
+                       cornerRadius={thumbDiameter}
+                       bgColor={theme.appBg}
+                       top="3px"
+                       left={isSelected ? '15px' : '3px'}
+                       animate="left 300ms"
+                       relative/>
   </StylableContainer>
 }
 
@@ -575,7 +570,9 @@ export const DropDownContainer = (props: DropDownProps) => {
     const className = 'className' in p ? p.className + ' ' + buildClassName(p) : buildClassName(p)
     return (
       <div className={className}
-           onMouseDown={e => { e.stopPropagation() }}>
+           onMouseDown={e => {
+             e.stopPropagation()
+           }}>
         {props.children}
       </div>
     )

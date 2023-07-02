@@ -1,7 +1,7 @@
 import { type LayoutLayer } from './Application'
 import * as React from 'react'
 
-const abbreviations: Record<string, string> = {
+export const abbreviations: Record<string, string> = {
   'align-items': 'A',
   'background-color': 'BG',
   'border': 'BO',
@@ -37,11 +37,12 @@ const abbreviations: Record<string, string> = {
   'opacity': 'OP',
   'overflow': 'O',
   'overflow-x': 'OX',
+  'padding': 'P',
   'padding-left': 'PL',
   'padding-right': 'PR',
   'padding-top': 'PT',
   'padding-bottom': 'PB',
-  'position': 'P',
+  'position': 'PO',
   'right': 'R',
   'text-align': 'TA',
   'text-decoration': 'TD',
@@ -165,12 +166,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, () =>
     setValue('padding-top', value)
     setValue('padding-bottom', value)
   }
-  operator.padding = (value: string) => {
-    setValue('padding-left', value)
-    setValue('padding-right', value)
-    setValue('padding-top', value)
-    setValue('padding-bottom', value)
-  }
+  operator.padding = (value: string) => { setValue('padding', value) }
 
   operator.layer = (value: LayoutLayer) => { setValue('z-index', value) }
   operator.fixed = (value: boolean) => { value && setValue('position', 'fixed') }
@@ -207,6 +203,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, () =>
   operator.cornerRadius = (value: string) => { setValue('border-radius', value) }
   operator.opacity = (value: string) => { setValue('opacity', value) }
   operator.shadow = (value: string) => { setValue('box-shadow', value) }
+  operator.btnCursor = (value: string) => { setValue('cursor', value ? 'pointer' : 'auto') }
 
   operator.fontFamily = (value: string) => { setValue('font-family', value) }
   operator.fontSize = (value: string) => { setValue('font-size', value) }
@@ -328,6 +325,7 @@ export interface StylableComponentProps {
   cornerRadius?: string
   opacity?: string
   shadow?: string
+  btnCursor?: boolean
   visible?: boolean
   className?: string
   children?: any

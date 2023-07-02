@@ -45,6 +45,9 @@ function buildConfig(options: BuildOptions): webpack.Configuration {
     mode: options.mode,
     entry: path.resolve(__dirname, 'src', 'index.tsx'),
     output,
+    optimization: {
+      minimize: !options.isDev
+    },
     module: { rules: buildLoaders(options) },
     plugins: buildPlugins(options),
     resolve: {
@@ -98,9 +101,7 @@ function buildLoaders(options: BuildOptions): webpack.RuleSetRule[] {
     use: options.isDev ? ['style-loader', 'css-loader'] : ['style-loader', 'css-loader', 'postcss-loader']
   }
 
-  return options.isDev
-    ? [tsxLoader, imgLoader, svgLoader, cssLoader]
-    : [jsLoader, tsxLoader, imgLoader, svgLoader, cssLoader]
+  return [jsLoader, tsxLoader, imgLoader, svgLoader, cssLoader]
 }
 
 function buildPlugins(options: BuildOptions): webpack.WebpackPluginInstance[] {

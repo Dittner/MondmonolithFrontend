@@ -157,6 +157,7 @@ export const DocsPage = observer(() => {
                height="100vh"
                layer={LayoutLayer.DOC_LIST}
                animate="left 0.5s"
+               shadow="0 0 4px #00000020"
                enableOwnScroller
                fixed/>
 

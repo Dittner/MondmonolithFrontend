@@ -165,7 +165,7 @@ export interface LabelProps extends StylableComponentProps {
   fontFamily?: string
   fontSize?: string
   fontWeight?: string
-  title?: string
+  text?: string
   textAlign?: 'left' | 'right' | 'center'
   textDecoration?: 'none' | 'underline'
   whiteSpace?: 'normal' | 'pre' | 'pre-wrap' | 'nowrap'
@@ -175,8 +175,8 @@ export interface LabelProps extends StylableComponentProps {
 export const Label = (props: LabelProps) => {
   if ('visible' in props && !props.visible) return <></>
 
-  if ('className' in props) { return <p className={props.className + ' ' + buildClassName(props)}>{props.title ?? props.children}</p> }
-  return <p className={buildClassName(props)}>{props.title ?? props.children}</p>
+  if ('className' in props) { return <p className={props.className + ' ' + buildClassName(props)}>{props.text ?? props.children}</p> }
+  return <p className={buildClassName(props)}>{props.text ?? props.children}</p>
 }
 
 /*
@@ -242,7 +242,7 @@ export const Input = (props: InputProps) => {
     <VStack halign="left" valign="top" gap="0"
             width="100%">
       <Label fontSize="9px"
-             title={customProps.title || 'TITLE'}
+             text={customProps.title || 'TITLE'}
              width="100%"
              textTransform="uppercase"
              textColor="#888888"/>
@@ -318,6 +318,8 @@ export const TextArea = (props: TextAreaProps) => {
       e.preventDefault()
       e.stopPropagation()
       props.onApply?.(value)
+    } else if (e.keyCode === 13 && e.shiftKey) {
+      e.stopPropagation()
     }
     // ESC key
     if (e.keyCode === 27) {

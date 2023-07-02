@@ -102,7 +102,7 @@ export const HeaderView = observer(() => {
           <Label className="mono"
                  whiteSpace="pre"
                  visible={app.size !== AppSize.XS}
-                 title={editTools.editMode ? 'Edit mode: ' : 'Read mode: '}
+                 text={editTools.editMode ? 'Edit mode: ' : 'Read mode: '}
                  textColor={app.theme.text75}/>
 
           <Switch theme={app.theme} isSelected={editTools.editMode} onClick={() => { editTools.toggleEditMode() }}/>
@@ -111,7 +111,7 @@ export const HeaderView = observer(() => {
 
           <Label className="mono"
                  visible={app.size !== AppSize.XS}
-                 title={user.login}
+                 text={user.login}
                  textColor={app.theme.text75}/>
 
           <HeaderVerSep visible={app.size !== AppSize.XS}/>
@@ -194,7 +194,7 @@ const AuthDropDown = observer(({ isDropDownOpened, onClose }: { isDropDownOpened
 
       {user.authWithError &&
         <Label fontSize="14px"
-               title={user.authWithError}
+               text={user.authWithError}
                textColor={app.theme.error}/>
       }
     </VStack>

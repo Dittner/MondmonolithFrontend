@@ -172,7 +172,7 @@ const DirectoryView = observer(({ dir }: { dir: Directory }) => {
             onDoubleClick={startEditing}>
 
       <Label className="notSelectable"
-             title={dir.title}
+             text={dir.title}
              textTransform="uppercase"
              textAlign="left"
              width="100%"/>
@@ -233,8 +233,7 @@ const DocLink = observer((props: any) => {
             onDoubleClick={startEditing}>
 
       <Label className="notSelectable"
-             title={isDocSelected ? doc.title + ' ' : doc.title}
-             fontWeight={isDocSelected ? '700' : '500'}
+             text={isDocSelected ? doc.title + ' ' : doc.title}
              textAlign="left"
              width="100%"/>
     </HStack>
@@ -295,7 +294,7 @@ const DocEditForm = observer((props: any) => {
       </HStack>
 
       <Label visible={doc?.storeWithError !== ''}
-             title={doc?.storeWithError}
+             text={doc?.storeWithError}
              textColor={app.theme.error}/>
     </VStack>
 
@@ -348,7 +347,7 @@ const DirEditForm = observer((props: any) => {
       </HStack>
 
       <Label visible={dir?.storeWithError !== ''}
-             title={dir?.storeWithError}
+             text={dir?.storeWithError}
              textColor={app.theme.error}/>
     </VStack>
   )

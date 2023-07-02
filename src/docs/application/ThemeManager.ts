@@ -4,7 +4,7 @@ import { buildRule, type StylableComponentProps } from './NoCSS'
 const DARK_THEME_RED = '#E06C75'
 const LIGHT_THEME_RED = '#b44553'
 const DARK_THEME_WHITE = '#c7d7e5'
-const LIGHT_THEME_WHITE = '#dbe0e4'
+const LIGHT_THEME_WHITE = '#e5eaee'
 const DARK_THEME_APP_BG = '#23282a'
 
 export interface Theme {
@@ -69,7 +69,7 @@ export class ThemeManager {
     inputBorder: '#a7c6d2',
     inputBorderFocused: '#46575f',
     border: '#323e44',
-    pageSelection: '#2a3439',
+    pageSelection: '#323e44',
     docSelection: '#00000020',
     caretColor: DARK_THEME_RED,
     error: '#ff719a'
@@ -121,14 +121,14 @@ export class ThemeManager {
     yellow: '#6f838d',
     appBg: LIGHT_THEME_WHITE,
     transparent: '0',
-    panelBg: '#e5eaee',
+    panelBg: '#e0e5e8',
     modalWindowBg: '#d0d4d8',
     text: DARK_THEME_APP_BG,
     text75: '#687278',
     textGreen: '#2c363c',
     textGreen75: '#2c363c75',
     pageTitle: '#396a88',
-    inputBg: '#d3d9dd',
+    inputBg: '#d8dee3',
     inputBorder: '#757b7d',
     inputBorderFocused: '#768a91',
     border: '#c4d1d7',
@@ -161,7 +161,7 @@ export class ThemeManager {
 
     const blockquoteProps: StylableComponentProps = {
       textColor: '#9da1a9',
-      bgColor: '#d0d2d4',
+      bgColor: '#dbdee0',
       padding: '20px',
       borderLeft: '5px solid #afb0b2'
     }

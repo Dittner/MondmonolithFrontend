@@ -93,7 +93,7 @@ export const IntroPage = observer(() => {
     <Label className="mono"
            whiteSpace="pre"
            padding="30px"
-           title={app.size === AppSize.XS ? aboutTxtXS : aboutTxt}
+           text={app.size === AppSize.XS ? aboutTxtXS : aboutTxt}
            textColor={app.theme.text75}
            bgColor={bgColor}
            layer={LayoutLayer.ONE}/>
@@ -124,7 +124,7 @@ export const IntroPage = observer(() => {
             padding="30px"
             layer={LayoutLayer.ONE}>
       <Label className="ibm h4"
-             title="Examples of Markdown formatting"
+             text="Examples of Markdown formatting"
              textColor={app.theme.text}
              paddingLeft="25px"
              paddingBottom="25px"
@@ -137,7 +137,7 @@ export const IntroPage = observer(() => {
     </VStack>
 
     <Label className="mono"
-           title={(app.isMobileDevice ? 'Mobile ' : 'Desktop ') + app.size}
+           text={(app.isMobileDevice ? 'Mobile ' : 'Desktop ') + app.size}
            fontSize="10px"
            textColor={app.theme.text75}
            layer={LayoutLayer.ONE}/>
@@ -149,7 +149,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.19  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.20  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -165,7 +165,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.19  |  DATE: 2023  
+*  MODE: demo  |  VER: 2.20  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/
@@ -243,7 +243,7 @@ const MarkdownEditor = observer(({ text, title, autoFocus }: { text: string, tit
               layer={LayoutLayer.ONE}>
 
         <Label className="ibm h4"
-               title={title}
+               text={title}
                textColor={app.theme.text75}
                whiteSpace="pre"
                paddingLeft="25px"
@@ -277,7 +277,7 @@ const MarkdownEditor = observer(({ text, title, autoFocus }: { text: string, tit
   return (
     <>
       <Label className="ibm h4"
-             title={title}
+             text={title}
              textColor={app.theme.text75}
              whiteSpace="pre"
              paddingLeft="25px"

@@ -21,7 +21,6 @@ const DocTopicsView = observer(() => {
   const docsContext = useDocsContext()
   const theme = docsContext.app.theme
   const params = useParams()
-  console.log('new DocTopicsView, params: ', params)
   const doc = docsContext.findDoc(d => params.docUID === d.uid)
   if (!doc || doc.loadStatus === DocLoadStatus.LOADING) {
     return <></>

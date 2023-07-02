@@ -226,7 +226,7 @@ export const ModalView = observer(() => {
             width="350px" padding="30px" gap="30px">
 
       <Label className="mono"
-             title={app.yesNoDialog?.text}
+             text={app.yesNoDialog?.text}
              whiteSpace="pre-wrap"
              textColor={app.theme.text}/>
 

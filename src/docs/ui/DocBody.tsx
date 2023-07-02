@@ -29,7 +29,7 @@ import {
 
 export const DocBody = stylable(() => {
   return <Routes>
-    <Route path="/" element={<EmptyDoc msg="No doc is selected"/>}/>
+    <Route path="/" element={<EmptyDoc msg="No document selected"/>}/>
     <Route path=":docUID" element={<PageList/>}/>
   </Routes>
 })
@@ -39,7 +39,7 @@ const EmptyDoc = ({ msg }: { msg: string }) => {
   return <HStack halign="center"
                  valign="center"
                  width="100%" height="100%">
-    <Label title={msg} textColor={app.theme.text75}/>
+    <Label text={msg} textColor={app.theme.text75}/>
   </HStack>
 }
 
@@ -154,61 +154,66 @@ const PageList = observer(() => {
             paddingVertical="20px">
 
       {!pagesSlice.isFirstPageShown &&
-      <Button onClick={showPrevPage}
-              textColor={theme.textGreen75}
-              paddingHorizontal="100px"
-              paddingVertical="10px"
-              border={['1px', 'solid', theme.textGreen75]}
-              hoverState={state => {
-                state.textColor = theme.textGreen
-                state.border = ['1px', 'solid', theme.textGreen]
-              }}>
-        <p className="icon icon-prevPage"/>
-        <p>Previous Page</p>
-      </Button>
+        <Button onClick={showPrevPage}
+                textColor={theme.textGreen75}
+                paddingHorizontal="150px"
+                paddingVertical="10px"
+                border={['1px', 'solid', theme.border]}
+                hoverState={state => {
+                  state.textColor = theme.textGreen
+                  state.border = ['1px', 'solid', theme.textGreen]
+                }}>
+          <p className="icon icon-prevPage"/>
+          <p>Previous Page</p>
+        </Button>
       }
 
       {doc.pages.length > 0 &&
-      doc.pages.slice(pagesSlice.start, pagesSlice.end + 1).map(page => {
-        return <PageView key={page.uid} page={page}/>
-      })
+        doc.pages.slice(pagesSlice.start, pagesSlice.end + 1).map(page => {
+          return <PageView key={page.uid} page={page}/>
+        })
       }
 
       {doc.pages.length > 0 && !pagesSlice.isLastPageShown &&
-      <Button onClick={showNextPage}
-              textColor={theme.textGreen75}
-              paddingHorizontal="100px"
-              paddingVertical="10px"
-              border={['1px', 'solid', theme.textGreen75]}
-              hoverState={state => {
-                state.textColor = theme.textGreen
-                state.border = ['1px', 'solid', theme.textGreen]
-              }}>
-        <p>Next Page</p>
-        <p className="icon icon-nextPage"/>
-      </Button>
+        <>
+          <Spacer height="10px"/>
+          <Button onClick={showNextPage}
+                  textColor={theme.textGreen75}
+                  paddingHorizontal="150px"
+                  paddingVertical="10px"
+                  border={['1px', 'solid', theme.border]}
+                  hoverState={state => {
+                    state.textColor = theme.textGreen
+                    state.border = ['1px', 'solid', theme.textGreen]
+                  }}>
+            <p>Next Page</p>
+            <p className="icon icon-nextPage"/>
+          </Button>
+        </>
       }
 
       {doc.pages.length > 0 && pagesSlice.isLastPageShown &&
-      <HStack halign="stretch"
-              valign="center"
-              padding="8px"
-              width="100%">
+        <HStack halign="stretch"
+                valign="center"
+                padding="8px"
+                width="100%">
 
-        <RedButton title="Export as JSON"
-                   hideBg
-                   theme={theme}
-                   onClick={exportDocAsJSON}/>
+          <RedButton title="Export as JSON"
+                     hideBg
+                     theme={theme}
+                     onClick={exportDocAsJSON}/>
 
-        <Spacer/>
+          <Spacer/>
 
-        <IconButton theme={theme}
-                    hideBg
-                    icon="scrollBack"
-                    popUp="Scroll back"
-                    onClick={() => { window.scrollTo(0, 0) }}/>
+          <IconButton theme={theme}
+                      hideBg
+                      icon="scrollBack"
+                      popUp="Scroll back"
+                      onClick={() => {
+                        window.scrollTo(0, 0)
+                      }}/>
 
-      </HStack>
+        </HStack>
       }
     </VStack>
   )
@@ -263,7 +268,7 @@ const PageTitle = observer(({ page }: { page: Page }) => {
                            onDoubleClick={editPage}>
           <Label className="h1"
                  textColor={app.theme.pageTitle}
-                 title={page.title}/>
+                 text={page.title}/>
         </StylableContainer>
       </>
     )
@@ -281,7 +286,7 @@ const PageTitle = observer(({ page }: { page: Page }) => {
                               }}>
       <Label className="h1"
              textColor={app.theme.pageTitle}
-             title={page.title}/>
+             text={page.title}/>
     </StylableContainer>
   }
 
@@ -292,7 +297,7 @@ const PageTitle = observer(({ page }: { page: Page }) => {
                        width="100%">
       <Label className="h1"
              textColor={app.theme.pageTitle}
-             title={page.title}/>
+             text={page.title}/>
     </StylableContainer>
   )
 })
@@ -332,7 +337,7 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
   useEffect(() => {
     if (!block.isEditing) {
       console.log('new PageBlockView: Prism.highlightAll')
-      setTimeout(Prism.highlightAll, Math.random() * 500)
+      setTimeout(Prism.highlightAll, Math.random() * 100)
     }
   }, [block, block.text, block.isEditing])
 

@@ -4,7 +4,7 @@ import { buildRule, type StylableComponentProps } from './NoCSS'
 const DARK_THEME_RED = '#E06C75'
 const LIGHT_THEME_RED = '#b44553'
 const DARK_THEME_WHITE = '#c7d7e5'
-const LIGHT_THEME_WHITE = '#e5eaee'
+const LIGHT_THEME_APP_BG = '#e5eaee'
 const DARK_THEME_APP_BG = '#23282a'
 
 export interface Theme {
@@ -116,10 +116,10 @@ export class ThemeManager {
     id: 'lightTheme',
     isDark: false,
     red: LIGHT_THEME_RED,
-    white: LIGHT_THEME_WHITE,
+    white: LIGHT_THEME_APP_BG,
     white25: '#ffffff20',
     yellow: '#6f838d',
-    appBg: LIGHT_THEME_WHITE,
+    appBg: LIGHT_THEME_APP_BG,
     transparent: '0',
     panelBg: '#e0e5e8',
     modalWindowBg: '#d0d4d8',

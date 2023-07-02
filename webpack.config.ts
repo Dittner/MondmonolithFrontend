@@ -58,21 +58,6 @@ function buildConfig(options: BuildOptions): webpack.Configuration {
   }
 }
 
-function buildDevServer(options: BuildOptions): DevServerConfiguration {
-  return {
-    static: {
-      directory: path.join(__dirname, 'public')
-    },
-    watchFiles: path.join(__dirname, 'src'),
-    open: true,
-    hot: true,
-    historyApiFallback: {
-      index: '/'
-    },
-    port: options.port
-  }
-}
-
 function buildLoaders(options: BuildOptions): webpack.RuleSetRule[] {
   const jsLoader = {
     test: /\.m?js$/,
@@ -132,4 +117,19 @@ function buildPlugins(options: BuildOptions): webpack.WebpackPluginInstance[] {
     }))
   }
   return res
+}
+
+function buildDevServer(options: BuildOptions): DevServerConfiguration {
+  return {
+    static: {
+      directory: path.join(__dirname, 'public')
+    },
+    watchFiles: path.join(__dirname, 'src'),
+    open: true,
+    hot: true,
+    historyApiFallback: {
+      index: '/'
+    },
+    port: options.port
+  }
 }

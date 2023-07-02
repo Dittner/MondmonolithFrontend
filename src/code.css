@@ -160,20 +160,13 @@ code[class*=language-] {
 }
 
 /*---------------*/
-.token.class {
-	color: #74d7d3;
-}
-
-.light .token.class {
-	color: #3a787d;
-}
-
-/*---------------*/
+.token.class,
 .token.class-name,
 .token.constant  {
-	color: #a8d8e1
+	color: #89dce0
 }
 
+.light .token.class,
 .light .token.class-name,
 .light .token.constant  {
 	color: #006571

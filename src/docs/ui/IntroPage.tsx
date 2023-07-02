@@ -218,7 +218,8 @@ exc(2, 1, '+') //3, returned from cache
 
 const links = `## Much more info:
 * [React-Markdown](https://remarkjs.github.io/react-markdown/)
-* [Markdown basic syntax](https://www.markdownguide.org/basic-syntax/)`
+* [Markdown basic syntax](https://www.markdownguide.org/basic-syntax/)
+* [Source Code (GitHub)](https://github.com/Dittner/Mondmonolith/tree/master)`
 
 const MarkdownEditor = observer(({ text, title, autoFocus }: { text: string, title: string, autoFocus?: boolean }) => {
   const { app } = useDocsContext()

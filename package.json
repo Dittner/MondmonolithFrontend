@@ -20,7 +20,6 @@
     "server": "webpack serve --env mode=development port=3000",
     "dev": "webpack --env mode=development",
     "build": "webpack --env mode=production",
-    "prod": "webpack --env mode=production",
     "eslint": "eslint '**/*.{ts,tsx}'",
     "test": "jest"
   },

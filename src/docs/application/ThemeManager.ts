@@ -88,7 +88,7 @@ export class ThemeManager {
 
     const inlineCodeProps: StylableComponentProps = {
       className: 'mono',
-      textColor: '#b1c5de',
+      textColor: '#afd2e8',
       bgColor: '#2e393f50',
       border: ['1px', 'solid', theme.border],
       padding: '4px',

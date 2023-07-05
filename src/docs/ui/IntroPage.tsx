@@ -66,14 +66,14 @@ export const IntroPage = observer(() => {
                  disableHorizontalScroll>
 
     {(app.size === AppSize.L || app.size === AppSize.M) &&
-      <Image
-        src={app.theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
-        maxWidth="100%"
-        disableHorizontalScroll
-        halign="center" valign="top"
-        top='0'
-        opacity={scrollPosition > SCROLL_POS_LIMIT ? '0.5' : '1'}
-        fixed/>
+      <Image src={app.theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
+             alt="header's background"
+             maxWidth="100%"
+             disableHorizontalScroll
+             halign="center" valign="top"
+             top="0"
+             opacity={scrollPosition > SCROLL_POS_LIMIT ? '0.5' : '1'}
+             fixed/>
     }
 
     <Header width="100%"
@@ -88,15 +88,17 @@ export const IntroPage = observer(() => {
                   hideBg
                   popUp="Switch a theme"
                   theme={app.theme}
-                  onClick={() => { app.switchTheme() }}/>
+                  onClick={() => {
+                    app.switchTheme()
+                  }}/>
     </StylableContainer>
     {(app.size === AppSize.XS || app.size === AppSize.S) &&
-      <Image
-        src={app.theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
-        maxWidth="100%"
-        width="100%"
-        disableScroll
-        halign="center" valign="top"/>
+      <Image src={app.theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
+             alt="header's background"
+             maxWidth="100%"
+             width="100%"
+             disableScroll
+             halign="center" valign="top"/>
     }
 
     <Label className="mono"
@@ -141,10 +143,10 @@ export const IntroPage = observer(() => {
 
       <MarkdownEditor text={headings} title="0.Headings, font style"/>
       <MarkdownEditor text={blockquote} title="1.Blockquote"/>
-      <MarkdownEditor text={shortcuts} secondMarkdownText={languages} title="2.Editor"/>
-      <MarkdownEditor text={code} title="3.Code"/>
-      <MarkdownEditor text={lists} title="4.Lists"/>
-      <MarkdownEditor text={links} title="5.Links"/>
+      <MarkdownEditor text={code} title="2.Code"/>
+      <MarkdownEditor text={lists} title="3.Lists"/>
+      <MarkdownEditor text={links} title="4.Links"/>
+      <MarkdownEditor text={shortcuts} secondMarkdownText={languages} title="5. Editor"/>
     </VStack>
 
     <Label className="mono"
@@ -247,7 +249,7 @@ exc(2, 1, '+') //3, returned from cache
 const links = `## Much more info:
 * [React-Markdown](https://remarkjs.github.io/react-markdown/)
 * [Markdown basic syntax](https://www.markdownguide.org/basic-syntax/)
-* [Source Code (GitHub)](https://github.com/Dittner/Mondmonolith/tree/master)`
+* [Source Code (GitHub)](https://github.com/dittner/mondmonolith/tree/master)`
 
 interface MarkdownEditorProps {
   text: string
@@ -255,6 +257,7 @@ interface MarkdownEditorProps {
   autoFocus?: boolean
   secondMarkdownText?: string
 }
+
 const MarkdownEditor = observer((props: MarkdownEditorProps) => {
   const { app } = useDocsContext()
   console.log('new MarkdownEditor')

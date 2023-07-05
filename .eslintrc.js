@@ -63,5 +63,7 @@ module.exports = {
     "prefer-const": "warn",
     "spaced-comment": "warn",
     "no-useless-escape": "off",
+    "@typescript-eslint/no-extraneous-class": "off",
+    "no-extraneous-class": "off",
   }
 }

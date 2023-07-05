@@ -291,6 +291,79 @@ const defTextAreaProps = (theme: Theme): any => {
   }
 }
 
+class TextAreaController {
+  static format(ta: HTMLTextAreaElement) {
+    const value = ta.value
+    const selectionStart = ta.selectionStart
+    ta.setSelectionRange(0, ta?.value.length)
+
+    try {
+      const formattedCode = reformat(value)
+      const scrollY = window.scrollY
+      document.execCommand('insertText', false, formattedCode)
+      ta.setSelectionRange(selectionStart, selectionStart)
+      window.scrollTo(0, scrollY)
+    } catch (e) {
+      console.log('Error, while formatting code: ', e)
+    }
+  }
+
+  static newLine(ta: HTMLTextAreaElement) {
+    const value = ta.value
+    const selectionStart = ta.selectionStart
+
+    const codeStartInd = value.lastIndexOf('```', selectionStart)
+    const isCodeFragment = codeStartInd !== -1 && (/^```[a-zA-Z]+/.test(value.slice(codeStartInd, codeStartInd + 4)))
+    const codeEndInd = value.indexOf('```', selectionStart)
+    if (isCodeFragment && selectionStart > codeStartInd && selectionStart < codeEndInd) {
+      let beginRowIndex = value.lastIndexOf('\n', selectionStart - 1)
+      beginRowIndex = beginRowIndex !== -1 ? beginRowIndex : codeStartInd
+
+      const row = value.slice(beginRowIndex + 1, selectionStart + 1) + '.\n'
+      const beginRowSpaces = calcSpaceBefore(row)
+      const formattedText = formatCode(row)
+      let endRowSpaces = 0
+      for (let i = formattedText.length - 3; i >= 0; i--) {
+        const char = formattedText.charAt(i)
+        if (char === ' ') {
+          endRowSpaces++
+        } else {
+          break
+        }
+      }
+
+      const spaces = '\n' + ' '.repeat(beginRowSpaces + endRowSpaces)
+      // func setRangeText unfortunately clears browser history
+      // ta.current.setRangeText(spaces, selectionStart, selectionStart, 'end')
+      document.execCommand('insertText', false, spaces)
+    }
+  }
+
+  static deleteAllSpacesBeforeCursor(ta: HTMLTextAreaElement): boolean {
+    const value = ta.value
+    const selectionStart = ta.selectionStart
+
+    const deleteAllSpaces = (/\n {2,}$/.test(value.slice(0, selectionStart)))
+    console.log('deleteAllSpaces: ', deleteAllSpaces)
+    if (deleteAllSpaces) {
+      const firstSpaceIndex = value.lastIndexOf('\n', selectionStart - 1)
+      if (firstSpaceIndex !== -1 && firstSpaceIndex + 1 < selectionStart) {
+        ta.setSelectionRange(firstSpaceIndex + 1, selectionStart)
+        document.execCommand('insertText', false, '')
+        return true
+      }
+    }
+    return false
+  }
+
+  static adjustScroller(ta: HTMLTextAreaElement | undefined | null) {
+    if (ta) {
+      ta.style.height = 'inherit'
+      ta.style.height = `${ta.scrollHeight + 5}px`
+    }
+  }
+}
+
 export const TextArea = (props: TextAreaProps) => {
   const customProps = { ...defTextAreaProps(props.theme), ...props }
   const [value, setValue] = useState(props.text ?? '')
@@ -298,20 +371,13 @@ export const TextArea = (props: TextAreaProps) => {
 
   const ta = useRef<HTMLTextAreaElement>(null)
 
-  const adjustScroller = () => {
-    if (ta?.current) {
-      ta.current.style.height = 'inherit'
-      ta.current.style.height = `${ta.current.scrollHeight + 5}px`
-    }
-  }
-
   const onChange = (event: any) => {
     setValue(event.target.value)
-    adjustScroller()
+    TextAreaController.adjustScroller(ta?.current)
   }
 
   useEffect(() => {
-    adjustScroller()
+    TextAreaController.adjustScroller(ta?.current)
   }, [width, height])
 
   const onKeyDown = (e: any) => {
@@ -319,18 +385,7 @@ export const TextArea = (props: TextAreaProps) => {
     if (e.keyCode === 76 && e.ctrlKey && e.shiftKey && ta?.current) {
       e.preventDefault()
       e.stopPropagation()
-      const curSelection = ta.current.selectionStart
-      ta.current.setSelectionRange(0, ta?.current?.value.length)
-
-      try {
-        const formattedCode = reformat(value)
-        const scrollY = window.scrollY
-        document.execCommand('insertText', false, formattedCode)
-        ta.current.setSelectionRange(curSelection, curSelection)
-        window.scrollTo(0, scrollY)
-      } catch (e) {
-        console.log('Error, while formatting code: ', e)
-      }
+      TextAreaController.format(ta.current)
     }
 
     // Enter key
@@ -338,43 +393,14 @@ export const TextArea = (props: TextAreaProps) => {
       e.preventDefault()
       e.stopPropagation()
       props.onApply?.(value)
-      adjustScroller()
+      TextAreaController.adjustScroller(ta?.current)
     }
 
     if (ta?.current && e.keyCode === 13 && !e.shiftKey) {
+      TextAreaController.newLine(ta.current)
       e.stopPropagation()
-
-      const text = ta.current.value
-      const selectionStart = ta.current.selectionStart ?? 0
-      const codeStartInd = text.lastIndexOf('```', selectionStart)
-      const isCodeFragment = codeStartInd !== -1 && (/^```[a-zA-Z]+/.test(text.slice(codeStartInd, codeStartInd + 4)))
-      const codeEndInd = text.indexOf('```', selectionStart)
-      if (isCodeFragment && selectionStart > codeStartInd && selectionStart < codeEndInd) {
-        let beginRowIndex = text.lastIndexOf('\n', selectionStart - 1)
-        beginRowIndex = beginRowIndex !== -1 ? beginRowIndex : codeStartInd
-
-        const row = text.slice(beginRowIndex + 1, selectionStart + 1) + '.\n'
-        const beginRowSpaces = calcSpaceBefore(row)
-        const formattedText = formatCode(row)
-        let endRowSpaces = 0
-        for (let i = formattedText.length - 3; i >= 0; i--) {
-          const char = formattedText.charAt(i)
-          if (char === ' ') {
-            endRowSpaces++
-          } else {
-            break
-          }
-        }
-
-        if (ta?.current?.selectionStart) {
-          const spaces = '\n' + ' '.repeat(beginRowSpaces + endRowSpaces)
-          // func setRangeText unfortunately clears browser history
-          // ta.current.setRangeText(spaces, selectionStart, selectionStart, 'end')
-          document.execCommand('insertText', false, spaces)
-        }
-        e.preventDefault()
-        adjustScroller()
-      }
+      e.preventDefault()
+      TextAreaController.adjustScroller(ta?.current)
     }
     // ESC key
     if (e.keyCode === 27) {
@@ -384,18 +410,9 @@ export const TextArea = (props: TextAreaProps) => {
     }
     // Delete key
     if (e.keyCode === 8 && ta?.current && ta.current.selectionStart === ta.current.selectionEnd) {
-      const text = ta.current.value
-      const selectionStart = ta.current.selectionStart
-      const deleteAllSpaces = (/\n {2,}$/.test(text.slice(0, selectionStart)))
-      console.log('deleteAllSpaces: ', deleteAllSpaces)
-      if (deleteAllSpaces) {
-        const firstSpaceIndex = text.lastIndexOf('\n', selectionStart - 1)
-        if (firstSpaceIndex !== -1 && firstSpaceIndex + 1 < selectionStart) {
-          ta.current.setSelectionRange(firstSpaceIndex + 1, selectionStart)
-          document.execCommand('insertText', false, '')
-          e.preventDefault()
-          e.stopPropagation()
-        }
+      if (TextAreaController.deleteAllSpacesBeforeCursor(ta.current)) {
+        e.preventDefault()
+        e.stopPropagation()
       }
     }
   }
@@ -667,6 +684,7 @@ export const DropDownContainer = (props: DropDownProps) => {
 
 interface ImageProps extends StackProps {
   src: string
+  alt: string
 }
 
 export const Image = (props: ImageProps) => {
@@ -684,7 +702,7 @@ export const Image = (props: ImageProps) => {
 
   return (
     <HStack className={className} valign={props.valign} halign={props.halign}>
-      <img className={imgClassName} src={props.src}/>
+      <img className={imgClassName} src={props.src} alt={props.alt}/>
     </HStack>
   )
 }

@@ -1,4 +1,3 @@
-
 export function regexIndexOf(text: string, rgx: RegExp, beginAt: number = 0) {
   const index = text.substring(beginAt || 0).search(rgx)
   return (index >= 0) ? (index + beginAt) : index
@@ -133,7 +132,7 @@ export const calcSpaceBefore = (row: string): number => {
 
 const hasOpenedClosedTags = (row: string): boolean => {
   if (!row) return false
-  const rgx = /(<[a-zA-Z\/])|([a-zA-Z\/}\]\)'"] *>)/
+  const rgx = /(<[a-zA-Z\/])|([a-zA-Z\/}\])'"] *>)/
   return rgx.test(row)
 }
 
@@ -142,7 +141,9 @@ function alignXMLProps(code: string): string {
   const onlyOpenedTag = /<[a-zA-Z]+ +[a-zA-Z]+/
   let hasOpenedTag = false
   let openedTagIndex = -1
-  let firstSpaceIndex = -1
+  let firstSpaceIndexAfterOpenedTag = -1
+  let amountOfBlocks = 0
+  let prevSpaces = 0
 
   const rows = code.split('\n')
   for (let r = 0; r < rows.length; r++) {
@@ -151,20 +152,22 @@ function alignXMLProps(code: string): string {
       if (r < rows.length - 1) res += '\n'
       continue
     }
-    if (hasOpenedTag && firstSpaceIndex !== -1) {
-      if (hasOpenedClosedTags(row)) {
-        const spaces = calcSpaceBefore(row)
-        res += ' '.repeat(firstSpaceIndex + 1) + row.slice(spaces)
-        hasOpenedTag = false
-      } else {
-        const spaces = calcSpaceBefore(row)
-        res += ' '.repeat(firstSpaceIndex + 1) + row.slice(spaces)
-      }
+    if (hasOpenedTag && firstSpaceIndexAfterOpenedTag !== -1) {
+      const spaces = calcSpaceBefore(row)
+      if (prevSpaces < 0) prevSpaces = spaces
+      if (spaces > prevSpaces) amountOfBlocks++
+      else if (spaces < prevSpaces && amountOfBlocks > 0) amountOfBlocks--
+      prevSpaces = spaces
+
+      res += ' '.repeat(firstSpaceIndexAfterOpenedTag + 1) + '  '.repeat(amountOfBlocks) + row.slice(spaces)
+      if (hasOpenedClosedTags(row)) hasOpenedTag = false
     } else {
       res += row
       openedTagIndex = regexIndexOf(row, onlyOpenedTag, 0)
       hasOpenedTag = openedTagIndex !== -1 && !row.includes('>', openedTagIndex)
-      firstSpaceIndex = row.indexOf(' ', openedTagIndex)
+      firstSpaceIndexAfterOpenedTag = row.indexOf(' ', openedTagIndex)
+      amountOfBlocks = 0
+      prevSpaces = -1
     }
 
     if (r < rows.length - 1) res += '\n'

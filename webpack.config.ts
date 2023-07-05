@@ -22,7 +22,7 @@ export default (env: BuildEnv) => {
   const mode = env.mode || 'development'
   const options: BuildOptions = {
     mode,
-    port: env.port || 9000,
+    port: env.port || 3000,
     isDev: mode === 'development',
     outputDir: 'build'
   }
@@ -37,7 +37,7 @@ function buildConfig(options: BuildOptions): webpack.Configuration {
     filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, options.outputDir),
     assetModuleFilename: path.join('images', '[name].[contenthash][ext]'),
-    clean: true,
+    // clean: true,
     publicPath: '/'
   }
 
@@ -86,7 +86,9 @@ function buildLoaders(options: BuildOptions): webpack.RuleSetRule[] {
     use: options.isDev ? ['style-loader', 'css-loader'] : ['style-loader', 'css-loader', 'postcss-loader']
   }
 
-  return [jsLoader, tsxLoader, imgLoader, svgLoader, cssLoader]
+  return options.isDev
+    ? [tsxLoader, imgLoader, svgLoader, cssLoader]
+    : [jsLoader, tsxLoader, imgLoader, svgLoader, cssLoader]
 }
 
 function buildPlugins(options: BuildOptions): webpack.WebpackPluginInstance[] {
@@ -126,7 +128,6 @@ function buildDevServer(options: BuildOptions): DevServerConfiguration {
     },
     watchFiles: path.join(__dirname, 'src'),
     open: true,
-    hot: true,
     historyApiFallback: {
       index: '/'
     },

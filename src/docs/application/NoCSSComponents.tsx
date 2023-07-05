@@ -4,6 +4,7 @@ import { useWindowSize } from '../../App'
 import { buildClassName, type StylableComponentProps } from './NoCSS'
 import { type Theme } from './ThemeManager'
 import { observer } from 'mobx-react'
+import { calcSpaceBefore, formatCode, reformat } from '../ui/common/String++'
 
 /*
 *
@@ -314,19 +315,88 @@ export const TextArea = (props: TextAreaProps) => {
   }, [width, height])
 
   const onKeyDown = (e: any) => {
+    // Ctrl + Alt + L
+    if (e.keyCode === 76 && e.ctrlKey && e.shiftKey && ta?.current) {
+      e.preventDefault()
+      e.stopPropagation()
+      const curSelection = ta.current.selectionStart
+      ta.current.setSelectionRange(0, ta?.current?.value.length)
+
+      try {
+        const formattedCode = reformat(value)
+        const scrollY = window.scrollY
+        document.execCommand('insertText', false, formattedCode)
+        ta.current.setSelectionRange(curSelection, curSelection)
+        window.scrollTo(0, scrollY)
+      } catch (e) {
+        console.log('Error, while formatting code: ', e)
+      }
+    }
+
     // Enter key
-    if (e.keyCode === 13 && !e.shiftKey) {
+    if (e.keyCode === 13 && e.shiftKey) {
       e.preventDefault()
       e.stopPropagation()
       props.onApply?.(value)
-    } else if (e.keyCode === 13 && e.shiftKey) {
+      adjustScroller()
+    }
+
+    if (ta?.current && e.keyCode === 13 && !e.shiftKey) {
       e.stopPropagation()
+
+      const text = ta.current.value
+      const selectionStart = ta.current.selectionStart ?? 0
+      const codeStartInd = text.lastIndexOf('```', selectionStart)
+      const isCodeFragment = codeStartInd !== -1 && (/^```[a-zA-Z]+/.test(text.slice(codeStartInd, codeStartInd + 4)))
+      const codeEndInd = text.indexOf('```', selectionStart)
+      if (isCodeFragment && selectionStart > codeStartInd && selectionStart < codeEndInd) {
+        let beginRowIndex = text.lastIndexOf('\n', selectionStart - 1)
+        beginRowIndex = beginRowIndex !== -1 ? beginRowIndex : codeStartInd
+
+        const row = text.slice(beginRowIndex + 1, selectionStart + 1) + '.\n'
+        const beginRowSpaces = calcSpaceBefore(row)
+        const formattedText = formatCode(row)
+        let endRowSpaces = 0
+        for (let i = formattedText.length - 3; i >= 0; i--) {
+          const char = formattedText.charAt(i)
+          if (char === ' ') {
+            endRowSpaces++
+          } else {
+            break
+          }
+        }
+
+        if (ta?.current?.selectionStart) {
+          const spaces = '\n' + ' '.repeat(beginRowSpaces + endRowSpaces)
+          // func setRangeText unfortunately clears browser history
+          // ta.current.setRangeText(spaces, selectionStart, selectionStart, 'end')
+          document.execCommand('insertText', false, spaces)
+        }
+        e.preventDefault()
+        adjustScroller()
+      }
     }
     // ESC key
     if (e.keyCode === 27) {
       e.preventDefault()
       e.stopPropagation()
       props.onCancel?.()
+    }
+    // Delete key
+    if (e.keyCode === 8 && ta?.current && ta.current.selectionStart === ta.current.selectionEnd) {
+      const text = ta.current.value
+      const selectionStart = ta.current.selectionStart
+      const deleteAllSpaces = (/\n {2,}$/.test(text.slice(0, selectionStart)))
+      console.log('deleteAllSpaces: ', deleteAllSpaces)
+      if (deleteAllSpaces) {
+        const firstSpaceIndex = text.lastIndexOf('\n', selectionStart - 1)
+        if (firstSpaceIndex !== -1 && firstSpaceIndex + 1 < selectionStart) {
+          ta.current.setSelectionRange(firstSpaceIndex + 1, selectionStart)
+          document.execCommand('insertText', false, '')
+          e.preventDefault()
+          e.stopPropagation()
+        }
+      }
     }
   }
 
@@ -435,7 +505,11 @@ export const RedButton = (props: RedButtonProps) => {
                  onClick={props.onClick}/>
 }
 
-export const Switch = ({ theme, isSelected, onClick }: { theme: Theme, isSelected: boolean, onClick: () => void }) => {
+export const Switch = ({
+  theme,
+  isSelected,
+  onClick
+}: { theme: Theme, isSelected: boolean, onClick: () => void }) => {
   const btnWidth = '34px'
   const btnHeight = '22px'
   const thumbDiameter = '16px'
@@ -566,7 +640,11 @@ export const DropDownContainer = (props: DropDownProps) => {
   }, [props.isOpened])
 
   if (props.isOpened) {
-    const p = { absolute: 'true', top: '50px', ...props }
+    const p = {
+      absolute: 'true',
+      top: '50px',
+      ...props
+    }
     const className = 'className' in p ? p.className + ' ' + buildClassName(p) : buildClassName(p)
     return (
       <div className={className}
@@ -600,6 +678,7 @@ export const Image = (props: ImageProps) => {
     const style: StylableComponentProps = {}
     if ('width' in props) style.width = props.width
     if ('height' in props) style.height = props.height
+    if ('opacity' in props) style.opacity = props.opacity
     imgClassName = buildClassName(style)
   }
 
@@ -684,7 +763,11 @@ interface SpacerProps {
   visible?: boolean
 }
 
-export const Spacer = ({ width, height, visible = true }: SpacerProps) => {
+export const Spacer = ({
+  width,
+  height,
+  visible = true
+}: SpacerProps) => {
   if (!visible) return <></>
 
   const style: any = {}

@@ -185,7 +185,6 @@ const AuthDropDown = observer(({ isDropDownOpened, onClose }: { isDropDownOpened
                    hideBg
                    theme={app.theme}
                    onClick={handleSignIn}/>
-
       }
 
       {user.authStatus === AuthStatus.AUTHORIZING &&

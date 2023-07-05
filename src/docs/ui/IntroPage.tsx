@@ -4,8 +4,17 @@ import ReactMarkdown from 'react-markdown'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-jsx'
+import 'prismjs/components/prism-tsx'
+import 'prismjs/components/prism-typescript'
 import 'prismjs/components/prism-javascript'
 import 'prismjs/components/prism-python'
+import 'prismjs/components/prism-c'
+import 'prismjs/components/prism-cpp'
+import 'prismjs/components/prism-csharp'
+import 'prismjs/components/prism-swift'
+import 'prismjs/components/prism-json'
+import 'prismjs/components/prism-css'
+import 'prismjs/components/prism-markup'
 import { Header } from './Header'
 import { stylable } from '../application/NoCSS'
 import { useDocsContext } from '../../App'
@@ -40,7 +49,7 @@ function useWindowPosition(limit: number = -1): number {
 }
 
 export const IntroPage = observer(() => {
-  const SCROLL_POS_LIMIT = 400
+  const SCROLL_POS_LIMIT = 750
   const { app } = useDocsContext()
   const scrollPosition = useWindowPosition(SCROLL_POS_LIMIT)
   console.log('new IntroView, scrollPosition: ', scrollPosition)
@@ -62,9 +71,9 @@ export const IntroPage = observer(() => {
         maxWidth="100%"
         disableHorizontalScroll
         halign="center" valign="top"
-        top={scrollPosition > SCROLL_POS_LIMIT ? SCROLL_POS_LIMIT + 'px' : '0'}
-        absolute={scrollPosition > SCROLL_POS_LIMIT}
-        fixed={scrollPosition <= SCROLL_POS_LIMIT}/>
+        top='0'
+        opacity={scrollPosition > SCROLL_POS_LIMIT ? '0.5' : '1'}
+        fixed/>
     }
 
     <Header width="100%"
@@ -129,11 +138,13 @@ export const IntroPage = observer(() => {
              paddingLeft="25px"
              paddingBottom="25px"
              layer={LayoutLayer.ONE}/>
+
       <MarkdownEditor text={headings} title="0.Headings, font style"/>
       <MarkdownEditor text={blockquote} title="1.Blockquote"/>
-      <MarkdownEditor text={code} title="2.Code"/>
-      <MarkdownEditor text={lists} title="3.Lists"/>
-      <MarkdownEditor text={links} title="4.Links"/>
+      <MarkdownEditor text={shortcuts} secondMarkdownText={languages} title="2.Editor"/>
+      <MarkdownEditor text={code} title="3.Code"/>
+      <MarkdownEditor text={lists} title="4.Lists"/>
+      <MarkdownEditor text={links} title="5.Links"/>
     </VStack>
 
     <Label className="mono"
@@ -149,7 +160,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.21  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.23  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -165,7 +176,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.21  |  DATE: 2023  
+*  MODE: demo  |  VER: 2.23  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/
@@ -188,11 +199,28 @@ const lists = `## Daisy Bell
     + I'm.. half... crazy...
     + All for the love... of you...`
 
+const languages = `## Supported languages\n
++ C: \`c\`\n
++ C++: \`cpp\`\n
++ C#: \`csharp, cs, dotnet\`\n
++ CSS: \`css\`\n
++ HTML: \`html\`\n
++ Java: \`java\`\n
++ JavaScript: \`js, jsx\`\n
++ JSON: \`json\`\n
++ Python: \`py\`\n
++ Swift: \`swift\`\n
++ TypeScript: \`ts, tsx\`\n
++ XML: \`xml\``
+
+const shortcuts = `## Shortcuts\n
++ Apply code changes: \`Enter + Shift\`\n
++ Format code: \`Ctrl + Shift + L\``
+
 const code = `## Memoization
-Memoization is an optimisation technique base on remembering results returned by
- a function called with same arguments, that uses a cache and a \`generateKey\` function.
+Memoization is an optimisation technique base on remembering results returned by a function called with same arguments, that uses a cache and a \`generateKey\` function.
  
-~~~js
+\`\`\`js
 const memoize = (fn) => {
   const argKey = (x) => x.toString() + ':' + typeof x
   const generateKey = (args) => args.map(argKey).join('|')
@@ -214,17 +242,23 @@ const calc = (x, y, op) => {...}
 const exc = memoize(calc);
 exc(2, 1, '+') //3, calculated
 exc(2, 1, '+') //3, returned from cache
-~~~`
+\`\`\``
 
 const links = `## Much more info:
 * [React-Markdown](https://remarkjs.github.io/react-markdown/)
 * [Markdown basic syntax](https://www.markdownguide.org/basic-syntax/)
 * [Source Code (GitHub)](https://github.com/Dittner/Mondmonolith/tree/master)`
 
-const MarkdownEditor = observer(({ text, title, autoFocus }: { text: string, title: string, autoFocus?: boolean }) => {
+interface MarkdownEditorProps {
+  text: string
+  title: string
+  autoFocus?: boolean
+  secondMarkdownText?: string
+}
+const MarkdownEditor = observer((props: MarkdownEditorProps) => {
   const { app } = useDocsContext()
   console.log('new MarkdownEditor')
-  const [value, setValue] = useState(text)
+  const [value, setValue] = useState(props.text)
   const apply = (newValue: string) => {
     if (value !== newValue) {
       setValue(newValue)
@@ -244,20 +278,28 @@ const MarkdownEditor = observer(({ text, title, autoFocus }: { text: string, tit
               layer={LayoutLayer.ONE}>
 
         <Label className="ibm h4"
-               text={title}
+               text={props.title}
                textColor={app.theme.text75}
                whiteSpace="pre"
                paddingLeft="25px"
                minWidth="150px"/>
 
-        <TextArea className="mono"
-                  text={value}
-                  theme={app.theme}
-                  paddingHorizontal="20px"
-                  paddingVertical="10px"
-                  onApply={apply}
-                  onCancel={cancel}
-                  autoFocus={autoFocus}/>
+        {props.secondMarkdownText &&
+          <MarkdownText value={props.secondMarkdownText}
+                        paddingLeft="25px"
+                        width="100%"/>
+        }
+
+        {!props.secondMarkdownText &&
+          <TextArea className="mono"
+                    text={value}
+                    theme={app.theme}
+                    paddingHorizontal="20px"
+                    paddingVertical="10px"
+                    onApply={apply}
+                    onCancel={cancel}
+                    autoFocus={props.autoFocus}/>
+        }
 
         <HStack halign="left"
                 valign="stretch"
@@ -278,7 +320,7 @@ const MarkdownEditor = observer(({ text, title, autoFocus }: { text: string, tit
   return (
     <>
       <Label className="ibm h4"
-             text={title}
+             text={props.title}
              textColor={app.theme.text75}
              whiteSpace="pre"
              paddingLeft="25px"
@@ -287,15 +329,22 @@ const MarkdownEditor = observer(({ text, title, autoFocus }: { text: string, tit
       <HStack halign="stretch"
               valign="stretch"
               gap="50px">
-        <TextArea className="mono"
-                  text={value}
-                  theme={app.theme}
-                  paddingHorizontal="20px"
-                  paddingVertical="10px"
-                  onApply={apply}
-                  onCancel={cancel}
-                  autoFocus={autoFocus}
-                  width="50%"/>
+        {props.secondMarkdownText &&
+          <MarkdownText value={props.secondMarkdownText}
+                        width="50%"/>
+        }
+
+        {!props.secondMarkdownText &&
+          <TextArea className="mono"
+                    text={value}
+                    theme={app.theme}
+                    paddingHorizontal="20px"
+                    paddingVertical="10px"
+                    onApply={apply}
+                    onCancel={cancel}
+                    autoFocus={props.autoFocus}
+                    width="50%"/>
+        }
 
         <VSeparator theme={app.theme}/>
 

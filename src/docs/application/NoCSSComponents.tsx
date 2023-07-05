@@ -308,7 +308,7 @@ class TextAreaController {
     }
   }
 
-  static newLine(ta: HTMLTextAreaElement) {
+  static newLine(ta: HTMLTextAreaElement): boolean {
     const value = ta.value
     const selectionStart = ta.selectionStart
 
@@ -336,7 +336,9 @@ class TextAreaController {
       // func setRangeText unfortunately clears browser history
       // ta.current.setRangeText(spaces, selectionStart, selectionStart, 'end')
       document.execCommand('insertText', false, spaces)
+      return true
     }
+    return false
   }
 
   static deleteAllSpacesBeforeCursor(ta: HTMLTextAreaElement): boolean {
@@ -360,6 +362,29 @@ class TextAreaController {
     if (ta) {
       ta.style.height = 'inherit'
       ta.style.height = `${ta.scrollHeight + 5}px`
+    }
+  }
+
+  static moveCursorToEndLine(ta: HTMLTextAreaElement | undefined | null) {
+    if (ta) {
+      const endOfTheLineIndex = ta.value.indexOf('\n', ta.selectionStart)
+      if (endOfTheLineIndex !== -1) ta.setSelectionRange(endOfTheLineIndex, endOfTheLineIndex)
+      else ta.setSelectionRange(ta.value.length, ta.value.length)
+    }
+  }
+
+  static moveCursorToBeginLine(ta: HTMLTextAreaElement | undefined | null) {
+    if (ta) {
+      let beginOfTheLineIndex = ta.value.lastIndexOf('\n', ta.selectionStart - 1)
+      if (beginOfTheLineIndex !== -1) {
+        for (let i = beginOfTheLineIndex + 1; i < ta.value.length; i++) {
+          if (ta.value.at(i) !== ' ') {
+            beginOfTheLineIndex = i
+            break
+          }
+        }
+        ta.setSelectionRange(beginOfTheLineIndex, beginOfTheLineIndex)
+      } else ta.setSelectionRange(0, 0)
     }
   }
 }
@@ -386,30 +411,54 @@ export const TextArea = (props: TextAreaProps) => {
       e.preventDefault()
       e.stopPropagation()
       TextAreaController.format(ta.current)
+      TextAreaController.moveCursorToBeginLine(ta?.current)
     }
-
     // Enter key
-    if (e.keyCode === 13 && e.shiftKey) {
+    else if (e.keyCode === 13 && e.shiftKey) {
       e.preventDefault()
       e.stopPropagation()
       props.onApply?.(value)
       TextAreaController.adjustScroller(ta?.current)
     }
-
-    if (ta?.current && e.keyCode === 13 && !e.shiftKey) {
-      TextAreaController.newLine(ta.current)
-      e.stopPropagation()
+    // PageUp key
+    else if (e.keyCode === 33) {
       e.preventDefault()
-      TextAreaController.adjustScroller(ta?.current)
+      e.stopPropagation()
+      ta?.current?.setSelectionRange(0, 0)
+    }
+    // PageDown key
+    else if (e.keyCode === 34) {
+      e.preventDefault()
+      e.stopPropagation()
+      const length = ta?.current?.value.length ?? 0
+      ta?.current?.setSelectionRange(length, length)
+    }
+    // Home key
+    else if (e.keyCode === 36) {
+      e.preventDefault()
+      e.stopPropagation()
+      TextAreaController.moveCursorToBeginLine(ta?.current)
+    }
+    // End key
+    else if (e.keyCode === 35) {
+      e.preventDefault()
+      e.stopPropagation()
+      TextAreaController.moveCursorToEndLine(ta?.current)
+    } else if (ta?.current && e.keyCode === 13 && !e.shiftKey) {
+      if (TextAreaController.newLine(ta.current)) {
+        e.stopPropagation()
+        e.preventDefault()
+        TextAreaController.adjustScroller(ta?.current)
+      }
     }
     // ESC key
-    if (e.keyCode === 27) {
+    else if (e.keyCode === 27) {
       e.preventDefault()
       e.stopPropagation()
       props.onCancel?.()
     }
     // Delete key
-    if (e.keyCode === 8 && ta?.current && ta.current.selectionStart === ta.current.selectionEnd) {
+    else if (e.keyCode === 8 && ta?.current && ta.current.selectionStart === ta.current.selectionEnd) {
       if (TextAreaController.deleteAllSpacesBeforeCursor(ta.current)) {
         e.preventDefault()
         e.stopPropagation()
@@ -697,6 +746,7 @@ export const Image = (props: ImageProps) => {
     if ('width' in props) style.width = props.width
     if ('height' in props) style.height = props.height
     if ('opacity' in props) style.opacity = props.opacity
+    if ('animate' in props) style.animate = props.animate
     imgClassName = buildClassName(style)
   }
 

@@ -94,7 +94,7 @@ function buildLoaders(options: BuildOptions): webpack.RuleSetRule[] {
 function buildPlugins(options: BuildOptions): webpack.WebpackPluginInstance[] {
   const res = [
     new HTMLWebpackPlugin({
-      template: path.resolve(__dirname, 'public', 'indexTemplate.html'),
+      template: path.resolve(__dirname, 'public', 'index.html'),
       filename: 'index.html'
     }),
     new webpack.HotModuleReplacementPlugin(),
@@ -105,9 +105,7 @@ function buildPlugins(options: BuildOptions): webpack.WebpackPluginInstance[] {
     res.push(new FileManagerPlugin({
       events: {
         onStart: {
-          delete: [options.outputDir]
-        },
-        onEnd: {
+          delete: [options.outputDir],
           copy: [
             {
               source: path.join(__dirname, 'public'),

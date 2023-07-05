@@ -49,7 +49,7 @@ function useWindowPosition(limit: number = -1): number {
 }
 
 export const IntroPage = observer(() => {
-  const SCROLL_POS_LIMIT = 750
+  const SCROLL_POS_LIMIT = 500
   const { app } = useDocsContext()
   const scrollPosition = useWindowPosition(SCROLL_POS_LIMIT)
   console.log('new IntroView, scrollPosition: ', scrollPosition)
@@ -73,6 +73,7 @@ export const IntroPage = observer(() => {
              halign="center" valign="top"
              top="0"
              opacity={scrollPosition > SCROLL_POS_LIMIT ? '0.5' : '1'}
+             animate='opacity 500ms'
              fixed/>
     }
 

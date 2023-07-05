@@ -17,8 +17,7 @@
     "react-scripts": "5.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "server": "webpack serve --env mode=development port=3000",
+    "server": "react-scripts start",
     "dev": "webpack --env mode=development",
     "build": "webpack --env mode=production",
     "eslint": "eslint '**/*.{ts,tsx}'",

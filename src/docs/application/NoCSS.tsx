@@ -37,6 +37,7 @@ export const abbreviations: Record<string, string> = {
   'opacity': 'OP',
   'overflow': 'O',
   'overflow-x': 'OX',
+  'outline': 'OL',
   'padding': 'P',
   'padding-left': 'PL',
   'padding-right': 'PR',
@@ -196,6 +197,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, () =>
 
   operator.bgColor = (value: string) => { setValue('background-color', value) }
   operator.border = (value: string | [string, string, string]) => { setValue('border', Array.isArray(value) ? value.join(' ') : value) }
+  operator.outline = (value: string | [string, string, string]) => { setValue('outline', Array.isArray(value) ? value.join(' ') : value) }
   operator.borderLeft = (value: string | [string, string, string]) => { setValue('border-left', Array.isArray(value) ? value.join(' ') : value) }
   operator.borderRight = (value: string | [string, string, string]) => { setValue('border-right', Array.isArray(value) ? value.join(' ') : value) }
   operator.borderTop = (value: string | [string, string, string]) => { setValue('border-top', Array.isArray(value) ? value.join(' ') : value) }
@@ -318,6 +320,7 @@ export interface StylableComponentProps {
   textColor?: string
   bgColor?: string
   border?: string | [string, string, string]
+  outline?: string | [string, string, string]
   borderLeft?: string | [string, string, string]
   borderRight?: string | [string, string, string]
   borderTop?: string | [string, string, string]
@@ -326,6 +329,7 @@ export interface StylableComponentProps {
   opacity?: string
   shadow?: string
   btnCursor?: boolean
+  caretColor?: string
   visible?: boolean
   className?: string
   children?: any

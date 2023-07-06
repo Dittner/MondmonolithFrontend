@@ -176,6 +176,8 @@ input[type=password] {
 textarea {
   font-size: 1rem;
   line-height: var(--CodeLineHeight);
+  caret-shape: block;
+  min-height: 50px;
   margin: 0;
   width: 100%;
   box-sizing: border-box;
@@ -184,7 +186,6 @@ textarea {
   resize: none;
   outline: none;
   overflow: visible;
-  box-shadow: 1px 3px 3px #00000005 inset;
 }
 
 /******************************/

@@ -187,10 +187,14 @@ export const Label = (props: LabelProps) => {
 * INPUT
 *
 * */
+export interface InputProtocol {
+  value: string
+}
 
 interface InputProps extends StylableComponentProps {
   type: 'text' | 'number' | 'password' | 'email'
   theme: Theme
+  protocol?: InputProtocol
   text?: string
   title?: string
   caretColor?: string
@@ -212,7 +216,7 @@ const defInputProps = (theme: Theme): any => {
     border: ['1px', 'solid', theme.inputBorder],
     focusState: (state: StylableComponentProps) => {
       state.textColor = theme.text
-      state.border = ['1px', 'solid', theme.inputBorderFocused]
+      state.border = ['1px', 'solid', theme.border]
     }
   }
 }
@@ -255,8 +259,9 @@ export const Input = (props: InputProps) => {
              autoCorrect="off"
              autoComplete="off"
              type={customProps.type}
-             defaultValue={customProps.text}
+             defaultValue={customProps.text || customProps.protocol.value}
              onChange={e => {
+               if (customProps.protocol) customProps.protocol.value = e.currentTarget.value
                customProps.onChange?.(e.currentTarget.value)
              }}
              onKeyDown={onKeyDown}/>
@@ -279,13 +284,13 @@ const defTextAreaProps = (theme: Theme): any => {
   return {
     width: '100%',
     caretColor: theme.caretColor,
-    textColor: theme.textGreen,
-    border: ['1px', 'solid', theme.border],
-    cornerRadius: '10px',
-    animate: 'border-left 300ms',
-    borderLeft: ['6px', 'solid', theme.inputBorder],
+    textColor: theme.green,
+    bgColor: theme.codeBg,
+    border: ['1px', 'solid', theme.inputBorder],
+    outline: ['10px', 'solid', theme.inputBorder],
     focusState: (state: StylableComponentProps) => {
-      state.borderLeft = ['6px', 'solid', theme.red]
+      state.outline = ['10px', 'solid', theme.inputBorderFocused]
+      state.border = ['1px', 'solid', theme.border]
       state.bgColor = theme.inputBg
     }
   }
@@ -361,7 +366,7 @@ class TextAreaController {
   static adjustScroller(ta: HTMLTextAreaElement | undefined | null) {
     if (ta) {
       ta.style.height = 'inherit'
-      ta.style.height = `${ta.scrollHeight + 5}px`
+      ta.style.height = `${ta.scrollHeight + 2}px`
     }
   }
 
@@ -450,12 +455,6 @@ export const TextArea = (props: TextAreaProps) => {
         e.preventDefault()
         TextAreaController.adjustScroller(ta?.current)
       }
-    }
-    // ESC key
-    else if (e.keyCode === 27) {
-      e.preventDefault()
-      e.stopPropagation()
-      props.onCancel?.()
     }
     // Delete key
     else if (e.keyCode === 8 && ta?.current && ta.current.selectionStart === ta.current.selectionEnd) {

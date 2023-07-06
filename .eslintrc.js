@@ -53,7 +53,6 @@ module.exports = {
     "@typescript-eslint/keyword-spacing": "warn",
     "keyword-spacing": "warn",
     "@typescript-eslint/brace-style": "warn",
-    "brace-style": "warn",
     "@typescript-eslint/object-curly-spacing": "warn",
     "object-curly-spacing": "warn",
     "@typescript-eslint/indent": "warn",
@@ -65,5 +64,7 @@ module.exports = {
     "no-useless-escape": "off",
     "@typescript-eslint/no-extraneous-class": "off",
     "no-extraneous-class": "off",
+    "@typescript-eslint/brace-style)" : "off",
+    "brace-style" : "off",
   }
 }

@@ -2,10 +2,13 @@ import { UUID } from '../infrastructure/UIDGenerator'
 import { buildRule, type StylableComponentProps } from './NoCSS'
 
 const DARK_THEME_RED = '#E06C75'
-const LIGHT_THEME_RED = '#b44553'
 const DARK_THEME_WHITE = '#c7d7e5'
-const LIGHT_THEME_APP_BG = '#e5eaee'
 const DARK_THEME_APP_BG = '#23282a'
+
+const LIGHT_THEME_APP_BG = '#e5eaee'
+const LIGHT_THEME_RED = '#b44553'
+
+const TRANSPARENT = '#00000001'
 
 export interface Theme {
   id: string
@@ -16,14 +19,16 @@ export interface Theme {
   yellow: string
   appBg: string
   transparent: string
+  docListBg: string
   panelBg: string
   modalWindowBg: string
   text: string
   text75: string
-  textGreen: string
-  textGreen75: string
+  green: string
+  green75: string
   pageTitle: string
   inputBg: string
+  codeBg: string
   inputBorder: string
   inputBorderFocused: string
   pageSelection: string
@@ -57,17 +62,19 @@ export class ThemeManager {
     white25: '#ffffff10',
     yellow: '#c29a5f',
     appBg: DARK_THEME_APP_BG,
-    transparent: '0',
-    panelBg: '#2e363b',
+    transparent: TRANSPARENT,
+    docListBg: '#293034',
+    panelBg: '#293034',
     modalWindowBg: '#495655',
     text: DARK_THEME_WHITE,
     text75: '#76818d',
-    textGreen: '#a7c6d2',
-    textGreen75: '#a7c6d275',
+    green: '#afd2e8',
+    green75: '#afd2e875',
     pageTitle: '#86b3c7',
-    inputBg: '#262e32',
-    inputBorder: '#a7c6d2',
-    inputBorderFocused: '#46575f',
+    inputBg: DARK_THEME_APP_BG,
+    codeBg: '#2e393f75',
+    inputBorder: TRANSPARENT,
+    inputBorderFocused: '#293034',
     border: '#323e44',
     pageSelection: '#323e44',
     docSelection: '#00000020',
@@ -88,8 +95,8 @@ export class ThemeManager {
 
     const inlineCodeProps: StylableComponentProps = {
       className: 'mono',
-      textColor: '#afd2e8',
-      bgColor: '#2e393f50',
+      textColor: theme.green,
+      bgColor: theme.codeBg,
       border: ['1px', 'solid', theme.border],
       padding: '4px',
       cornerRadius: '4px'
@@ -120,17 +127,19 @@ export class ThemeManager {
     white25: '#ffffff20',
     yellow: '#6f838d',
     appBg: LIGHT_THEME_APP_BG,
-    transparent: '0',
-    panelBg: '#e0e5e8',
+    transparent: TRANSPARENT,
+    docListBg: '#e0e5e8',
+    panelBg: '#d7dce0',
     modalWindowBg: '#d0d4d8',
     text: DARK_THEME_APP_BG,
     text75: '#687278',
-    textGreen: '#2c363c',
-    textGreen75: '#2c363c75',
+    green: '#2c363c',
+    green75: '#2c363c75',
     pageTitle: '#396a88',
-    inputBg: '#d8dee3',
-    inputBorder: '#757b7d',
-    inputBorderFocused: '#768a91',
+    inputBg: LIGHT_THEME_APP_BG,
+    codeBg: '#c4d1d775',
+    inputBorder: TRANSPARENT,
+    inputBorderFocused: '#c4d1d7',
     border: '#c4d1d7',
     pageSelection: '#c4d1d7',
     docSelection: '#c4d1d7',
@@ -152,7 +161,7 @@ export class ThemeManager {
     const inlineCodeProps: StylableComponentProps = {
       className: 'mono',
       textColor: theme.text,
-      bgColor: '#c0c9d275',
+      bgColor: theme.codeBg,
       border: 'none',
       padding: '4px',
       cornerRadius: '4px'

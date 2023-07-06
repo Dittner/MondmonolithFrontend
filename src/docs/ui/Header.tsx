@@ -146,12 +146,12 @@ export const HeaderView = observer(() => {
 
 const AuthDropDown = observer(({ isDropDownOpened, onClose }: { isDropDownOpened: boolean, onClose: () => void }) => {
   const { user, app } = useDocsContext()
-  const [name, setName] = useState(user.login)
-  const [pwd, setPwd] = useState(user.pwd)
+  const [nameProtocol, _] = useState({ value: user.login })
+  const [pwdProtocol, __] = useState({ value: user.pwd })
 
   const handleSignIn = () => {
     if (user.authStatus === AuthStatus.SIGNED_OUT) {
-      user.signIn(name, pwd)
+      user.signIn(nameProtocol.value, pwdProtocol.value)
     }
   }
 
@@ -164,19 +164,17 @@ const AuthDropDown = observer(({ isDropDownOpened, onClose }: { isDropDownOpened
             padding="20px"
             shadow="0 5px 5px #00000020">
       <Input type="text"
-             text={name}
+             protocol={nameProtocol}
              theme={app.theme}
              title="Login"
              placeHolder="Enter your name"
-             onChange={(value: string) => { setName(value) }}
              onSubmitted={handleSignIn}/>
 
       <Input type="password"
-             text={pwd}
+             protocol={pwdProtocol}
              theme={app.theme}
              title="Password"
              placeHolder="Enter your password"
-             onChange={(value: string) => { setPwd(value) }}
              onSubmitted={handleSignIn}/>
 
       {user.authStatus !== AuthStatus.AUTHORIZING &&

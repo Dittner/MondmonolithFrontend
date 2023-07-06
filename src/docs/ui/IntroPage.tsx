@@ -49,7 +49,7 @@ function useWindowPosition(limit: number = -1): number {
 }
 
 export const IntroPage = observer(() => {
-  const SCROLL_POS_LIMIT = 500
+  const SCROLL_POS_LIMIT = 600
   const { app } = useDocsContext()
   const scrollPosition = useWindowPosition(SCROLL_POS_LIMIT)
   console.log('new IntroView, scrollPosition: ', scrollPosition)
@@ -299,7 +299,7 @@ const MarkdownEditor = observer((props: MarkdownEditorProps) => {
                     text={value}
                     theme={app.theme}
                     paddingHorizontal="20px"
-                    paddingVertical="10px"
+                    paddingVertical="20px"
                     onApply={apply}
                     onCancel={cancel}
                     autoFocus={props.autoFocus}/>
@@ -343,7 +343,7 @@ const MarkdownEditor = observer((props: MarkdownEditorProps) => {
                     text={value}
                     theme={app.theme}
                     paddingHorizontal="20px"
-                    paddingVertical="10px"
+                    paddingVertical="20px"
                     onApply={apply}
                     onCancel={cancel}
                     autoFocus={props.autoFocus}

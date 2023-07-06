@@ -163,13 +163,13 @@ const PageList = observer(() => {
 
       {!pagesSlice.isFirstPageShown &&
         <Button onClick={showPrevPage}
-                textColor={theme.textGreen75}
+                textColor={theme.green75}
                 paddingHorizontal="150px"
                 paddingVertical="10px"
                 border={['1px', 'solid', theme.border]}
                 hoverState={state => {
-                  state.textColor = theme.textGreen
-                  state.border = ['1px', 'solid', theme.textGreen]
+                  state.textColor = theme.green
+                  state.border = ['1px', 'solid', theme.green]
                 }}>
           <p className="icon icon-prevPage"/>
           <p>Previous Page</p>
@@ -186,13 +186,13 @@ const PageList = observer(() => {
         <>
           <Spacer height="10px"/>
           <Button onClick={showNextPage}
-                  textColor={theme.textGreen75}
+                  textColor={theme.green75}
                   paddingHorizontal="150px"
                   paddingVertical="10px"
                   border={['1px', 'solid', theme.border]}
                   hoverState={state => {
-                    state.textColor = theme.textGreen
-                    state.border = ['1px', 'solid', theme.textGreen]
+                    state.textColor = theme.green
+                    state.border = ['1px', 'solid', theme.green]
                   }}>
             <p>Next Page</p>
             <p className="icon icon-nextPage"/>

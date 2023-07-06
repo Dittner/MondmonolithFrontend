@@ -43,7 +43,7 @@ export const DocList = observer(stylable(() => {
   if (docsContext.dirsLoadStatus === LoadStatus.LOADING) {
     return <StylableContainer width="100%"
                               height="100%"
-                              bgColor={app.theme.panelBg}/>
+                              bgColor={app.theme.docListBg}/>
   }
   return (
     <VStack valign="top"
@@ -51,7 +51,7 @@ export const DocList = observer(stylable(() => {
             gap="0"
             width="100%"
             height="100%"
-            bgColor={app.theme.panelBg}>
+            bgColor={app.theme.docListBg}>
 
       <HStack halign="center"
               valign="center"

@@ -9,8 +9,8 @@ const found = code.match(/^```([a-zA-Z]+) */)
 const lang = found.length > 1 && found[1]
 console.log('lang = ', lang)
 
-const row = '    else '
-let isParentIfConditionOrForLoop = /^ *(if)|(for)|(else if) *\(/.test(row) && /\) *$/.test(row)
+const row = 'formatting code'
+let isParentIfConditionOrForLoop = /^ *(if|for|else if) *\(/.test(row) && /\) *$/.test(row)
 isParentIfConditionOrForLoop = isParentIfConditionOrForLoop || /^ *else *$/.test(row)
 
 console.log('res1 = ', isParentIfConditionOrForLoop)

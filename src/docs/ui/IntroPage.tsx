@@ -1,5 +1,5 @@
-import {observer} from 'mobx-react'
-import React, {useEffect, useLayoutEffect, useState} from 'react'
+import { observer } from 'mobx-react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-java'
@@ -15,10 +15,10 @@ import 'prismjs/components/prism-swift'
 import 'prismjs/components/prism-json'
 import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-markup'
-import {Header} from './Header'
-import {stylable} from '../application/NoCSS'
-import {useDocsContext} from '../../App'
-import {AppSize, LayoutLayer} from '../application/Application'
+import { Header } from './Header'
+import { stylable } from '../application/NoCSS'
+import { useDocsContext } from '../../App'
+import { AppSize, LayoutLayer } from '../application/Application'
 import {
   HStack,
   IconButton,
@@ -184,7 +184,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.24  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.25  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -200,7 +200,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.24  |  DATE: 2023  
+*  MODE: demo  |  VER: 2.25  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/

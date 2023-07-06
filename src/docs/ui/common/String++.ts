@@ -122,7 +122,7 @@ function removeExtraSpaces(code: string): string {
     res += '  '.repeat(amountOfBlocks) + row.slice(spaces)
     if (r < rows.length - 1) res += '\n'
 
-    isParentIfConditionOrForLoop = /^ *(if)|(for)|(else if) *\(/.test(row) && /\) *$/.test(row)
+    isParentIfConditionOrForLoop = /^ *(if|for|else if) *\(/.test(row) && /\) *$/.test(row)
     isParentIfConditionOrForLoop = isParentIfConditionOrForLoop || /^ *else *$/.test(row)
     prevSpaces = spaces
   }

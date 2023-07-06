@@ -1,5 +1,5 @@
-import {UUID} from '../infrastructure/UIDGenerator'
-import {buildRule, type StylableComponentProps} from './NoCSS'
+import { UUID } from '../infrastructure/UIDGenerator'
+import { buildRule, type StylableComponentProps } from './NoCSS'
 
 const DARK_THEME_RED = '#E06C75'
 const DARK_THEME_WHITE = '#c7d7e5'
@@ -129,7 +129,7 @@ export class ThemeManager {
     appBg: LIGHT_THEME_APP_BG,
     transparent: TRANSPARENT,
     docListBg: '#e0e5e8',
-    panelBg: '#d7dce0',
+    panelBg: LIGHT_THEME_APP_BG,
     modalWindowBg: '#d0d4d8',
     text: DARK_THEME_APP_BG,
     text75: '#687278',
@@ -141,8 +141,8 @@ export class ThemeManager {
     inputBorder: TRANSPARENT,
     inputBorderFocused: '#c4d1d7',
     border: '#c4d1d7',
-    pageSelection: '#c4d1d7',
-    docSelection: '#c4d1d7',
+    pageSelection: '#c4d1d775',
+    docSelection: '#c4d1d775',
     caretColor: LIGHT_THEME_RED,
     error: '#914058'
   }

@@ -1,10 +1,10 @@
 import * as React from 'react'
-import {useCallback, useEffect, useRef, useState} from 'react'
-import {useWindowSize} from '../../App'
-import {buildClassName, type StylableComponentProps} from './NoCSS'
-import {type Theme} from './ThemeManager'
-import {observer} from 'mobx-react'
-import {calcSpaceBefore, formatCode, reformat} from '../ui/common/String++'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useWindowSize } from '../../App'
+import { buildClassName, type StylableComponentProps } from './NoCSS'
+import { type Theme } from './ThemeManager'
+import { observer } from 'mobx-react'
+import { calcSpaceBefore, formatCode, reformat } from '../ui/common/String++'
 
 /*
 *
@@ -301,8 +301,20 @@ class TextAreaController {
     try {
       const formattedCode = reformat(value)
       const scrollY = window.scrollY
-      const selectionStart = ta.selectionStart
-      ta.setSelectionRange(0, ta?.value.length)
+      let selectionRow = value.slice(0, ta.selectionStart).split('\n').length
+      let selectionStart = ta.selectionStart
+      if (selectionRow > 0) {
+        for (let i = 0; i < formattedCode.length; i++) {
+          if (formattedCode.at(i) === '\n') {
+            selectionRow--
+            if (selectionRow === 0) {
+              selectionStart = i
+            }
+          }
+        }
+      }
+
+      ta.setSelectionRange(0, value.length)
       document.execCommand('insertText', false, formattedCode)
       ta.setSelectionRange(selectionStart, selectionStart)
       window.scrollTo(0, scrollY)

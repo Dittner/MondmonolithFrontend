@@ -1,9 +1,9 @@
-import { Route, Routes, useLocation, useParams } from 'react-router-dom'
-import { LoadingSpinner } from './common/Loading'
-import { observer } from 'mobx-react'
-import { useDocsContext } from '../../App'
+import {Route, Routes, useLocation, useParams} from 'react-router-dom'
+import {LoadingSpinner} from './common/Loading'
+import {observer} from 'mobx-react'
+import {useDocsContext} from '../../App'
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import {useEffect, useState} from 'react'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-jsx'
@@ -18,11 +18,11 @@ import 'prismjs/components/prism-swift'
 import 'prismjs/components/prism-json'
 import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-markup'
-import { DocLoadStatus, type Page, type PageBlock } from '../domain/DomainModel'
-import { LoadStatus } from '../DocsContext'
+import {DocLoadStatus, type Page, type PageBlock} from '../domain/DomainModel'
+import {LoadStatus} from '../DocsContext'
 import ReactMarkdown from 'react-markdown'
-import { stylable } from '../application/NoCSS'
-import { AppSize } from '../application/Application'
+import {stylable} from '../application/NoCSS'
+import {AppSize} from '../application/Application'
 import {
   Button,
   HStack,
@@ -330,7 +330,7 @@ const PageTitleEditor = observer(({ page }: { page: Page }) => {
               className="mono"
               text={page.title}
               theme={app.theme}
-              paddingHorizontal="26px"
+              paddingHorizontal="28px"
               paddingTop="10px"
               onApply={apply}
               onCancel={cancel}
@@ -434,7 +434,7 @@ const PageBlockEditor = observer(({ block }: { block: PageBlock }) => {
               text={block.text}
               theme={app.theme}
               className="mono"
-              paddingHorizontal="26px"
+              paddingHorizontal="28px"
               paddingTop="10px"
               onApply={apply}
               onCancel={cancel}

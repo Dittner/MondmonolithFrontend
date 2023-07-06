@@ -10,10 +10,15 @@ function parseLang(code: string): string {
 
 export function reformat(text: string): string {
   let textBeforeCode = ''
+  let textAfterCode = ''
   const startCodeInd = regexIndexOf(text, /```[a-zA-Z]+\n+/)
   if (startCodeInd !== -1) {
     let endCodeInd = text.indexOf('```', startCodeInd + 3)
-    endCodeInd = endCodeInd !== -1 ? endCodeInd : text.length
+    if (endCodeInd === -1) {
+      textAfterCode = '\n```'
+      endCodeInd = text.length
+    }
+
     if (startCodeInd !== 0) {
       textBeforeCode = text.slice(0, startCodeInd)
     }
@@ -22,7 +27,7 @@ export function reformat(text: string): string {
     const lang = parseLang(code)
     const checkXMLTags = lang === 'jsx' || lang === 'tsx' || lang === 'xml' || lang === 'html'
     const res = formatCode(code, checkXMLTags)
-    return endCodeInd !== text.length ? textBeforeCode + res + reformat(text.slice(endCodeInd)) : textBeforeCode + res
+    return endCodeInd !== text.length ? textBeforeCode + res + reformat(text.slice(endCodeInd)) + textAfterCode : textBeforeCode + res + textAfterCode
   } else {
     return text
   }

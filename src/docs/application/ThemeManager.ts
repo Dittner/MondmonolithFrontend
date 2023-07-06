@@ -1,5 +1,5 @@
-import { UUID } from '../infrastructure/UIDGenerator'
-import { buildRule, type StylableComponentProps } from './NoCSS'
+import {UUID} from '../infrastructure/UIDGenerator'
+import {buildRule, type StylableComponentProps} from './NoCSS'
 
 const DARK_THEME_RED = '#E06C75'
 const DARK_THEME_WHITE = '#c7d7e5'
@@ -136,7 +136,7 @@ export class ThemeManager {
     green: '#2c363c',
     green75: '#2c363c75',
     pageTitle: '#396a88',
-    inputBg: LIGHT_THEME_APP_BG,
+    inputBg: '#c4d1d775',
     codeBg: '#c4d1d775',
     inputBorder: TRANSPARENT,
     inputBorderFocused: '#c4d1d7',

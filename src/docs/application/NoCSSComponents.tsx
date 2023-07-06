@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useWindowSize } from '../../App'
-import { buildClassName, type StylableComponentProps } from './NoCSS'
-import { type Theme } from './ThemeManager'
-import { observer } from 'mobx-react'
-import { calcSpaceBefore, formatCode, reformat } from '../ui/common/String++'
+import {useCallback, useEffect, useRef, useState} from 'react'
+import {useWindowSize} from '../../App'
+import {buildClassName, type StylableComponentProps} from './NoCSS'
+import {type Theme} from './ThemeManager'
+import {observer} from 'mobx-react'
+import {calcSpaceBefore, formatCode, reformat} from '../ui/common/String++'
 
 /*
 *
@@ -285,13 +285,11 @@ const defTextAreaProps = (theme: Theme): any => {
     width: '100%',
     caretColor: theme.caretColor,
     textColor: theme.green,
-    bgColor: theme.codeBg,
-    border: ['1px', 'solid', theme.inputBorder],
+    bgColor: theme.inputBg,
+    border: ['1px', 'solid', theme.border],
     outline: ['10px', 'solid', theme.inputBorder],
     focusState: (state: StylableComponentProps) => {
       state.outline = ['10px', 'solid', theme.inputBorderFocused]
-      state.border = ['1px', 'solid', theme.border]
-      state.bgColor = theme.inputBg
     }
   }
 }
@@ -299,15 +297,18 @@ const defTextAreaProps = (theme: Theme): any => {
 class TextAreaController {
   static format(ta: HTMLTextAreaElement) {
     const value = ta.value
-    const selectionStart = ta.selectionStart
-    ta.setSelectionRange(0, ta?.value.length)
 
     try {
       const formattedCode = reformat(value)
       const scrollY = window.scrollY
+      const selectionStart = ta.selectionStart
+      ta.setSelectionRange(0, ta?.value.length)
       document.execCommand('insertText', false, formattedCode)
       ta.setSelectionRange(selectionStart, selectionStart)
       window.scrollTo(0, scrollY)
+      // blur() and focus() force input's scroll move to cursor
+      ta.blur()
+      ta.focus()
     } catch (e) {
       console.log('Error, while formatting code: ', e)
     }
@@ -341,6 +342,9 @@ class TextAreaController {
       // func setRangeText unfortunately clears browser history
       // ta.current.setRangeText(spaces, selectionStart, selectionStart, 'end')
       document.execCommand('insertText', false, spaces)
+      // blur() and focus() enable scroll to cursor
+      ta.blur()
+      ta.focus()
       return true
     }
     return false
@@ -366,15 +370,18 @@ class TextAreaController {
   static adjustScroller(ta: HTMLTextAreaElement | undefined | null) {
     if (ta) {
       ta.style.height = 'inherit'
-      ta.style.height = `${ta.scrollHeight + 2}px`
+      ta.style.height = `${ta.scrollHeight + 5}px`
     }
   }
 
   static moveCursorToEndLine(ta: HTMLTextAreaElement | undefined | null) {
     if (ta) {
       const endOfTheLineIndex = ta.value.indexOf('\n', ta.selectionStart)
-      if (endOfTheLineIndex !== -1) ta.setSelectionRange(endOfTheLineIndex, endOfTheLineIndex)
-      else ta.setSelectionRange(ta.value.length, ta.value.length)
+      if (endOfTheLineIndex !== -1) {
+        ta.setSelectionRange(endOfTheLineIndex, endOfTheLineIndex)
+      } else {
+        ta.setSelectionRange(ta.value.length, ta.value.length)
+      }
     }
   }
 
@@ -389,7 +396,9 @@ class TextAreaController {
           }
         }
         ta.setSelectionRange(beginOfTheLineIndex, beginOfTheLineIndex)
-      } else ta.setSelectionRange(0, 0)
+      } else {
+        ta.setSelectionRange(0, 0)
+      }
     }
   }
 }
@@ -422,8 +431,14 @@ export const TextArea = (props: TextAreaProps) => {
     else if (e.keyCode === 13 && e.shiftKey) {
       e.preventDefault()
       e.stopPropagation()
-      props.onApply?.(value)
       TextAreaController.adjustScroller(ta?.current)
+      props.onApply?.(value)
+    } else if (ta?.current && e.keyCode === 13 && !e.shiftKey) {
+      if (TextAreaController.newLine(ta.current)) {
+        e.stopPropagation()
+        e.preventDefault()
+        TextAreaController.adjustScroller(ta?.current)
+      }
     }
     // PageUp key
     else if (e.keyCode === 33) {
@@ -449,12 +464,6 @@ export const TextArea = (props: TextAreaProps) => {
       e.preventDefault()
       e.stopPropagation()
       TextAreaController.moveCursorToEndLine(ta?.current)
-    } else if (ta?.current && e.keyCode === 13 && !e.shiftKey) {
-      if (TextAreaController.newLine(ta.current)) {
-        e.stopPropagation()
-        e.preventDefault()
-        TextAreaController.adjustScroller(ta?.current)
-      }
     }
     // Delete key
     else if (e.keyCode === 8 && ta?.current && ta.current.selectionStart === ta.current.selectionEnd) {
@@ -467,7 +476,7 @@ export const TextArea = (props: TextAreaProps) => {
 
   const className = 'className' in props ? props.className + ' ' + buildClassName(customProps) : buildClassName(customProps)
 
-  return <textarea className={className}
+  return <textarea className={className + ' listScrollbar'}
                    value={value}
                    autoFocus={customProps.autoFocus}
                    ref={ta}
@@ -733,9 +742,11 @@ export const DropDownContainer = (props: DropDownProps) => {
 interface ImageProps extends StackProps {
   src: string
   alt: string
+  preview?: string
 }
 
 export const Image = (props: ImageProps) => {
+  const [showPreview, setShowPreview] = useState(props.preview !== undefined)
   if ('visible' in props && !props.visible) return <></>
   const className = 'className' in props ? props.className + ' ' + buildClassName(props) : buildClassName(props)
 
@@ -749,9 +760,17 @@ export const Image = (props: ImageProps) => {
     imgClassName = buildClassName(style)
   }
 
+  useEffect(() => {
+    if (props.preview) {
+      setTimeout(() => {
+        setShowPreview(false)
+      }, 1000)
+    }
+  }, [])
+
   return (
     <HStack className={className} valign={props.valign} halign={props.halign}>
-      <img className={imgClassName} src={props.src} alt={props.alt}/>
+      <img className={imgClassName} src={showPreview ? props.preview : props.src} alt={props.alt}/>
     </HStack>
   )
 }

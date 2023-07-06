@@ -1,5 +1,5 @@
-import { observer } from 'mobx-react'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import {observer} from 'mobx-react'
+import React, {useEffect, useLayoutEffect, useState} from 'react'
 import ReactMarkdown from 'react-markdown'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-java'
@@ -15,10 +15,10 @@ import 'prismjs/components/prism-swift'
 import 'prismjs/components/prism-json'
 import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-markup'
-import { Header } from './Header'
-import { stylable } from '../application/NoCSS'
-import { useDocsContext } from '../../App'
-import { AppSize, LayoutLayer } from '../application/Application'
+import {Header} from './Header'
+import {stylable} from '../application/NoCSS'
+import {useDocsContext} from '../../App'
+import {AppSize, LayoutLayer} from '../application/Application'
 import {
   HStack,
   IconButton,
@@ -65,10 +65,12 @@ export const IntroPage = observer(() => {
                  paddingBottom="20px"
                  disableHorizontalScroll>
 
-    {(app.size === AppSize.L || app.size === AppSize.M) &&
+    {app.size !== AppSize.XS &&
       <Image src={app.theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
+             preview={app.theme.isDark ? '/headerBg-preview.jpg' : '/headerBg-light-preview.jpg'}
              alt="header's background"
-             maxWidth="100%"
+             width='2000px'
+             height='850px'
              disableHorizontalScroll
              halign="center" valign="top"
              top="0"
@@ -93,13 +95,32 @@ export const IntroPage = observer(() => {
                     app.switchTheme()
                   }}/>
     </StylableContainer>
-    {(app.size === AppSize.XS || app.size === AppSize.S) &&
-      <Image src={app.theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
-             alt="header's background"
-             maxWidth="100%"
-             width="100%"
-             disableScroll
-             halign="center" valign="top"/>
+    {app.size === AppSize.XS &&
+      <>
+        <Image src={app.theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
+               preview={app.theme.isDark ? '/headerBg-preview.jpg' : '/headerBg-light-preview.jpg'}
+               alt="header's background"
+               width='800px'
+               height='340px'
+               disableScroll
+               halign="center" valign="top"/>
+
+        <Label
+          className={app.theme.isDark ? 'ibm h2' : 'ibm h2 light'}
+          whiteSpace="pre"
+          textAlign='center'
+          top="250px"
+          absolute
+          layer={LayoutLayer.ONE}>
+          <span className="token keyword">{'func '}</span>
+          <span className="token function">{'highlight\n'}</span>
+          <span className="token symbol">(</span>
+          <span className="token def">yourNotes</span>
+          <span className="token symbol">: [</span>
+          <span className="token class">String</span>
+          <span className="token symbol">{'])'}</span>
+        </Label>
+      </>
     }
 
     <Label className="mono"
@@ -110,24 +131,24 @@ export const IntroPage = observer(() => {
            bgColor={bgColor}
            layer={LayoutLayer.ONE}/>
 
-    <Label
-      className={app.theme.isDark ? app.size === AppSize.XS ? 'ibm h3' : 'ibm h2' : app.size === AppSize.XS ? 'ibm h3 light' : 'ibm h2 light'}
-      whiteSpace="pre"
-      paddingVertical="30px"
-      layer={LayoutLayer.ONE}>
-      <span className="token keyword">func </span>
-      <span className="token function">highlight</span>
-      <span className="token symbol">(</span>
-      <span className="token def">yourNotes</span>
-      <span className="token symbol">: [</span>
-      <span className="token class">String</span>
-      <span className="token symbol">{'])'}</span>
-      {app.size !== AppSize.XS &&
+    {app.size !== AppSize.XS &&
+      <Label
+        className={app.theme.isDark ? 'ibm h2' : 'ibm h2 light'}
+        whiteSpace="pre"
+        paddingVertical="30px"
+        layer={LayoutLayer.ONE}>
+        <span className="token keyword">func </span>
+        <span className="token function">highlight</span>
+        <span className="token symbol">(</span>
+        <span className="token def">yourNotes</span>
+        <span className="token symbol">: [</span>
+        <span className="token class">String</span>
+        <span className="token symbol">{'])'}</span>
         <span className="token symbol">{' {...}'}</span>
-      }
-    </Label>
+      </Label>
+    }
 
-    <Spacer visible={app.size === AppSize.L || app.size === AppSize.M} height="250px"/>
+    <Spacer visible={app.size !== AppSize.XS} height="250px"/>
 
     <VStack halign="stretch"
             valign="top"
@@ -163,7 +184,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ======================== 
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE
 *   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.23  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.24  |  2023  
 *   having to write a plane text or HTML tags.          *   ======================== 
 *                                                       *
 ***/
@@ -179,7 +200,7 @@ const aboutTxtXS = `/***
 *  or HTML tags.
 *
 *  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.23  |  DATE: 2023  
+*  MODE: demo  |  VER: 2.24  |  DATE: 2023  
 *  –––––––––––––––––––––––––––––––––––––––––
 *
 ***/
@@ -197,7 +218,7 @@ const blockquote = `> «Sorry to interrupt the festivities, Dave, but I think we
 const lists = `## Daisy Bell
 + Daisy...
 + Daisy...
-+ Daisy... 
++ Daisy...
     + Give me your answer, do...
     + I'm.. half... crazy...
     + All for the love... of you...`
@@ -277,7 +298,7 @@ const MarkdownEditor = observer((props: MarkdownEditorProps) => {
     return (
       <VStack halign="stretch"
               valign="top"
-              gap="5px"
+              gap="10px"
               width="100%"
               layer={LayoutLayer.ONE}>
 
@@ -298,7 +319,7 @@ const MarkdownEditor = observer((props: MarkdownEditorProps) => {
           <TextArea className="mono"
                     text={value}
                     theme={app.theme}
-                    paddingHorizontal="20px"
+                    paddingHorizontal="25px"
                     paddingVertical="20px"
                     onApply={apply}
                     onCancel={cancel}
@@ -342,7 +363,7 @@ const MarkdownEditor = observer((props: MarkdownEditorProps) => {
           <TextArea className="mono"
                     text={value}
                     theme={app.theme}
-                    paddingHorizontal="20px"
+                    paddingHorizontal="25px"
                     paddingVertical="20px"
                     onApply={apply}
                     onCancel={cancel}

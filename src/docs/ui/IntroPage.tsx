@@ -56,10 +56,10 @@ export const IntroPage = observer(() => {
 
   let headerFontSize = ''
   switch (app.size) {
-    case AppSize.XS: headerFontSize = '30px'; break
-    case AppSize.S: headerFontSize = '45px'; break
-    case AppSize.M: headerFontSize = '45px'; break
-    case AppSize.L: headerFontSize = '55px'; break
+    case AppSize.XS: headerFontSize = '35px'; break
+    case AppSize.S: headerFontSize = '50px'; break
+    case AppSize.M: headerFontSize = '60px'; break
+    case AppSize.L: headerFontSize = '65px'; break
   }
 
   return <VStack maxWidth="100%"
@@ -123,9 +123,9 @@ export const IntroPage = observer(() => {
            paddingTop="100px"
            paddingBottom='100px'
            layer={LayoutLayer.ONE}>
-      <span className="token keyword">{'func\n'}</span>
-      <span className="token function">{'  highlight\n'}</span>
-      <span className="token symbol">{'    ('}</span>
+      <span className="token keyword">{'              func\n'}</span>
+      <span className="token function">{'      highlight\n'}</span>
+      <span className="token symbol">{'('}</span>
       <span className="token def">yourNotes</span>
       <span className="token symbol">: [</span>
       <span className="token class">String</span>

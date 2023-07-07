@@ -54,16 +54,35 @@ export const IntroPage = observer(() => {
   const scrollPosition = useWindowPosition(SCROLL_POS_LIMIT)
   console.log('new IntroView, scrollPosition: ', scrollPosition)
 
-  const bgColor = app.theme.appBg + '99'
+  let headerFontSize = ''
+  switch (app.size) {
+    case AppSize.XS: headerFontSize = '30px'; break
+    case AppSize.S: headerFontSize = '45px'; break
+    case AppSize.M: headerFontSize = '45px'; break
+    case AppSize.L: headerFontSize = '55px'; break
+  }
 
   return <VStack maxWidth="100%"
                  width="100%"
                  height="100%"
                  halign="center"
                  valign="center"
-                 gap="30px"
+                 gap="0"
                  paddingBottom="20px"
                  disableHorizontalScroll>
+
+    {app.size === AppSize.XS &&
+      <Image src={app.theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
+             preview={app.theme.isDark ? '/headerBg-preview.jpg' : '/headerBg-light-preview.jpg'}
+             alt="header's background"
+             top="0"
+             width='800px'
+             height='340px'
+             disableScroll
+             fixed
+             halign="center" valign="top"/>
+
+    }
 
     {app.size !== AppSize.XS &&
       <Image src={app.theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
@@ -95,67 +114,39 @@ export const IntroPage = observer(() => {
                     app.switchTheme()
                   }}/>
     </StylableContainer>
-    {app.size === AppSize.XS &&
-      <>
-        <Image src={app.theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
-               preview={app.theme.isDark ? '/headerBg-preview.jpg' : '/headerBg-light-preview.jpg'}
-               alt="header's background"
-               width='800px'
-               height='340px'
-               disableScroll
-               halign="center" valign="top"/>
 
-        <Label
-          className={app.theme.isDark ? 'ibm h2' : 'ibm h2 light'}
-          whiteSpace="pre"
-          textAlign='center'
-          top="250px"
-          absolute
-          layer={LayoutLayer.ONE}>
-          <span className="token keyword">{'func '}</span>
-          <span className="token function">{'highlight\n'}</span>
-          <span className="token symbol">(</span>
-          <span className="token def">yourNotes</span>
-          <span className="token symbol">: [</span>
-          <span className="token class">String</span>
-          <span className="token symbol">{'])'}</span>
-        </Label>
-      </>
-    }
+    <Label className={app.theme.isDark ? 'ibm' : 'ibm light'}
+           fontSize={headerFontSize}
+           fontWeight='100'
+           whiteSpace="pre"
+           textAlign='left'
+           paddingTop="100px"
+           paddingBottom='100px'
+           layer={LayoutLayer.ONE}>
+      <span className="token keyword">{'func\n'}</span>
+      <span className="token function">{'  highlight\n'}</span>
+      <span className="token symbol">{'    ('}</span>
+      <span className="token def">yourNotes</span>
+      <span className="token symbol">: [</span>
+      <span className="token class">String</span>
+      <span className="token symbol">{'])'}</span>
+    </Label>
 
     <Label className="mono"
            whiteSpace="pre"
+           bgColor={app.theme.appBg50}
            padding="30px"
            text={app.size === AppSize.XS ? aboutTxtXS : aboutTxt}
            textColor={app.theme.text75}
-           bgColor={bgColor}
            layer={LayoutLayer.ONE}/>
-
-    {app.size !== AppSize.XS &&
-      <Label
-        className={app.theme.isDark ? 'ibm h2' : 'ibm h2 light'}
-        whiteSpace="pre"
-        paddingVertical="30px"
-        layer={LayoutLayer.ONE}>
-        <span className="token keyword">func </span>
-        <span className="token function">highlight</span>
-        <span className="token symbol">(</span>
-        <span className="token def">yourNotes</span>
-        <span className="token symbol">: [</span>
-        <span className="token class">String</span>
-        <span className="token symbol">{'])'}</span>
-        <span className="token symbol">{' {...}'}</span>
-      </Label>
-    }
-
-    <Spacer visible={app.size !== AppSize.XS} height="250px"/>
 
     <VStack halign="stretch"
             valign="top"
             maxWidth="1700px"
-            bgColor={bgColor}
-            padding="30px"
+            bgColor={app.theme.appBg}
+            padding="40px"
             layer={LayoutLayer.ONE}>
+
       <Label className="ibm h4"
              text="Examples of Markdown formatting"
              textColor={app.theme.text}
@@ -176,34 +167,36 @@ export const IntroPage = observer(() => {
            fontSize="10px"
            textColor={app.theme.text75}
            layer={LayoutLayer.ONE}/>
+
   </VStack>
 })
 
-const aboutTxt = `/***
-*                                                       *
-*   Designed by developers for developers               *   ======================== 
-*   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE
-*   notes using a markdown-editor. Markdown helps       *   –––––––––––––––––––––––– 
-*   to format notes and code fragments easily without   *   demo  |  2.25  |  2023  
-*   having to write a plane text or HTML tags.          *   ======================== 
-*                                                       *
-***/
+const aboutTxt = `/***                                                                                
+*                                                       *                           
+*   Designed by developers for developers               *   ========================
+*   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE  
+*   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
+*   to format notes and code fragments easily without   *   demo  |  2.26  |  2023  
+*   having to write a plane text or HTML tags.          *   ========================
+*                                                       *                           
+***/                                                                                
 `
 
-const aboutTxtXS = `/***
-*
-*  Designed by developers for developers
-*  This is a web-solution, that enables you to 
-*  make notes using a markdown-editor. Markdown
-*  helps to format notes and code fragments 
-*  easily without having to write a plane text
-*  or HTML tags.
-*
-*  –––––––––––––––––––––––––––––––––––––––––
-*  MODE: demo  |  VER: 2.25  |  DATE: 2023  
-*  –––––––––––––––––––––––––––––––––––––––––
-*
-***/
+const aboutTxtXS = `
+/***                                            
+*                                               
+*  Designed by developers for developers        
+*  This is a web-solution, that enables you to  
+*  make notes using a markdown-editor. Markdown 
+*  helps to format notes and code fragments     
+*  easily without having to write a plane text  
+*  or HTML tags.                                
+*                                               
+*  –––––––––––––––––––––––––––––––––––––––––    
+*  MODE: demo  |  VER: 2.26  |  DATE: 2023      
+*  –––––––––––––––––––––––––––––––––––––––––    
+*                                               
+***/                                             
 `
 
 const headings = `# HAL 9000
@@ -238,7 +231,7 @@ const languages = `## Supported languages\n
 + XML: \`xml\``
 
 const shortcuts = `## Shortcuts\n
-+ Apply code changes: \`Enter + Shift\`\n
++ Apply code changes: \`Shift + Enter\`\n
 + Format code: \`Ctrl + Shift + L\``
 
 const code = `## Memoization
@@ -373,10 +366,8 @@ const MarkdownEditor = observer((props: MarkdownEditorProps) => {
 
         <VSeparator theme={app.theme}/>
 
-        {value &&
-          <MarkdownText value={value}
-                        width="50%"/>
-        }
+        <MarkdownText value={value}
+                      width="50%"/>
       </HStack>
 
       <Spacer height="50px"/>

@@ -18,6 +18,7 @@ export interface Theme {
   white25: string
   yellow: string
   appBg: string
+  appBg50: string
   transparent: string
   docListBg: string
   panelBg: string
@@ -62,6 +63,7 @@ export class ThemeManager {
     white25: '#ffffff10',
     yellow: '#c29a5f',
     appBg: DARK_THEME_APP_BG,
+    appBg50: DARK_THEME_APP_BG + '50',
     transparent: TRANSPARENT,
     docListBg: '#293034',
     panelBg: '#293034',
@@ -71,7 +73,7 @@ export class ThemeManager {
     green: '#afd2e8',
     green75: '#afd2e875',
     pageTitle: '#86b3c7',
-    inputBg: DARK_THEME_APP_BG,
+    inputBg: '#212628',
     codeBg: '#2e393f75',
     inputBorder: TRANSPARENT,
     inputBorderFocused: '#293034',
@@ -127,6 +129,7 @@ export class ThemeManager {
     white25: '#ffffff20',
     yellow: '#6f838d',
     appBg: LIGHT_THEME_APP_BG,
+    appBg50: LIGHT_THEME_APP_BG + '50',
     transparent: TRANSPARENT,
     docListBg: '#e0e5e8',
     panelBg: LIGHT_THEME_APP_BG,
@@ -169,10 +172,10 @@ export class ThemeManager {
     buildRule(inlineCodeProps, theme.id, 'code')
 
     const blockquoteProps: StylableComponentProps = {
-      textColor: '#9da1a9',
-      bgColor: '#dbdee0',
+      textColor: '#526576',
+      bgColor: '#d2dde8',
       padding: '20px',
-      borderLeft: '5px solid #afb0b2'
+      borderLeft: '5px solid #73889d'
     }
     buildRule(blockquoteProps, theme.id, 'blockquote')
   }

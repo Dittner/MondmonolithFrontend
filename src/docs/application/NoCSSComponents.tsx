@@ -4,7 +4,7 @@ import { useWindowSize } from '../../App'
 import { buildClassName, type StylableComponentProps } from './NoCSS'
 import { type Theme } from './ThemeManager'
 import { observer } from 'mobx-react'
-import { calcSpaceBefore, formatCode, reformat } from '../ui/common/String++'
+import { calcSpaceBefore, formatCode, formatIfTextIsCode } from '../ui/common/String++'
 
 /*
 *
@@ -295,11 +295,18 @@ const defTextAreaProps = (theme: Theme): any => {
 }
 
 class TextAreaController {
+  static scrollToCursor(ta: HTMLTextAreaElement) {
+    ta.blur()
+    ta.focus()
+  }
+
   static format(ta: HTMLTextAreaElement) {
     const value = ta.value
 
     try {
-      const formattedCode = reformat(value)
+      const formattedCode = formatIfTextIsCode(value)
+      if (formattedCode === value) return
+
       const scrollY = window.scrollY
       let selectionRow = value.slice(0, ta.selectionStart).split('\n').length
       let selectionStart = ta.selectionStart
@@ -318,9 +325,7 @@ class TextAreaController {
       document.execCommand('insertText', false, formattedCode)
       ta.setSelectionRange(selectionStart, selectionStart)
       window.scrollTo(0, scrollY)
-      // blur() and focus() force input's scroll move to cursor
-      ta.blur()
-      ta.focus()
+      TextAreaController.scrollToCursor(ta)
     } catch (e) {
       console.log('Error, while formatting code: ', e)
     }
@@ -354,9 +359,7 @@ class TextAreaController {
       // func setRangeText unfortunately clears browser history
       // ta.current.setRangeText(spaces, selectionStart, selectionStart, 'end')
       document.execCommand('insertText', false, spaces)
-      // blur() and focus() enable scroll to cursor
-      ta.blur()
-      ta.focus()
+      TextAreaController.scrollToCursor(ta)
       return true
     }
     return false
@@ -373,6 +376,7 @@ class TextAreaController {
       if (firstSpaceIndex !== -1 && firstSpaceIndex + 1 < selectionStart) {
         ta.setSelectionRange(firstSpaceIndex + 1, selectionStart)
         document.execCommand('insertText', false, '')
+        if (selectionStart === value.length) ta.setSelectionRange(ta.value.length - 1, ta.value.length - 1)
         return true
       }
     }
@@ -453,17 +457,19 @@ export const TextArea = (props: TextAreaProps) => {
       }
     }
     // PageUp key
-    else if (e.keyCode === 33) {
+    else if (e.keyCode === 33 && ta?.current) {
       e.preventDefault()
       e.stopPropagation()
-      ta?.current?.setSelectionRange(0, 0)
+      ta.current.setSelectionRange(0, 0)
+      TextAreaController.scrollToCursor(ta.current)
     }
     // PageDown key
-    else if (e.keyCode === 34) {
+    else if (e.keyCode === 34 && ta?.current) {
       e.preventDefault()
       e.stopPropagation()
       const length = ta?.current?.value.length ?? 0
-      ta?.current?.setSelectionRange(length, length)
+      ta.current.setSelectionRange(length, length)
+      TextAreaController.scrollToCursor(ta.current)
     }
     // Home key
     else if (e.keyCode === 36) {
@@ -833,7 +839,8 @@ export const VSeparator = (props: VSeparatorProps) => {
   if (props.visible === false) return <></>
 
   const style: any = {}
-  if (props.height !== undefined) style.height = props.height
+  style.flexGrow = 1
+
   if (props.marginHorizontal !== undefined) {
     style.marginLeft = props.marginHorizontal
     style.marginRight = props.marginHorizontal
@@ -845,6 +852,12 @@ export const VSeparator = (props: VSeparatorProps) => {
   style.bgColor = props.theme.border
   style.width = '1px'
   style.maxWidth = '1px'
+
+  if (props.height !== undefined) {
+    style.height = props.height
+    style.minHeight = props.height
+    style.maxHeight = props.height
+  }
 
   return <div className={buildClassName(style)}/>
 }

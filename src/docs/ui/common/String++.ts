@@ -8,7 +8,7 @@ function parseLang(code: string): string {
   return found && found.length > 1 ? found[1] : ''
 }
 
-export function reformat(text: string): string {
+export function formatIfTextIsCode(text: string): string {
   let textBeforeCode = ''
   let textAfterCode = ''
   const startCodeInd = regexIndexOf(text, /```[a-zA-Z]+\n+/)
@@ -27,7 +27,7 @@ export function reformat(text: string): string {
     const lang = parseLang(code)
     const checkXMLTags = lang === 'jsx' || lang === 'tsx' || lang === 'xml' || lang === 'html'
     const res = formatCode(code, checkXMLTags)
-    return endCodeInd !== text.length ? textBeforeCode + res + reformat(text.slice(endCodeInd)) + textAfterCode : textBeforeCode + res + textAfterCode
+    return endCodeInd !== text.length ? textBeforeCode + res + formatIfTextIsCode(text.slice(endCodeInd)) + textAfterCode : textBeforeCode + res + textAfterCode
   } else {
     return text
   }
@@ -85,7 +85,10 @@ export function formatCode(code: string, checkXMLTags: boolean = false): string 
   }
   res += buffer
   res = removeExtraSpaces(res)
-  res = alignXMLProps(res)
+  if (checkXMLTags) {
+    res = alignXMLProps(res)
+  }
+  
   return res
 }
 
@@ -106,7 +109,8 @@ function removeExtraSpaces(code: string): string {
       }
     }
     if (spaces > 0 && spaces === row.length) {
-      res += ' '.repeat(spaces) + '\n'
+      res += '  '.repeat(amountOfBlocks) + row.slice(spaces)
+      if (r < rows.length - 1) res += '\n'
       continue
     }
 

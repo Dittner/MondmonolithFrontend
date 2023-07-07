@@ -175,7 +175,6 @@ input[type=password] {
 textarea {
   font-size: 1rem;
   line-height: var(--CodeLineHeight);
-  caret-shape: block;
   min-height: 50px;
   max-height: 80vh;
   margin: 0;
@@ -222,14 +221,6 @@ textarea {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
-}
-
-/******************************/
-/*--------- SPACER ---------*/
-/******************************/
-
-div.spacer {
-  flex-grow: 1;
 }
 
 /******************************/

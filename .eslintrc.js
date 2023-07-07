@@ -66,5 +66,9 @@ module.exports = {
     "no-extraneous-class": "off",
     "@typescript-eslint/brace-style)" : "off",
     "brace-style" : "off",
+    "@typescript-eslint/comma-spacing" : "warn",
+    "comma-spacing" : "warn",
+    "arrow-spacing" : "warn",
+    "no-multiple-empty-lines" : "warn",
   }
 }

@@ -14,7 +14,7 @@ import {
   Label,
   RedButton,
   Spacer,
-  Switch,
+  Switcher,
   VSeparator,
   VStack
 } from '../application/NoCSSComponents'
@@ -105,7 +105,10 @@ export const HeaderView = observer(() => {
                  text={editTools.editMode ? 'Edit mode: ' : 'Read mode: '}
                  textColor={app.theme.text75}/>
 
-          <Switch theme={app.theme} isSelected={editTools.editMode} onClick={() => { editTools.toggleEditMode() }}/>
+          <Switcher color={app.theme.appBg}
+                    selectionColor={app.theme.red}
+                    isSelected={editTools.editMode}
+                    onClick={() => { editTools.toggleEditMode() }}/>
 
           <HeaderVerSep/>
 

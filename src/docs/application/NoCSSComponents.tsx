@@ -597,17 +597,18 @@ export const RedButton = (props: RedButtonProps) => {
                  onClick={props.onClick}/>
 }
 
-export const Switch = ({
-  theme,
+export const Switcher = ({
+  color,
+  selectionColor,
   isSelected,
   onClick
-}: { theme: Theme, isSelected: boolean, onClick: () => void }) => {
+}: { color: string, selectionColor: string, isSelected: boolean, onClick: () => void }) => {
   const btnWidth = '34px'
   const btnHeight = '22px'
   const thumbDiameter = '16px'
   return <StylableContainer width={btnWidth}
                             height={btnHeight}
-                            bgColor={isSelected ? theme.red : '#727a86'}
+                            bgColor={isSelected ? selectionColor : '#727a86'}
                             cornerRadius={btnHeight}
                             animate="background-color 300ms"
                             btnCursor
@@ -616,7 +617,7 @@ export const Switch = ({
     <StylableContainer width={thumbDiameter}
                        height={thumbDiameter}
                        cornerRadius={thumbDiameter}
-                       bgColor={theme.appBg}
+                       bgColor={color}
                        top="3px"
                        left={isSelected ? '15px' : '3px'}
                        animate="left 300ms"

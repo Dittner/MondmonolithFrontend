@@ -172,10 +172,10 @@ export class ThemeManager {
     buildRule(inlineCodeProps, theme.id, 'code')
 
     const blockquoteProps: StylableComponentProps = {
-      textColor: '#526576',
-      bgColor: '#d2dde8',
+      textColor: '#6a6a73',
+      bgColor: '#dedde4',
       padding: '20px',
-      borderLeft: '5px solid #73889d'
+      borderLeft: '5px solid #b9b7bb'
     }
     buildRule(blockquoteProps, theme.id, 'blockquote')
   }

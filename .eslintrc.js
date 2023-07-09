@@ -70,5 +70,8 @@ module.exports = {
     "comma-spacing" : "warn",
     "arrow-spacing" : "warn",
     "no-multiple-empty-lines" : "warn",
+    "@typescript-eslint/key-spacing" : "warn",
+    "@typescript-eslint/type-annotation-spacing" : "warn",
+    "block-spacing" : "warn",
   }
 }

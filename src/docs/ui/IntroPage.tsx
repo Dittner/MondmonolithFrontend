@@ -58,8 +58,8 @@ export const IntroPage = observer(() => {
   switch (app.size) {
     case AppSize.XS: headerFontSize = '35px'; break
     case AppSize.S: headerFontSize = '50px'; break
-    case AppSize.M: headerFontSize = '60px'; break
-    case AppSize.L: headerFontSize = '65px'; break
+    case AppSize.M: headerFontSize = '55px'; break
+    case AppSize.L: headerFontSize = '55px'; break
   }
 
   return <VStack maxWidth="100%"
@@ -76,8 +76,8 @@ export const IntroPage = observer(() => {
              preview={app.theme.isDark ? '/headerBg-preview.jpg' : '/headerBg-light-preview.jpg'}
              alt="header's background"
              top="0"
-             width='800px'
-             height='340px'
+             width='1200px'
+             height='510px'
              disableScroll
              fixed
              halign="center" valign="top"/>
@@ -176,7 +176,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   demo  |  2.26  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.27  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           
 ***/                                                                                
@@ -193,7 +193,7 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: demo  |  VER: 2.26  |  DATE: 2023      
+*  MODE: demo  |  VER: 2.27  |  DATE: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 ***/                                             
@@ -235,7 +235,7 @@ const shortcuts = `## Shortcuts\n
 + Format code: \`Ctrl + Shift + L\``
 
 const code = `## Memoization
-Memoization is an optimisation technique base on remembering results returned by a function called with same arguments, that uses a cache and a \`generateKey\` function.
+Memoization is an optimisation technique base on remembering results returned by a function called with same arguments.
  
 \`\`\`js
 const memoize = (fn) => {
@@ -245,17 +245,12 @@ const memoize = (fn) => {
 
   return (...args) => {
     const key = generateKey(args)
-    const value = cache[key]
-    if (value) return value
-    const res = fn(...args)
-    cache[key] = res
-    return res
+    if (!cache[key]) cache[key] = fn(...args)
+    return cache[key]
   }
 }
 
-//calc(2, 1, '+') => 3
-const calc = (x, y, op) => {...}
-
+const calc = (x, y, op) => { return x + y }
 const exc = memoize(calc);
 exc(2, 1, '+') //3, calculated
 exc(2, 1, '+') //3, returned from cache

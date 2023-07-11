@@ -135,11 +135,11 @@ export const IntroPage = observer(() => {
       <span className="token symbol">{'])'}</span>
     </Label>
 
-    <Label className="mono"
+    <Label className="ibm"
            whiteSpace="pre"
            padding="30px"
            text={app.size === AppSize.XS ? aboutTxtXS : aboutTxt}
-           textColor={theme.text75}
+           textColor={theme.green}
            layer={LayoutLayer.ONE}/>
 
     <VStack halign="stretch"
@@ -178,7 +178,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   demo  |  2.29  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.30  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           
 ***/                                                                                
@@ -195,7 +195,7 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: demo  |  VER: 2.29  |  DATE: 2023      
+*  MODE: demo  |  VER: 2.30  |  DATE: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 ***/                                             

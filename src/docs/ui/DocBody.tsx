@@ -59,7 +59,7 @@ const PageList = observer(() => {
   const dirList = observeDirList()
   const { docsLoader, theme } = useDocsContext()
 
-  console.log('  dirList = ', dirList)
+  //console.log('  dirList = ', dirList)
   const params = useParams()
   const location = useLocation()
   const [pagesSlice, setPagesSlice] = useState(

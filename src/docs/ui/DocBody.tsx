@@ -1,6 +1,5 @@
 import { Route, Routes, useLocation, useParams } from 'react-router-dom'
 import { LoadingSpinner } from './common/Loading'
-import { observer } from 'mobx-react'
 import { useDocsContext } from '../../App'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
@@ -18,11 +17,11 @@ import 'prismjs/components/prism-swift'
 import 'prismjs/components/prism-json'
 import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-markup'
-import { DocLoadStatus, type Page, type PageBlock } from '../domain/DomainModel'
-import { LoadStatus } from '../DocsContext'
+import { DocLoadStatus, LoadStatus, type Page, type PageBlock } from '../domain/DomainModel'
 import ReactMarkdown from 'react-markdown'
 import { stylable } from '../application/NoCSS'
 import { AppSize } from '../application/Application'
+import { observeApp, observeDirList, observeEditTools } from '../DocsContext'
 import {
   Button,
   HStack,
@@ -34,6 +33,7 @@ import {
   TextArea,
   VStack
 } from '../application/NoCSSComponents'
+import { observe, observer } from '../infrastructure/Observer'
 
 export const DocBody = stylable(() => {
   return <Routes>
@@ -43,16 +43,23 @@ export const DocBody = stylable(() => {
 })
 
 const EmptyDoc = ({ msg }: { msg: string }) => {
-  const { app } = useDocsContext()
+  const { theme } = useDocsContext()
+
   return <HStack halign="center"
                  valign="center"
                  width="100%" height="100%">
-    <Label text={msg} textColor={app.theme.text75}/>
+    <Label text={msg} textColor={theme.text75}/>
   </HStack>
 }
 
 const PageList = observer(() => {
   console.log('new PageList')
+
+  const app = observeApp()
+  const dirList = observeDirList()
+  const { docsLoader, theme } = useDocsContext()
+
+  console.log('  dirList = ', dirList)
   const params = useParams()
   const location = useLocation()
   const [pagesSlice, setPagesSlice] = useState(
@@ -62,15 +69,14 @@ const PageList = observer(() => {
       isFirstPageShown: true,
       isLastPageShown: true
     })
-  const docsContext = useDocsContext()
-  const theme = docsContext.app.theme
 
-  const doc = docsContext.findDoc(d => params.docUID === d.uid)
-  console.log('PageList, doc = ', doc)
+  const doc = dirList.findDoc(d => params.docUID === d.uid)
+  observe(doc)
+  console.log('  PageList, doc = ', doc)
 
   useEffect(() => {
     if (doc?.loadStatus === DocLoadStatus.HEADER_LOADED && !doc?.loadWithError) {
-      docsContext.docsLoader.fetchDoc(doc.uid)
+      docsLoader.fetchDoc(doc.uid)
     }
   })
 
@@ -143,7 +149,7 @@ const PageList = observer(() => {
     }
   }
 
-  if (doc?.loadStatus === DocLoadStatus.LOADING || docsContext.dirsLoadStatus === LoadStatus.LOADING) {
+  if (doc?.loadStatus === DocLoadStatus.LOADING || dirList.loadStatus === LoadStatus.LOADING) {
     return <LoadingSpinner/>
   }
 
@@ -158,7 +164,7 @@ const PageList = observer(() => {
   return (
     <VStack valign="top" halign="center" gap="10px"
             width="100%"
-            paddingHorizontal={docsContext.app.size === AppSize.XS ? '2px' : '40px'}
+            paddingHorizontal={app.size === AppSize.XS ? '2px' : '40px'}
             paddingVertical="20px">
 
       {!pagesSlice.isFirstPageShown &&
@@ -229,6 +235,8 @@ const PageList = observer(() => {
 
 const PageView = observer(({ page }: { page: Page }) => {
   console.log('new PageView')
+  observe(page)
+
   return (
     <VStack id={page.id}
             width="100%"
@@ -243,7 +251,9 @@ const PageView = observer(({ page }: { page: Page }) => {
 })
 
 const PageTitle = observer(({ page }: { page: Page }) => {
-  const { editTools, app } = useDocsContext()
+  const editTools = observeEditTools()
+  const { theme } = useDocsContext()
+
   const isSelected = editTools.selectedItem === page
 
   const selectTitle = () => {
@@ -270,12 +280,12 @@ const PageTitle = observer(({ page }: { page: Page }) => {
                            paddingRight="10px"
                            paddingLeft="24px"
                            width="100%"
-                           bgColor={app.theme.pageSelection}
-                           borderLeft={['6px', 'solid', app.theme.yellow]}
+                           bgColor={theme.pageSelection}
+                           borderLeft={['6px', 'solid', theme.yellow]}
                            cornerRadius="10px"
                            onDoubleClick={editPage}>
           <Label className="h1"
-                 textColor={app.theme.pageTitle}
+                 textColor={theme.pageTitle}
                  text={page.title}/>
         </StylableContainer>
       </>
@@ -289,11 +299,11 @@ const PageTitle = observer(({ page }: { page: Page }) => {
                               width="100%"
                               onMouseDown={selectTitle}
                               hoverState={state => {
-                                state.bgColor = app.theme.pageSelection
+                                state.bgColor = theme.pageSelection
                                 state.cornerRadius = '10px'
                               }}>
       <Label className="h1"
-             textColor={app.theme.pageTitle}
+             textColor={theme.pageTitle}
              text={page.title}/>
     </StylableContainer>
   }
@@ -304,14 +314,15 @@ const PageTitle = observer(({ page }: { page: Page }) => {
                        paddingLeft="30px"
                        width="100%">
       <Label className="h1"
-             textColor={app.theme.pageTitle}
+             textColor={theme.pageTitle}
              text={page.title}/>
     </StylableContainer>
   )
 })
 
 const PageTitleEditor = observer(({ page }: { page: Page }) => {
-  const { app } = useDocsContext()
+  const { theme } = useDocsContext()
+
   const apply = (value: string) => {
     if (page.title !== value) {
       page.title = value
@@ -329,7 +340,7 @@ const PageTitleEditor = observer(({ page }: { page: Page }) => {
     <TextArea key={page.uid}
               className="mono"
               text={page.title}
-              theme={app.theme}
+              theme={theme}
               paddingHorizontal="28px"
               paddingTop="10px"
               onApply={apply}
@@ -339,7 +350,10 @@ const PageTitleEditor = observer(({ page }: { page: Page }) => {
 })
 
 const PageBlockView = observer(({ block }: { block: PageBlock }) => {
-  const { editTools, app } = useDocsContext()
+  const editTools = observeEditTools()
+  observe(block)
+  const { theme } = useDocsContext()
+
   const isSelected = editTools.selectedItem === block
 
   useEffect(() => {
@@ -372,50 +386,51 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
 
   if (editTools.editMode && isSelected) {
     return (<>
-        <StylableContainer className={app.theme.id}
+        <StylableContainer className={theme.id}
                            minHeight="50px"
                            paddingRight="30px"
                            paddingLeft="24px"
                            paddingVertical="5px"
                            width="100%"
-                           bgColor={app.theme.pageSelection}
-                           borderLeft={['6px', 'solid', app.theme.yellow]}
+                           bgColor={theme.pageSelection}
+                           borderLeft={['6px', 'solid', theme.yellow]}
                            cornerRadius="10px"
                            onDoubleClick={editPage}>
-          <ReactMarkdown className={app.theme.isDark ? 'dark' : 'light'}>{block.text}</ReactMarkdown>
+          <ReactMarkdown className={theme.isDark ? 'dark' : 'light'}>{block.text}</ReactMarkdown>
         </StylableContainer>
       </>
     )
   }
 
   if (editTools.editMode) {
-    return <StylableContainer className={app.theme.id}
+    return <StylableContainer className={theme.id}
                               minHeight="50px"
                               paddingHorizontal="30px"
                               paddingVertical="5px"
                               width="100%"
                               onMouseDown={selectBlock}
                               hoverState={state => {
-                                state.bgColor = app.theme.pageSelection
+                                state.bgColor = theme.pageSelection
                                 state.cornerRadius = '10px'
                               }}>
-      <ReactMarkdown className={app.theme.isDark ? 'dark' : 'light'}>{block.text}</ReactMarkdown>
+      <ReactMarkdown className={theme.isDark ? 'dark' : 'light'}>{block.text}</ReactMarkdown>
     </StylableContainer>
   }
 
   return (
-    <StylableContainer className={app.theme.id}
+    <StylableContainer className={theme.id}
                        minHeight="50px"
                        paddingVertical="5px"
                        paddingHorizontal="30px"
                        width="100%">
-      <ReactMarkdown className={app.theme.isDark ? 'dark' : 'light'}>{block.text}</ReactMarkdown>
+      <ReactMarkdown className={theme.isDark ? 'dark' : 'light'}>{block.text}</ReactMarkdown>
     </StylableContainer>
   )
 })
 
-const PageBlockEditor = observer(({ block }: { block: PageBlock }) => {
-  const { app } = useDocsContext()
+const PageBlockEditor = ({ block }: { block: PageBlock }) => {
+  const { theme } = useDocsContext()
+
   const apply = (value: string) => {
     if (block.text !== value) {
       block.text = value
@@ -432,7 +447,7 @@ const PageBlockEditor = observer(({ block }: { block: PageBlock }) => {
   return (
     <TextArea key={block.uid}
               text={block.text}
-              theme={app.theme}
+              theme={theme}
               className="mono"
               paddingHorizontal="28px"
               paddingTop="10px"
@@ -440,4 +455,4 @@ const PageBlockEditor = observer(({ block }: { block: PageBlock }) => {
               onCancel={cancel}
               autoFocus/>
   )
-})
+}

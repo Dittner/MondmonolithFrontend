@@ -1,11 +1,10 @@
 import { useState } from 'react'
-import { useDocsContext } from '../../App'
 import { AuthStatus, Page, PageBlock } from '../domain/DomainModel'
-import { observer } from 'mobx-react'
 import { stylable } from '../application/NoCSS'
 import { Route, Routes, useParams } from 'react-router-dom'
 import { SmallSpinner } from './common/Loading'
 import { AppSize, YesNoDialog } from '../application/Application'
+import { observeApp, observeDirList, observeEditTools } from '../DocsContext'
 import {
   DropDownContainer,
   HStack,
@@ -18,6 +17,8 @@ import {
   VSeparator,
   VStack
 } from '../application/NoCSSComponents'
+import { observer } from '../infrastructure/Observer'
+import { useDocsContext } from '../../App'
 
 export const Header = stylable(() => {
   return <Routes>
@@ -27,23 +28,26 @@ export const Header = stylable(() => {
 })
 
 export const HeaderVerSep = ({ visible = true }: { visible?: boolean }) => {
-  const { app } = useDocsContext()
+  const { theme } = useDocsContext()
 
   if (!visible) return <></>
 
-  return <VSeparator theme={app.theme}
+  return <VSeparator theme={theme}
                      marginHorizontal="10px"
                      height="20px"/>
 }
 
 export const HeaderView = observer(() => {
   console.log('new AuthPanel')
+  const editTools = observeEditTools()
+  const app = observeApp()
+  const dirList = observeDirList()
+  const { theme, user } = useDocsContext()
+
   const [isDropDownOpened, setIsDropDown] = useState(false)
   const params = useParams()
-  const docsContext = useDocsContext()
-  const { user, editTools, app } = docsContext
 
-  const doc = docsContext.findDoc(d => params.docUID === d.uid)
+  const doc = dirList.findDoc(d => params.docUID === d.uid)
 
   const showDocList = () => {
     app.showDocList()
@@ -66,8 +70,8 @@ export const HeaderView = observer(() => {
             width="100%"
             height="50px"
             gap="0"
-            bgColor={editTools.editMode ? app.theme.appBg : '0'}
-            borderBottom={user.authStatus === AuthStatus.AUTHORIZED ? ['1px', 'solid', app.theme.border] : 'none'}
+            bgColor={editTools.editMode ? theme.appBg : '0'}
+            borderBottom={user.authStatus === AuthStatus.AUTHORIZED ? ['1px', 'solid', theme.border] : 'none'}
             paddingHorizontal="10px">
 
       {user.authStatus === AuthStatus.AUTHORIZED &&
@@ -78,7 +82,7 @@ export const HeaderView = observer(() => {
 
               <IconButton icon="menu"
                           popUp="Open Doc's List"
-                          theme={app.theme}
+                          theme={theme}
                           onClick={showDocList}/>
 
               <HeaderVerSep/>
@@ -88,7 +92,7 @@ export const HeaderView = observer(() => {
           {editTools.editMode &&
             <>
               <RedButton title="New Page"
-                         theme={app.theme}
+                         theme={theme}
                          onClick={createPage}
                          hideBg/>
 
@@ -103,10 +107,10 @@ export const HeaderView = observer(() => {
                  whiteSpace="pre"
                  visible={app.size !== AppSize.XS}
                  text={editTools.editMode ? 'Edit mode: ' : 'Read mode: '}
-                 textColor={app.theme.text75}/>
+                 textColor={theme.text75}/>
 
-          <Switcher color={app.theme.appBg}
-                    selectionColor={app.theme.red}
+          <Switcher color={theme.appBg}
+                    selectionColor={theme.red}
                     isSelected={editTools.editMode}
                     onClick={() => { editTools.toggleEditMode() }}/>
 
@@ -115,13 +119,13 @@ export const HeaderView = observer(() => {
           <Label className="mono"
                  visible={app.size !== AppSize.XS}
                  text={user.login}
-                 textColor={app.theme.text75}/>
+                 textColor={theme.text75}/>
 
           <HeaderVerSep visible={app.size !== AppSize.XS}/>
 
           <RedButton title="Sign out"
                      hideBg
-                     theme={app.theme}
+                     theme={theme}
                      onClick={handleSignOut}/>
         </>
       }
@@ -132,7 +136,7 @@ export const HeaderView = observer(() => {
           <Spacer/>
 
           <RedButton title="Sign in"
-                     theme={app.theme}
+                     theme={theme}
                      isSelected={isDropDownOpened}
                      hideBg
                      onClick={() => {
@@ -147,8 +151,9 @@ export const HeaderView = observer(() => {
   )
 })
 
-const AuthDropDown = observer(({ isDropDownOpened, onClose }: { isDropDownOpened: boolean, onClose: () => void }) => {
-  const { user, app } = useDocsContext()
+const AuthDropDown = ({ isDropDownOpened, onClose }: { isDropDownOpened: boolean, onClose: () => void }) => {
+  const { theme, user } = useDocsContext()
+
   const [nameProtocol, _] = useState({ value: user.login })
   const [pwdProtocol, __] = useState({ value: user.pwd })
 
@@ -159,7 +164,7 @@ const AuthDropDown = observer(({ isDropDownOpened, onClose }: { isDropDownOpened
   }
 
   return <DropDownContainer isOpened={isDropDownOpened} onClose={onClose}
-                            bgColor={app.theme.panelBg}
+                            bgColor={theme.panelBg}
                             minWidth="250px"
                             top="50px"
                             absolute>
@@ -168,14 +173,14 @@ const AuthDropDown = observer(({ isDropDownOpened, onClose }: { isDropDownOpened
             shadow="0 5px 5px #00000020">
       <Input type="text"
              protocol={nameProtocol}
-             theme={app.theme}
+             theme={theme}
              title="Login"
              placeHolder="Enter your name"
              onSubmitted={handleSignIn}/>
 
       <Input type="password"
              protocol={pwdProtocol}
-             theme={app.theme}
+             theme={theme}
              title="Password"
              placeHolder="Enter your password"
              onSubmitted={handleSignIn}/>
@@ -184,7 +189,7 @@ const AuthDropDown = observer(({ isDropDownOpened, onClose }: { isDropDownOpened
 
         <RedButton title="Submit"
                    hideBg
-                   theme={app.theme}
+                   theme={theme}
                    onClick={handleSignIn}/>
       }
 
@@ -195,15 +200,18 @@ const AuthDropDown = observer(({ isDropDownOpened, onClose }: { isDropDownOpened
       {user.authWithError &&
         <Label fontSize="14px"
                text={user.authWithError}
-               textColor={app.theme.error}/>
+               textColor={theme.error}/>
       }
     </VStack>
 
   </DropDownContainer>
-})
+}
 
 const ToolsPanel = observer(() => {
-  const { editTools, app } = useDocsContext()
+  const editTools = observeEditTools()
+  const app = observeApp()
+  const { theme } = useDocsContext()
+
   const selectedPage = editTools.selectedItem instanceof Page && editTools.selectedItem
   const selectedPageBlock = editTools.selectedItem instanceof PageBlock && editTools.selectedItem
   const createBlock = () => {
@@ -260,25 +268,25 @@ const ToolsPanel = observer(() => {
 
         <IconButton icon="plus"
                     popUp="Add new Block"
-                    theme={app.theme}
+                    theme={theme}
                     onClick={createBlock}
                     disabled={!selectedPage && !selectedPageBlock}/>
 
         <IconButton icon="up"
                     popUp="Move Block up"
-                    theme={app.theme}
+                    theme={theme}
                     onClick={moveBlockUp}
                     disabled={!selectedPageBlock}/>
 
         <IconButton icon="down"
                     popUp="Move Block down"
-                    theme={app.theme}
+                    theme={theme}
                     onClick={moveBlockDown}
                     disabled={!selectedPageBlock}/>
 
         <IconButton icon="delete"
                     popUp="Delete Block"
-                    theme={app.theme}
+                    theme={theme}
                     onClick={deleteBlock}
                     disabled={!selectedPage && !selectedPageBlock}/>
 

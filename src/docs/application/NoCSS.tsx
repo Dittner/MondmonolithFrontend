@@ -79,7 +79,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, () =>
 
     const className = hashSum.replace(notAllowedSymbolsInClassName, 'x')
 
-    console.log('--new selector #' + (++selectorsCount) + ': ', className)
+    //console.log('--new selector #' + (++selectorsCount) + ': ', className)
 
     const rule = '.' + className + style + '}'
     classNameHash.set(hashSum, className)
@@ -104,7 +104,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, () =>
     const selector = parentSelector + ' ' + childSelector
     if (classNameHash.has(selector)) return
 
-    console.log('--new selector #' + (++selectorsCount) + ': ', selector)
+    //console.log('--new selector #' + (++selectorsCount) + ': ', selector)
 
     const rule = '.' + selector + style + '}'
     classNameHash.set(selector, parentSelector)
@@ -250,7 +250,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, () =>
   return [clear, operator, getClassName, addRule]
 }
 
-let selectorsCount = 0
+const selectorsCount = 0
 
 const ruleBuilder = RuleBuilder()
 

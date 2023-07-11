@@ -1,5 +1,5 @@
-import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { UUID } from '../infrastructure/UIDGenerator'
+import { Observable } from '../infrastructure/Observer'
 
 export enum AuthStatus {
   SIGNED_OUT = 'SIGNED_OUT',
@@ -11,20 +11,64 @@ interface Serializable {
   serialize: () => any
 }
 
-export class User {
+export class User extends Observable {
   readonly uid: string
-  @observable login: string = 'demo'
-  @observable pwd: string = 'pwd'
-  @observable authStatus: AuthStatus = AuthStatus.SIGNED_OUT
-  @observable authWithError: string = ''
 
-  constructor() {
-    this.uid = UUID()
-    if (window.localStorage.getItem('authStatus') === 'authorized') { this.authStatus = AuthStatus.AUTHORIZED }
-    makeObservable(this)
+  //--------------------------------------
+  //  login
+  //--------------------------------------
+  private _login: string = 'demo'
+  get login(): string { return this._login }
+  set login(value: string) {
+    if (this._login !== value) {
+      this._login = value
+      this.mutated()
+    }
   }
 
-  @action signIn(login: string, pwd: string) {
+  //--------------------------------------
+  //  pwd
+  //--------------------------------------
+  private _pwd: string = 'pwd'
+  get pwd(): string { return this._pwd }
+  set pwd(value: string) {
+    if (this._pwd !== value) {
+      this._pwd = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  authStatus
+  //--------------------------------------
+  private _authStatus: AuthStatus = AuthStatus.SIGNED_OUT
+  get authStatus(): AuthStatus { return this._authStatus }
+  set authStatus(value: AuthStatus) {
+    if (this._authStatus !== value) {
+      this._authStatus = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  authWithError
+  //--------------------------------------
+  private _authWithError: string = ''
+  get authWithError(): string { return this._authWithError }
+  set authWithError(value: string) {
+    if (this._authWithError !== value) {
+      this._authWithError = value
+      this.mutated()
+    }
+  }
+
+  constructor() {
+    super()
+    this.uid = UUID()
+    if (window.localStorage.getItem('authStatus') === 'authorized') { this.authStatus = AuthStatus.AUTHORIZED }
+  }
+
+  signIn(login: string, pwd: string) {
     console.log('signIn()')
     if (!login) {
       this.authWithError = 'Login is not filled!'
@@ -38,21 +82,19 @@ export class User {
     this.authStatus = AuthStatus.AUTHORIZING
     this.authWithError = ''
     setTimeout(() => {
-      runInAction(() => {
-        if (login === 'demo' && pwd === 'pwd') {
-          this.authStatus = AuthStatus.AUTHORIZED
-          window.localStorage.setItem('authStatus', 'authorized')
-          this.login = login
-          this.pwd = pwd
-        } else {
-          this.authWithError = 'Invalid login or password!'
-          this.authStatus = AuthStatus.SIGNED_OUT
-        }
-      })
+      if (login === 'demo' && pwd === 'pwd') {
+        this.authStatus = AuthStatus.AUTHORIZED
+        window.localStorage.setItem('authStatus', 'authorized')
+        this.login = login
+        this.pwd = pwd
+      } else {
+        this.authWithError = 'Invalid login or password!'
+        this.authStatus = AuthStatus.SIGNED_OUT
+      }
     }, 1000)
   }
 
-  @action signOut() {
+  signOut() {
     console.log('signOut()')
     if (this.authStatus === AuthStatus.AUTHORIZED) {
       this.authStatus = AuthStatus.SIGNED_OUT
@@ -61,14 +103,36 @@ export class User {
   }
 }
 
-export class EditTools {
+export class EditTools extends Observable {
   readonly uid: string
-  @observable editMode: boolean = false
-  @observable selectedItem: Page | PageBlock | undefined
+
+  //--------------------------------------
+  //  editMode
+  //--------------------------------------
+  private _editMode: boolean = false
+  get editMode(): boolean { return this._editMode }
+  set editMode(value: boolean) {
+    if (this._editMode !== value) {
+      this._editMode = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  selectedItem
+  //--------------------------------------
+  private _selectedItem: Page | PageBlock | undefined = undefined
+  get selectedItem(): Page | PageBlock | undefined { return this._selectedItem }
+  set selectedItem(value: Page | PageBlock | undefined) {
+    if (this._selectedItem !== value) {
+      this._selectedItem = value
+      this.mutated()
+    }
+  }
 
   constructor() {
+    super()
     this.uid = UUID()
-    makeObservable(this)
     document.addEventListener('keydown', this.onKeyDown.bind(this))
   }
 
@@ -81,55 +145,169 @@ export class EditTools {
     }
   }
 
-  @action toggleEditMode() {
+  toggleEditMode() {
     this.editMode = !this.editMode
   }
 
-  @action select(item: Page | PageBlock | undefined) {
+  select(item: Page | PageBlock | undefined) {
     this.selectedItem = item
   }
 }
 
-export class Directory {
-  readonly uid: string
-  @observable title: string
-  @observable isEditing: boolean = false
-  @observable isStoring: boolean = false
-  @observable storeWithError: string = ''
-  @observable readonly docs: Doc[] = []
+export enum LoadStatus {
+  PENDING = 'PENDING',
+  LOADING = 'LOADING',
+  LOADED = 'LOADED',
+}
 
-  constructor(uid: string, title: string) {
-    this.uid = uid
-    this.title = title
-    makeObservable(this)
+export class DirectoryList extends Observable {
+  readonly uid: string
+
+  //--------------------------------------
+  //  dirs
+  //--------------------------------------
+  private _dirs = Array<Directory>()
+  get dirs(): Directory[] { return this._dirs }
+  set dirs(value: Directory[]) {
+    if (this._dirs !== value) {
+      this._dirs.forEach(d => { d.dispose() })
+      this._dirs = value
+      this._dirs.forEach(d => { d.subscribe(() => { this.mutated() }) })
+      this.mutated()
+    }
   }
 
-  @action add(doc: Doc) {
+  //--------------------------------------
+  //  loadStatus
+  //--------------------------------------
+  private _loadStatus: LoadStatus = LoadStatus.PENDING
+  get loadStatus(): LoadStatus { return this._loadStatus }
+  set loadStatus(value: LoadStatus) {
+    if (this._loadStatus !== value) {
+      this._loadStatus = value
+      this.mutated()
+    }
+  }
+
+  constructor() {
+    super()
+    this.uid = UUID()
+  }
+
+  findDir(predicate: (dir: Directory) => boolean): Directory | undefined {
+    return this.dirs.find(predicate)
+  }
+
+  findDoc(predicate: (doc: Doc) => boolean): Doc | undefined {
+    for (const dir of Object.values(this.dirs)) {
+      for (const doc of Object.values(dir.docs)) {
+        if (predicate(doc)) { return doc }
+      }
+    }
+    return undefined
+  }
+
+  add(dir: Directory) {
+    this.dirs.push(dir)
+    dir.subscribe(this.mutated)
+    this.mutated()
+  }
+}
+
+export class Directory extends Observable {
+  readonly uid: string
+
+  //--------------------------------------
+  //  title
+  //--------------------------------------
+  private _title: string = ''
+  get title(): string { return this._title }
+  set title(value: string) {
+    if (this._title !== value) {
+      this._title = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  isEditing
+  //--------------------------------------
+  private _isEditing: boolean = false
+  get isEditing(): boolean { return this._isEditing }
+  set isEditing(value: boolean) {
+    if (this._isEditing !== value) {
+      this._isEditing = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  isStoring
+  //--------------------------------------
+  private _isStoring: boolean = false
+  get isStoring(): boolean { return this._isStoring }
+  set isStoring(value: boolean) {
+    if (this._isStoring !== value) {
+      this._isStoring = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  storeWithError
+  //--------------------------------------
+  private _storeWithError: string = ''
+  get storeWithError(): string { return this._storeWithError }
+  set storeWithError(value: string) {
+    if (this._storeWithError !== value) {
+      this._storeWithError = value
+      this.mutated()
+    }
+  }
+
+  readonly docs: Doc[] = []
+
+  constructor(uid: string, title: string) {
+    super()
+    this.uid = uid
+    this.title = title
+  }
+
+  add(doc: Doc) {
     if (doc.dir) {
       doc.dir.remove(doc)
     }
     this.docs.push(doc)
     doc.dir = this
+    this.mutated()
   }
 
-  @action remove(doc: Doc): Doc | undefined {
+  remove(doc: Doc): Doc | undefined {
     const docInd = this.docs.findIndex(d => d.uid === doc.uid)
     if (docInd !== -1) {
       this.docs.splice(docInd, 1)
-      doc.destroy()
+      doc.dispose()
+      this.mutated()
       return doc
     }
     return undefined
   }
 
-  @action replaceWith(doc: Doc): void {
+  replaceWith(doc: Doc): void {
     const docInd = this.docs.findIndex(d => d.uid === doc.uid)
     if (docInd !== -1) {
       const oldDoc = this.docs[docInd]
       this.docs[docInd] = doc
       doc.dir = this
-      oldDoc.destroy()
+      oldDoc.dispose()
+      this.mutated()
     }
+  }
+
+  dispose() {
+    super.dispose()
+    this.docs.forEach(d => { d.dispose() })
+    this.docs.length = 0
   }
 }
 
@@ -139,31 +317,107 @@ export enum DocLoadStatus {
   LOADED = 'LOADED',
 }
 
-export class Doc implements Serializable {
+export class Doc extends Observable implements Serializable {
   readonly uid: string
-  @observable isEditing: boolean = false
-  @observable isStoring: boolean = false
-  @observable title: string
-  @observable storeWithError: string = ''
-  @observable loadWithError: string = ''
-  @observable loadStatus: DocLoadStatus = DocLoadStatus.HEADER_LOADED
-  @observable dir: Directory | undefined
 
-  @observable private _pages: Page[] = []
-  @computed get pages(): Page[] {
-    return this._pages
+  //--------------------------------------
+  //  isEditing
+  //--------------------------------------
+  private _isEditing: boolean = false
+  get isEditing(): boolean { return this._isEditing }
+  set isEditing(value: boolean) {
+    if (this._isEditing !== value) {
+      this._isEditing = value
+      this.mutated()
+    }
   }
 
+  //--------------------------------------
+  //  isStoring
+  //--------------------------------------
+  private _isStoring: boolean = false
+  get isStoring(): boolean { return this._isStoring }
+  set isStoring(value: boolean) {
+    if (this._isStoring !== value) {
+      this._isStoring = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  title
+  //--------------------------------------
+  private _title: string = ''
+  get title(): string { return this._title }
+  set title(value: string) {
+    if (this._title !== value) {
+      this._title = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  storeWithError
+  //--------------------------------------
+  private _storeWithError: string = ''
+  get storeWithError(): string { return this._storeWithError }
+  set storeWithError(value: string) {
+    if (this._storeWithError !== value) {
+      this._storeWithError = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  loadWithError
+  //--------------------------------------
+  private _loadWithError: string = ''
+  get loadWithError(): string { return this._loadWithError }
+  set loadWithError(value: string) {
+    if (this._loadWithError !== value) {
+      this._loadWithError = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  loadStatus
+  //--------------------------------------
+  private _loadStatus: DocLoadStatus = DocLoadStatus.HEADER_LOADED
+  get loadStatus(): DocLoadStatus { return this._loadStatus }
+  set loadStatus(value: DocLoadStatus) {
+    if (this._loadStatus !== value) {
+      this._loadStatus = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  dir
+  //--------------------------------------
+  private _dir: Directory | undefined = undefined
+  get dir(): Directory | undefined { return this._dir }
+  set dir(value: Directory | undefined) {
+    if (this._dir !== value) {
+      this._dir = value
+      this.mutated()
+    }
+  }
+
+  private _pages: Page[] = []
+  get pages(): Page[] { return this._pages }
+
   constructor(uid: string, title: string) {
+    super()
     this.uid = uid
     this.title = title
-    makeObservable(this)
   }
 
   init(pages: Page[]): void {
     if (this.pages.length === 0) {
       this._pages = pages.sort(sortByKey('title'))
       this._pages.forEach(p => p.doc = this)
+      this.mutated()
     }
   }
 
@@ -176,38 +430,38 @@ export class Doc implements Serializable {
     }
   }
 
-  @action add(page: Page): void {
+  add(page: Page): void {
     page.doc = this
     this.pages.unshift(page)
+    this.mutated()
   }
 
-  @computed get id(): string {
+  get id(): string {
     return strToHashId(this.title)
   }
 
-  @action createPage(): void {
+  createPage(): void {
     const p = new Page(UUID(), 'TITLE')
     p.doc = this
     p.isEditing = true
     this.pages.unshift(p)
+    this.mutated()
   }
 
-  @action deletePage(page: Page): void {
+  deletePage(page: Page): void {
     const pageInd = this.pages.findIndex(p => p.uid === page.uid)
     if (pageInd !== -1) {
       this.pages.splice(pageInd, 1)
-      page.destroy()
+      page.dispose()
+      this.mutated()
     }
   }
 
-  @action destroy(): void {
+  dispose() {
+    super.dispose()
+    this.pages.forEach(p => { p.dispose() })
     this.dir = undefined
-    this.pages.forEach(p => { p.destroy() })
-  }
-
-  @action send(storeWithError: string, loadStatus: DocLoadStatus): void {
-    this.storeWithError = storeWithError
-    this.loadStatus = loadStatus
+    this._pages = []
   }
 }
 
@@ -226,30 +480,84 @@ function filterCharacters() {
   }
 }
 
-export class Page implements Serializable {
+export class Page extends Observable implements Serializable {
   readonly uid: string
-  @observable isStoring: boolean = false
-  @observable title: string
-  @observable storeWithError: string = ''
-  @observable doc: Doc | undefined
-  @observable isEditing: boolean = false
 
-  @observable private _blocks: PageBlock[] = []
-  @computed get blocks(): PageBlock[] {
+  //--------------------------------------
+  //  isStoring
+  //--------------------------------------
+  private _isStoring: boolean = false
+  get isStoring(): boolean { return this._isStoring }
+  set isStoring(value: boolean) {
+    if (this._isStoring !== value) {
+      this._isStoring = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  isEditing
+  //--------------------------------------
+  private _isEditing: boolean = false
+  get isEditing(): boolean { return this._isEditing }
+  set isEditing(value: boolean) {
+    if (this._isEditing !== value) {
+      this._isEditing = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  title
+  //--------------------------------------
+  private _title: string = ''
+  get title(): string { return this._title }
+  set title(value: string) {
+    if (this._title !== value) {
+      this._title = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  storeWithError
+  //--------------------------------------
+  private _storeWithError: string = ''
+  get storeWithError(): string { return this._storeWithError }
+  set storeWithError(value: string) {
+    if (this._storeWithError !== value) {
+      this._storeWithError = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  doc
+  //--------------------------------------
+  private _doc: Doc | undefined = undefined
+  get doc(): Doc | undefined { return this._doc }
+  set doc(value: Doc | undefined) {
+    if (this._doc !== value) {
+      this._doc = value
+      this.mutated()
+    }
+  }
+
+  private _blocks: PageBlock[] = []
+  get blocks(): PageBlock[] {
     return this._blocks
   }
 
   constructor(uid: string, title: string) {
+    super()
     this.uid = uid
     this.title = title
-    makeObservable(this)
   }
 
   init(blocks: PageBlock[]): void {
-    if (this.blocks.length === 0) {
-      this._blocks = blocks
-      this._blocks.forEach(b => b.page = this)
-    }
+    this._blocks.forEach(b => { b.dispose() })
+    this._blocks = blocks
+    this._blocks.forEach(b => b.page = this)
   }
 
   serialize(): any {
@@ -260,16 +568,17 @@ export class Page implements Serializable {
     }
   }
 
-  @computed get id(): string {
+  get id(): string {
     return strToHashId(this.title)
   }
 
-  @action add(block: PageBlock): void {
+  add(block: PageBlock): void {
     block.page = this
     this.blocks.unshift(block)
+    this.mutated()
   }
 
-  @action createAndAddBlock(atIndex: number = 0): void {
+  createAndAddBlock(atIndex: number = 0): void {
     const block = new PageBlock(UUID(), '_New Block_')
     block.page = this
     if (atIndex === 0) {
@@ -279,66 +588,102 @@ export class Page implements Serializable {
     } else {
       this._blocks = [...this._blocks.slice(0, atIndex), block, ...this._blocks.slice(atIndex)]
     }
+    this.mutated()
   }
 
-  @action moveBlockUp(block: PageBlock): void {
+  moveBlockUp(block: PageBlock): void {
     const blockInd = this.blocks.findIndex(b => b.uid === block.uid)
     if (blockInd !== -1 && blockInd !== 0) {
       this.blocks[blockInd] = this.blocks[blockInd - 1]
       this.blocks[blockInd - 1] = block
+      this.mutated()
     }
   }
 
-  @action moveBlockDown(block: PageBlock): void {
+  moveBlockDown(block: PageBlock): void {
     const blockInd = this.blocks.findIndex(b => b.uid === block.uid)
     if (blockInd !== -1 && blockInd < this.blocks.length - 1) {
       this.blocks[blockInd] = this.blocks[blockInd + 1]
       this.blocks[blockInd + 1] = block
+      this.mutated()
     }
   }
 
-  @action deleteBlock(block: PageBlock): void {
+  deleteBlock(block: PageBlock): void {
     const blockInd = this.blocks.findIndex(b => b.uid === block.uid)
     if (blockInd !== -1) {
       this.blocks.splice(blockInd, 1)
-      block.destroy()
+      block.dispose()
+      this.mutated()
     }
   }
 
-  @action destroy(): void {
+  dispose() {
+    super.dispose()
     this.doc = undefined
-    this.blocks.forEach(b => { b.destroy() })
+    this.blocks.forEach(b => { b.dispose() })
+    this._blocks = []
   }
 }
 
-export class PageBlock implements Serializable {
+export class PageBlock extends Observable implements Serializable {
   readonly uid: string
 
-  @observable _text: string = ''
-  get text(): string { return this._text }
-  set text(value: string) {
-    if (value !== this._text) {
-      this._text = value
-      this._estimatedRowNum = Math.max(value.length / 100, value.split(/\r\n|\r|\n/).length)
-    }
-  }
-
-  @observable isEditing: boolean = false
-  @observable page: Page | undefined
+  //--------------------------------------
+  //  estimatedRowNum
+  //--------------------------------------
   private _estimatedRowNum: number = 0
   get estimatedRowNum(): number { return this._estimatedRowNum }
 
+  //--------------------------------------
+  //  text
+  //--------------------------------------
+  private _text: string = ''
+  get text(): string { return this._text }
+  set text(value: string) {
+    if (this._text !== value) {
+      this._text = value
+      this._estimatedRowNum = Math.max(value.length / 100, value.split(/\r\n|\r|\n/).length)
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  isEditing
+  //--------------------------------------
+  private _isEditing: boolean = false
+  get isEditing(): boolean { return this._isEditing }
+  set isEditing(value: boolean) {
+    if (this._isEditing !== value) {
+      this._isEditing = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  page
+  //--------------------------------------
+  private _page: Page | undefined = undefined
+  get page(): Page | undefined { return this._page }
+  set page(value: Page | undefined) {
+    if (this._page !== value) {
+      this._page = value
+      this.mutated()
+    }
+  }
+
   constructor(uid: string, text: string) {
+    super()
     this.uid = uid
     this.text = text
-    makeObservable(this)
   }
 
   serialize(): any {
     return { uid: this.uid, text: this.text }
   }
 
-  @action destroy(): void {
+  dispose() {
+    super.dispose()
     this.page = undefined
   }
 }

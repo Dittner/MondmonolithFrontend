@@ -1,13 +1,10 @@
-import { type DocsContext, LoadStatus } from '../../DocsContext'
+import { type DocsContext } from '../../DocsContext'
 import { InfoDialog, YesNoDialog } from '../../application/Application'
-import { Directory, Doc, DocLoadStatus } from '../../domain/DomainModel'
-import { action, runInAction } from 'mobx'
+import { Directory, Doc, DocLoadStatus, LoadStatus } from '../../domain/DomainModel'
 
 export interface DocsLoader {
   fetchDirectories: () => void
-
   fetchDoc: (docUID: string) => void
-
   loadDocFromDisc: (doc: File) => void
 }
 
@@ -31,13 +28,11 @@ export class DemoDocsRepo implements DocsLoader {
 
   public fetchDirectories() {
     console.log('fetchDirectories')
-    if (this.context.dirsLoadStatus !== LoadStatus.PENDING) {
+    if (this.context.directoryList.loadStatus !== LoadStatus.PENDING) {
       return
     }
 
-    runInAction(() => {
-      this.context.dirsLoadStatus = LoadStatus.LOADING
-    })
+    this.context.directoryList.loadStatus = LoadStatus.LOADING
 
     const rawDocs: any[] = []
     this.loadJsonFile('/demo/java.json')
@@ -56,7 +51,8 @@ export class DemoDocsRepo implements DocsLoader {
     console.log('--fetchDirectories, start fetching...')
 
     setTimeout(() => {
-      this.context.send(this.parseRawDocs(rawDocs), LoadStatus.LOADED)
+      this.context.directoryList.dirs = this.parseRawDocs(rawDocs)
+      this.context.directoryList.loadStatus = LoadStatus.LOADED
       console.log('fetchDirectories complete')
     }, 1000)
   }
@@ -83,10 +79,10 @@ export class DemoDocsRepo implements DocsLoader {
 
   public fetchDoc(docUID: string) {
     console.log('fetchDoc, id =', docUID)
-    const doc = this.context.findDoc(d => d.uid === docUID)
+    const doc = this.context.directoryList.findDoc(d => d.uid === docUID)
 
     if (doc && doc?.loadStatus === DocLoadStatus.HEADER_LOADED) {
-      doc.send('', DocLoadStatus.LOADING)
+      doc.loadStatus = DocLoadStatus.LOADING
 
       console.log('fetchDoc, start fetching...')
       let d: Doc
@@ -107,38 +103,45 @@ export class DemoDocsRepo implements DocsLoader {
         this.loadJsonFile(docUrl)
           .then(value => {
             d = this.context.docsParser.parseDoc(value)
-            d.send('', DocLoadStatus.LOADED)
+            d.loadStatus = DocLoadStatus.LOADED
             doc.dir?.replaceWith(d)
+            console.log('fetching complete')
           }, err => {
-            doc.send('Loading of the file is failed. Details: ' + err, DocLoadStatus.HEADER_LOADED)
+            doc.loadWithError = 'Loading of the file is failed. Details: ' + err
+            doc.loadStatus = DocLoadStatus.HEADER_LOADED
+            console.log('fetching complete')
           })
           .catch(err => {
-            doc.send('Loading of the file is failed. Details: ' + err, DocLoadStatus.HEADER_LOADED)
+            doc.loadWithError = 'Loading of the file is failed. Details: ' + err
+            doc.loadStatus = DocLoadStatus.HEADER_LOADED
+            console.log('fetching complete')
           })
       } else {
         doc.loadStatus = DocLoadStatus.LOADED
+        console.log('fetching complete')
       }
     }
   }
 
-  @action loadDocFromDisc(doc: File) {
+  loadDocFromDisc(doc: File) {
     const onError = (title: string, msg: string): void => {
       this.context.app.infoDialog = new InfoDialog(title, msg)
       console.log(msg)
     }
 
     const onComplete = (text: any) => {
+      const dirList = this.context.directoryList
       try {
         const data = JSON.parse(text)
         try {
           const doc = this.context.docsParser.parseDoc(data)
-          const dir = this.context.dirs.find(d => d.uid === data.directory)
+          const dir = dirList.findDir(d => d.uid === data.directory)
           if (dir) {
             const duplicate = dir.docs.find(d => d.uid === doc.uid)
             if (duplicate) {
               const msg = `The directory «${dir.title}» already has the doc «${doc.title}». Do you want to overwrite it?`
               const overwriteDoc = () => {
-                doc.send('', DocLoadStatus.LOADED)
+                doc.loadStatus = DocLoadStatus.LOADED
                 dir.replaceWith(doc)
               }
               this.context.app.yesNoDialog = new YesNoDialog(msg, overwriteDoc)
@@ -148,7 +151,7 @@ export class DemoDocsRepo implements DocsLoader {
           } else {
             const dir = new Directory(data.directory, data.directory)
             dir.add(doc)
-            this.context.dirs.push(dir)
+            dirList.add(dir)
           }
         } catch (e: any) {
           onError('The file is damaged', `An error has occurred while reading a file.\n${e}`)

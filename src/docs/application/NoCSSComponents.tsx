@@ -3,7 +3,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useWindowSize } from '../../App'
 import { buildClassName, type StylableComponentProps } from './NoCSS'
 import { type Theme } from './ThemeManager'
-import { observer } from 'mobx-react'
 import { calcSpaceBefore, formatCode, formatIfTextIsCode } from '../ui/common/String++'
 
 /*
@@ -649,7 +648,7 @@ interface IconButtonProps {
   onClick?: () => void
 }
 
-export const IconButton = observer((props: IconButtonProps) => {
+export const IconButton = (props: IconButtonProps) => {
   if ('visible' in props && !props.visible) return <></>
 
   if (props.disabled) {
@@ -701,7 +700,7 @@ export const IconButton = observer((props: IconButtonProps) => {
                    state.opacity = '100%'
                  }}
                  onClick={props.onClick}/>
-})
+}
 
 /*
 *

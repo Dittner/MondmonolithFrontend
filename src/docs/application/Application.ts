@@ -1,6 +1,5 @@
-import { action, makeObservable, observable } from 'mobx'
 import { UUID } from '../infrastructure/UIDGenerator'
-import { type Theme, ThemeManager } from './ThemeManager'
+import { Observable } from '../infrastructure/Observer'
 
 export enum LayoutLayer {
   ZERO = '0',
@@ -18,41 +17,74 @@ export enum AppSize {
   L = 'L'
 }
 
-export class Application {
+export class Application extends Observable {
   readonly uid
-  @observable isDocListShown = false
-  @observable yesNoDialog: YesNoDialog | undefined = undefined
-  @observable infoDialog: InfoDialog | undefined = undefined
-  @observable size = AppSize.S
-  @observable theme: Theme
+
+  //--------------------------------------
+  //  isDocListShown
+  //--------------------------------------
+  private _isDocListShown: boolean = false
+  get isDocListShown(): boolean { return this._isDocListShown }
+  set isDocListShown(value: boolean) {
+    if (this._isDocListShown !== value) {
+      this._isDocListShown = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  yesNoDialog
+  //--------------------------------------
+  private _yesNoDialog: YesNoDialog | undefined = undefined
+  get yesNoDialog(): YesNoDialog | undefined { return this._yesNoDialog }
+  set yesNoDialog(value: YesNoDialog | undefined) {
+    if (this._yesNoDialog !== value) {
+      this._yesNoDialog = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  infoDialog
+  //--------------------------------------
+  private _infoDialog: InfoDialog | undefined = undefined
+  get infoDialog(): InfoDialog | undefined { return this._infoDialog }
+  set infoDialog(value: InfoDialog | undefined) {
+    if (this._infoDialog !== value) {
+      this._infoDialog = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  size
+  //--------------------------------------
+  private _size: AppSize
+  get size(): AppSize { return this._size }
+  set size(value: AppSize) {
+    if (this._size !== value) {
+      this._size = value
+      this.mutated()
+    }
+  }
+
   public readonly isMobileDevice: boolean
 
-  private readonly themeManager: ThemeManager
-
   constructor() {
+    super()
     this.uid = UUID()
-    this.size = this.evaluateAppSize()
-    this.themeManager = new ThemeManager()
+    this._size = this.evaluateAppSize()
     this.isMobileDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0)
 
-    if (window.localStorage.getItem('theme') === 'dark') {
-      this.theme = this.themeManager.darkTheme
-      this.setUpDarkTheme()
-    } else {
-      this.theme = this.themeManager.lightTheme
-      this.setUpLightTheme()
-    }
-
-    makeObservable(this)
     console.log('isMobileDevice: ' + this.isMobileDevice)
     console.log('localStorage, theme: ' + window.localStorage.getItem('theme'))
   }
 
-  @action showDocList() {
+  showDocList() {
     this.isDocListShown = true
   }
 
-  @action hideDocList() {
+  hideDocList() {
     this.isDocListShown = false
   }
 
@@ -60,32 +92,7 @@ export class Application {
     window.addEventListener('resize', this.updateSize.bind(this))
   }
 
-  setUpLightTheme() {
-    this.theme = this.themeManager.lightTheme
-    const html = document.querySelector('html')
-    if (html) {
-      html.style.colorScheme = 'light'
-      html.style.backgroundColor = this.theme.appBg
-    }
-    window.localStorage.setItem('theme', 'light')
-  }
-
-  setUpDarkTheme() {
-    this.theme = this.themeManager.darkTheme
-    const html = document.querySelector('html')
-    if (html) {
-      html.style.colorScheme = 'dark'
-      html.style.backgroundColor = this.theme.appBg
-    }
-    window.localStorage.setItem('theme', 'dark')
-  }
-
-  switchTheme(): void {
-    if (this.theme.isDark) this.setUpLightTheme()
-    else this.setUpDarkTheme()
-  }
-
-  @action private updateSize(): void {
+  private updateSize(): void {
     const evaluatedSize = this.evaluateAppSize()
     if (this.size !== evaluatedSize) {
       this.size = evaluatedSize

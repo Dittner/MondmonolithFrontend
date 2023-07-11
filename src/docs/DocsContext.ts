@@ -1,24 +1,20 @@
-import { action, autorun, makeObservable, observable } from 'mobx'
-import { AuthStatus, type Directory, type Doc, EditTools, User } from './domain/DomainModel'
+import { AuthStatus, DirectoryList, EditTools, User } from './domain/DomainModel'
 import { DomainService } from './domain/DomainService'
 import { UUID } from './infrastructure/UIDGenerator'
 import { DemoDocsRepo, type DocsLoader } from './infrastructure/loader/DocsLoader'
 import { type DocsParser, DocsParserV1 } from './infrastructure/parser/DocsParser'
 import { Application } from './application/Application'
-
-export enum LoadStatus {
-  PENDING = 'PENDING',
-  LOADING = 'LOADING',
-  LOADED = 'LOADED',
-}
+import { useDocsContext } from '../App'
+import { observe } from './infrastructure/Observer'
+import { type Theme, ThemeManager } from './application/ThemeManager'
 
 export class DocsContext {
   readonly uid = UUID()
-  @observable readonly user: User
-  @observable readonly editTools: EditTools
-  @observable dirs: Directory[] = []
-  @observable dirsLoadStatus: LoadStatus = LoadStatus.PENDING
-  @observable readonly app: Application
+  readonly themeManager: ThemeManager
+  readonly user: User
+  readonly editTools: EditTools
+  readonly directoryList: DirectoryList
+  readonly app: Application
   readonly docsParser: DocsParser
   readonly docsLoader: DocsLoader
   readonly domainService: DomainService
@@ -32,7 +28,12 @@ export class DocsContext {
     return DocsContext.self
   }
 
+  private _theme: Theme
+  get theme(): Theme { return this._theme }
+
   private constructor() {
+    this.themeManager = new ThemeManager()
+    this._theme = this.themeManager.theme
     this.user = new User()
     this.editTools = new EditTools()
     this.docsParser = new DocsParserV1()
@@ -40,31 +41,29 @@ export class DocsContext {
     this.domainService = new DomainService(this)
     this.app = new Application()
     this.app.subscribeToWindowResize()
-    makeObservable(this)
+    this.directoryList = new DirectoryList()
 
-    autorun(() => {
+    this.user.subscribe(() => {
       if (this.user.authStatus === AuthStatus.SIGNED_OUT) {
         this.editTools.editMode = false
         this.editTools.select(undefined)
       }
     })
-  }
 
-  findDoc(predicate: (doc: Doc) => boolean): Doc | undefined {
-    for (const dir of Object.values(this.dirs)) {
-      for (const doc of Object.values(dir.docs)) {
-        if (predicate(doc)) { return doc }
-      }
-    }
-    return undefined
+    this.themeManager.subscribe(() => {
+      this._theme = this.themeManager.theme
+    })
   }
+}
 
-  @action send(dirs?: Directory[], dirsLoadStatus?: LoadStatus) {
-    if (dirs != null) {
-      this.dirs = dirs
-    }
-    if (dirsLoadStatus) {
-      this.dirsLoadStatus = dirsLoadStatus
-    }
-  }
+export function observeApp(): Application {
+  return observe(useDocsContext().app)
+}
+
+export function observeEditTools(): EditTools {
+  return observe(useDocsContext().editTools)
+}
+
+export function observeDirList(): DirectoryList {
+  return observe(useDocsContext().directoryList)
 }

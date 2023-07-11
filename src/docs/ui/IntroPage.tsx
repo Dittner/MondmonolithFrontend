@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import Prism from 'prismjs'
@@ -17,7 +16,6 @@ import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-markup'
 import { Header } from './Header'
 import { stylable } from '../application/NoCSS'
-import { useDocsContext } from '../../App'
 import { AppSize, LayoutLayer } from '../application/Application'
 import {
   HStack,
@@ -30,6 +28,9 @@ import {
   VSeparator,
   VStack
 } from '../application/NoCSSComponents'
+import { observeApp } from '../DocsContext'
+import { observer } from '../infrastructure/Observer'
+import { useDocsContext } from '../../App'
 
 function useWindowPosition(limit: number = -1): number {
   const [scrollPosition, setPosition] = useState(window.scrollY)
@@ -49,10 +50,12 @@ function useWindowPosition(limit: number = -1): number {
 }
 
 export const IntroPage = observer(() => {
+  const app = observeApp()
+  const { theme, themeManager } = useDocsContext()
+
   const SCROLL_POS_LIMIT = 600
-  const { app } = useDocsContext()
   const scrollPosition = useWindowPosition(SCROLL_POS_LIMIT)
-  console.log('new IntroView, scrollPosition: ', scrollPosition)
+  console.log('new IntroPage, scrollPosition: ', scrollPosition)
 
   let headerFontSize = ''
   switch (app.size) {
@@ -72,8 +75,8 @@ export const IntroPage = observer(() => {
                  disableHorizontalScroll>
 
     {app.size === AppSize.XS &&
-      <Image src={app.theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
-             preview={app.theme.isDark ? '/headerBg-preview.jpg' : '/headerBg-light-preview.jpg'}
+      <Image src={theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
+             preview={theme.isDark ? '/headerBg-preview.jpg' : '/headerBg-light-preview.jpg'}
              alt="header's background"
              top="0"
              width='1200px'
@@ -85,8 +88,8 @@ export const IntroPage = observer(() => {
     }
 
     {app.size !== AppSize.XS &&
-      <Image src={app.theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
-             preview={app.theme.isDark ? '/headerBg-preview.jpg' : '/headerBg-light-preview.jpg'}
+      <Image src={theme.isDark ? '/headerBg.jpg' : '/headerBg-light.jpg'}
+             preview={theme.isDark ? '/headerBg-preview.jpg' : '/headerBg-light-preview.jpg'}
              alt="header's background"
              width='2000px'
              height='850px'
@@ -106,16 +109,16 @@ export const IntroPage = observer(() => {
 
     <StylableContainer left="10px" top="5px" fixed
                        layer={LayoutLayer.HEADER}>
-      <IconButton icon={app.theme.isDark ? 'moon' : 'sun'}
+      <IconButton icon={theme.isDark ? 'moon' : 'sun'}
                   hideBg
                   popUp="Switch a theme"
-                  theme={app.theme}
+                  theme={theme}
                   onClick={() => {
-                    app.switchTheme()
+                    themeManager.switchTheme()
                   }}/>
     </StylableContainer>
 
-    <Label className={app.theme.isDark ? 'ibm' : 'ibm light'}
+    <Label className={theme.isDark ? 'ibm' : 'ibm light'}
            fontSize={headerFontSize}
            fontWeight='100'
            whiteSpace="pre"
@@ -134,22 +137,21 @@ export const IntroPage = observer(() => {
 
     <Label className="mono"
            whiteSpace="pre"
-           bgColor={app.theme.appBg50}
            padding="30px"
            text={app.size === AppSize.XS ? aboutTxtXS : aboutTxt}
-           textColor={app.theme.text75}
+           textColor={theme.text75}
            layer={LayoutLayer.ONE}/>
 
     <VStack halign="stretch"
             valign="top"
             maxWidth="1700px"
-            bgColor={app.theme.appBg}
+            bgColor={theme.appBg}
             padding="40px"
             layer={LayoutLayer.ONE}>
 
       <Label className="ibm h4"
              text="Examples of Markdown formatting"
-             textColor={app.theme.text}
+             textColor={theme.text}
              paddingLeft="25px"
              paddingBottom="25px"
              layer={LayoutLayer.ONE}/>
@@ -165,7 +167,7 @@ export const IntroPage = observer(() => {
     <Label className="mono"
            text={(app.isMobileDevice ? 'Mobile ' : 'Desktop ') + app.size}
            fontSize="10px"
-           textColor={app.theme.text75}
+           textColor={theme.text75}
            layer={LayoutLayer.ONE}/>
 
   </VStack>
@@ -176,7 +178,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   demo  |  2.27  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.28  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           
 ***/                                                                                
@@ -193,7 +195,7 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: demo  |  VER: 2.27  |  DATE: 2023      
+*  MODE: demo  |  VER: 2.28  |  DATE: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 ***/                                             
@@ -268,8 +270,9 @@ interface MarkdownEditorProps {
   secondMarkdownText?: string
 }
 
-const MarkdownEditor = observer((props: MarkdownEditorProps) => {
-  const { app } = useDocsContext()
+const MarkdownEditor = (props: MarkdownEditorProps) => {
+  const { app, theme } = useDocsContext()
+
   console.log('new MarkdownEditor')
   const [value, setValue] = useState(props.text)
   const apply = (newValue: string) => {
@@ -292,7 +295,7 @@ const MarkdownEditor = observer((props: MarkdownEditorProps) => {
 
         <Label className="ibm h4"
                text={props.title}
-               textColor={app.theme.text75}
+               textColor={theme.text75}
                whiteSpace="pre"
                paddingLeft="25px"
                minWidth="150px"/>
@@ -306,7 +309,7 @@ const MarkdownEditor = observer((props: MarkdownEditorProps) => {
         {!props.secondMarkdownText &&
           <TextArea className="mono"
                     text={value}
-                    theme={app.theme}
+                    theme={theme}
                     paddingHorizontal="25px"
                     paddingVertical="20px"
                     onApply={apply}
@@ -334,7 +337,7 @@ const MarkdownEditor = observer((props: MarkdownEditorProps) => {
     <>
       <Label className="ibm h4"
              text={props.title}
-             textColor={app.theme.text75}
+             textColor={theme.text75}
              whiteSpace="pre"
              paddingLeft="25px"
              minWidth="150px"/>
@@ -350,7 +353,7 @@ const MarkdownEditor = observer((props: MarkdownEditorProps) => {
         {!props.secondMarkdownText &&
           <TextArea className="mono"
                     text={value}
-                    theme={app.theme}
+                    theme={theme}
                     paddingHorizontal="25px"
                     paddingVertical="20px"
                     onApply={apply}
@@ -359,7 +362,7 @@ const MarkdownEditor = observer((props: MarkdownEditorProps) => {
                     width="50%"/>
         }
 
-        <VSeparator theme={app.theme}/>
+        <VSeparator theme={theme}/>
 
         <MarkdownText value={value}
                       width="50%"/>
@@ -368,16 +371,16 @@ const MarkdownEditor = observer((props: MarkdownEditorProps) => {
       <Spacer height="50px"/>
     </>
   )
-})
+}
 
 const MarkdownText = stylable(({ value }: { value: string }) => {
-  const { app } = useDocsContext()
-  console.log('new MarkdownText')
+  const { theme } = useDocsContext()
+
   useEffect(() => {
     console.log('--Prism.highlightAll')
     Prism.highlightAll()
   }, [value])
-  return <div className={app.theme.id}>
-    <ReactMarkdown className={app.theme.isDark ? 'dark' : 'light'} key={value}>{value}</ReactMarkdown>
+  return <div className={theme.id}>
+    <ReactMarkdown className={theme.isDark ? 'dark' : 'light'} key={value}>{value}</ReactMarkdown>
   </div>
 })

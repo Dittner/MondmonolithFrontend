@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { DocList } from './DocList'
-import { observer } from 'mobx-react'
 import { useDocsContext } from '../../App'
 import { DocBody } from './DocBody'
 import { DocTopics } from './DocTopics'
 import { Header } from './Header'
 import { AppSize, LayoutLayer } from '../application/Application'
 import { HStack, Label, RedButton, StylableContainer, VStack } from '../application/NoCSSComponents'
+import { observeApp } from '../DocsContext'
+import { observer } from '../infrastructure/Observer'
 
 export const DocsPage = observer(() => {
-  console.log('DocsView init')
-  const { docsLoader, app } = useDocsContext()
+  console.log('new DocsPage')
+  const app = observeApp()
+  const { docsLoader, theme } = useDocsContext()
   const drawLayoutLines = false
 
   useEffect(() => {
@@ -70,7 +72,7 @@ export const DocsPage = observer(() => {
                    top={headerHeight}
                    bottom="0"
                    enableOwnScroller
-                   borderLeft={['1px', 'solid', app.theme.border]}
+                   borderLeft={['1px', 'solid', theme.border]}
                    fixed/>
         <ModalView/>
 
@@ -190,7 +192,8 @@ export const DocsPage = observer(() => {
 export const ModalView = observer(() => {
   console.log('new ModalView')
 
-  const { app } = useDocsContext()
+  const app = observeApp()
+  const { theme } = useDocsContext()
 
   const apply = () => {
     if (app.infoDialog) {
@@ -221,7 +224,7 @@ export const ModalView = observer(() => {
     <VStack visible={app.yesNoDialog !== undefined}
             halign="stretch"
             valign="center"
-            bgColor={app.theme.modalWindowBg}
+            bgColor={theme.modalWindowBg}
             cornerRadius="20px"
             shadow="0 10px 20px #00000020"
             width="350px" padding="30px" gap="30px">
@@ -229,16 +232,16 @@ export const ModalView = observer(() => {
       <Label className="mono"
              text={app.yesNoDialog?.text}
              whiteSpace="pre-wrap"
-             textColor={app.theme.text}/>
+             textColor={theme.text}/>
 
       <HStack halign="center" valign="top" gap="50px">
         <RedButton title="No"
-                   theme={app.theme}
+                   theme={theme}
                    hideBg
                    onClick={cancel}/>
 
         <RedButton title="Yes"
-                   theme={app.theme}
+                   theme={theme}
                    hideBg
                    onClick={apply}/>
       </HStack>

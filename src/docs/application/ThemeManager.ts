@@ -1,5 +1,6 @@
 import { UUID } from '../infrastructure/UIDGenerator'
 import { buildRule, type StylableComponentProps } from './NoCSS'
+import { Observable } from '../infrastructure/Observer'
 
 const DARK_THEME_RED = '#E06C75'
 const DARK_THEME_WHITE = '#c7d7e5'
@@ -39,13 +40,58 @@ export interface Theme {
   error: string
 }
 
-export class ThemeManager {
+export class ThemeManager extends Observable {
   readonly uid
 
+  //--------------------------------------
+  //  theme
+  //--------------------------------------
+  private _theme: Theme
+  get theme(): Theme { return this._theme }
+  set theme(value: Theme) {
+    if (this._theme !== value) {
+      this._theme = value
+      this.mutated()
+    }
+  }
+
   constructor() {
+    super()
     this.uid = UUID()
     this.buildDarkThemeStandardSelectors()
     this.buildLightThemeStandardSelectors()
+    if (window.localStorage.getItem('theme') === 'dark') {
+      this._theme = this.darkTheme
+      this.setUpDarkTheme()
+    } else {
+      this._theme = this.lightTheme
+      this.setUpLightTheme()
+    }
+  }
+
+  setUpLightTheme() {
+    this.theme = this.lightTheme
+    const html = document.querySelector('html')
+    if (html) {
+      html.style.colorScheme = 'light'
+      html.style.backgroundColor = this.theme.appBg
+    }
+    window.localStorage.setItem('theme', 'light')
+  }
+
+  setUpDarkTheme() {
+    this.theme = this.darkTheme
+    const html = document.querySelector('html')
+    if (html) {
+      html.style.colorScheme = 'dark'
+      html.style.backgroundColor = this.theme.appBg
+    }
+    window.localStorage.setItem('theme', 'dark')
+  }
+
+  switchTheme(): void {
+    if (this.theme.isDark) this.setUpLightTheme()
+    else this.setUpDarkTheme()
   }
 
   /*
@@ -55,7 +101,7 @@ export class ThemeManager {
   *
   * */
 
-  public readonly darkTheme: Theme = {
+  readonly darkTheme: Theme = {
     id: 'darkTheme',
     isDark: true,
     red: DARK_THEME_RED,
@@ -121,7 +167,7 @@ export class ThemeManager {
   *
   * */
 
-  readonly lightTheme: Theme = {
+  lightTheme: Theme = {
     id: 'lightTheme',
     isDark: false,
     red: LIGHT_THEME_RED,

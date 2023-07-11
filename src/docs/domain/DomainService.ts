@@ -1,7 +1,6 @@
 import { type DocsContext } from '../DocsContext'
 import { Directory, Doc } from './DomainModel'
 import { UUID } from '../infrastructure/UIDGenerator'
-import { action } from 'mobx'
 
 export class DomainService {
   private readonly context: DocsContext
@@ -10,27 +9,29 @@ export class DomainService {
     this.context = context
   }
 
-  @action updateDocHeader(doc: Doc, newDocTitle: string, newDirTitle: string) {
+  updateDocHeader(doc: Doc, newDocTitle: string, newDirTitle: string) {
+    const dirList = this.context.directoryList
     doc.title = newDocTitle
     doc.isEditing = false
     if (doc.dir?.title !== newDirTitle) {
       doc.dir?.remove(doc)
 
-      const dir = this.context.dirs.find(d => d.title === newDirTitle)
+      const dir = dirList.findDir(dir => dir.title === newDirTitle)
       if (dir) {
         dir.add(doc)
       } else {
         const newDir = new Directory(UUID(), newDirTitle)
         newDir.add(doc)
-        this.context.dirs.push(newDir)
+        dirList.add(newDir)
       }
     }
   }
 
-  @action updateDirTitle(dir: Directory, newDirTitle: string) {
+  updateDirTitle(dir: Directory, newDirTitle: string) {
+    const dirList = this.context.directoryList
     if (dir.title === newDirTitle) return
 
-    const destDir = this.context.dirs.find(d => d.title === newDirTitle)
+    const destDir = dirList.findDir(dir => dir.title === newDirTitle)
     if (destDir) {
       while (dir.docs.length > 0) {
         const removingDoc = dir.docs[0]
@@ -44,15 +45,16 @@ export class DomainService {
     dir.isEditing = false
   }
 
-  @action createDoc(docTitle: string, dirTitle: string) {
+  createDoc(docTitle: string, dirTitle: string) {
+    const dirList = this.context.directoryList
     const doc = new Doc(UUID(), docTitle)
-    const dir = this.context.dirs.find(dir => dir.title === dirTitle)
+    const dir = dirList.findDir(dir => dir.title === dirTitle)
     if (dir) {
       dir.add(doc)
     } else {
       const newDir = new Directory(UUID(), dirTitle)
       newDir.add(doc)
-      this.context.dirs.push(newDir)
+      dirList.dirs.push(newDir)
     }
   }
 }

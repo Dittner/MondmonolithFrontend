@@ -1,4 +1,4 @@
-import { UUID } from '../infrastructure/UIDGenerator'
+import { type UID, uid } from '../infrastructure/UIDGenerator'
 import { Observable } from '../infrastructure/Observer'
 
 export enum AuthStatus {
@@ -12,7 +12,7 @@ interface Serializable {
 }
 
 export class User extends Observable {
-  readonly uid: string
+  readonly uid: UID
 
   //--------------------------------------
   //  login
@@ -64,7 +64,7 @@ export class User extends Observable {
 
   constructor() {
     super('User')
-    this.uid = UUID()
+    this.uid = uid()
     if (window.localStorage.getItem('authStatus') === 'authorized') { this.authStatus = AuthStatus.AUTHORIZED }
   }
 
@@ -104,7 +104,7 @@ export class User extends Observable {
 }
 
 export class EditTools extends Observable {
-  readonly uid: string
+  readonly uid: UID
 
   //--------------------------------------
   //  editMode
@@ -132,7 +132,7 @@ export class EditTools extends Observable {
 
   constructor() {
     super('EditTools')
-    this.uid = UUID()
+    this.uid = uid()
     document.addEventListener('keydown', this.onKeyDown.bind(this))
   }
 
@@ -161,7 +161,7 @@ export enum LoadStatus {
 }
 
 export class DirectoryList extends Observable {
-  readonly uid: string
+  readonly uid: UID
 
   //--------------------------------------
   //  dirs
@@ -191,7 +191,7 @@ export class DirectoryList extends Observable {
 
   constructor() {
     super('DirList')
-    this.uid = UUID()
+    this.uid = uid()
   }
 
   findDir(predicate: (dir: Directory) => boolean): Directory | undefined {
@@ -215,7 +215,7 @@ export class DirectoryList extends Observable {
 }
 
 export class Directory extends Observable {
-  readonly uid: string
+  readonly uid: UID
 
   //--------------------------------------
   //  title
@@ -267,7 +267,7 @@ export class Directory extends Observable {
 
   readonly docs: Doc[] = []
 
-  constructor(uid: string, title: string) {
+  constructor(uid: UID, title: string) {
     super('Dir')
     this.uid = uid
     this._title = title
@@ -318,7 +318,7 @@ export enum DocLoadStatus {
 }
 
 export class Doc extends Observable implements Serializable {
-  readonly uid: string
+  readonly uid: UID
 
   //--------------------------------------
   //  isEditing
@@ -401,18 +401,17 @@ export class Doc extends Observable implements Serializable {
   private _pages: Page[] = []
   get pages(): Page[] { return this._pages }
 
-  constructor(uid: string, title: string) {
+  constructor(uid: UID, title: string) {
     super('Doc')
     this.uid = uid
     this._title = title
   }
 
   init(pages: Page[]): void {
-    if (this.pages.length === 0) {
-      this._pages = pages.sort(sortByKey('title'))
-      this._pages.forEach(p => p._doc = this)
-      this.mutated()
-    }
+    this.pages.forEach(p => { p.dispose() })
+    this._pages = pages.sort(sortByKey('title'))
+    this._pages.forEach(p => p._doc = this)
+    this.mutated()
   }
 
   serialize(): any {
@@ -435,7 +434,7 @@ export class Doc extends Observable implements Serializable {
   }
 
   createPage(): void {
-    const p = new Page(UUID(), 'TITLE')
+    const p = new Page(uid(), 'TITLE')
     p._doc = this
     p.isEditing = true
     this.pages.unshift(p)
@@ -475,7 +474,7 @@ function filterCharacters() {
 }
 
 export class Page extends Observable implements Serializable {
-  readonly uid: string
+  readonly uid: UID
 
   //--------------------------------------
   //  isStoring
@@ -536,7 +535,7 @@ export class Page extends Observable implements Serializable {
     return this._blocks
   }
 
-  constructor(uid: string, title: string) {
+  constructor(uid: UID, title: string) {
     super('Page')
     this.uid = uid
     this._title = title
@@ -567,7 +566,7 @@ export class Page extends Observable implements Serializable {
   }
 
   createAndAddBlock(atIndex: number = 0): void {
-    const block = new PageBlock(UUID(), '_New Block_')
+    const block = new PageBlock(uid(), '_New Block_')
     block._page = this
     if (atIndex === 0) {
       this.blocks.unshift(block)
@@ -615,7 +614,7 @@ export class Page extends Observable implements Serializable {
 }
 
 export class PageBlock extends Observable implements Serializable {
-  readonly uid: string
+  readonly uid: UID
 
   //--------------------------------------
   //  estimatedRowNum
@@ -654,7 +653,7 @@ export class PageBlock extends Observable implements Serializable {
   _page: Page | undefined = undefined
   get page(): Page | undefined { return this._page }
 
-  constructor(uid: string, text: string) {
+  constructor(uid: UID, text: string) {
     super('PageBlock')
     this.uid = uid
     this._text = text

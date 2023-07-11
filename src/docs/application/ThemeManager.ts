@@ -1,4 +1,4 @@
-import { UUID } from '../infrastructure/UIDGenerator'
+import { uid } from '../infrastructure/UIDGenerator'
 import { buildRule, type StylableComponentProps } from './NoCSS'
 import { Observable } from '../infrastructure/Observer'
 
@@ -57,7 +57,7 @@ export class ThemeManager extends Observable {
 
   constructor() {
     super('ThemeManager')
-    this.uid = UUID()
+    this.uid = uid()
     this.buildDarkThemeStandardSelectors()
     this.buildLightThemeStandardSelectors()
     if (window.localStorage.getItem('theme') === 'dark') {

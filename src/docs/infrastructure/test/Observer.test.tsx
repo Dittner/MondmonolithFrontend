@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
-import { Observable, ObservableGlobalState, observe, observer } from '../Observer'
-import { UUID } from '../UIDGenerator'
+import { Observable, ObservableGlobalState, observe, observer, Reaction, ReactionSet } from '../Observer'
+import { uid } from '../UIDGenerator'
 
 /*
 *
@@ -41,7 +41,7 @@ class TodoList extends Observable {
 }
 
 class Task extends Observable {
-  readonly uid = UUID()
+  readonly uid = uid()
   
   //--------------------------------------
   //  text
@@ -155,10 +155,63 @@ afterAll(() => {
 *
 *  */
 
+test('Testing ReactionSet', async() => {
+  const set = new ReactionSet()
+  expect(set.size).toBe(0)
+
+  const r1 = new Reaction(() => {})
+  const r2 = new Reaction(() => {})
+  const r3 = new Reaction(() => {})
+
+  set.add(r1)
+  expect(set.size).toBe(1)
+  set.add(r2)
+  expect(set.size).toBe(2)
+  set.add(r3)
+  set.add(r3)
+  expect(set.size).toBe(3)
+
+  set.remove(r => r.uid === r1.uid)
+  expect(set.size).toBe(2)
+  set.forEach(r => { expect(r.uid).not.toBe(r1.uid) })
+
+  r2.dispose()
+  set.remove(r => r.isDisposed)
+  expect(set.size).toBe(1)
+  set.forEach(r => { expect(r.uid).toBe(r3.uid) })
+
+  set.clear()
+  expect(set.size).toBe(0)
+  set.forEach(r => { expect(true).toBe(false) })
+})
+
+test('Observable respects the order: the reactions should be run in the same order that they were added', async() => {
+  const someObservable = new Observable()
+  let reactionsResult = ''
+  someObservable.addReaction(new Reaction(() => reactionsResult += '1'))
+  someObservable.subscribe(() => reactionsResult += '2')
+  someObservable.addReaction(new Reaction(() => reactionsResult += '3'))
+
+  someObservable.mutated()
+  someObservable.mutated()
+  expect(reactionsResult).toBe('')
+
+  await sleep()
+
+  expect(reactionsResult).toBe('123')
+
+  someObservable.reactions.clear()
+  someObservable.mutated()
+
+  await sleep()
+
+  expect(reactionsResult).toBe('123')
+})
+
 test('Empty Todo list after setting the same title has only one render', async() => {
   expect(fakeAppRenderings).toBe(1)
   expect(themeLblRenderings).toBe(1)
-  expect(todoList.reactions.length).toBe(1)
+  expect(todoList.reactions.size).toBe(1)
 
   todoList.title = 'Title 1'
 
@@ -166,7 +219,7 @@ test('Empty Todo list after setting the same title has only one render', async()
 
   expect(fakeAppRenderings).toBe(2)
   expect(themeLblRenderings).toBe(2)
-  expect(todoList.reactions.length).toBe(1)
+  expect(todoList.reactions.size).toBe(1)
 
   todoList.title = 'Title 1'
 
@@ -174,15 +227,15 @@ test('Empty Todo list after setting the same title has only one render', async()
 
   expect(fakeAppRenderings).toBe(2)
   expect(themeLblRenderings).toBe(2)
-  expect(todoList.reactions.length).toBe(1)
+  expect(todoList.reactions.size).toBe(1)
 })
 
 test('Empty Todo list after sync updates minimizes renderings', async() => {
   expect(fakeAppRenderings).toBe(1)
   expect(themeLblRenderings).toBe(1)
   expect(taskRenderings).toBe(0)
-  expect(todoList.reactions.length).toBe(1)
-  expect(themeManager.reactions.length).toBe(2)
+  expect(todoList.reactions.size).toBe(1)
+  expect(themeManager.reactions.size).toBe(2)
 
   todoList.title = 'New Title'
   themeManager.theme = 'dark'
@@ -195,16 +248,16 @@ test('Empty Todo list after sync updates minimizes renderings', async() => {
   expect(fakeAppRenderings).toBe(2)
   expect(themeLblRenderings).toBe(2)
   expect(taskRenderings).toBe(1)
-  expect(todoList.reactions.length).toBe(1)
-  expect(themeManager.reactions.length).toBe(2)
+  expect(todoList.reactions.size).toBe(1)
+  expect(themeManager.reactions.size).toBe(2)
 })
 
 test('The sequence of mutations has not impact on amount and sequence of renderings', async() => {
   expect(fakeAppRenderings).toBe(1)
   expect(themeLblRenderings).toBe(1)
   expect(taskRenderings).toBe(0)
-  expect(todoList.reactions.length).toBe(1)
-  expect(themeManager.reactions.length).toBe(2)
+  expect(todoList.reactions.size).toBe(1)
+  expect(themeManager.reactions.size).toBe(2)
 
   todoList.addTask(new Task())
   themeManager.theme = 'dark'
@@ -217,16 +270,16 @@ test('The sequence of mutations has not impact on amount and sequence of renderi
   expect(fakeAppRenderings).toBe(2)
   expect(themeLblRenderings).toBe(2)
   expect(taskRenderings).toBe(1)
-  expect(todoList.reactions.length).toBe(1)
-  expect(themeManager.reactions.length).toBe(2)
+  expect(todoList.reactions.size).toBe(1)
+  expect(themeManager.reactions.size).toBe(2)
 })
 
 test('One task list after removing task', async() => {
   expect(fakeAppRenderings).toBe(1)
   expect(themeLblRenderings).toBe(1)
   expect(taskRenderings).toBe(0)
-  expect(todoList.reactions.length).toBe(1)
-  expect(themeManager.reactions.length).toBe(2)
+  expect(todoList.reactions.size).toBe(1)
+  expect(themeManager.reactions.size).toBe(2)
 
   todoList.addTask(new Task())
 
@@ -237,8 +290,8 @@ test('One task list after removing task', async() => {
   expect(fakeAppRenderings).toBe(2)
   expect(themeLblRenderings).toBe(2)
   expect(taskRenderings).toBe(1)
-  expect(todoList.reactions.length).toBe(1)
-  expect(themeManager.reactions.length).toBe(2)
+  expect(todoList.reactions.size).toBe(1)
+  expect(themeManager.reactions.size).toBe(2)
 
   todoList.removeAll()
   console.log('AFTER DELETING A TASK')
@@ -248,6 +301,6 @@ test('One task list after removing task', async() => {
   expect(fakeAppRenderings).toBe(3)
   expect(themeLblRenderings).toBe(3)
   expect(taskRenderings).toBe(1)
-  expect(todoList.reactions.length).toBe(1)
-  expect(themeManager.reactions.length).toBe(2)
+  expect(todoList.reactions.size).toBe(1)
+  expect(themeManager.reactions.size).toBe(2)
 })

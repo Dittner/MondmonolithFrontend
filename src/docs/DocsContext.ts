@@ -1,6 +1,6 @@
 import { AuthStatus, DirectoryList, EditTools, User } from './domain/DomainModel'
 import { DomainService } from './domain/DomainService'
-import { UUID } from './infrastructure/UIDGenerator'
+import { uid } from './infrastructure/UIDGenerator'
 import { DemoDocsRepo, type DocsLoader } from './infrastructure/loader/DocsLoader'
 import { type DocsParser, DocsParserV1 } from './infrastructure/parser/DocsParser'
 import { Application } from './application/Application'
@@ -9,7 +9,7 @@ import { observe } from './infrastructure/Observer'
 import { type Theme, ThemeManager } from './application/ThemeManager'
 
 export class DocsContext {
-  readonly uid = UUID()
+  readonly uid = uid()
   readonly themeManager: ThemeManager
   readonly user: User
   readonly editTools: EditTools

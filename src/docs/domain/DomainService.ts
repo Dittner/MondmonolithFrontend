@@ -1,6 +1,6 @@
 import { type DocsContext } from '../DocsContext'
 import { Directory, Doc } from './DomainModel'
-import { UUID } from '../infrastructure/UIDGenerator'
+import { uid } from '../infrastructure/UIDGenerator'
 
 export class DomainService {
   private readonly context: DocsContext
@@ -20,7 +20,7 @@ export class DomainService {
       if (dir) {
         dir.add(doc)
       } else {
-        const newDir = new Directory(UUID(), newDirTitle)
+        const newDir = new Directory(uid(), newDirTitle)
         newDir.add(doc)
         dirList.add(newDir)
       }
@@ -47,12 +47,12 @@ export class DomainService {
 
   createDoc(docTitle: string, dirTitle: string) {
     const dirList = this.context.directoryList
-    const doc = new Doc(UUID(), docTitle)
+    const doc = new Doc(uid(), docTitle)
     const dir = dirList.findDir(dir => dir.title === dirTitle)
     if (dir) {
       dir.add(doc)
     } else {
-      const newDir = new Directory(UUID(), dirTitle)
+      const newDir = new Directory(uid(), dirTitle)
       newDir.add(doc)
       dirList.dirs.push(newDir)
     }

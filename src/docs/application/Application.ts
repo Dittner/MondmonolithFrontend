@@ -1,4 +1,4 @@
-import { UUID } from '../infrastructure/UIDGenerator'
+import { uid } from '../infrastructure/UIDGenerator'
 import { Observable } from '../infrastructure/Observer'
 
 export enum LayoutLayer {
@@ -72,7 +72,7 @@ export class Application extends Observable {
 
   constructor() {
     super('App')
-    this.uid = UUID()
+    this.uid = uid()
     this._size = this.evaluateAppSize()
     this.isMobileDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0)
 

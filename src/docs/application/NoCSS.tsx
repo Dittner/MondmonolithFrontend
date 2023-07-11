@@ -336,7 +336,7 @@ export interface StylableComponentProps {
   hoverState?: (state: StylableComponentProps) => void
 }
 
-export const stylable = <T, X extends T & StylableComponentProps>(component: (componentProps: T) => JSX.Element): ((props: X) => JSX.Element) => {
+export const stylable = <T, X extends T & StylableComponentProps>(component: (componentProps: T) => React.JSX.Element): ((props: X) => React.JSX.Element) => {
   return (props: X) => {
     const className = buildClassName(props)
     return <div key={props.key} id={props.id} className={props.className ? props.className + ' ' + className : className}>{component(props)}</div>

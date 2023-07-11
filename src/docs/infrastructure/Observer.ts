@@ -75,6 +75,11 @@ class ReactionRunner {
 }
 export class Observable {
   reactions = Array<Reaction>()
+  readonly className: string
+
+  constructor(className: string = '') {
+    this.className = className || 'Some observable'
+  }
 
   addReaction(reaction: Reaction) {
     if (this.isDisposed) {
@@ -112,8 +117,6 @@ export class Observable {
 
   private _isDisposed: boolean = false
   get isDisposed(): boolean { return this._isDisposed }
-
-  get className(): string { return this.constructor.name }
 
   mutated() {
     if (!this._isMutated) {

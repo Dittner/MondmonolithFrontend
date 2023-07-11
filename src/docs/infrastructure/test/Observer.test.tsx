@@ -24,7 +24,7 @@ class TodoList extends Observable {
   tasks = Array<Task>()
 
   constructor(title: string) {
-    super()
+    super('TodoList')
     this._title = title
   }
 

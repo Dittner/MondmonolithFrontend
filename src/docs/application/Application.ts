@@ -71,7 +71,7 @@ export class Application extends Observable {
   public readonly isMobileDevice: boolean
 
   constructor() {
-    super()
+    super('App')
     this.uid = UUID()
     this._size = this.evaluateAppSize()
     this.isMobileDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0)

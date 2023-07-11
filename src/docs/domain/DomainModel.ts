@@ -63,7 +63,7 @@ export class User extends Observable {
   }
 
   constructor() {
-    super()
+    super('User')
     this.uid = UUID()
     if (window.localStorage.getItem('authStatus') === 'authorized') { this.authStatus = AuthStatus.AUTHORIZED }
   }
@@ -131,7 +131,7 @@ export class EditTools extends Observable {
   }
 
   constructor() {
-    super()
+    super('EditTools')
     this.uid = UUID()
     document.addEventListener('keydown', this.onKeyDown.bind(this))
   }
@@ -190,7 +190,7 @@ export class DirectoryList extends Observable {
   }
 
   constructor() {
-    super()
+    super('DirList')
     this.uid = UUID()
   }
 
@@ -268,9 +268,9 @@ export class Directory extends Observable {
   readonly docs: Doc[] = []
 
   constructor(uid: string, title: string) {
-    super()
+    super('Dir')
     this.uid = uid
-    this.title = title
+    this._title = title
   }
 
   add(doc: Doc) {
@@ -278,7 +278,7 @@ export class Directory extends Observable {
       doc.dir.remove(doc)
     }
     this.docs.push(doc)
-    doc.dir = this
+    doc._dir = this
     this.mutated()
   }
 
@@ -298,7 +298,7 @@ export class Directory extends Observable {
     if (docInd !== -1) {
       const oldDoc = this.docs[docInd]
       this.docs[docInd] = doc
-      doc.dir = this
+      doc._dir = this
       oldDoc.dispose()
       this.mutated()
     }
@@ -395,28 +395,22 @@ export class Doc extends Observable implements Serializable {
   //--------------------------------------
   //  dir
   //--------------------------------------
-  private _dir: Directory | undefined = undefined
+  _dir: Directory | undefined = undefined
   get dir(): Directory | undefined { return this._dir }
-  set dir(value: Directory | undefined) {
-    if (this._dir !== value) {
-      this._dir = value
-      this.mutated()
-    }
-  }
 
   private _pages: Page[] = []
   get pages(): Page[] { return this._pages }
 
   constructor(uid: string, title: string) {
-    super()
+    super('Doc')
     this.uid = uid
-    this.title = title
+    this._title = title
   }
 
   init(pages: Page[]): void {
     if (this.pages.length === 0) {
       this._pages = pages.sort(sortByKey('title'))
-      this._pages.forEach(p => p.doc = this)
+      this._pages.forEach(p => p._doc = this)
       this.mutated()
     }
   }
@@ -431,7 +425,7 @@ export class Doc extends Observable implements Serializable {
   }
 
   add(page: Page): void {
-    page.doc = this
+    page._doc = this
     this.pages.unshift(page)
     this.mutated()
   }
@@ -442,7 +436,7 @@ export class Doc extends Observable implements Serializable {
 
   createPage(): void {
     const p = new Page(UUID(), 'TITLE')
-    p.doc = this
+    p._doc = this
     p.isEditing = true
     this.pages.unshift(p)
     this.mutated()
@@ -460,7 +454,7 @@ export class Doc extends Observable implements Serializable {
   dispose() {
     super.dispose()
     this.pages.forEach(p => { p.dispose() })
-    this.dir = undefined
+    this._dir = undefined
     this._pages = []
   }
 }
@@ -534,14 +528,8 @@ export class Page extends Observable implements Serializable {
   //--------------------------------------
   //  doc
   //--------------------------------------
-  private _doc: Doc | undefined = undefined
+  _doc: Doc | undefined = undefined
   get doc(): Doc | undefined { return this._doc }
-  set doc(value: Doc | undefined) {
-    if (this._doc !== value) {
-      this._doc = value
-      this.mutated()
-    }
-  }
 
   private _blocks: PageBlock[] = []
   get blocks(): PageBlock[] {
@@ -549,15 +537,15 @@ export class Page extends Observable implements Serializable {
   }
 
   constructor(uid: string, title: string) {
-    super()
+    super('Page')
     this.uid = uid
-    this.title = title
+    this._title = title
   }
 
   init(blocks: PageBlock[]): void {
     this._blocks.forEach(b => { b.dispose() })
     this._blocks = blocks
-    this._blocks.forEach(b => b.page = this)
+    this._blocks.forEach(b => b._page = this)
   }
 
   serialize(): any {
@@ -573,14 +561,14 @@ export class Page extends Observable implements Serializable {
   }
 
   add(block: PageBlock): void {
-    block.page = this
+    block._page = this
     this.blocks.unshift(block)
     this.mutated()
   }
 
   createAndAddBlock(atIndex: number = 0): void {
     const block = new PageBlock(UUID(), '_New Block_')
-    block.page = this
+    block._page = this
     if (atIndex === 0) {
       this.blocks.unshift(block)
     } else if (atIndex === this.blocks.length) {
@@ -620,7 +608,7 @@ export class Page extends Observable implements Serializable {
 
   dispose() {
     super.dispose()
-    this.doc = undefined
+    this._doc = undefined
     this.blocks.forEach(b => { b.dispose() })
     this._blocks = []
   }
@@ -663,19 +651,13 @@ export class PageBlock extends Observable implements Serializable {
   //--------------------------------------
   //  page
   //--------------------------------------
-  private _page: Page | undefined = undefined
+  _page: Page | undefined = undefined
   get page(): Page | undefined { return this._page }
-  set page(value: Page | undefined) {
-    if (this._page !== value) {
-      this._page = value
-      this.mutated()
-    }
-  }
 
   constructor(uid: string, text: string) {
-    super()
+    super('PageBlock')
     this.uid = uid
-    this.text = text
+    this._text = text
   }
 
   serialize(): any {
@@ -684,7 +666,7 @@ export class PageBlock extends Observable implements Serializable {
 
   dispose() {
     super.dispose()
-    this.page = undefined
+    this._page = undefined
   }
 }
 

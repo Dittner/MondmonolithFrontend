@@ -56,7 +56,7 @@ export class ThemeManager extends Observable {
   }
 
   constructor() {
-    super()
+    super('ThemeManager')
     this.uid = UUID()
     this.buildDarkThemeStandardSelectors()
     this.buildLightThemeStandardSelectors()

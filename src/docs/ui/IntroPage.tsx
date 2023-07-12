@@ -96,7 +96,7 @@ export const IntroPage = observer(() => {
              disableHorizontalScroll
              halign="center" valign="top"
              top="0"
-             opacity={scrollPosition > SCROLL_POS_LIMIT ? '0.5' : '1'}
+             opacity={scrollPosition > SCROLL_POS_LIMIT ? '0.75' : '1'}
              animate='opacity 500ms'
              fixed/>
     }
@@ -178,7 +178,7 @@ const aboutTxt = `/***
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   demo  |  2.32  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.34  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           
 ***/                                                                                
@@ -195,7 +195,7 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: demo  |  VER: 2.32  |  DATE: 2023      
+*  MODE: demo  |  VER: 2.34  |  DATE: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 ***/                                             

@@ -607,7 +607,7 @@ export const Switcher = ({
   const thumbDiameter = '16px'
   return <StylableContainer width={btnWidth}
                             height={btnHeight}
-                            bgColor={isSelected ? selectionColor : '#727a86'}
+                            bgColor={isSelected ? selectionColor : '#727a8690'}
                             cornerRadius={btnHeight}
                             animate="background-color 300ms"
                             btnCursor

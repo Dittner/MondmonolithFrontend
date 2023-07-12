@@ -191,7 +191,7 @@ export class ThemeManager extends Observable {
     inputBorderFocused: '#c4d1d7',
     border: '#c4d1d7',
     pageSelection: '#c4d1d775',
-    docSelection: '#c4d1d775',
+    docSelection: '#d3cad650',
     caretColor: LIGHT_THEME_RED,
     error: '#914058'
   }

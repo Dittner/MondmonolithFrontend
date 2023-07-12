@@ -173,26 +173,28 @@ const DirectoryView = observer(({ dir }: { dir: Directory }) => {
     </>
   }
   return <>
-    <HStack width="100%"
-            height="35px"
+    <VStack width="100%"
+            gap='0'
             halign="left"
             valign="center"
             textColor={theme.text75}
-            paddingLeft="20px"
-            paddingRight="5px"
+            paddingBottom='30px'
             onDoubleClick={startEditing}>
 
       <Label className="notSelectable"
+             height="30px"
+             paddingLeft="20px"
+             paddingRight="5px"
              text={dir.title}
              textAlign="left"
              width="100%"/>
-    </HStack>
+      {
+        dir.docs.map(doc => {
+          return <DocLink key={doc.uid} doc={doc}/>
+        })
+      }
+    </VStack>
 
-    {
-      dir.docs.map(doc => {
-        return <DocLink key={doc.uid} doc={doc}/>
-      })
-    }
   </>
 })
 
@@ -232,18 +234,23 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
 
   return (
     <HStack width="100%"
-            height="35px"
+            height="30px"
             halign="left"
             valign="center"
             textColor={isDocSelected ? theme.text : theme.text75}
-            paddingLeft="40px"
+            paddingLeft="20px"
             paddingRight="5px"
+            bgColor = {isDocSelected ? theme.docSelection : theme.docListBg}
             hoverState={state => {
               state.textColor = theme.text
               state.bgColor = theme.docSelection
             }}
             onClick={openDoc}
             onDoubleClick={startEditing}>
+
+      <Label className="ibm" text={isDocSelected ? '>' : '—'}
+             fontSize='1rem'
+             fontWeight='1000'/>
 
       <Label className="notSelectable"
              text={isDocSelected ? doc.title + ' ' : doc.title}

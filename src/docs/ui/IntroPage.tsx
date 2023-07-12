@@ -79,8 +79,8 @@ export const IntroPage = observer(() => {
              preview={theme.isDark ? '/headerBg-preview.jpg' : '/headerBg-light-preview.jpg'}
              alt="header's background"
              top="0"
-             width='1200px'
-             height='510px'
+             width='1000px'
+             height='auto'
              disableScroll
              fixed
              halign="center" valign="top"/>
@@ -92,11 +92,11 @@ export const IntroPage = observer(() => {
              preview={theme.isDark ? '/headerBg-preview.jpg' : '/headerBg-light-preview.jpg'}
              alt="header's background"
              width='2000px'
-             height='850px'
+             height='auto'
              disableHorizontalScroll
              halign="center" valign="top"
              top="0"
-             opacity={scrollPosition > SCROLL_POS_LIMIT ? '0.75' : '1'}
+             opacity={scrollPosition > SCROLL_POS_LIMIT ? '0.6' : '1'}
              animate='opacity 500ms'
              fixed/>
     }
@@ -121,16 +121,17 @@ export const IntroPage = observer(() => {
     <Label className={theme.isDark ? 'ibm' : 'ibm light'}
            fontSize={headerFontSize}
            fontWeight='100'
+           opacity='0.75'
            whiteSpace="pre"
            textAlign='left'
-           paddingTop="100px"
+           paddingTop="50px"
            paddingBottom='100px'
            layer={LayoutLayer.ONE}>
       <span className="token keyword">{'              func\n'}</span>
       <span className="token function">{'      highlight\n'}</span>
       <span className="token symbol">{'('}</span>
       <span className="token def">yourNotes</span>
-      <span className="token symbol">: [</span>
+      <span className="token symbol">{':\n           ['}</span>
       <span className="token class">String</span>
       <span className="token symbol">{'])'}</span>
     </Label>
@@ -173,32 +174,29 @@ export const IntroPage = observer(() => {
   </VStack>
 })
 
-const aboutTxt = `/***                                                                                
+const aboutTxt = `
 *                                                       *                           
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   demo  |  2.34  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.35  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           
-***/                                                                                
 `
 
 const aboutTxtXS = `
-/***                                            
 *                                               
 *  Designed by developers for developers        
 *  This is a web-solution, that enables you to  
-*  make notes using a markdown-editor. Markdown 
 *  helps to format notes and code fragments     
+*  make notes using a markdown-editor. Markdown 
 *  easily without having to write a plane text  
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: demo  |  VER: 2.34  |  DATE: 2023      
+*  MODE: demo  |  VER: 2.35  |  DATE: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
-***/                                             
 `
 
 const headings = `# HAL 9000

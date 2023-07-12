@@ -286,7 +286,6 @@ export class Directory extends Observable {
     const docInd = this.docs.findIndex(d => d.uid === doc.uid)
     if (docInd !== -1) {
       this.docs.splice(docInd, 1)
-      doc.dispose()
       this.mutated()
       return doc
     }

@@ -184,7 +184,6 @@ const DirectoryView = observer(({ dir }: { dir: Directory }) => {
 
       <Label className="notSelectable"
              text={dir.title}
-             textTransform="uppercase"
              textAlign="left"
              width="100%"/>
     </HStack>
@@ -261,12 +260,11 @@ const DocEditForm = (props: any) => {
   const doc = props.doc as Doc
   const onCancel = props.onCancel as () => void
   const onApply = props.onApply as (docTitle: string, dirTitle: string) => void
-
-  const [newDocTitle, setNewDocTitle] = useState(doc?.title ?? '')
-  const [newDirTitle, setNewDirTitle] = useState(doc?.dir?.title ?? '')
+  const [newDocTitleProtocol, _] = useState({ value: doc?.title ?? '' })
+  const [newDirTitleProtocol, __] = useState({ value: doc?.dir?.title ?? '' })
 
   const apply = () => {
-    onApply(newDocTitle, newDirTitle)
+    onApply(newDocTitleProtocol.value, newDirTitleProtocol.value)
   }
   const cancel = () => {
     onCancel()
@@ -281,19 +279,17 @@ const DocEditForm = (props: any) => {
             borderBottom={['1px', 'solid', theme.appBg]}>
       <HStack halign="center" valign="center">
         <Input type="text"
-               text={newDocTitle}
+               protocol={newDocTitleProtocol}
                theme={theme}
                title="Doc's title"
                onSubmitted={apply}
-               onChange={setNewDocTitle}
                autoFocus/>
 
         <Input type="text"
-               text={newDirTitle}
+               protocol={newDirTitleProtocol}
                title="Directory"
                theme={theme}
-               onSubmitted={apply}
-               onChange={setNewDirTitle}/>
+               onSubmitted={apply}/>
       </HStack>
 
       <HStack halign="center" valign="center" gap="50px">
@@ -323,11 +319,11 @@ const DirEditForm = (props: any) => {
   const onCancel = props.onCancel as () => void
   const onApply = props.onApply as (title: string) => void
 
-  const [title, setTitle] = useState(dir.title || '')
+  const [titleProtocol, _] = useState({ value: dir.title })
 
   const apply = () => {
-    if (!dir.isStoring && title) {
-      onApply(title)
+    if (!dir.isStoring && titleProtocol.value) {
+      onApply(titleProtocol.value)
     }
   }
   const cancel = () => {
@@ -343,11 +339,10 @@ const DirEditForm = (props: any) => {
             borderBottom={['1px', 'solid', theme.appBg]}>
 
       <Input type="text"
-             text={title}
+             protocol={titleProtocol}
              theme={theme}
              title="Directory"
              onSubmitted={apply}
-             onChange={setTitle}
              autoFocus
       />
 

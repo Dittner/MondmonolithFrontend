@@ -15,7 +15,6 @@ export class DomainService {
     doc.isEditing = false
     if (doc.dir?.title !== newDirTitle) {
       doc.dir?.remove(doc)
-
       const dir = dirList.findDir(dir => dir.title === newDirTitle)
       if (dir) {
         dir.add(doc)

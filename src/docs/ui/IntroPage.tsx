@@ -121,7 +121,7 @@ export const IntroPage = observer(() => {
     <Label className={theme.isDark ? 'ibm' : 'ibm light'}
            fontSize={headerFontSize}
            fontWeight='100'
-           opacity='0.75'
+           opacity={theme.isDark ? '1' : '0.75'}
            whiteSpace="pre"
            textAlign='left'
            paddingTop="50px"

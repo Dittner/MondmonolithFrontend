@@ -186,7 +186,7 @@ export class ThemeManager extends Observable {
     green75: '#2c363c75',
     pageTitle: '#396a88',
     inputBg: '#cfd8dc75',
-    codeBg: '#d4dde1',
+    codeBg: '#d6dde1',
     inputBorder: TRANSPARENT,
     inputBorderFocused: '#c4d1d7',
     border: '#cfd8dc',

@@ -6,7 +6,7 @@ const DARK_THEME_RED = '#E06C75'
 const DARK_THEME_WHITE = '#c7d7e5'
 const DARK_THEME_APP_BG = '#23282a'
 
-const LIGHT_THEME_APP_BG = '#e5eaee'
+const LIGHT_THEME_APP_BG = '#e7ebed'
 const LIGHT_THEME_RED = '#b44553'
 
 const TRANSPARENT = '#00000001'
@@ -185,11 +185,11 @@ export class ThemeManager extends Observable {
     green: '#2c363c',
     green75: '#2c363c75',
     pageTitle: '#396a88',
-    inputBg: '#c4d1d775',
-    codeBg: '#c4d1d775',
+    inputBg: '#cfd8dc75',
+    codeBg: '#d4dde1',
     inputBorder: TRANSPARENT,
     inputBorderFocused: '#c4d1d7',
-    border: '#c4d1d7',
+    border: '#cfd8dc',
     pageSelection: '#c4d1d775',
     docSelection: '#d3cad650',
     caretColor: LIGHT_THEME_RED,
@@ -221,7 +221,7 @@ export class ThemeManager extends Observable {
       textColor: '#6a6a73',
       bgColor: '#dedde4',
       padding: '20px',
-      borderLeft: '5px solid #b9b7bb'
+      borderLeft: '5px solid #d0cfda'
     }
     buildRule(blockquoteProps, theme.id, 'blockquote')
   }

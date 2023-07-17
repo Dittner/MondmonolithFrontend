@@ -281,6 +281,10 @@ button {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-doc:before {
+  content: "\e90d";
+}
+
 .icon-moon:before {
   font-size: 1.25rem;
   content: "\e90b";

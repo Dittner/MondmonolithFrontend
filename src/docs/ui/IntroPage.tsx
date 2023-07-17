@@ -97,7 +97,7 @@ export const IntroPage = observer(() => {
              halign="center" valign="top"
              top="0"
              opacity={scrollPosition > SCROLL_POS_LIMIT ? theme.isDark ? '0.6' : '0.2' : '1'}
-             animate='opacity 500ms'
+             animate='opacity 700ms'
              fixed/>
     }
 
@@ -121,7 +121,6 @@ export const IntroPage = observer(() => {
     <Label className={theme.isDark ? 'ibm' : 'ibm light'}
            fontSize={headerFontSize}
            fontWeight='100'
-           opacity={theme.isDark ? '1' : '0.75'}
            whiteSpace="pre"
            textAlign='left'
            paddingTop="50px"
@@ -177,12 +176,11 @@ export const IntroPage = observer(() => {
 const aboutTxt = `
 *                                                       *                           
 *   Designed by developers for developers               *   ========================
-*   This is a web-solution, that enables you to make    *   MODE  |  VER   |  DATE  
+*   This is a web-solution, that enables you to make    *   MODE  |  VER   |  YEAR  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   demo  |  2.37  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.38  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
-*                                                       *                           
-`
+*                                                       *                           `
 
 const aboutTxtXS = `
 *                                               
@@ -194,7 +192,7 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: demo  |  VER: 2.37  |  DATE: 2023      
+*  MODE: demo  |  VER: 2.38  |  YEAR: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 `

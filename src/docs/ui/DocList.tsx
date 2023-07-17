@@ -240,6 +240,7 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
             textColor={isDocSelected ? theme.text : theme.text75}
             paddingLeft="20px"
             paddingRight="5px"
+            gap="8px"
             bgColor = {isDocSelected ? theme.docSelection : theme.docListBg}
             hoverState={state => {
               state.textColor = theme.text
@@ -248,9 +249,7 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
             onClick={openDoc}
             onDoubleClick={startEditing}>
 
-      <Label className="ibm" text={isDocSelected ? '>' : '—'}
-             fontSize='1rem'
-             fontWeight='1000'/>
+      <Label className='icon-doc' paddingBottom='5px'/>
 
       <Label className="notSelectable"
              text={isDocSelected ? doc.title + ' ' : doc.title}

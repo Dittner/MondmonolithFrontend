@@ -61,8 +61,8 @@ export const IntroPage = observer(() => {
   switch (app.size) {
     case AppSize.XS: headerFontSize = '45px'; break
     case AppSize.S: headerFontSize = '60px'; break
-    case AppSize.M: headerFontSize = '75px'; break
-    case AppSize.L: headerFontSize = '75px'; break
+    case AppSize.M: headerFontSize = '65px'; break
+    case AppSize.L: headerFontSize = '70px'; break
   }
 
   const funcColor = theme.isDark ? '#7a5196' : '#a06a9d'
@@ -129,8 +129,8 @@ export const IntroPage = observer(() => {
            whiteSpace="pre"
            opacity='0.85'
            textAlign='left'
-           paddingTop="50px"
-           paddingBottom='55px'
+           paddingTop="70px"
+           paddingBottom='60px'
            layer={LayoutLayer.ONE}>
       <span style={{ color: funcColor }}>{'              func\n'}</span>
       <span style={{ color: highlightColor }}>{'      highlight\n'}</span>

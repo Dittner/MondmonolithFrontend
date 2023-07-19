@@ -418,8 +418,7 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
   return (
     <StylableContainer className={theme.id}
                        minHeight="30px"
-                       paddingVertical="5px"
-                       paddingHorizontal="30px"
+                       paddingHorizontal="20px"
                        width="100%">
       <ReactMarkdown className={theme.isDark ? 'dark' : 'light'}>{block.text}</ReactMarkdown>
     </StylableContainer>

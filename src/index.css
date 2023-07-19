@@ -97,7 +97,7 @@ p {
 
 .title {
   font-family: "ibm", var(--font-family-mono);
-  letter-spacing: -2px;
+  letter-spacing: -1.5px;
   word-wrap: break-word;
   font-weight: 800;
   line-height: 1.4;

@@ -276,7 +276,7 @@ const PageTitle = observer(({ page }: { page: Page }) => {
 
   if (editTools.editMode && isSelected) {
     return (<>
-        <StylableContainer minHeight="50px"
+        <StylableContainer minHeight="30px"
                            paddingRight="10px"
                            paddingLeft="24px"
                            width="100%"
@@ -293,7 +293,7 @@ const PageTitle = observer(({ page }: { page: Page }) => {
   }
 
   if (editTools.editMode) {
-    return <StylableContainer minHeight="50px"
+    return <StylableContainer minHeight="30px"
                               paddingRight="10px"
                               paddingLeft="30px"
                               width="100%"
@@ -309,7 +309,7 @@ const PageTitle = observer(({ page }: { page: Page }) => {
   }
 
   return (
-    <StylableContainer minHeight="50px"
+    <StylableContainer minHeight="30px"
                        paddingRight="10px"
                        paddingLeft="30px"
                        width="100%">
@@ -387,10 +387,9 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
   if (editTools.editMode && isSelected) {
     return (<>
         <StylableContainer className={theme.id}
-                           minHeight="50px"
-                           paddingRight="30px"
-                           paddingLeft="24px"
-                           paddingVertical="5px"
+                           minHeight="30px"
+                           paddingRight="20px"
+                           paddingLeft="14px"
                            width="100%"
                            bgColor={theme.pageSelection}
                            borderLeft={['6px', 'solid', theme.yellow]}
@@ -404,9 +403,8 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
 
   if (editTools.editMode) {
     return <StylableContainer className={theme.id}
-                              minHeight="50px"
-                              paddingHorizontal="30px"
-                              paddingVertical="5px"
+                              minHeight="30px"
+                              paddingHorizontal="20px"
                               width="100%"
                               onMouseDown={selectBlock}
                               hoverState={state => {
@@ -419,7 +417,7 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
 
   return (
     <StylableContainer className={theme.id}
-                       minHeight="50px"
+                       minHeight="30px"
                        paddingVertical="5px"
                        paddingHorizontal="30px"
                        width="100%">
@@ -449,7 +447,7 @@ const PageBlockEditor = ({ block }: { block: PageBlock }) => {
               text={block.text}
               theme={theme}
               className="mono"
-              paddingHorizontal="28px"
+              paddingHorizontal="18px"
               paddingTop="10px"
               onApply={apply}
               onCancel={cancel}

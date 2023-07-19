@@ -59,11 +59,17 @@ export const IntroPage = observer(() => {
 
   let headerFontSize = ''
   switch (app.size) {
-    case AppSize.XS: headerFontSize = '35px'; break
-    case AppSize.S: headerFontSize = '50px'; break
-    case AppSize.M: headerFontSize = '55px'; break
-    case AppSize.L: headerFontSize = '55px'; break
+    case AppSize.XS: headerFontSize = '45px'; break
+    case AppSize.S: headerFontSize = '60px'; break
+    case AppSize.M: headerFontSize = '75px'; break
+    case AppSize.L: headerFontSize = '75px'; break
   }
+
+  const funcColor = theme.isDark ? '#7a5196' : '#a06a9d'
+  const highlightColor = theme.isDark ? '#4e95cb' : '#416fb3'
+  const stringColor = theme.isDark ? '#61b1b2' : '#5e929d'
+  const yourNotesColor = theme.isDark ? '#bccbd7' : '#5b6269'
+  const symbolsColor = theme.isDark ? '#6b888e' : '#5b6269'
 
   return <VStack maxWidth="100%"
                  width="100%"
@@ -79,7 +85,7 @@ export const IntroPage = observer(() => {
              preview={theme.isDark ? '/headerBg-preview.jpg' : '/headerBg-light-preview.jpg'}
              alt="header's background"
              top="0"
-             width='1000px'
+             width='900px'
              height='auto'
              disableScroll
              fixed
@@ -118,21 +124,21 @@ export const IntroPage = observer(() => {
                   }}/>
     </StylableContainer>
 
-    <Label className={theme.isDark ? 'ibm' : 'ibm light'}
+    <Label className={theme.isDark ? 'title' : 'title light'}
            fontSize={headerFontSize}
-           fontWeight='100'
            whiteSpace="pre"
+           opacity='0.85'
            textAlign='left'
            paddingTop="50px"
-           paddingBottom='100px'
+           paddingBottom='55px'
            layer={LayoutLayer.ONE}>
-      <span className="token keyword">{'              func\n'}</span>
-      <span className="token function">{'      highlight\n'}</span>
-      <span className="token symbol">{'('}</span>
-      <span className="token def">yourNotes</span>
-      <span className="token symbol">{':\n           ['}</span>
-      <span className="token class">String</span>
-      <span className="token symbol">{'])'}</span>
+      <span style={{ color: funcColor }}>{'              func\n'}</span>
+      <span style={{ color: highlightColor }}>{'      highlight\n'}</span>
+      <span style={{ color: symbolsColor }}>{'('}</span>
+      <span style={{ color: yourNotesColor }}>yourNotes</span>
+      <span style={{ color: symbolsColor }}>{':\n           ['}</span>
+      <span style={{ color: stringColor }}>String</span>
+      <span style={{ color: symbolsColor }}>{'])'}</span>
     </Label>
 
     <Label className="ibm"
@@ -178,7 +184,7 @@ const aboutTxt = `
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  YEAR  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   demo  |  2.38  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.39  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           `
 
@@ -192,7 +198,7 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: demo  |  VER: 2.38  |  YEAR: 2023      
+*  MODE: demo  |  VER: 2.39  |  YEAR: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 `

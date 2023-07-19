@@ -219,9 +219,9 @@ export class ThemeManager extends Observable {
 
     const blockquoteProps: StylableComponentProps = {
       textColor: '#6a6a73',
-      bgColor: '#dedde4',
+      bgColor: '#e6e5eb',
       padding: '20px',
-      borderLeft: '5px solid #d0cfda'
+      borderLeft: '5px solid #d6c8db'
     }
     buildRule(blockquoteProps, theme.id, 'blockquote')
   }

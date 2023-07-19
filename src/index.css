@@ -6,15 +6,7 @@
 
 @font-face {
   font-family: "ibm";
-  src: url("resources/fonts/ibm-plex-mono-light.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-  font-display: block;
-}
-
-@font-face {
-  font-family: "ibmBold";
-  src: url("resources/fonts/ibm-plex-mono-bold.ttf") format("truetype");
+  src: url("resources/fonts/ibm-plex-mono.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -22,10 +14,6 @@
 
 .ibm {
   font-family: "ibm", var(--font-family-mono);
-}
-
-.ibmBold {
-  font-family: "ibmBold", var(--font-family-mono);
 }
 
 ::selection {
@@ -108,9 +96,10 @@ p {
 }
 
 .title {
-  font-family: "ibmBold", var(--font-family-mono);
+  font-family: "ibm", var(--font-family-mono);
   letter-spacing: -2px;
   word-wrap: break-word;
+  font-weight: 800;
   line-height: 1.4;
 }
 

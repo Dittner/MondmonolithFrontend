@@ -184,7 +184,7 @@ const aboutTxt = `
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  YEAR  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   demo  |  2.39  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.40  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           `
 
@@ -198,7 +198,7 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: demo  |  VER: 2.39  |  YEAR: 2023      
+*  MODE: demo  |  VER: 2.40  |  YEAR: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 `

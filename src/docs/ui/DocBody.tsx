@@ -280,8 +280,8 @@ const PageTitle = observer(({ page }: { page: Page }) => {
                            paddingRight="10px"
                            paddingLeft="24px"
                            width="100%"
-                           bgColor={theme.pageSelection}
-                           borderLeft={['6px', 'solid', theme.yellow]}
+                           bgColor={theme.selectedBlockBg}
+                           borderLeft={['6px', 'solid', theme.border]}
                            cornerRadius="10px"
                            onDoubleClick={editPage}>
           <Label className="h1"
@@ -299,7 +299,7 @@ const PageTitle = observer(({ page }: { page: Page }) => {
                               width="100%"
                               onMouseDown={selectTitle}
                               hoverState={state => {
-                                state.bgColor = theme.pageSelection
+                                state.bgColor = theme.selectedBlockBg
                                 state.cornerRadius = '10px'
                               }}>
       <Label className="h1"
@@ -391,8 +391,8 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
                            paddingRight="20px"
                            paddingLeft="14px"
                            width="100%"
-                           bgColor={theme.pageSelection}
-                           borderLeft={['6px', 'solid', theme.yellow]}
+                           bgColor={theme.selectedBlockBg}
+                           borderLeft={['6px', 'solid', theme.selectedBlockBorder]}
                            cornerRadius="10px"
                            onDoubleClick={editPage}>
           <ReactMarkdown className={theme.isDark ? 'dark' : 'light'}>{block.text}</ReactMarkdown>
@@ -408,7 +408,7 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
                               width="100%"
                               onMouseDown={selectBlock}
                               hoverState={state => {
-                                state.bgColor = theme.pageSelection
+                                state.bgColor = theme.selectedBlockBg
                                 state.cornerRadius = '10px'
                               }}>
       <ReactMarkdown className={theme.isDark ? 'dark' : 'light'}>{block.text}</ReactMarkdown>

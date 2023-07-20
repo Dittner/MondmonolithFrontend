@@ -17,7 +17,6 @@ export interface Theme {
   red: string
   white: string
   white25: string
-  yellow: string
   appBg: string
   appBg50: string
   transparent: string
@@ -33,7 +32,8 @@ export interface Theme {
   codeBg: string
   inputBorder: string
   inputBorderFocused: string
-  pageSelection: string
+  selectedBlockBorder: string
+  selectedBlockBg: string
   docSelection: string
   border: string
   caretColor: string
@@ -107,7 +107,6 @@ export class ThemeManager extends Observable {
     red: DARK_THEME_RED,
     white: DARK_THEME_WHITE,
     white25: '#ffffff10',
-    yellow: '#c29a5f',
     appBg: DARK_THEME_APP_BG,
     appBg50: DARK_THEME_APP_BG + '50',
     transparent: TRANSPARENT,
@@ -124,7 +123,8 @@ export class ThemeManager extends Observable {
     inputBorder: TRANSPARENT,
     inputBorderFocused: '#293034',
     border: '#323e44',
-    pageSelection: '#323e44',
+    selectedBlockBorder: '#c29a5f',
+    selectedBlockBg: '#323e44',
     docSelection: '#00000020',
     caretColor: DARK_THEME_RED,
     error: '#ff719a'
@@ -173,7 +173,6 @@ export class ThemeManager extends Observable {
     red: LIGHT_THEME_RED,
     white: LIGHT_THEME_APP_BG,
     white25: '#ffffff20',
-    yellow: '#6f838d',
     appBg: LIGHT_THEME_APP_BG,
     appBg50: LIGHT_THEME_APP_BG + '50',
     transparent: TRANSPARENT,
@@ -190,7 +189,8 @@ export class ThemeManager extends Observable {
     inputBorder: TRANSPARENT,
     inputBorderFocused: '#c4d1d7',
     border: '#cfd8dc',
-    pageSelection: '#e0e6ea',
+    selectedBlockBorder: '#6f838d',
+    selectedBlockBg: '#e0e6ea',
     docSelection: '#e0e6ea',
     caretColor: LIGHT_THEME_RED,
     error: '#914058'

@@ -214,7 +214,9 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
     doc.isEditing = false
   }
 
-  const startEditing = () => {
+  const startEditing = (e: any) => {
+    e.preventDefault()
+    e.stopPropagation()
     if (!doc.isStoring && editTools.editMode && isDocSelected) {
       doc.isEditing = true
     }

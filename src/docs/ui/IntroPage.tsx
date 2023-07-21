@@ -146,6 +146,7 @@ export const IntroPage = observer(() => {
            padding="30px"
            text={app.size === AppSize.XS ? aboutTxtXS : aboutTxt}
            textColor={theme.green}
+           opacity='0.85'
            layer={LayoutLayer.ONE}/>
 
     <VStack halign="stretch"
@@ -184,7 +185,7 @@ const aboutTxt = `
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  YEAR  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   demo  |  2.41  |  2023  
+*   to format notes and code fragments easily without   *   demo  |  2.42  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           `
 
@@ -198,7 +199,7 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: demo  |  VER: 2.41  |  YEAR: 2023      
+*  MODE: demo  |  VER: 2.42  |  YEAR: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 `

@@ -27,6 +27,9 @@ const DocTopicsView = observer(() => {
   if (!doc || doc.loadStatus === DocLoadStatus.LOADING) {
     return <></>
   }
+
+  observe(doc)
+
   return (
     <VStack halign="left" valign="top" gap="0"
             width="100%" height="100%"

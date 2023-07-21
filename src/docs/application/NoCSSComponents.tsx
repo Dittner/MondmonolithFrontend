@@ -810,7 +810,7 @@ interface HSeparatorProps {
 export const HSeparator = (props: HSeparatorProps) => {
   if (props.visible === false) return <></>
 
-  const style: any = {}
+  const style: any = { ...props }
   if (props.width !== undefined) style.width = props.width
   if (props.marginHorizontal !== undefined) {
     style.marginLeft = props.marginHorizontal
@@ -897,4 +897,15 @@ export const Spacer = ({
   }
 
   return <div className={'spacer ' + buildClassName(style)}/>
+}
+
+/*
+*
+* Rectangle
+*
+* */
+
+export const Rectangle = (props: StylableComponentProps) => {
+  if (props.visible === false) return <></>
+  return <div className={buildClassName(props)}/>
 }

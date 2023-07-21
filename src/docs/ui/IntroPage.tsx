@@ -59,7 +59,7 @@ export const IntroPage = observer(() => {
 
   let headerFontSize = ''
   switch (app.size) {
-    case AppSize.XS: headerFontSize = '45px'; break
+    case AppSize.XS: headerFontSize = '40px'; break
     case AppSize.S: headerFontSize = '60px'; break
     case AppSize.M: headerFontSize = '65px'; break
     case AppSize.L: headerFontSize = '70px'; break
@@ -176,7 +176,6 @@ export const IntroPage = observer(() => {
            fontSize="10px"
            textColor={theme.text75}
            layer={LayoutLayer.ONE}/>
-
   </VStack>
 })
 

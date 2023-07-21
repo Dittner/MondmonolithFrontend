@@ -149,6 +149,11 @@ const PageList = observer(() => {
     }
   }
 
+  const scrollBack = () => {
+    setPagesSlice({ start: 0, end: 2, isFirstPageShown: true, isLastPageShown: (doc?.pages.length ?? 0) <= 3 })
+    window.scrollTo(0, 0)
+  }
+
   if (doc?.loadStatus === DocLoadStatus.LOADING || dirList.loadStatus === LoadStatus.LOADING) {
     return <LoadingSpinner/>
   }
@@ -223,10 +228,7 @@ const PageList = observer(() => {
                       hideBg
                       icon="scrollBack"
                       popUp="Scroll back"
-                      onClick={() => {
-                        window.scrollTo(0, 0)
-                      }}/>
-
+                      onClick={scrollBack}/>
         </HStack>
       }
     </VStack>

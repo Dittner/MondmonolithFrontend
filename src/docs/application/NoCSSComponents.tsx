@@ -765,7 +765,18 @@ interface ImageProps extends StackProps {
 
 export const Image = (props: ImageProps) => {
   const [showPreview, setShowPreview] = useState(props.preview !== undefined)
+
+  useEffect(() => {
+    if (props.preview) {
+      setShowPreview(true)
+      setTimeout(() => {
+        setShowPreview(false)
+      }, 100)
+    }
+  }, [props.src])
+
   if ('visible' in props && !props.visible) return <></>
+
   const className = 'className' in props ? props.className + ' ' + buildClassName(props) : buildClassName(props)
 
   let imgClassName
@@ -777,14 +788,6 @@ export const Image = (props: ImageProps) => {
     if ('animate' in props) style.animate = props.animate
     imgClassName = buildClassName(style)
   }
-
-  useEffect(() => {
-    if (props.preview) {
-      setTimeout(() => {
-        setShowPreview(false)
-      }, 1000)
-    }
-  }, [])
 
   return (
     <HStack className={className} valign={props.valign} halign={props.halign}>

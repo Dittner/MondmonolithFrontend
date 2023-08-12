@@ -1,23 +1,21 @@
-import { AuthStatus, DirectoryList, EditTools, User } from './domain/DomainModel'
-import { DomainService } from './domain/DomainService'
+import { AuthStatus, DirectoryList, EditTools, LoadStatus, User } from './domain/DomainModel'
 import { uid } from './infrastructure/UIDGenerator'
-import { DemoDocsRepo, type DocsLoader } from './infrastructure/loader/DocsLoader'
-import { type DocsParser, DocsParserV1 } from './infrastructure/parser/DocsParser'
+import { DocsLoader } from './infrastructure/loader/DocsLoader'
 import { Application } from './application/Application'
 import { useDocsContext } from '../App'
 import { observe } from './infrastructure/Observer'
 import { type Theme, ThemeManager } from './application/ThemeManager'
+import { RestApi } from './infrastructure/rest/RestApi'
 
 export class DocsContext {
   readonly uid = uid()
   readonly themeManager: ThemeManager
   readonly user: User
   readonly editTools: EditTools
-  readonly directoryList: DirectoryList
+  readonly dirList: DirectoryList
   readonly app: Application
-  readonly docsParser: DocsParser
   readonly docsLoader: DocsLoader
-  readonly domainService: DomainService
+  readonly restApi: RestApi
 
   static self: DocsContext
 
@@ -35,18 +33,23 @@ export class DocsContext {
     this.themeManager = new ThemeManager()
     this._theme = this.themeManager.theme
     this.user = new User()
+    this.restApi = new RestApi(this)
     this.editTools = new EditTools()
-    this.docsParser = new DocsParserV1()
-    this.docsLoader = new DemoDocsRepo(this)
-    this.domainService = new DomainService(this)
+    this.docsLoader = new DocsLoader(this)
     this.app = new Application()
     this.app.subscribeToWindowResize()
-    this.directoryList = new DirectoryList()
+    this.dirList = new DirectoryList()
 
     this.user.subscribe(() => {
       if (this.user.authStatus === AuthStatus.SIGNED_OUT) {
         this.editTools.editMode = false
         this.editTools.select(undefined)
+      }
+    })
+
+    this.dirList.subscribe(() => {
+      if (this.dirList.loadStatus === LoadStatus.LOADED && this.dirList.dirs.length === 0) {
+        this.editTools.editMode = true
       }
     })
 
@@ -65,5 +68,5 @@ export function observeEditTools(): EditTools {
 }
 
 export function observeDirList(): DirectoryList {
-  return observe(useDocsContext().directoryList)
+  return observe(useDocsContext().dirList)
 }

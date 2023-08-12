@@ -89,6 +89,8 @@ class ReactionRunner {
   private status = ReactionRunnerStatus.IDLE
 
   addToQueue(ob: Observable) {
+    if (this.infiniteLoopFound) return
+
     if (this.status === ReactionRunnerStatus.RUNNING) {
       this.temp.push(ob)
     } else {
@@ -97,12 +99,14 @@ class ReactionRunner {
         this.status = ReactionRunnerStatus.PENDING
         setTimeout(() => {
           this.runAll()
-        }, 0)
+        }, 10)
       }
     }
   }
 
-  private infiniteLoopRenderings = 0
+  private readonly INFINITE_LOOP_LIMIT = 20
+  private infiniteLoopFound = false
+  private loopRenderings = 0
   private runAll() {
     logInfo('--Start executing of reaction...')
     this.status = ReactionRunnerStatus.RUNNING
@@ -126,22 +130,23 @@ class ReactionRunner {
     this.queue.clear()
     this.status = ReactionRunnerStatus.IDLE
     if (this.temp.length > 0) {
-      this.infiniteLoopRenderings++
+      this.loopRenderings++
 
-      if (this.infiniteLoopRenderings > 1) {
-        logWarn('Generating mutations while reactions are running may cause an infinite loop. Loop renderings:', this.infiniteLoopRenderings,
-          '. Frequently mutated observables:', ...this.temp.map(ob => ob.className))
+      if (this.loopRenderings > 2) {
+        logWarn('Generating mutations while reactions are running may cause an infinite loop. Loop renderings:', this.loopRenderings,
+          '. Frequently mutated observables: [', ...this.temp.map(ob => ob.className), ']')
       }
       
-      if (this.infiniteLoopRenderings < 20) {
+      if (this.loopRenderings < this.INFINITE_LOOP_LIMIT) {
         this.temp.forEach(ob => { this.addToQueue(ob) })
         this.temp.length = 0
       } else {
+        this.infiniteLoopFound = true
         logWarn('--Infinite Loop! The possible reason: An executed reaction X invoked new rendering of a JSX-component, ' +
           'that caused mutation in observable object, that added again the reaction X to the execution queue.')
       }
     } else {
-      this.infiniteLoopRenderings = 0
+      this.loopRenderings = 0
     }
     logInfo("--End of reaction's executing, total executions:", executedReactions)
   }

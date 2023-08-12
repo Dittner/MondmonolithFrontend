@@ -7,7 +7,8 @@ export enum LayoutLayer {
   HEADER = '10',
   DOC_LIST = '20',
   POPUP = '30',
-  MODAL = '40',
+  ERR_MSG = '40',
+  MODAL = '50',
 }
 
 export enum AppSize {
@@ -33,25 +34,25 @@ export class Application extends Observable {
   }
 
   //--------------------------------------
-  //  yesNoDialog
+  //  dialog
   //--------------------------------------
-  private _yesNoDialog: YesNoDialog | undefined = undefined
-  get yesNoDialog(): YesNoDialog | undefined { return this._yesNoDialog }
-  set yesNoDialog(value: YesNoDialog | undefined) {
-    if (this._yesNoDialog !== value) {
-      this._yesNoDialog = value
+  private _dialog: Dialog | undefined = undefined
+  get dialog(): Dialog | undefined { return this._dialog }
+  set dialog(value: Dialog | undefined) {
+    if (this._dialog !== value) {
+      this._dialog = value
       this.mutated()
     }
   }
 
   //--------------------------------------
-  //  infoDialog
+  //  errorMsg
   //--------------------------------------
-  private _infoDialog: InfoDialog | undefined = undefined
-  get infoDialog(): InfoDialog | undefined { return this._infoDialog }
-  set infoDialog(value: InfoDialog | undefined) {
-    if (this._infoDialog !== value) {
-      this._infoDialog = value
+  private _errorMsg: string = ''
+  get errorMsg(): string { return this._errorMsg }
+  set errorMsg(value: string) {
+    if (this._errorMsg !== value) {
+      this._errorMsg = value
       this.mutated()
     }
   }
@@ -107,24 +108,16 @@ export class Application extends Observable {
   }
 }
 
-export class YesNoDialog {
+export class Dialog {
+  readonly title: string
   readonly text: string
-  readonly onApply: () => void
+  readonly onApply: (() => void) | undefined
   readonly onCancel: (() => void) | undefined
 
-  constructor(text: string, onApply: () => void, onCancel?: (() => void) | undefined) {
+  constructor(title: string, text: string, onApply?: (() => void) | undefined, onCancel?: (() => void) | undefined) {
+    this.title = title
     this.text = text
     this.onApply = onApply
     this.onCancel = onCancel
-  }
-}
-
-export class InfoDialog {
-  readonly title: string
-  readonly text: string
-
-  constructor(title: string, text: string) {
-    this.title = title
-    this.text = text
   }
 }

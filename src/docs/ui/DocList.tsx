@@ -6,7 +6,6 @@ import { AppSize } from '../application/Application'
 import { type Directory, type Doc, LoadStatus } from '../domain/DomainModel'
 import { stylable } from '../application/NoCSS'
 import { observeApp, observeDirList, observeEditTools } from '../DocsContext'
-import { HeaderVerSep } from './Header'
 import { observe, observer } from '../infrastructure/Observer'
 import {
   HStack,
@@ -18,24 +17,37 @@ import {
   StylableContainer,
   VStack
 } from '../application/NoCSSComponents'
+import { sortByKey } from './common/Utils'
+import { HeaderVerSep } from './Header'
 
 export const DocList = observer(stylable(() => {
   console.log('new DocList')
   const app = observeApp()
   const editTools = observeEditTools()
   const dirList = observeDirList()
-  const { domainService, theme, themeManager } = useDocsContext()
+  const {
+    restApi,
+    theme,
+    themeManager
+  } = useDocsContext()
 
-  const [isNewDocCreating, setIsNewDocCreating] = useState(false)
+  const [newDir, setNewDir] = useState<Directory | null>(null)
 
-  const onCancel = () => {
-    setIsNewDocCreating(false)
+  const createDir = () => {
+    setNewDir(dirList.createDir())
   }
 
-  const onApply = (docTitle: string, dirTitle: string) => {
-    if (docTitle && dirTitle) {
-      domainService.createDoc(docTitle, dirTitle)
-      setIsNewDocCreating(false)
+  const onCancel = () => {
+    setNewDir(null)
+  }
+
+  const onApply = (title: string) => {
+    if (newDir && title) {
+      if (newDir.title !== title) {
+        newDir.title = title
+        restApi.storeDir(newDir)
+      }
+      setNewDir(null)
     }
   }
 
@@ -54,6 +66,7 @@ export const DocList = observer(stylable(() => {
             gap="0"
             width="100%"
             height="100%"
+            borderRight={['1px', 'solid', theme.border]}
             bgColor={theme.docListBg}>
 
       <HStack halign="center"
@@ -61,8 +74,7 @@ export const DocList = observer(stylable(() => {
               gap="0"
               width="100%"
               minHeight="50px"
-              paddingLeft="10px"
-              paddingRight="10px">
+              paddingHorizontal="10px">
 
         <IconButton icon={theme.isDark ? 'moon' : 'sun'}
                     hideBg
@@ -73,19 +85,10 @@ export const DocList = observer(stylable(() => {
                     }}/>
 
         {editTools.editMode &&
-          <>
-
-            <RedButton title="New doc"
+            <RedButton title="Add Dir"
                        theme={theme}
                        hideBg
-                       onClick={() => {
-                         setIsNewDocCreating(true)
-                       }}/>
-
-            <HeaderVerSep/>
-
-            <DocPicker/>
-          </>
+                       onClick={createDir}/>
         }
 
         <Spacer/>
@@ -98,29 +101,150 @@ export const DocList = observer(stylable(() => {
                     onClick={hideDocList}/>
       </HStack>
 
-      {isNewDocCreating &&
-        <DocEditForm doc={null}
-                     onCancel={onCancel}
-                     onApply={onApply}/>
+      {newDir &&
+        <DirForm dir={newDir}
+                 padding='10px'
+                 width='100%'
+                 onCancel={onCancel}
+                 onApply={onApply}/>
       }
 
-      {dirList.dirs.map(dir => {
+      {dirList.dirs.sort(sortByKey('title')).map(dir => {
         return <DirectoryView key={dir.uid} dir={dir}/>
       })}
     </VStack>
   )
 }))
 
-const DocPicker = () => {
+const DirectoryView = observer(({ dir }: { dir: Directory }) => {
+  observe(dir)
+  const editTools = observeEditTools()
+  const { restApi, theme, docsLoader } = useDocsContext()
+
+  const [newDoc, setNewDoc] = useState<Doc | null>(null)
+
+  if (dir.loadStatus === LoadStatus.PENDING) { restApi.loadDocs(dir) }
+
+  const createDoc = () => {
+    setNewDoc(dir.createDoc())
+  }
+  const onApplyDocCreating = (title: string) => {
+    if (newDoc && title) {
+      newDoc.title = title
+      restApi.storeDoc(newDoc, dir)
+      newDoc.isEditing = false
+      setNewDoc(null)
+    }
+  }
+
+  const onCancelDocCreating = () => {
+    setNewDoc(null)
+  }
+
+  const onApplyDirEditing = (title: string) => {
+    if (dir && title && dir.title !== title) {
+      dir.title = title
+      restApi.storeDir(dir)
+      dir.isEditing = false
+    }
+  }
+
+  const onDeleteDir = () => {
+    restApi.deleteDir(dir)
+    dir.isEditing = false
+  }
+
+  const onCancelDirEditing = () => {
+    dir.isEditing = false
+  }
+
+  const startEditing = () => {
+    if (!dir.isStoring && editTools.editMode) {
+      dir.isEditing = true
+    }
+  }
+
+  const onFileSelected = (f: File) => {
+    docsLoader.loadDocFromDisc(f, dir)
+  }
+
+  if (editTools.editMode && dir.isEditing) {
+    return <>
+      <DirForm dir={dir}
+               padding='10px'
+               width='100%'
+               onCancel={onCancelDirEditing}
+               onApply={onApplyDirEditing}
+               onDelete={onDeleteDir}/>
+      {
+        dir.docs.map(doc => {
+          return <DocLink key={doc.uid} doc={doc}/>
+        })
+      }
+    </>
+  }
+  return <>
+    <VStack width="100%"
+            gap='0'
+            halign="left"
+            valign="center"
+            paddingBottom='30px'
+            onDoubleClick={startEditing}>
+
+      <HStack halign='left' valign='center'
+              height="35px"
+              width="100%" gap='0'>
+        <Label className="notSelectable"
+               width='100%'
+               whiteSpace='nowrap'
+               overflow='clip'
+               textOverflow='ellipsis'
+               textColor={theme.text75}
+               paddingHorizontal="20px"
+               text={dir.title}
+               textAlign="left"/>
+
+        {editTools.editMode &&
+          <HStack halign='left' valign='center' gap='0'>
+
+            <RedButton title="New Doc"
+                       theme={theme}
+                       hideBg
+                       onClick={createDoc}/>
+            <HeaderVerSep marginHorizontal='0'/>
+            <DocPicker onFileSelected={onFileSelected}/>
+          </HStack>
+        }
+      </HStack>
+
+      {newDoc &&
+        <DocForm doc={newDoc}
+                 padding='10px'
+                 width='100%'
+                 onCancel={onCancelDocCreating}
+                 onApply={onApplyDocCreating}/>
+      }
+
+      {
+        dir.docs.map(doc => {
+          return <DocLink key={doc.uid} doc={doc}/>
+        })
+      }
+    </VStack>
+
+  </>
+})
+
+const DocPicker = ({ onFileSelected }: { onFileSelected: (doc: File) => void }) => {
   const [value, setValue] = useState('')
-  const { docsLoader, theme } = useDocsContext()
+  const { theme } = useDocsContext()
 
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const f = e.target.files[0]
-      docsLoader.loadDocFromDisc(f)
+      onFileSelected(f)
       setValue('')
     }
   }
@@ -141,76 +265,31 @@ const DocPicker = () => {
   </>
 }
 
-const DirectoryView = observer(({ dir }: { dir: Directory }) => {
-  const editTools = observeEditTools()
-  observe(dir)
-  const { domainService, theme } = useDocsContext()
-
-  const onApply = (title: string) => {
-    domainService.updateDirTitle(dir, title)
-  }
-
-  const onCancel = () => {
-    dir.isEditing = false
-  }
-
-  const startEditing = () => {
-    if (!dir.isStoring && editTools.editMode) {
-      dir.isEditing = true
-    }
-  }
-
-  if (editTools.editMode && dir.isEditing) {
-    return <>
-      <DirEditForm dir={dir}
-                   onCancel={onCancel}
-                   onApply={onApply}/>
-      {
-        dir.docs.map(doc => {
-          return <DocLink key={doc.uid} doc={doc}/>
-        })
-      }
-    </>
-  }
-  return <>
-    <VStack width="100%"
-            gap='0'
-            halign="left"
-            valign="center"
-            textColor={theme.text75}
-            paddingBottom='30px'
-            onDoubleClick={startEditing}>
-
-      <Label className="notSelectable"
-             height="30px"
-             paddingLeft="20px"
-             paddingRight="5px"
-             text={dir.title}
-             textAlign="left"
-             width="100%"/>
-      {
-        dir.docs.map(doc => {
-          return <DocLink key={doc.uid} doc={doc}/>
-        })
-      }
-    </VStack>
-
-  </>
-})
-
 const DocLink = observer(({ doc }: { doc: Doc }) => {
   observe(doc)
-  const { domainService, editTools, theme } = useDocsContext()
+  const {
+    restApi,
+    editTools,
+    theme
+  } = useDocsContext()
 
   const navigate = useNavigate()
   const location = useLocation()
-  const isDocSelected = location.pathname === '/docs/' + doc.uid
+  const isDocSelected = location.pathname === '/docs/' + doc.id
 
-  const onApply = (newDocTitle: string, newDirTitle: string) => {
-    domainService.updateDocHeader(doc, newDocTitle, newDirTitle)
+  const onApply = (title: string) => {
+    if (doc && title && doc.title !== title && doc.dir) {
+      doc.title = title
+      restApi.storeDoc(doc, doc.dir)
+      doc.isEditing = false
+    }
   }
 
   const onCancel = () => {
+    doc.isEditing = false
+  }
+  const onDelete = () => {
+    restApi.deleteDoc(doc)
     doc.isEditing = false
   }
 
@@ -223,27 +302,29 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
   }
 
   const openDoc = () => {
-    if (!isDocSelected) navigate(`./${doc.uid}`)
+    if (!isDocSelected) navigate(`./${doc.id}`)
   }
 
   if (editTools.editMode && doc.isEditing) {
     return (
-      <DocEditForm doc={doc}
-                   onCancel={onCancel}
-                   onApply={onApply}/>
+      <DocForm doc={doc}
+               padding='10px'
+               width='100%'
+               onCancel={onCancel}
+               onApply={onApply}
+               onDelete={onDelete}/>
     )
   }
 
   return (
     <HStack width="100%"
-            height="30px"
             halign="left"
             valign="center"
-            textColor={isDocSelected ? theme.text : theme.text75}
+            textColor={isDocSelected ? theme.selectedDoc : theme.text75}
             paddingLeft="20px"
             paddingRight="5px"
+            bgColor={isDocSelected ? theme.docSelection : theme.transparent}
             gap="8px"
-            bgColor = {isDocSelected ? theme.docSelection : theme.docListBg}
             hoverState={state => {
               state.textColor = theme.text
               state.bgColor = theme.docSelection
@@ -251,7 +332,7 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
             onClick={openDoc}
             onDoubleClick={startEditing}>
 
-      <Label className='icon-doc' paddingBottom='5px'/>
+      <Label className='icon-doc' paddingBottom='5px' opacity='0.75'/>
 
       <Label className="notSelectable"
              text={isDocSelected ? doc.title + ' ' : doc.title}
@@ -261,31 +342,40 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
   )
 })
 
-const DocEditForm = (props: any) => {
+interface DocFormProps {
+  doc: Doc
+  onCancel: () => void
+  onApply: (title: string) => void
+  onDelete?: (() => void) | undefined
+}
+
+const DocForm = stylable((props: DocFormProps) => {
   console.log('new DocEditForm')
   const { theme } = useDocsContext()
 
-  const doc = props.doc as Doc
-  const onCancel = props.onCancel as () => void
-  const onApply = props.onApply as (docTitle: string, dirTitle: string) => void
+  const doc = props.doc
   const [newDocTitleProtocol, _] = useState({ value: doc?.title ?? '' })
-  const [newDirTitleProtocol, __] = useState({ value: doc?.dir?.title ?? '' })
 
   const apply = () => {
-    onApply(newDocTitleProtocol.value, newDirTitleProtocol.value)
+    props.onApply(newDocTitleProtocol.value)
   }
   const cancel = () => {
-    onCancel()
+    props.onCancel()
+  }
+
+  const deleteDoc = () => {
+    props.onDelete?.()
   }
 
   return (
-    <VStack className="editForm"
-            halign="stretch"
+    <HStack halign="stretch" valign="center" gap="5px"
+            paddingHorizontal="10px"
+            borderColor={theme.border}>
+    <VStack halign="stretch"
             valign="center"
-            padding="20px"
-            bgColor={theme.white25}
-            borderBottom={['1px', 'solid', theme.appBg]}>
-      <HStack halign="center" valign="center">
+            paddingTop='11px'
+            gap="0">
+
         <Input type="text"
                protocol={newDocTitleProtocol}
                theme={theme}
@@ -293,13 +383,6 @@ const DocEditForm = (props: any) => {
                onSubmitted={apply}
                autoFocus/>
 
-        <Input type="text"
-               protocol={newDirTitleProtocol}
-               title="Directory"
-               theme={theme}
-               onSubmitted={apply}/>
-      </HStack>
-
       <HStack halign="center" valign="center" gap="50px">
         <RedButton title="Cancel"
                    theme={theme}
@@ -311,48 +394,61 @@ const DocEditForm = (props: any) => {
                    hideBg
                    onClick={apply}/>
       </HStack>
-
-      <Label visible={doc?.storeWithError !== ''}
-             text={doc?.storeWithError}
-             textColor={theme.error}/>
     </VStack>
+
+      <IconButton icon="delete"
+                  visible={!props.doc.isNew}
+                  hideBg
+                  theme={theme}
+                  popUp="Delete"
+                  onClick={deleteDoc}/>
+    </HStack>
   )
+})
+
+interface DirFormProps {
+  dir: Directory
+  onCancel: () => void
+  onApply: (title: string) => void
+  onDelete?: (() => void) | undefined
 }
 
-const DirEditForm = (props: any) => {
+const DirForm = stylable((props: DirFormProps) => {
   console.log('new DirEditForm')
   const { theme } = useDocsContext()
 
-  const dir = props.dir as Directory
-  const onCancel = props.onCancel as () => void
-  const onApply = props.onApply as (title: string) => void
-
-  const [titleProtocol, _] = useState({ value: dir.title })
+  const [titleProtocol, _] = useState({ value: props.dir?.title ?? '' })
 
   const apply = () => {
-    if (!dir.isStoring && titleProtocol.value) {
-      onApply(titleProtocol.value)
+    if (!props.dir.isStoring && titleProtocol.value) {
+      props.onApply(titleProtocol.value)
     }
   }
+
   const cancel = () => {
-    onCancel()
+    props.onCancel()
+  }
+
+  const deleteDir = () => {
+    props.onDelete?.()
   }
 
   return (
-    <VStack className="editForm"
-            halign="stretch"
-            valign="center"
-            padding="20px"
-            bgColor={theme.white25}
-            borderBottom={['1px', 'solid', theme.appBg]}>
+    <HStack halign="stretch" valign="center" gap="5px"
+            paddingHorizontal="10px"
+            borderColor={theme.border}>
+      <VStack halign="stretch"
+              valign="center"
+              paddingTop='11px'
+              gap="0">
 
-      <Input type="text"
-             protocol={titleProtocol}
-             theme={theme}
-             title="Directory"
-             onSubmitted={apply}
-             autoFocus
-      />
+        <Input type="text"
+               protocol={titleProtocol}
+               theme={theme}
+               title="Directory"
+               onSubmitted={apply}
+               autoFocus
+        />
 
       <HStack halign="center" valign="center" gap="50px">
         <RedButton title="Cancel"
@@ -365,10 +461,13 @@ const DirEditForm = (props: any) => {
                    hideBg
                    onClick={apply}/>
       </HStack>
-
-      <Label visible={dir?.storeWithError !== ''}
-             text={dir?.storeWithError}
-             textColor={theme.error}/>
     </VStack>
+      <IconButton icon="delete"
+                  visible={!props.dir.isNew}
+                  hideBg
+                  theme={theme}
+                  popUp="Delete"
+                  onClick={deleteDir}/>
+</HStack>
   )
-}
+})

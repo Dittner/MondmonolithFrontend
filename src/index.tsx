@@ -4,7 +4,9 @@ import './index.css'
 import './code.css'
 import { App } from './App'
 
-console.log('React v.', React.version)
+console.log('React v.' + React.version)
+console.log('API_URL:', process.env.REACT_APP_API_URL)
+console.log('DEV_MODE:', process.env.REACT_APP_DEV_MODE)
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

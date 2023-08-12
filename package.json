@@ -15,9 +15,9 @@
     "react-scripts": "5.0.1"
   },
   "scripts": {
-    "server": "react-scripts start",
-    "dev": "webpack --env mode=development",
-    "build": "webpack --env mode=production",
+    "server": "env-cmd -f .env.dev react-scripts start",
+    "dev": "env-cmd -f .env.dev webpack --env mode=development",
+    "build": "env-cmd -f .env.prod webpack --env mode=production",
     "eslint": "eslint '**/*.{ts,tsx}'",
     "test": "jest"
   },
@@ -48,10 +48,12 @@
     "babel-jest": "^29.5.0",
     "babel-loader": "^9.1.2",
     "css-loader": "^6.8.1",
+    "env-cmd": "^10.1.0",
     "eslint": "^8.44.0",
     "eslint-config-standard-with-typescript": "^36.0.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-only-warn": "^1.1.0",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.32.2",
     "file-loader": "^6.2.0",

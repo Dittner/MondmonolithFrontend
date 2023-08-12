@@ -1,41 +1,44 @@
 import { type UID, uid } from '../infrastructure/UIDGenerator'
 import { Observable } from '../infrastructure/Observer'
 
+export const UNDEFINED_ID = ''
+
+interface Serializable {
+  serialize: () => any
+}
+
+export enum LoadStatus {
+  PENDING = 'PENDING',
+  LOADING = 'LOADING',
+  LOADED = 'LOADED',
+  ERROR = 'ERROR',
+}
+
+/*
+*
+*
+* DOMAIN ENTITY
+*
+*
+* */
+
 export enum AuthStatus {
   SIGNED_OUT = 'SIGNED_OUT',
   AUTHORIZING = 'AUTHORIZING',
   AUTHORIZED = 'AUTHORIZED',
 }
 
-interface Serializable {
-  serialize: () => any
-}
-
 export class User extends Observable {
+  id = UNDEFINED_ID
+  role: string = ''
   readonly uid: UID
 
-  //--------------------------------------
-  //  login
-  //--------------------------------------
-  private _login: string = 'demo'
-  get login(): string { return this._login }
-  set login(value: string) {
-    if (this._login !== value) {
-      this._login = value
-      this.mutated()
-    }
-  }
+  email: string = ''
+  pwd: string = ''
 
-  //--------------------------------------
-  //  pwd
-  //--------------------------------------
-  private _pwd: string = 'pwd'
-  get pwd(): string { return this._pwd }
-  set pwd(value: string) {
-    if (this._pwd !== value) {
-      this._pwd = value
-      this.mutated()
-    }
+  constructor() {
+    super('User')
+    this.uid = uid()
   }
 
   //--------------------------------------
@@ -61,47 +64,15 @@ export class User extends Observable {
       this.mutated()
     }
   }
-
-  constructor() {
-    super('User')
-    this.uid = uid()
-    if (window.localStorage.getItem('authStatus') === 'authorized') { this.authStatus = AuthStatus.AUTHORIZED }
-  }
-
-  signIn(login: string, pwd: string) {
-    console.log('signIn()')
-    if (!login) {
-      this.authWithError = 'Login is not filled!'
-      return
-    }
-    if (!pwd) {
-      this.authWithError = 'Password is not filled!'
-      return
-    }
-
-    this.authStatus = AuthStatus.AUTHORIZING
-    this.authWithError = ''
-    setTimeout(() => {
-      if (login === 'demo' && pwd === 'pwd') {
-        this.authStatus = AuthStatus.AUTHORIZED
-        window.localStorage.setItem('authStatus', 'authorized')
-        this.login = login
-        this.pwd = pwd
-      } else {
-        this.authWithError = 'Invalid login or password!'
-        this.authStatus = AuthStatus.SIGNED_OUT
-      }
-    }, 1000)
-  }
-
-  signOut() {
-    console.log('signOut()')
-    if (this.authStatus === AuthStatus.AUTHORIZED) {
-      this.authStatus = AuthStatus.SIGNED_OUT
-      window.localStorage.setItem('authStatus', 'signedOut')
-    }
-  }
 }
+
+/*
+*
+*
+* DOMAIN ENTITY
+*
+*
+* */
 
 export class EditTools extends Observable {
   readonly uid: UID
@@ -109,7 +80,7 @@ export class EditTools extends Observable {
   //--------------------------------------
   //  editMode
   //--------------------------------------
-  private _editMode: boolean = false
+  private _editMode: boolean = true
   get editMode(): boolean { return this._editMode }
   set editMode(value: boolean) {
     if (this._editMode !== value) {
@@ -154,14 +125,21 @@ export class EditTools extends Observable {
   }
 }
 
-export enum LoadStatus {
-  PENDING = 'PENDING',
-  LOADING = 'LOADING',
-  LOADED = 'LOADED',
-}
+/*
+*
+*
+* DOMAIN ENTITY
+*
+*
+* */
 
 export class DirectoryList extends Observable {
   readonly uid: UID
+
+  constructor() {
+    super('DirList')
+    this.uid = uid()
+  }
 
   //--------------------------------------
   //  dirs
@@ -189,11 +167,6 @@ export class DirectoryList extends Observable {
     }
   }
 
-  constructor() {
-    super('DirList')
-    this.uid = uid()
-  }
-
   findDir(predicate: (dir: Directory) => boolean): Directory | undefined {
     return this.dirs.find(predicate)
   }
@@ -207,15 +180,46 @@ export class DirectoryList extends Observable {
     return undefined
   }
 
+  createDir() {
+    return new Directory()
+  }
+
   add(dir: Directory) {
     this.dirs.push(dir)
     dir.subscribe(this.mutated)
     this.mutated()
   }
+
+  remove(dir: Directory) {
+    const dirInd = this.dirs.findIndex(d => d.uid === dir.uid)
+    if (dirInd !== -1) {
+      this.dirs.splice(dirInd, 1)
+      this.mutated()
+      return dir
+    }
+    return undefined
+  }
 }
 
+/*
+*
+*
+* DOMAIN ENTITY
+*
+*
+* */
+
 export class Directory extends Observable {
-  readonly uid: UID
+  readonly uid = uid()
+  id = UNDEFINED_ID
+  isNew: boolean
+
+  constructor(id: string = UNDEFINED_ID, title: string = '') {
+    super('Dir')
+    this.id = id
+    this.isNew = id === UNDEFINED_ID
+    this._title = title
+  }
 
   //--------------------------------------
   //  title
@@ -225,6 +229,32 @@ export class Directory extends Observable {
   set title(value: string) {
     if (this._title !== value) {
       this._title = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  dirs
+  //--------------------------------------
+  private _docs = Array<Doc>()
+  get docs(): Doc[] { return this._docs }
+  set docs(value: Doc[]) {
+    if (this._docs !== value) {
+      this._docs.forEach(d => { d.dispose() })
+      this._docs = value
+      this._docs.forEach(d => { d._dir = this })
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
+  //  loadStatus
+  //--------------------------------------
+  private _loadStatus: LoadStatus = LoadStatus.PENDING
+  get loadStatus(): LoadStatus { return this._loadStatus }
+  set loadStatus(value: LoadStatus) {
+    if (this._loadStatus !== value) {
+      this._loadStatus = value
       this.mutated()
     }
   }
@@ -253,24 +283,8 @@ export class Directory extends Observable {
     }
   }
 
-  //--------------------------------------
-  //  storeWithError
-  //--------------------------------------
-  private _storeWithError: string = ''
-  get storeWithError(): string { return this._storeWithError }
-  set storeWithError(value: string) {
-    if (this._storeWithError !== value) {
-      this._storeWithError = value
-      this.mutated()
-    }
-  }
-
-  readonly docs: Doc[] = []
-
-  constructor(uid: UID, title: string) {
-    super('Dir')
-    this.uid = uid
-    this._title = title
+  createDoc() {
+    return new Doc()
   }
 
   add(doc: Doc) {
@@ -310,14 +324,34 @@ export class Directory extends Observable {
   }
 }
 
+/*
+*
+*
+* DOMAIN ENTITY
+*
+*
+* */
+
 export enum DocLoadStatus {
   HEADER_LOADED = 'HEADER_LOADED',
   LOADING = 'LOADING',
   LOADED = 'LOADED',
+  ERROR = 'ERROR',
 }
 
 export class Doc extends Observable implements Serializable {
-  readonly uid: UID
+  readonly uid = uid()
+  id: string
+  isNew: boolean
+  publicKey: string
+
+  constructor(id: string = UNDEFINED_ID, title: string = '', publicKey: string = '') {
+    super('Doc')
+    this.id = id
+    this.isNew = id === UNDEFINED_ID
+    this._title = title
+    this.publicKey = publicKey
+  }
 
   //--------------------------------------
   //  isEditing
@@ -368,18 +402,6 @@ export class Doc extends Observable implements Serializable {
   }
 
   //--------------------------------------
-  //  loadWithError
-  //--------------------------------------
-  private _loadWithError: string = ''
-  get loadWithError(): string { return this._loadWithError }
-  set loadWithError(value: string) {
-    if (this._loadWithError !== value) {
-      this._loadWithError = value
-      this.mutated()
-    }
-  }
-
-  //--------------------------------------
   //  loadStatus
   //--------------------------------------
   private _loadStatus: DocLoadStatus = DocLoadStatus.HEADER_LOADED
@@ -397,27 +419,21 @@ export class Doc extends Observable implements Serializable {
   _dir: Directory | undefined = undefined
   get dir(): Directory | undefined { return this._dir }
 
+  //--------------------------------------
+  //  pages
+  //--------------------------------------
   private _pages: Page[] = []
   get pages(): Page[] { return this._pages }
-
-  constructor(uid: UID, title: string) {
-    super('Doc')
-    this.uid = uid
-    this._title = title
-  }
-
-  init(pages: Page[]): void {
+  set pages(value: Page[]) {
     this.pages.forEach(p => { p.dispose() })
-    this._pages = pages.sort(sortByKey('title'))
+    this._pages = value.sort(sortByKey('title'))
     this._pages.forEach(p => p._doc = this)
     this.mutated()
   }
 
   serialize(): any {
     return {
-      uid: this.uid,
       title: this.title,
-      directory: this.dir?.title,
       pages: this.pages.map(p => p.serialize())
     }
   }
@@ -428,19 +444,15 @@ export class Doc extends Observable implements Serializable {
     this.mutated()
   }
 
-  get id(): string {
+  get key(): string {
     return strToHashId(this.title)
   }
 
-  createPage(): void {
-    const p = new Page(uid(), 'TITLE')
-    p._doc = this
-    p.isEditing = true
-    this.pages.unshift(p)
-    this.mutated()
+  createPage(): Page {
+    return new Page(UNDEFINED_ID, 'TITLE')
   }
 
-  deletePage(page: Page): void {
+  remove(page: Page): void {
     const pageInd = this.pages.findIndex(p => p.uid === page.uid)
     if (pageInd !== -1) {
       this.pages.splice(pageInd, 1)
@@ -472,8 +484,25 @@ function filterCharacters() {
   }
 }
 
+/*
+*
+*
+* DOMAIN ENTITY
+*
+*
+* */
+
 export class Page extends Observable implements Serializable {
-  readonly uid: UID
+  readonly uid = uid()
+  id: string
+  isNew: boolean
+
+  constructor(id: string = UNDEFINED_ID, title: string = '') {
+    super('Page')
+    this.id = id
+    this.isNew = id === UNDEFINED_ID
+    this._title = title
+  }
 
   //--------------------------------------
   //  isStoring
@@ -529,32 +558,25 @@ export class Page extends Observable implements Serializable {
   _doc: Doc | undefined = undefined
   get doc(): Doc | undefined { return this._doc }
 
+  //--------------------------------------
+  //  blocks
+  //--------------------------------------
   private _blocks: PageBlock[] = []
-  get blocks(): PageBlock[] {
-    return this._blocks
-  }
-
-  constructor(uid: UID, title: string) {
-    super('Page')
-    this.uid = uid
-    this._title = title
-  }
-
-  init(blocks: PageBlock[]): void {
+  get blocks(): PageBlock[] { return this._blocks }
+  set blocks(value: PageBlock[]) {
     this._blocks.forEach(b => { b.dispose() })
-    this._blocks = blocks
+    this._blocks = value
     this._blocks.forEach(b => b._page = this)
   }
 
   serialize(): any {
     return {
-      uid: this.uid,
       title: this.title,
       blocks: this.blocks.map(b => b.serialize())
     }
   }
 
-  get id(): string {
+  get key(): string {
     return strToHashId(this.title)
   }
 
@@ -565,7 +587,7 @@ export class Page extends Observable implements Serializable {
   }
 
   createAndAddBlock(atIndex: number = 0): void {
-    const block = new PageBlock(uid(), '_New Block_')
+    const block = new PageBlock('_New Block_')
     block._page = this
     if (atIndex === 0) {
       this.blocks.unshift(block)
@@ -577,31 +599,37 @@ export class Page extends Observable implements Serializable {
     this.mutated()
   }
 
-  moveBlockUp(block: PageBlock): void {
+  moveBlockUp(block: PageBlock): boolean {
     const blockInd = this.blocks.findIndex(b => b.uid === block.uid)
     if (blockInd !== -1 && blockInd !== 0) {
       this.blocks[blockInd] = this.blocks[blockInd - 1]
       this.blocks[blockInd - 1] = block
       this.mutated()
+      return true
     }
+    return false
   }
 
-  moveBlockDown(block: PageBlock): void {
+  moveBlockDown(block: PageBlock): boolean {
     const blockInd = this.blocks.findIndex(b => b.uid === block.uid)
     if (blockInd !== -1 && blockInd < this.blocks.length - 1) {
       this.blocks[blockInd] = this.blocks[blockInd + 1]
       this.blocks[blockInd + 1] = block
       this.mutated()
+      return true
     }
+    return false
   }
 
-  deleteBlock(block: PageBlock): void {
+  remove(block: PageBlock): boolean {
     const blockInd = this.blocks.findIndex(b => b.uid === block.uid)
     if (blockInd !== -1) {
       this.blocks.splice(blockInd, 1)
       block.dispose()
       this.mutated()
+      return true
     }
+    return false
   }
 
   dispose() {
@@ -612,8 +640,16 @@ export class Page extends Observable implements Serializable {
   }
 }
 
+/*
+*
+*
+* DOMAIN ENTITY
+*
+*
+* */
+
 export class PageBlock extends Observable implements Serializable {
-  readonly uid: UID
+  readonly uid = uid()
 
   //--------------------------------------
   //  estimatedRowNum
@@ -652,14 +688,13 @@ export class PageBlock extends Observable implements Serializable {
   _page: Page | undefined = undefined
   get page(): Page | undefined { return this._page }
 
-  constructor(uid: UID, text: string) {
+  constructor(text: string) {
     super('PageBlock')
-    this.uid = uid
     this._text = text
   }
 
   serialize(): any {
-    return { uid: this.uid, text: this.text }
+    return { text: this.text }
   }
 
   dispose() {

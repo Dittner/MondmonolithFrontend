@@ -33,6 +33,7 @@ module.exports = {
     "project": "./tsconfig.json",
   },
   "plugins": [
+    "only-warn",
     "react"
   ],
   "rules": {

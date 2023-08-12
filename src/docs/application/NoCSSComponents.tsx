@@ -169,6 +169,8 @@ export interface LabelProps extends StylableComponentProps {
   textAlign?: 'left' | 'right' | 'center'
   textDecoration?: 'none' | 'underline'
   whiteSpace?: 'normal' | 'pre' | 'pre-wrap' | 'nowrap'
+  overflow?: 'auto' | 'hidden' | 'clip'
+  textOverflow?: 'auto' | 'ellipsis' | 'clip' | 'fade'
   textTransform?: 'none' | 'uppercase' | 'capitalize' | 'lowercase'
 }
 
@@ -195,7 +197,9 @@ interface InputProps extends StylableComponentProps {
   theme: Theme
   protocol?: InputProtocol
   text?: string
+  fontSize?: string
   title?: string
+  titleSize?: string
   caretColor?: string
   placeHolder?: string
   onChange?: ((value: string) => void) | undefined
@@ -209,13 +213,15 @@ const defInputProps = (theme: Theme): any => {
     width: '100%',
     height: '35px',
     caretColor: theme.caretColor,
-    textColor: theme.text75,
+    textColor: theme.text,
     bgColor: theme.inputBg,
-    padding: '5px',
+    titleSize: '0.9rem',
+    titleColor: theme.green75,
+    fontSize: '1rem',
+    padding: '10px',
     border: ['1px', 'solid', theme.inputBorder],
     focusState: (state: StylableComponentProps) => {
-      state.textColor = theme.text
-      state.border = ['1px', 'solid', theme.border]
+      state.border = ['1px', 'solid', theme.inputBorderFocused]
     }
   }
 }
@@ -246,11 +252,15 @@ export const Input = (props: InputProps) => {
   return (
     <VStack halign="left" valign="top" gap="0"
             width="100%">
-      <Label fontSize="9px"
-             text={customProps.title || 'TITLE'}
-             width="100%"
-             textTransform="uppercase"
-             textColor="#888888"/>
+
+      {customProps.title &&
+        <Label className="ibm"
+               fontSize={customProps.titleSize}
+               width='100%'
+               text={customProps.title}
+               textColor={customProps.titleColor}
+               paddingLeft="10px"/>
+      }
 
       <input ref={inputRef}
              className={className}
@@ -286,9 +296,9 @@ const defTextAreaProps = (theme: Theme): any => {
     textColor: theme.green,
     bgColor: theme.inputBg,
     border: ['1px', 'solid', theme.border],
-    outline: ['10px', 'solid', theme.inputBorder],
+    outline: ['10px', 'solid', theme.transparent],
     focusState: (state: StylableComponentProps) => {
-      state.outline = ['10px', 'solid', theme.inputBorderFocused]
+      state.outline = ['10px', 'solid', theme.border]
     }
   }
 }
@@ -369,7 +379,7 @@ class TextAreaController {
     const selectionStart = ta.selectionStart
 
     const deleteAllSpaces = (/\n {2,}$/.test(value.slice(0, selectionStart)))
-    console.log('deleteAllSpaces: ', deleteAllSpaces)
+    //console.log('deleteAllSpaces: ', deleteAllSpaces)
     if (deleteAllSpaces) {
       const firstSpaceIndex = value.lastIndexOf('\n', selectionStart - 1)
       if (firstSpaceIndex !== -1 && firstSpaceIndex + 1 < selectionStart) {
@@ -653,6 +663,7 @@ export const IconButton = (props: IconButtonProps) => {
 
   if (props.disabled) {
     return <Button className={'icon-' + props.icon}
+                   paddingHorizontal='10px'
                    popUp={props.popUp}
                    textColor={props.theme.text75}
                    disabled/>
@@ -661,6 +672,7 @@ export const IconButton = (props: IconButtonProps) => {
   if (props.theme.isDark) {
     if (props.hideBg) {
       return <Button className={'icon-' + props.icon}
+                     paddingHorizontal='10px'
                      popUp={props.popUp}
                      textColor={props.theme.red}
                      hoverState={state => {
@@ -670,6 +682,7 @@ export const IconButton = (props: IconButtonProps) => {
     }
 
     return <Button className={'icon-' + props.icon}
+                   paddingHorizontal='10px'
                    popUp={props.popUp}
                    textColor={props.theme.red}
                    bgColor={props.theme.border}
@@ -681,6 +694,7 @@ export const IconButton = (props: IconButtonProps) => {
 
   if (props.hideBg) {
     return <Button className={'icon-' + props.icon}
+                   paddingHorizontal='10px'
                    popUp={props.popUp}
                    textColor={props.theme.red}
                    hoverState={state => {
@@ -692,6 +706,7 @@ export const IconButton = (props: IconButtonProps) => {
   }
 
   return <Button className={'icon-' + props.icon}
+                 paddingHorizontal='10px'
                  popUp={props.popUp}
                  textColor={props.theme.white}
                  bgColor={props.theme.red}

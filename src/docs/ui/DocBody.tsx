@@ -38,7 +38,7 @@ import { observe, observer } from '../infrastructure/Observer'
 export const DocBody = stylable(() => {
   return <Routes>
     <Route path="/" element={<EmptyDoc msg="No document selected"/>}/>
-    <Route path=":docUID" element={<PageList/>}/>
+    <Route path=":docId" element={<PageList/>}/>
   </Routes>
 })
 
@@ -57,7 +57,7 @@ const PageList = observer(() => {
 
   const app = observeApp()
   const dirList = observeDirList()
-  const { docsLoader, theme } = useDocsContext()
+  const { restApi, theme } = useDocsContext()
 
   //console.log('  dirList = ', dirList)
   const params = useParams()
@@ -70,15 +70,15 @@ const PageList = observer(() => {
       isLastPageShown: true
     })
 
-  const doc = dirList.findDoc(d => params.docUID === d.uid)
+  const doc = dirList.findDoc(d => params.docId === d.id)
   observe(doc)
-  console.log('  PageList, doc = ', doc)
+  //console.log('  PageList, doc = ', doc)
 
   useEffect(() => {
-    if (doc?.loadStatus === DocLoadStatus.HEADER_LOADED && !doc?.loadWithError) {
-      docsLoader.fetchDoc(doc.uid)
+    if (doc && doc.loadStatus === DocLoadStatus.HEADER_LOADED && !doc.isNew) {
+      restApi.loadPages(doc)
     }
-  })
+  }, [doc])
 
   useEffect(() => {
     if (doc) {
@@ -143,7 +143,7 @@ const PageList = observer(() => {
       const blob = new Blob([docJSON], { type: 'text/plain' })
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
-      link.download = doc.uid + '.json'
+      link.download = doc.title + '.json'
       link.href = url
       link.click()
     }
@@ -160,10 +160,6 @@ const PageList = observer(() => {
 
   if (!doc) {
     return <EmptyDoc msg="Doc not found"/>
-  }
-
-  if (doc.loadWithError) {
-    return <EmptyDoc msg={doc.loadWithError}/>
   }
 
   return (
@@ -240,7 +236,7 @@ const PageView = observer(({ page }: { page: Page }) => {
   observe(page)
 
   return (
-    <VStack id={page.id}
+    <VStack id={page.key}
             width="100%"
             halign="stretch"
             valign="top">
@@ -279,11 +275,11 @@ const PageTitle = observer(({ page }: { page: Page }) => {
   if (editTools.editMode && isSelected) {
     return (<>
         <StylableContainer minHeight="30px"
-                           paddingRight="10px"
-                           paddingLeft="24px"
+                           paddingRight="20px"
+                           paddingLeft="14px"
                            width="100%"
                            bgColor={theme.selectedBlockBg}
-                           borderLeft={['6px', 'solid', theme.border]}
+                           borderLeft={['6px', 'solid', theme.selectedBlockBorder]}
                            cornerRadius="10px"
                            onDoubleClick={editPage}>
           <Label className="h1"
@@ -296,8 +292,7 @@ const PageTitle = observer(({ page }: { page: Page }) => {
 
   if (editTools.editMode) {
     return <StylableContainer minHeight="30px"
-                              paddingRight="10px"
-                              paddingLeft="30px"
+                              paddingHorizontal="20px"
                               width="100%"
                               onMouseDown={selectTitle}
                               hoverState={state => {
@@ -312,8 +307,7 @@ const PageTitle = observer(({ page }: { page: Page }) => {
 
   return (
     <StylableContainer minHeight="30px"
-                       paddingRight="10px"
-                       paddingLeft="30px"
+                       paddingHorizontal="20px"
                        width="100%">
       <Label className="h1"
              textColor={theme.pageTitle}
@@ -323,12 +317,13 @@ const PageTitle = observer(({ page }: { page: Page }) => {
 })
 
 const PageTitleEditor = observer(({ page }: { page: Page }) => {
-  const { theme } = useDocsContext()
+  const { theme, restApi } = useDocsContext()
 
   const apply = (value: string) => {
-    if (page.title !== value) {
+    if (page.doc && page.title !== value) {
       page.title = value
       page.isEditing = false
+      restApi.storePage(page, page.doc)
     } else {
       cancel()
     }
@@ -343,7 +338,7 @@ const PageTitleEditor = observer(({ page }: { page: Page }) => {
               className="mono"
               text={page.title}
               theme={theme}
-              paddingHorizontal="28px"
+              paddingHorizontal="20px"
               paddingTop="10px"
               onApply={apply}
               onCancel={cancel}
@@ -428,12 +423,15 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
 })
 
 const PageBlockEditor = ({ block }: { block: PageBlock }) => {
-  const { theme } = useDocsContext()
+  const { theme, restApi } = useDocsContext()
 
   const apply = (value: string) => {
     if (block.text !== value) {
       block.text = value
       block.isEditing = false
+      if (block.page?.doc) {
+        restApi.storePage(block.page, block.page.doc)
+      }
     } else {
       cancel()
     }

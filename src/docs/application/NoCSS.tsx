@@ -37,6 +37,7 @@ export const abbreviations: Record<string, string> = {
   'opacity': 'OP',
   'overflow': 'O',
   'overflow-x': 'OX',
+  'overflow-y': 'OY',
   'outline': 'OL',
   'padding': 'P',
   'padding-left': 'PL',
@@ -48,6 +49,7 @@ export const abbreviations: Record<string, string> = {
   'text-align': 'TA',
   'text-decoration': 'TD',
   'text-transform': 'TR',
+  'text-overflow': 'TO',
   'top': 'T',
   'transition': 'TN',
   'white-space': 'WS',
@@ -173,7 +175,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, () =>
   operator.fixed = (value: boolean) => { value && setValue('position', 'fixed') }
   operator.absolute = (value: boolean) => { value && setValue('position', 'absolute') }
   operator.relative = (value: boolean) => { value && setValue('position', 'relative') }
-  operator.enableOwnScroller = (value: boolean) => { value && setValue('overflow', 'auto') }
+  operator.enableOwnScroller = (value: boolean) => { value && setValue('overflow-y', 'auto') }
   operator.disableScroll = (value: boolean) => { value && setValue('overflow', 'hidden') }
   operator.disableHorizontalScroll = (value: boolean) => { value && setValue('overflow-x', 'hidden') }
   operator.disabled = (value: boolean) => { value && setValue('cursor', 'not-allowed') }
@@ -196,6 +198,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, () =>
   operator.marginBottom = (value: string) => { setValue('margin-bottom', value) }
 
   operator.bgColor = (value: string) => { setValue('background-color', value) }
+  operator.borderColor = (value: string) => { setValue('border', '1px solid' + value) }
   operator.border = (value: string | [string, string, string]) => { setValue('border', Array.isArray(value) ? value.join(' ') : value) }
   operator.outline = (value: string | [string, string, string]) => { setValue('outline', Array.isArray(value) ? value.join(' ') : value) }
   operator.borderLeft = (value: string | [string, string, string]) => { setValue('border-left', Array.isArray(value) ? value.join(' ') : value) }
@@ -216,6 +219,8 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, () =>
   operator.textTransform = (value: string) => { setValue('text-transform', value) }
   operator.whiteSpace = (value: string) => { setValue('white-space', value) }
   operator.caretColor = (value: string) => { setValue('caret-color', value) }
+  operator.overflow = (value: string) => { setValue('overflow', value) }
+  operator.textOverflow = (value: string) => { setValue('text-overflow', value) }
 
   operator.animate = (value: string) => { setValue('transition', value) }
 
@@ -320,6 +325,7 @@ export interface StylableComponentProps {
   textColor?: string
   bgColor?: string
   border?: string | [string, string, string]
+  borderColor?: string
   outline?: string | [string, string, string]
   borderLeft?: string | [string, string, string]
   borderRight?: string | [string, string, string]

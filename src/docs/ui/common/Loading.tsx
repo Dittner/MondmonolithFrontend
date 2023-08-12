@@ -1,6 +1,7 @@
 import spinner from '../../../resources/images/spinner.svg'
 import smallSpinner from '../../../resources/images/smallSpinner.svg'
 import { VStack } from '../../application/NoCSSComponents'
+import { stylable } from '../../application/NoCSS'
 
 export const LoadingSpinner = () => {
   return (
@@ -10,8 +11,8 @@ export const LoadingSpinner = () => {
   )
 }
 
-export const SmallSpinner = () => {
+export const SmallSpinner = stylable(() => {
   return (
     <img src={smallSpinner} className="smallSpinner" alt="spinner"/>
   )
-}
+})

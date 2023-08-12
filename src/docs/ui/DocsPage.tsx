@@ -6,21 +6,28 @@ import { DocBody } from './DocBody'
 import { DocTopics } from './DocTopics'
 import { Header } from './Header'
 import { AppSize, LayoutLayer } from '../application/Application'
-import { HStack, Label, RedButton, StylableContainer, VStack } from '../application/NoCSSComponents'
+import { StylableContainer } from '../application/NoCSSComponents'
 import { observeApp } from '../DocsContext'
 import { observer } from '../infrastructure/Observer'
 
 export const DocsPage = observer(() => {
   console.log('new DocsPage')
   const app = observeApp()
-  const { docsLoader, theme } = useDocsContext()
+  const {
+    theme,
+    restApi
+  } = useDocsContext()
   const drawLayoutLines = false
 
   useEffect(() => {
-    docsLoader.fetchDirectories()
-  })
+    restApi.loadAllDirs()
+  }, [])
 
-  const { pathname, hash, key } = useLocation()
+  const {
+    pathname,
+    hash,
+    key
+  } = useLocation()
 
   useEffect(() => {
     app.hideDocList()
@@ -55,7 +62,7 @@ export const DocsPage = observer(() => {
                 fixed/>
 
         <DocList width="20%"
-                 height="100vh"
+                 height="100%"
                  left="0"
                  layer={LayoutLayer.DOC_LIST}
                  enableOwnScroller
@@ -74,28 +81,27 @@ export const DocsPage = observer(() => {
                    enableOwnScroller
                    borderLeft={['1px', 'solid', theme.border]}
                    fixed/>
-        <ModalView/>
 
         {drawLayoutLines &&
-        <>
-          <StylableContainer className="appLayout L"
-                             width="100vw"
-                             height="1px"
-                             top={headerHeight}
-                             fixed/>
+          <>
+            <StylableContainer className="appLayout L"
+                               width="100vw"
+                               height="1px"
+                               top={headerHeight}
+                               fixed/>
 
-          <StylableContainer className="appLayout L"
-                             width="1px"
-                             height="100vh"
-                             left="20vw"
-                             fixed/>
+            <StylableContainer className="appLayout L"
+                               width="1px"
+                               height="100vh"
+                               left="20vw"
+                               fixed/>
 
-          <StylableContainer className="appLayout L"
-                             width="1px"
-                             height="100vh"
-                             left="80vw"
-                             fixed/>
-        </>
+            <StylableContainer className="appLayout L"
+                               width="1px"
+                               height="100vh"
+                               left="80vw"
+                               fixed/>
+          </>
         }
       </>
     )
@@ -115,30 +121,29 @@ export const DocsPage = observer(() => {
                  height="100vh"
                  layer={LayoutLayer.DOC_LIST}
                  enableOwnScroller
+                 disableHorizontalScroll
                  fixed/>
 
         <DocBody width="70%"
-                 height="100%"
                  top={headerHeight}
+                 bottom="0"
                  left="30%"
                  absolute/>
 
-        <ModalView/>
-
         {drawLayoutLines &&
-        <>
-          <StylableContainer className="appLayout M"
-                             width="100vw"
-                             height="1px"
-                             top={headerHeight}
-                             fixed/>
+          <>
+            <StylableContainer className="appLayout M"
+                               width="100vw"
+                               height="1px"
+                               top={headerHeight}
+                               fixed/>
 
-          <StylableContainer className="appLayout M"
-                             width="1px"
-                             height="100vh"
-                             left="30vw"
-                             fixed/>
-        </>
+            <StylableContainer className="appLayout M"
+                               width="1px"
+                               height="100vh"
+                               left="30vw"
+                               fixed/>
+          </>
         }
 
       </>
@@ -161,6 +166,7 @@ export const DocsPage = observer(() => {
                animate="left 0.5s"
                shadow="0 0 4px #00000020"
                enableOwnScroller
+               disableHorizontalScroll
                fixed/>
 
       <DocBody width="100%"
@@ -168,97 +174,21 @@ export const DocsPage = observer(() => {
                bottom="0"
                absolute/>
 
-      <ModalView/>
-
       {drawLayoutLines &&
-      <>
-        <StylableContainer className="appLayout S"
-                           width="100vw"
-                           height="1px"
-                           top={headerHeight}
-                           fixed/>
+        <>
+          <StylableContainer className="appLayout S"
+                             width="100vw"
+                             height="1px"
+                             top={headerHeight}
+                             fixed/>
 
-        <StylableContainer className="appLayout S"
-                           width="1px"
-                           height="100vh"
-                           left="350px"
-                           fixed/>
-      </>
+          <StylableContainer className="appLayout S"
+                             width="1px"
+                             height="100vh"
+                             left="350px"
+                             fixed/>
+        </>
       }
     </>
   )
-})
-
-export const ModalView = observer(() => {
-  console.log('new ModalView')
-
-  const app = observeApp()
-  const { theme } = useDocsContext()
-
-  const apply = () => {
-    if (app.infoDialog) {
-      app.infoDialog = undefined
-    } else if (app.yesNoDialog) {
-      app.yesNoDialog.onApply()
-      app.yesNoDialog = undefined
-    }
-  }
-
-  const cancel = () => {
-    if (app.yesNoDialog) {
-      app.yesNoDialog.onCancel?.()
-      app.yesNoDialog = undefined
-    }
-  }
-
-  if (!app.yesNoDialog && !app.infoDialog) { return <></> }
-
-  return <VStack halign="center"
-                 valign="center"
-                 width="100%"
-                 height="100%"
-                 bgColor="#00000050"
-                 layer={LayoutLayer.MODAL}
-                 fixed>
-
-    <VStack visible={app.yesNoDialog !== undefined}
-            halign="stretch"
-            valign="center"
-            bgColor={theme.modalWindowBg}
-            cornerRadius="20px"
-            shadow="0 10px 20px #00000020"
-            width="350px" padding="30px" gap="30px">
-
-      <Label className="mono"
-             text={app.yesNoDialog?.text}
-             whiteSpace="pre-wrap"
-             textColor={theme.text}/>
-
-      <HStack halign="center" valign="top" gap="50px">
-        <RedButton title="No"
-                   theme={theme}
-                   hideBg
-                   onClick={cancel}/>
-
-        <RedButton title="Yes"
-                   theme={theme}
-                   hideBg
-                   onClick={apply}/>
-      </HStack>
-    </VStack>
-
-    {app.infoDialog &&
-    <VStack className="yesNoDialog"
-            halign="center"
-            valign="center"
-            width="350px" padding="30px" gap="30px">
-      <h2>{app.infoDialog.title}</h2>
-      <p>{app.infoDialog.text}</p>
-
-      <button onClick={apply}
-              className="btn">OK
-      </button>
-    </VStack>
-    }
-  </VStack>
 })

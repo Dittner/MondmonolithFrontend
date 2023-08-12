@@ -14,7 +14,6 @@ import 'prismjs/components/prism-swift'
 import 'prismjs/components/prism-json'
 import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-markup'
-import { Header } from './Header'
 import { stylable } from '../application/NoCSS'
 import { AppSize, LayoutLayer } from '../application/Application'
 import {
@@ -22,8 +21,8 @@ import {
   IconButton,
   Image,
   Label,
+  RedButton,
   Spacer,
-  StylableContainer,
   TextArea,
   VSeparator,
   VStack
@@ -31,6 +30,8 @@ import {
 import { observeApp } from '../DocsContext'
 import { observer } from '../infrastructure/Observer'
 import { useDocsContext } from '../../App'
+import { useNavigate } from 'react-router-dom'
+import { AuthStatus } from '../domain/DomainModel'
 
 function useWindowPosition(limit: number = -1): number {
   const [scrollPosition, setPosition] = useState(window.scrollY)
@@ -51,7 +52,8 @@ function useWindowPosition(limit: number = -1): number {
 
 export const IntroPage = observer(() => {
   const app = observeApp()
-  const { theme, themeManager } = useDocsContext()
+  const { user, theme, themeManager } = useDocsContext()
+  const navigate = useNavigate()
 
   const SCROLL_POS_LIMIT = 600
   const scrollPosition = useWindowPosition(SCROLL_POS_LIMIT)
@@ -107,13 +109,9 @@ export const IntroPage = observer(() => {
              fixed/>
     }
 
-    <Header width="100%"
-            height="50px"
-            top="0"
-            layer={LayoutLayer.HEADER}
-            fixed/>
-
-    <StylableContainer left="10px" top="5px" fixed
+    <HStack halign='left' valign='center'
+            width="100%" height='50px'
+            paddingHorizontal='10px' top="0" fixed
                        layer={LayoutLayer.HEADER}>
       <IconButton icon={theme.isDark ? 'moon' : 'sun'}
                   hideBg
@@ -122,7 +120,14 @@ export const IntroPage = observer(() => {
                   onClick={() => {
                     themeManager.switchTheme()
                   }}/>
-    </StylableContainer>
+
+      <Spacer/>
+
+      <RedButton title={user.authStatus === AuthStatus.AUTHORIZED ? 'Docs' : 'Log in'}
+                 hideBg
+                 theme={theme}
+                 onClick={() => { navigate('/auth') }}/>
+    </HStack>
 
     <Label className={theme.isDark ? 'title' : 'title light'}
            fontSize={headerFontSize}
@@ -184,7 +189,7 @@ const aboutTxt = `
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  YEAR  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   demo  |  2.43  |  2023  
+*   to format notes and code fragments easily without   *   beta  |  3.00  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           `
 
@@ -198,7 +203,7 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: demo  |  VER: 2.43  |  YEAR: 2023      
+*  MODE: beta  |  VER: 3.00  |  YEAR: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 `

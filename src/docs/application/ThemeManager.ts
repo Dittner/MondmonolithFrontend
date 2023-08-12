@@ -32,12 +32,14 @@ export interface Theme {
   codeBg: string
   inputBorder: string
   inputBorderFocused: string
+  selectedDoc: string
   selectedBlockBorder: string
   selectedBlockBg: string
   docSelection: string
   border: string
   caretColor: string
   error: string
+  errorMsgBg: string
 }
 
 export class ThemeManager extends Observable {
@@ -120,14 +122,16 @@ export class ThemeManager extends Observable {
     pageTitle: '#86b3c7',
     inputBg: '#212628',
     codeBg: '#2e393f75',
-    inputBorder: TRANSPARENT,
-    inputBorderFocused: '#293034',
+    inputBorder: '#323e44',
+    inputBorderFocused: '#455f6b',
     border: '#323e44',
+    selectedDoc: '#cfe0ee',
     selectedBlockBorder: '#c29a5f',
     selectedBlockBg: '#323e44',
     docSelection: '#00000020',
     caretColor: DARK_THEME_RED,
-    error: '#ff719a'
+    error: '#ff719a',
+    errorMsgBg: '#5e4e31'
   }
 
   buildDarkThemeStandardSelectors() {
@@ -153,9 +157,9 @@ export class ThemeManager extends Observable {
 
     const blockquoteProps: StylableComponentProps = {
       textColor: '#9aa8bb',
-      bgColor: '#2d3034',
+      bgColor: '#2a3135',
       padding: '20px',
-      borderLeft: '5px solid #4c5157'
+      borderLeft: '7px solid #353e43'
     }
     buildRule(blockquoteProps, theme.id, 'blockquote')
   }
@@ -176,7 +180,7 @@ export class ThemeManager extends Observable {
     appBg: LIGHT_THEME_APP_BG,
     appBg50: LIGHT_THEME_APP_BG + '50',
     transparent: TRANSPARENT,
-    docListBg: '#e7ebee',
+    docListBg: LIGHT_THEME_APP_BG,
     panelBg: LIGHT_THEME_APP_BG,
     modalWindowBg: '#d0d4d8',
     text: DARK_THEME_APP_BG,
@@ -187,13 +191,15 @@ export class ThemeManager extends Observable {
     inputBg: '#cfd8dc75',
     codeBg: '#e0e6ea',
     inputBorder: TRANSPARENT,
-    inputBorderFocused: '#c4d1d7',
+    inputBorderFocused: '#90b2c2',
     border: '#cfd8dc',
+    selectedDoc: DARK_THEME_APP_BG,
     selectedBlockBorder: '#6f838d',
     selectedBlockBg: '#e0e6ea',
     docSelection: '#e0e6ea',
     caretColor: LIGHT_THEME_RED,
-    error: '#914058'
+    error: '#914058',
+    errorMsgBg: '#c5b395'
   }
 
   buildLightThemeStandardSelectors() {
@@ -219,9 +225,9 @@ export class ThemeManager extends Observable {
 
     const blockquoteProps: StylableComponentProps = {
       textColor: '#6a6a73',
-      bgColor: '#e6e5eb',
+      bgColor: '#e1e7ea',
       padding: '20px',
-      borderLeft: '5px solid #d0c5d4'
+      borderLeft: '7px solid #dae1e4'
     }
     buildRule(blockquoteProps, theme.id, 'blockquote')
   }

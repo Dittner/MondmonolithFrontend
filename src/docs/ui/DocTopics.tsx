@@ -9,7 +9,7 @@ import { useDocsContext } from '../../App'
 export const DocTopics = stylable(() => {
   return <Routes>
     <Route path="/" element={<EmptyDocTopicsView/>}/>
-    <Route path=":docUID" element={<DocTopicsView/>}/>
+    <Route path=":docId" element={<DocTopicsView/>}/>
   </Routes>
 })
 
@@ -23,7 +23,7 @@ const DocTopicsView = observer(() => {
   const { theme } = useDocsContext()
 
   const params = useParams()
-  const doc = dirList.findDoc(d => params.docUID === d.uid)
+  const doc = dirList.findDoc(d => params.docId === d.id)
   if (!doc || doc.loadStatus === DocLoadStatus.LOADING) {
     return <></>
   }
@@ -56,5 +56,5 @@ const TopicLink = observer((props: TopicLinkProps) => {
   const page = observe(props.page)
   const className = 'className' in props ? props.className + ' ' + buildClassName(props) : buildClassName(props)
 
-  return <NavLink className={className} to={page.id}>{page.title}</NavLink>
+  return <NavLink className={className} to={page.key}>{page.title}</NavLink>
 })

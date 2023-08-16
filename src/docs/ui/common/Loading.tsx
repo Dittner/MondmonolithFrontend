@@ -1,7 +1,7 @@
 import spinner from '../../../resources/images/spinner.svg'
 import smallSpinner from '../../../resources/images/smallSpinner.svg'
-import { VStack } from '../../application/NoCSSComponents'
 import { stylable } from '../../application/NoCSS'
+import { VStack } from './Container'
 
 export const LoadingSpinner = () => {
   return (

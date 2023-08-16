@@ -75,5 +75,7 @@ module.exports = {
     "@typescript-eslint/type-annotation-spacing" : "warn",
     "block-spacing" : "warn",
     "spaced-comment" : "off",
+    "@typescript-eslint/dot-notation" : "off",
+    "dot-notation" : "off",
   }
 }

@@ -43,7 +43,8 @@ pre[class*=language-] {
 	padding-right: 5px;
 	overflow: auto;
 	background: none;
-	border: 1px solid #bdcfd8;
+	background-color: #b6b8bb10;
+	border: 1px solid #bdcfd850;
 	border-radius: 10px;
 	white-space: pre-wrap;
 	margin-left: -21px;

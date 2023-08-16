@@ -5,8 +5,17 @@ import { AuthStatus } from './docs/domain/DomainModel'
 import { LoadingSpinner } from './docs/ui/common/Loading'
 import { observe, observer } from './docs/infrastructure/Observer'
 import { AuthPage } from './docs/ui/AuthPage'
-import { HStack, IconButton, Label, RedButton, VStack } from './docs/application/NoCSSComponents'
-import { AppSize, LayoutLayer } from './docs/application/Application'
+import { LayoutLayer } from './docs/application/Application'
+import { HStack, VStack } from './docs/ui/common/Container'
+import { Label } from './docs/ui/common/Label'
+import { IconButton, RedButton } from './docs/ui/common/Button'
+
+export const API_URL = process.env.REACT_APP_API_URL
+export const IS_DEV_MODE = process.env.REACT_APP_MODE === 'development'
+
+console.log('React v.' + React.version)
+console.log('API_URL:', API_URL)
+console.log('DEV_MODE:', IS_DEV_MODE)
 
 const docsContext = React.createContext(DocsContext.init())
 export const useDocsContext = () => React.useContext(docsContext)
@@ -22,15 +31,15 @@ export const App = observer(() => {
 
   const isUserAuthorized = user.authStatus === AuthStatus.AUTHORIZED
   return <>
-      <BrowserRouter>
-        <Suspense fallback={<LoadingSpinner/>}>
-          <Routes>
-            <Route path="/auth" element={isUserAuthorized ? (<Navigate replace to="/docs"/>) : <AuthPage/>}/>
-            <Route path="/docs/*" element={isUserAuthorized ? <LazyDocsPage/> : (<Navigate replace to="/auth"/>)}/>
-            <Route path="*" element={<LazyIntroPage/>}/>
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
+    <BrowserRouter>
+      <Suspense fallback={<LoadingSpinner/>}>
+        <Routes>
+          <Route path="/auth" element={isUserAuthorized ? (<Navigate replace to="/docs"/>) : <AuthPage/>}/>
+          <Route path="/docs/*" element={isUserAuthorized ? <LazyDocsPage/> : (<Navigate replace to="/auth"/>)}/>
+          <Route path="*" element={<LazyIntroPage/>}/>
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
 
     <ErrorMsgView/>
     <ModalView/>
@@ -117,22 +126,16 @@ export const ModalView = observer(() => {
           <HStack halign="center" valign="top" gap="50px">
             {app.dialog.onCancel &&
               <RedButton title="No"
-                         theme={theme}
-                         hideBg
                          onClick={cancel}/>
             }
 
             {hasOkBtn &&
               <RedButton title="Ok"
-                         theme={theme}
-                         hideBg
                          onClick={ok}/>
             }
 
             {hasApplyBtn &&
               <RedButton title="Yes"
-                         theme={theme}
-                         hideBg
                          onClick={apply}/>
             }
 
@@ -173,10 +176,8 @@ export const ErrorMsgView = observer(() => {
            textAlign='center'
            text={app.errorMsg}
            textColor={theme.text}/>
-    
+
     <IconButton icon="close"
-                hideBg
-                theme={theme}
                 popUp="Close"
                 onClick={close}/>
   </HStack>

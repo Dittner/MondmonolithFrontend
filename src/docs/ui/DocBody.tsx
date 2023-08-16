@@ -22,17 +22,11 @@ import ReactMarkdown from 'react-markdown'
 import { stylable } from '../application/NoCSS'
 import { AppSize } from '../application/Application'
 import { observeApp, observeDirList, observeEditTools } from '../DocsContext'
-import {
-  Button,
-  HStack,
-  IconButton,
-  Label,
-  RedButton,
-  Spacer,
-  StylableContainer,
-  TextArea,
-  VStack
-} from '../application/NoCSSComponents'
+import { HStack, StylableContainer, VStack } from './common/Container'
+import { Button, IconButton, RedButton } from './common/Button'
+import { Label } from './common/Label'
+import { TextArea } from './common/Input'
+import { Spacer } from './common/Spacer'
 import { observe, observer } from '../infrastructure/Observer'
 
 export const DocBody = stylable(() => {
@@ -214,15 +208,11 @@ const PageList = observer(() => {
                 width="100%">
 
           <RedButton title="Export as JSON"
-                     hideBg
-                     theme={theme}
                      onClick={exportDocAsJSON}/>
 
           <Spacer/>
 
-          <IconButton theme={theme}
-                      hideBg
-                      icon="scrollBack"
+          <IconButton icon="scrollBack"
                       popUp="Scroll back"
                       onClick={scrollBack}/>
         </HStack>
@@ -337,7 +327,6 @@ const PageTitleEditor = observer(({ page }: { page: Page }) => {
     <TextArea key={page.uid}
               className="mono"
               text={page.title}
-              theme={theme}
               paddingHorizontal="20px"
               paddingTop="10px"
               onApply={apply}
@@ -381,6 +370,8 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
     )
   }
 
+  const markdownClassName = theme.isDark ? 'markdown dark' : 'markdown light'
+
   if (editTools.editMode && isSelected) {
     return (<>
         <StylableContainer className={theme.id}
@@ -392,7 +383,7 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
                            borderLeft={['6px', 'solid', theme.selectedBlockBorder]}
                            cornerRadius="10px"
                            onDoubleClick={editPage}>
-          <ReactMarkdown className={theme.isDark ? 'dark' : 'light'}>{block.text}</ReactMarkdown>
+          <ReactMarkdown className={markdownClassName}>{block.text}</ReactMarkdown>
         </StylableContainer>
       </>
     )
@@ -408,7 +399,7 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
                                 state.bgColor = theme.selectedBlockBg
                                 state.cornerRadius = '10px'
                               }}>
-      <ReactMarkdown className={theme.isDark ? 'dark' : 'light'}>{block.text}</ReactMarkdown>
+      <ReactMarkdown className={markdownClassName}>{block.text}</ReactMarkdown>
     </StylableContainer>
   }
 
@@ -417,13 +408,13 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
                        minHeight="30px"
                        paddingHorizontal="20px"
                        width="100%">
-      <ReactMarkdown className={theme.isDark ? 'dark' : 'light'}>{block.text}</ReactMarkdown>
+      <ReactMarkdown className={markdownClassName}>{block.text}</ReactMarkdown>
     </StylableContainer>
   )
 })
 
 const PageBlockEditor = ({ block }: { block: PageBlock }) => {
-  const { theme, restApi } = useDocsContext()
+  const { restApi } = useDocsContext()
 
   const apply = (value: string) => {
     if (block.text !== value) {
@@ -444,7 +435,6 @@ const PageBlockEditor = ({ block }: { block: PageBlock }) => {
   return (
     <TextArea key={block.uid}
               text={block.text}
-              theme={theme}
               className="mono"
               paddingHorizontal="18px"
               paddingTop="10px"

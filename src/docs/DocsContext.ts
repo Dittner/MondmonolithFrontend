@@ -34,7 +34,7 @@ export class DocsContext {
     this._theme = this.themeManager.theme
     this.user = new User()
     this.restApi = new RestApi(this)
-    this.editTools = new EditTools()
+    this.editTools = new EditTools(this.user)
     this.docsLoader = new DocsLoader(this)
     this.app = new Application()
     this.app.subscribeToWindowResize()

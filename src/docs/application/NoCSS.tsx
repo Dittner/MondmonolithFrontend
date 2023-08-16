@@ -335,6 +335,9 @@ export interface StylableComponentProps {
   opacity?: string
   shadow?: string
   btnCursor?: boolean
+  fontFamily?: string
+  fontSize?: string
+  fontWeight?: string
   caretColor?: string
   visible?: boolean
   className?: string

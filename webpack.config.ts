@@ -99,7 +99,7 @@ function buildPlugins(options: BuildOptions): webpack.WebpackPluginInstance[] {
     }),
     new webpack.DefinePlugin({
       'process.env.REACT_APP_API_URL': JSON.stringify(process.env.REACT_APP_API_URL),
-      'process.env.REACT_APP_DEV_MODE': JSON.stringify(process.env.REACT_APP_DEV_MODE)
+      'process.env.REACT_APP_MODE': JSON.stringify(process.env.REACT_APP_MODE)
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.ProgressPlugin()

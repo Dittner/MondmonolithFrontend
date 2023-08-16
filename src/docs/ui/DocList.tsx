@@ -7,18 +7,13 @@ import { type Directory, type Doc, LoadStatus } from '../domain/DomainModel'
 import { stylable } from '../application/NoCSS'
 import { observeApp, observeDirList, observeEditTools } from '../DocsContext'
 import { observe, observer } from '../infrastructure/Observer'
-import {
-  HStack,
-  IconButton,
-  Input,
-  Label,
-  RedButton,
-  Spacer,
-  StylableContainer,
-  VStack
-} from '../application/NoCSSComponents'
+import { HStack, StylableContainer, VStack } from './common/Container'
+import { IconButton, RedButton } from './common/Button'
+import { Label } from './common/Label'
+import { Spacer } from './common/Spacer'
 import { sortByKey } from './common/Utils'
 import { HeaderVerSep } from './Header'
+import { Input } from './common/Input'
 
 export const DocList = observer(stylable(() => {
   console.log('new DocList')
@@ -77,26 +72,20 @@ export const DocList = observer(stylable(() => {
               paddingHorizontal="10px">
 
         <IconButton icon={theme.isDark ? 'moon' : 'sun'}
-                    hideBg
                     popUp="Switch a theme"
-                    theme={theme}
                     onClick={() => {
                       themeManager.switchTheme()
                     }}/>
 
         {editTools.editMode &&
             <RedButton title="Add Dir"
-                       theme={theme}
-                       hideBg
                        onClick={createDir}/>
         }
 
         <Spacer/>
 
         <IconButton icon="close"
-                    hideBg
                     visible={app.isDocListShown && (app.size === AppSize.S || app.size === AppSize.XS)}
-                    theme={theme}
                     popUp="Close Doc's List"
                     onClick={hideDocList}/>
       </HStack>
@@ -208,8 +197,6 @@ const DirectoryView = observer(({ dir }: { dir: Directory }) => {
           <HStack halign='left' valign='center' gap='0'>
 
             <RedButton title="New Doc"
-                       theme={theme}
-                       hideBg
                        onClick={createDoc}/>
             <HeaderVerSep marginHorizontal='0'/>
             <DocPicker onFileSelected={onFileSelected}/>
@@ -255,8 +242,6 @@ const DocPicker = ({ onFileSelected }: { onFileSelected: (doc: File) => void }) 
 
   return <>
     <RedButton title="Import"
-               theme={theme}
-               hideBg
                onClick={importDoc}/>
 
     <input ref={inputRef} className="btn" type="file" onChange={handleFileChange} value={value}
@@ -378,28 +363,21 @@ const DocForm = stylable((props: DocFormProps) => {
 
         <Input type="text"
                protocol={newDocTitleProtocol}
-               theme={theme}
                title="Doc's title"
                onSubmitted={apply}
                autoFocus/>
 
       <HStack halign="center" valign="center" gap="50px">
         <RedButton title="Cancel"
-                   theme={theme}
-                   hideBg
                    onClick={cancel}/>
 
         <RedButton title="Save"
-                   theme={theme}
-                   hideBg
                    onClick={apply}/>
       </HStack>
     </VStack>
 
       <IconButton icon="delete"
                   visible={!props.doc.isNew}
-                  hideBg
-                  theme={theme}
                   popUp="Delete"
                   onClick={deleteDoc}/>
     </HStack>
@@ -444,7 +422,6 @@ const DirForm = stylable((props: DirFormProps) => {
 
         <Input type="text"
                protocol={titleProtocol}
-               theme={theme}
                title="Directory"
                onSubmitted={apply}
                autoFocus
@@ -452,20 +429,14 @@ const DirForm = stylable((props: DirFormProps) => {
 
       <HStack halign="center" valign="center" gap="50px">
         <RedButton title="Cancel"
-                   theme={theme}
-                   hideBg
                    onClick={cancel}/>
 
         <RedButton title="Save"
-                   theme={theme}
-                   hideBg
                    onClick={apply}/>
       </HStack>
     </VStack>
       <IconButton icon="delete"
                   visible={!props.dir.isNew}
-                  hideBg
-                  theme={theme}
                   popUp="Delete"
                   onClick={deleteDir}/>
 </HStack>

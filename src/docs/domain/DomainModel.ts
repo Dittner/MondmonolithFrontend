@@ -77,10 +77,13 @@ export class User extends Observable {
 export class EditTools extends Observable {
   readonly uid: UID
 
+  private readonly _user: User
+  get editModeEnabled(): boolean { return this._user.email !== '' && this._user.email !== 'demo' }
+
   //--------------------------------------
   //  editMode
   //--------------------------------------
-  private _editMode: boolean = true
+  private _editMode: boolean = false
   get editMode(): boolean { return this._editMode }
   set editMode(value: boolean) {
     if (this._editMode !== value) {
@@ -101,9 +104,10 @@ export class EditTools extends Observable {
     }
   }
 
-  constructor() {
+  constructor(user: User) {
     super('EditTools')
     this.uid = uid()
+    this._user = user
     document.addEventListener('keydown', this.onKeyDown.bind(this))
   }
 
@@ -198,6 +202,13 @@ export class DirectoryList extends Observable {
       return dir
     }
     return undefined
+  }
+
+  removeAll() {
+    this.dirs.forEach(d => { d.dispose() })
+    this.dirs = Array<Directory>()
+    this.loadStatus = LoadStatus.PENDING
+    this.mutated()
   }
 }
 

@@ -6,9 +6,9 @@ import { DocBody } from './DocBody'
 import { DocTopics } from './DocTopics'
 import { Header } from './Header'
 import { AppSize, LayoutLayer } from '../application/Application'
-import { StylableContainer } from '../application/NoCSSComponents'
 import { observeApp } from '../DocsContext'
 import { observer } from '../infrastructure/Observer'
+import { StylableContainer } from './common/Container'
 
 export const DocsPage = observer(() => {
   console.log('new DocsPage')

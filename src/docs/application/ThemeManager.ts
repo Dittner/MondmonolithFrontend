@@ -32,6 +32,7 @@ export interface Theme {
   codeBg: string
   inputBorder: string
   inputBorderFocused: string
+  textAreaBorderFocused: string
   selectedDoc: string
   selectedBlockBorder: string
   selectedBlockBg: string
@@ -124,6 +125,7 @@ export class ThemeManager extends Observable {
     codeBg: '#2e393f75',
     inputBorder: '#323e44',
     inputBorderFocused: '#455f6b',
+    textAreaBorderFocused: '#293338',
     border: '#323e44',
     selectedDoc: '#cfe0ee',
     selectedBlockBorder: '#c29a5f',
@@ -192,6 +194,7 @@ export class ThemeManager extends Observable {
     codeBg: '#e0e6ea',
     inputBorder: TRANSPARENT,
     inputBorderFocused: '#90b2c2',
+    textAreaBorderFocused: '#cfd8dc',
     border: '#cfd8dc',
     selectedDoc: DARK_THEME_APP_BG,
     selectedBlockBorder: '#6f838d',
@@ -227,7 +230,7 @@ export class ThemeManager extends Observable {
       textColor: '#6a6a73',
       bgColor: '#e1e7ea',
       padding: '20px',
-      borderLeft: '7px solid #dae1e4'
+      borderLeft: '7px solid #d3dbde'
     }
     buildRule(blockquoteProps, theme.id, 'blockquote')
   }

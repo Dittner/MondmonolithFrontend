@@ -8,6 +8,19 @@ export interface UserDto {
   role: string
 }
 
+export class SignupRequest implements RequestBody {
+  username: string
+  password: string
+  constructor(username: string, password: string) {
+    this.username = username
+    this.password = password
+  }
+
+  serialize() {
+    return JSON.stringify(this)
+  }
+}
+
 export class DirDto implements RequestBody {
   id: number
   title: string

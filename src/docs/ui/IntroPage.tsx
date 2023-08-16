@@ -16,22 +16,18 @@ import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-markup'
 import { stylable } from '../application/NoCSS'
 import { AppSize, LayoutLayer } from '../application/Application'
-import {
-  HStack,
-  IconButton,
-  Image,
-  Label,
-  RedButton,
-  Spacer,
-  TextArea,
-  VSeparator,
-  VStack
-} from '../application/NoCSSComponents'
 import { observeApp } from '../DocsContext'
 import { observer } from '../infrastructure/Observer'
 import { useDocsContext } from '../../App'
 import { useNavigate } from 'react-router-dom'
 import { AuthStatus } from '../domain/DomainModel'
+import { Image } from './common/Image'
+import { HStack, VStack } from './common/Container'
+import { IconButton, LargeButton, RedButton } from './common/Button'
+import { Label } from './common/Label'
+import { TextArea } from './common/Input'
+import { Spacer } from './common/Spacer'
+import { VSeparator } from './common/Separator'
 
 function useWindowPosition(limit: number = -1): number {
   const [scrollPosition, setPosition] = useState(window.scrollY)
@@ -52,7 +48,12 @@ function useWindowPosition(limit: number = -1): number {
 
 export const IntroPage = observer(() => {
   const app = observeApp()
-  const { user, theme, themeManager } = useDocsContext()
+  const {
+    user,
+    theme,
+    themeManager,
+    restApi
+  } = useDocsContext()
   const navigate = useNavigate()
 
   const SCROLL_POS_LIMIT = 600
@@ -61,10 +62,18 @@ export const IntroPage = observer(() => {
 
   let headerFontSize = ''
   switch (app.size) {
-    case AppSize.XS: headerFontSize = '40px'; break
-    case AppSize.S: headerFontSize = '60px'; break
-    case AppSize.M: headerFontSize = '65px'; break
-    case AppSize.L: headerFontSize = '70px'; break
+    case AppSize.XS:
+      headerFontSize = '40px'
+      break
+    case AppSize.S:
+      headerFontSize = '60px'
+      break
+    case AppSize.M:
+      headerFontSize = '65px'
+      break
+    case AppSize.L:
+      headerFontSize = '70px'
+      break
   }
 
   const funcColor = theme.isDark ? '#7a5196' : '#a06a9d'
@@ -72,6 +81,11 @@ export const IntroPage = observer(() => {
   const stringColor = theme.isDark ? '#61b1b2' : '#5e929d'
   const yourNotesColor = theme.isDark ? '#bccbd7' : '#5b6269'
   const symbolsColor = theme.isDark ? '#6b888e' : '#5b6269'
+
+  const enterDemoMode = () => {
+    navigate('/auth')
+    restApi.logIn('demo', 'pwd')
+  }
 
   return <VStack maxWidth="100%"
                  width="100%"
@@ -112,11 +126,9 @@ export const IntroPage = observer(() => {
     <HStack halign='left' valign='center'
             width="100%" height='50px'
             paddingHorizontal='10px' top="0" fixed
-                       layer={LayoutLayer.HEADER}>
+            layer={LayoutLayer.HEADER}>
       <IconButton icon={theme.isDark ? 'moon' : 'sun'}
-                  hideBg
                   popUp="Switch a theme"
-                  theme={theme}
                   onClick={() => {
                     themeManager.switchTheme()
                   }}/>
@@ -124,9 +136,9 @@ export const IntroPage = observer(() => {
       <Spacer/>
 
       <RedButton title={user.authStatus === AuthStatus.AUTHORIZED ? 'Docs' : 'Log in'}
-                 hideBg
-                 theme={theme}
-                 onClick={() => { navigate('/auth') }}/>
+                 onClick={() => {
+                   navigate('/auth')
+                 }}/>
     </HStack>
 
     <Label className={theme.isDark ? 'title' : 'title light'}
@@ -176,6 +188,15 @@ export const IntroPage = observer(() => {
       <MarkdownEditor text={shortcuts} secondMarkdownText={languages} title="5. Editor"/>
     </VStack>
 
+    <HStack halign='right' valign='center' width="100%" paddingHorizontal='20px'>
+      <Spacer/>
+      
+      <LargeButton title={'Try Demo Mode'}
+                   width='250px'
+                   layer={LayoutLayer.ONE}
+                   onClick={enterDemoMode}/>
+    </HStack>
+
     <Label className="mono"
            text={(app.isMobileDevice ? 'Mobile ' : 'Desktop ') + app.size}
            fontSize="10px"
@@ -189,7 +210,7 @@ const aboutTxt = `
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  YEAR  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   beta  |  3.00  |  2023  
+*   to format notes and code fragments easily without   *   beta  |  3.06  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           `
 
@@ -203,7 +224,7 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: beta  |  VER: 3.00  |  YEAR: 2023      
+*  MODE: beta  |  VER: 3.06  |  YEAR: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 `
@@ -244,7 +265,7 @@ const shortcuts = `## Shortcuts\n
 + Format code: \`Ctrl + Shift + L\``
 
 const code = `## Memoization
-Memoization is an optimisation technique base on remembering results returned by a function called with same arguments.
+Memoization is an optimization technique based on remembering the results returned by a function called with the same arguments.
  
 \`\`\`js
 const memoize = (fn) => {
@@ -260,7 +281,7 @@ const memoize = (fn) => {
 }
 
 const calc = (x, y, op) => { return x + y }
-const exc = memoize(calc);
+const exc = memoize(calc)
 exc(2, 1, '+') //3, calculated
 exc(2, 1, '+') //3, returned from cache
 \`\`\``
@@ -278,7 +299,10 @@ interface MarkdownEditorProps {
 }
 
 const MarkdownEditor = (props: MarkdownEditorProps) => {
-  const { app, theme } = useDocsContext()
+  const {
+    app,
+    theme
+  } = useDocsContext()
 
   console.log('new MarkdownEditor')
   const [value, setValue] = useState(props.text)
@@ -316,7 +340,6 @@ const MarkdownEditor = (props: MarkdownEditorProps) => {
         {!props.secondMarkdownText &&
           <TextArea className="mono"
                     text={value}
-                    theme={theme}
                     paddingHorizontal="25px"
                     paddingVertical="20px"
                     onApply={apply}
@@ -360,7 +383,6 @@ const MarkdownEditor = (props: MarkdownEditorProps) => {
         {!props.secondMarkdownText &&
           <TextArea className="mono"
                     text={value}
-                    theme={theme}
                     paddingHorizontal="25px"
                     paddingVertical="20px"
                     onApply={apply}
@@ -369,7 +391,7 @@ const MarkdownEditor = (props: MarkdownEditorProps) => {
                     width="50%"/>
         }
 
-        <VSeparator theme={theme}/>
+        <VSeparator/>
 
         <MarkdownText value={value}
                       width="50%"/>
@@ -388,6 +410,6 @@ const MarkdownText = stylable(({ value }: { value: string }) => {
     Prism.highlightAll()
   }, [value])
   return <div className={theme.id}>
-    <ReactMarkdown className={theme.isDark ? 'dark' : 'light'} key={value}>{value}</ReactMarkdown>
+    <ReactMarkdown className={theme.isDark ? 'markdown dark' : 'markdown light'} key={value}>{value}</ReactMarkdown>
   </div>
 })

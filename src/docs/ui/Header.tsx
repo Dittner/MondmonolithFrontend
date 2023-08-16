@@ -3,9 +3,13 @@ import { stylable } from '../application/NoCSS'
 import { Route, Routes, useParams } from 'react-router-dom'
 import { AppSize, Dialog } from '../application/Application'
 import { observeApp, observeDirList, observeEditTools } from '../DocsContext'
-import { HStack, IconButton, Label, RedButton, Spacer, Switcher, VSeparator } from '../application/NoCSSComponents'
+import { HStack } from './common/Container'
+import { IconButton, RedButton, Switcher } from './common/Button'
+import { Label } from './common/Label'
+import { Spacer } from './common/Spacer'
 import { observer } from '../infrastructure/Observer'
 import { useDocsContext } from '../../App'
+import { VSeparator } from './common/Separator'
 
 export const Header = stylable(() => {
   return <Routes>
@@ -19,8 +23,7 @@ export const HeaderVerSep = ({ visible = true, marginHorizontal = '10px' }: { vi
 
   if (!visible) return <></>
 
-  return <VSeparator theme={theme}
-                     marginHorizontal={marginHorizontal}
+  return <VSeparator marginHorizontal={marginHorizontal}
                      height="20px"/>
 }
 
@@ -72,7 +75,6 @@ export const HeaderView = observer(() => {
 
               <IconButton icon="menu"
                           popUp="Open Doc's List"
-                          theme={theme}
                           onClick={showDocList}/>
 
               <HeaderVerSep/>
@@ -82,9 +84,7 @@ export const HeaderView = observer(() => {
           {doc && editTools.editMode &&
             <>
               <RedButton title="Add Page"
-                         theme={theme}
-                         onClick={createPage}
-                         hideBg/>
+                         onClick={createPage}/>
 
               <Spacer width="10px"/>
 
@@ -100,6 +100,7 @@ export const HeaderView = observer(() => {
                  textColor={theme.text75}/>
 
           <Switcher color={theme.appBg}
+                    disabled={!editTools.editModeEnabled}
                     selectionColor={theme.red}
                     isSelected={editTools.editMode}
                     onClick={() => {
@@ -120,8 +121,6 @@ export const HeaderView = observer(() => {
           }
 
           <RedButton title="Sign out"
-                     hideBg
-                     theme={theme}
                      onClick={handleSignOut}/>
         </>
       }
@@ -205,29 +204,21 @@ const ToolsPanel = observer(() => {
 
         <IconButton icon="plus"
                     popUp="New Block"
-                    theme={theme}
-                    hideBg
                     onClick={createBlock}
                     disabled={!selectedPage && !selectedPageBlock}/>
 
         <IconButton icon="up"
-                    hideBg
                     popUp="Move Block up"
-                    theme={theme}
                     onClick={moveBlockUp}
                     disabled={!selectedPageBlock}/>
 
         <IconButton icon="down"
-                    hideBg
                     popUp="Move Block down"
-                    theme={theme}
                     onClick={moveBlockDown}
                     disabled={!selectedPageBlock}/>
 
         <IconButton icon="delete"
-                    hideBg
                     popUp="Delete Block"
-                    theme={theme}
                     onClick={deleteBlock}
                     disabled={!selectedPage && !selectedPageBlock}/>
 

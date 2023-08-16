@@ -1,10 +1,11 @@
 import { NavLink, Route, Routes, useParams } from 'react-router-dom'
 import { DocLoadStatus, type Page } from '../domain/DomainModel'
 import { buildClassName, stylable, type StylableComponentProps } from '../application/NoCSS'
-import { VStack } from '../application/NoCSSComponents'
+
 import { observeDirList } from '../DocsContext'
 import { observe, observer } from '../infrastructure/Observer'
 import { useDocsContext } from '../../App'
+import { VStack } from './common/Container'
 
 export const DocTopics = stylable(() => {
   return <Routes>

@@ -22,7 +22,6 @@ export class RestApi {
   readonly baseUrl: string
   readonly context: DocsContext
   headers: any = {}
-
   constructor(context: DocsContext) {
     this.baseUrl = process.env.REACT_APP_API_URL ?? 'http://localhost:3000'
     this.context = context
@@ -52,6 +51,11 @@ export class RestApi {
     cmd.run()
   }
 
+  signup(email: string, pwd: string) {
+    const cmd = new AuthCmd(this, email, pwd, true)
+    cmd.run()
+  }
+
   logOut() {
     const user = this.context.user
     user.id = ''
@@ -60,6 +64,7 @@ export class RestApi {
     user.authStatus = AuthStatus.SIGNED_OUT
     window.localStorage.removeItem(this.SIGNED_IN_USER_ID)
     window.localStorage.removeItem(this.SIGNED_IN_USER_EMAIL)
+    this.context.dirList.removeAll()
   }
 
   //--------------------------------------
@@ -130,14 +135,15 @@ export class RestApi {
 
   async sendRequest(method: HttpMethod, path: string, body: RequestBody | null = null, handleErrors: boolean = true): Promise<[Response | null, any | null ]> {
     try {
-      console.log('====>', method, ':', path)
+      console.log('===>', method, ':', path)
       const response = await fetch(this.baseUrl + path, {
         method,
         headers: this.headers,
         credentials: 'same-origin',
         body: body?.serialize()
       })
-      console.log('<====', response.status, method, path)
+
+      console.log('<===', response.status, method, path)
 
       if (response.ok) {
         if (response.status === 204) {
@@ -162,7 +168,7 @@ export class RestApi {
         this.context.app.errorMsg = msg
 
         try {
-          const details = await response.json()
+          const details = await response.text()
 
           console.log('Details:', details)
         } catch (_) {}

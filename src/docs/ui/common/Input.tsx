@@ -76,7 +76,7 @@ export const Input = (props: InputProps) => {
 
   return (
     <VStack halign="left" valign="top" gap="0"
-            width="100%">
+            width={customProps.width}>
 
       {customProps.title &&
         <Label className="ibm"
@@ -102,6 +102,66 @@ export const Input = (props: InputProps) => {
     </VStack>
   )
 }
+
+const defAuthInputProps = (theme: Theme): any => {
+  return {
+    width: '100%',
+    height: '45px',
+    caretColor: theme.caretColor,
+    textColor: theme.text,
+    fontSize: '1.2rem',
+    borderBottom: ['3px', 'solid', '#6f838575'],
+    focusState: (state: StylableComponentProps) => {
+      state.borderBottom = ['3px', 'solid', theme.red]
+    }
+  }
+}
+
+export const AuthInput = (props: InputProps) => {
+  console.log('new Input')
+  const theme = useDocsContext().theme
+  const customProps = { ...defAuthInputProps(theme), ...props }
+
+  const onKeyDown = (e: any) => {
+    // Enter key
+    if (e.keyCode === 13 && !e.shiftKey) {
+      e.preventDefault()
+      e.stopPropagation()
+      customProps.onSubmitted?.()
+    }
+  }
+
+  const inputRef = useCallback((input: HTMLInputElement) => {
+    if (input && customProps.autoFocus) {
+      setTimeout(() => {
+        input.focus()
+      }, 0)
+    }
+  }, [customProps.autoFocus])
+
+  const className = 'className' in customProps ? customProps.className + ' ' + buildClassName(customProps) : buildClassName(customProps)
+
+  return <>
+    <input ref={inputRef}
+           className={className}
+           placeholder={customProps.placeHolder}
+           autoCorrect="off"
+           autoComplete="off"
+           type={customProps.type}
+           defaultValue={customProps.text || customProps.protocol.value}
+           onChange={e => {
+             if (customProps.protocol) customProps.protocol.value = e.currentTarget.value
+             customProps.onChange?.(e.currentTarget.value)
+           }}
+           onKeyDown={onKeyDown}/>
+  </>
+}
+
+/*
+*
+* TextArea
+*
+* */
 
 class TextAreaController {
   static scrollToCursor(ta: HTMLTextAreaElement) {
@@ -245,7 +305,6 @@ const defTextAreaProps = (theme: Theme): any => {
     textColor: theme.green,
     bgColor: theme.inputBg,
     border: ['1px', 'solid', theme.inputBorder],
-    outline: ['10px', 'solid', theme.transparent],
     focusState: (state: StylableComponentProps) => {
       state.outline = ['10px', 'solid', theme.textAreaBorderFocused]
     }

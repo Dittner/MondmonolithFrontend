@@ -51,7 +51,10 @@ const PageList = observer(() => {
 
   const app = observeApp()
   const dirList = observeDirList()
-  const { restApi, theme } = useDocsContext()
+  const {
+    restApi,
+    theme
+  } = useDocsContext()
 
   //console.log('  dirList = ', dirList)
   const params = useParams()
@@ -91,13 +94,19 @@ const PageList = observer(() => {
         rowsTotal += p.blocks.reduce((sum, block) => sum + block.estimatedRowNum, 0)
 
         if (rowsTotal > 100) {
-          if (!location.hash) break
-          else if (location.hash && i > start) break
+          if (!location.hash) {
+            break
+          } else if (location.hash && i > start) break
         }
       }
       const isFirstPageShown = start === 0
       const isLastPageShown = doc && end === (doc.pages.length - 1)
-      setPagesSlice({ start, end, isFirstPageShown, isLastPageShown })
+      setPagesSlice({
+        start,
+        end,
+        isFirstPageShown,
+        isLastPageShown
+      })
     }
   }, [doc?.uid, doc?.pages.length, location.key])
 
@@ -111,12 +120,22 @@ const PageList = observer(() => {
       window.scrollTo(0, 1)
 
       setTimeout(() => {
-        setPagesSlice({ start, end, isFirstPageShown, isLastPageShown })
+        setPagesSlice({
+          start,
+          end,
+          isFirstPageShown,
+          isLastPageShown
+        })
       }, 10)
 
       setTimeout(() => {
         const isFirstPageShown = start === 0
-        setPagesSlice({ start, end, isFirstPageShown, isLastPageShown })
+        setPagesSlice({
+          start,
+          end,
+          isFirstPageShown,
+          isLastPageShown
+        })
       }, 50)
     }
   }
@@ -127,7 +146,12 @@ const PageList = observer(() => {
       const start = end - pagesSlice.start > 3 ? pagesSlice.start + 1 : pagesSlice.start
       const isFirstPageShown = start === 0
       const isLastPageShown = end === (doc.pages.length - 1)
-      setPagesSlice({ start, end, isFirstPageShown, isLastPageShown })
+      setPagesSlice({
+        start,
+        end,
+        isFirstPageShown,
+        isLastPageShown
+      })
     }
   }
 
@@ -144,7 +168,12 @@ const PageList = observer(() => {
   }
 
   const scrollBack = () => {
-    setPagesSlice({ start: 0, end: 2, isFirstPageShown: true, isLastPageShown: (doc?.pages.length ?? 0) <= 3 })
+    setPagesSlice({
+      start: 0,
+      end: 2,
+      isFirstPageShown: true,
+      isLastPageShown: (doc?.pages.length ?? 0) <= 3
+    })
     window.scrollTo(0, 0)
   }
 
@@ -158,7 +187,7 @@ const PageList = observer(() => {
 
   return (
     <VStack valign="top" halign="center" gap="10px"
-            width="100%"
+            width="100%" maxWidth='1000px'
             paddingHorizontal={app.size === AppSize.XS ? '2px' : '40px'}
             paddingVertical="20px">
 
@@ -229,6 +258,7 @@ const PageView = observer(({ page }: { page: Page }) => {
     <VStack id={page.key}
             width="100%"
             halign="stretch"
+            paddingBottom='50px'
             valign="top">
       <PageTitle page={page}/>
       {page.blocks.map(block => {
@@ -269,11 +299,13 @@ const PageTitle = observer(({ page }: { page: Page }) => {
                            paddingLeft="14px"
                            width="100%"
                            bgColor={theme.selectedBlockBg}
-                           borderLeft={['6px', 'solid', theme.selectedBlockBorder]}
-                           cornerRadius="10px"
+                           borderLeft={['6px', 'solid', theme.red]}
                            onDoubleClick={editPage}>
           <Label className="h1"
-                 textColor={theme.pageTitle}
+                 textColor={theme.h1}
+                 marginHorizontal='-20px'
+                 paddingHorizontal='20px'
+                 bgColor={theme.pageTitleBg}
                  text={page.title}/>
         </StylableContainer>
       </>
@@ -287,10 +319,12 @@ const PageTitle = observer(({ page }: { page: Page }) => {
                               onMouseDown={selectTitle}
                               hoverState={state => {
                                 state.bgColor = theme.selectedBlockBg
-                                state.cornerRadius = '10px'
                               }}>
       <Label className="h1"
-             textColor={theme.pageTitle}
+             textColor={theme.h1}
+             marginHorizontal='-20px'
+             paddingHorizontal='20px'
+             bgColor={theme.pageTitleBg}
              text={page.title}/>
     </StylableContainer>
   }
@@ -300,14 +334,17 @@ const PageTitle = observer(({ page }: { page: Page }) => {
                        paddingHorizontal="20px"
                        width="100%">
       <Label className="h1"
-             textColor={theme.pageTitle}
+             textColor={theme.h1}
+             marginHorizontal='-20px'
+             paddingHorizontal='20px'
+             bgColor={theme.pageTitleBg}
              text={page.title}/>
     </StylableContainer>
   )
 })
 
 const PageTitleEditor = observer(({ page }: { page: Page }) => {
-  const { theme, restApi } = useDocsContext()
+  const { restApi } = useDocsContext()
 
   const apply = (value: string) => {
     if (page.doc && page.title !== value) {
@@ -345,7 +382,7 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
   useEffect(() => {
     if (!block.isEditing) {
       console.log('new PageBlockView: Prism.highlightAll')
-      setTimeout(Prism.highlightAll, Math.random() * 100)
+      setTimeout(Prism.highlightAll, Math.random() * 10)
     }
   }, [block, block.text, block.isEditing])
 
@@ -380,8 +417,7 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
                            paddingLeft="14px"
                            width="100%"
                            bgColor={theme.selectedBlockBg}
-                           borderLeft={['6px', 'solid', theme.selectedBlockBorder]}
-                           cornerRadius="10px"
+                           borderLeft={['6px', 'solid', theme.red]}
                            onDoubleClick={editPage}>
           <ReactMarkdown className={markdownClassName}>{block.text}</ReactMarkdown>
         </StylableContainer>
@@ -397,7 +433,6 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
                               onMouseDown={selectBlock}
                               hoverState={state => {
                                 state.bgColor = theme.selectedBlockBg
-                                state.cornerRadius = '10px'
                               }}>
       <ReactMarkdown className={markdownClassName}>{block.text}</ReactMarkdown>
     </StylableContainer>
@@ -436,7 +471,7 @@ const PageBlockEditor = ({ block }: { block: PageBlock }) => {
     <TextArea key={block.uid}
               text={block.text}
               className="mono"
-              paddingHorizontal="18px"
+              paddingHorizontal="20px"
               paddingTop="10px"
               onApply={apply}
               onCancel={cancel}

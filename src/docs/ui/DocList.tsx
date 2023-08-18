@@ -61,7 +61,6 @@ export const DocList = observer(stylable(() => {
             gap="0"
             width="100%"
             height="100%"
-            borderRight={['1px', 'solid', theme.border]}
             bgColor={theme.docListBg}>
 
       <HStack halign="center"
@@ -305,10 +304,9 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
     <HStack width="100%"
             halign="left"
             valign="center"
-            textColor={isDocSelected ? theme.selectedDoc : theme.text75}
+            textColor={isDocSelected ? theme.selectedDocLink : theme.text75}
             paddingLeft="20px"
             paddingRight="5px"
-            bgColor={isDocSelected ? theme.docSelection : theme.transparent}
             gap="8px"
             hoverState={state => {
               state.textColor = theme.text

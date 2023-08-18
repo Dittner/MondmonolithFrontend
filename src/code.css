@@ -4,7 +4,7 @@ pre[class*=language-] {
 	line-height: var(--CodeLineHeight);
 	background: 0 0;
 	border: none;
-	font-family: Menlo, Monaco, Consolas, 'Source Code Pro', 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-family: var(--font-family-mono);
 	text-align: left;
 	white-space: pre-wrap;
 	word-spacing: normal;
@@ -28,9 +28,7 @@ pre[class*=language-] {
 	padding-left: 19px;
 	padding-right: 5px;
 	overflow: auto;
-	background-color: #2a343920;
-	border: 1px solid #323e44;
-	border-radius: 10px;
+	background-color: #3a4a5250;
 	white-space: pre-wrap;
 	margin-left: -20px;
 	margin-right: -20px;
@@ -43,18 +41,16 @@ pre[class*=language-] {
 	padding-right: 5px;
 	overflow: auto;
 	background: none;
-	background-color: #b6b8bb10;
-	border: 1px solid #bdcfd850;
-	border-radius: 10px;
+	background-color: #ccCCcc50;
 	white-space: pre-wrap;
-	margin-left: -21px;
+	margin-left: -20px;
 	margin-right: -20px;
 }
 
 :not(pre)>code[class*=language-],
 pre[class*=language-] {
 	#background: #282a34;
-	border-radius: 10px;
+	#border-radius: 10px;
 }
 
 .token.block-comment,
@@ -62,12 +58,12 @@ pre[class*=language-] {
 .token.comment,
 .token.doctype,
 .token.prolog {
-	color: #747b7c
+	color: #717783;
 }
 
 
 .token.comment.bold {
-	color: #747b7c;
+	color: #717783;
 	font-weight: bold;
 }
 
@@ -123,7 +119,7 @@ code[class*=language-] {
 /*------Number------*/
 
 .token.number {
-	color: #E9DEB1
+	color: #d0c3da
 }
 
 .light .token.number {
@@ -137,7 +133,7 @@ code[class*=language-] {
 .token.regex,
 .token.string,
 .token.variable {
-	color: #CAAD99
+	color: #9cb9a8
 }
 
 .light .token.attr-value,
@@ -164,7 +160,7 @@ code[class*=language-] {
 .token.class,
 .token.class-name,
 .token.constant  {
-	color: #89dce0
+	color: #9693d7
 }
 
 .light .token.class,

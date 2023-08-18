@@ -63,7 +63,7 @@ export const HeaderView = observer(() => {
             width="100%"
             height="50px"
             gap="0"
-            bgColor={editTools.editMode ? theme.appBg : '0'}
+            bgColor={theme.appBg}
             borderBottom={user.authStatus === AuthStatus.AUTHORIZED ? ['1px', 'solid', theme.border] : 'none'}
             paddingHorizontal="10px">
 
@@ -131,7 +131,7 @@ export const HeaderView = observer(() => {
 const ToolsPanel = observer(() => {
   const editTools = observeEditTools()
   const app = observeApp()
-  const { theme, restApi } = useDocsContext()
+  const { restApi } = useDocsContext()
 
   const selectedPage = editTools.selectedItem instanceof Page && editTools.selectedItem
   const selectedPageBlock = editTools.selectedItem instanceof PageBlock && editTools.selectedItem
@@ -185,8 +185,9 @@ const ToolsPanel = observer(() => {
             editTools.select(undefined)
           }
 
-          if (selectedPageBlock.page?.doc && selectedPageBlock.page.remove(selectedPageBlock)) {
-            restApi.storePage(selectedPageBlock.page, selectedPageBlock.page.doc)
+          const page = selectedPageBlock.page
+          if (page?.doc && page.remove(selectedPageBlock)) {
+            restApi.storePage(page, page.doc)
           }
         },
         () => {

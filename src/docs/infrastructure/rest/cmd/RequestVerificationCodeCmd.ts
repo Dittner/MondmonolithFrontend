@@ -1,10 +1,9 @@
-import { AuthStatus, LoadStatus, type User } from '../../../domain/DomainModel'
+import { AuthStatus, type User } from '../../../domain/DomainModel'
 import { type RestApiCmd } from './RestApiCmd'
 import { type RestApi } from '../RestApi'
-import { SignupRequest, type UserDto } from '../Dto'
-import { Base64 } from '../Base64'
+import { SignupRequest } from '../Dto'
 
-export class AuthCmd implements RestApiCmd {
+export class RequestVerificationCodeCmd implements RestApiCmd {
   private readonly api: RestApi
   private readonly email: string
   private readonly pwd: string
@@ -19,14 +18,12 @@ export class AuthCmd implements RestApiCmd {
     const user = this.api.context.user
     if (user.authStatus === AuthStatus.SIGNED_OUT) {
       if (!this.validate(user)) return
-      user.authStatus = AuthStatus.AUTHORIZING
-      console.log('AuthCmd, user:', this.email, '*****')
+      user.authStatus = AuthStatus.REQUESTING_VERIFICATION_CODE
+      console.log('RequestVerificationCodeCmd:: user:', this.email, '*****')
 
       this.api.headers = {}
       this.api.headers['Content-Type'] = 'application/json'
-      this.api.headers['Authorization'] = 'basic ' + Base64.encode(this.email + ':' + this.pwd)
-
-      this.logIn()
+      this.send()
     }
   }
 
@@ -43,34 +40,25 @@ export class AuthCmd implements RestApiCmd {
     return true
   }
 
-  private async logIn() {
-    const path = '/auth'
-    const method = 'GET'
-    const [response, body] = await this.api.sendRequest(method, path, null, false)
+  private async send() {
+    const path = '/signup/code'
+    const method = 'POST'
+    const request = new SignupRequest(this.email, this.pwd, '')
+    const [response, _] = await this.api.sendRequest(method, path, request, false)
     const user = this.api.context.user
-    const dto = body as UserDto
-    console.log('AuthCmd.logIn, body:', body)
 
-    if (response?.ok && dto) {
-      user.authStatus = AuthStatus.AUTHORIZED
-      user.id = dto.id.toString()
-      user.role = dto.role
+    if (response?.ok) {
+      console.log('RequestVerificationCodeCmd:: verification code is generated und sent successfully')
       user.email = this.email
       user.pwd = this.pwd
-
-      window.localStorage.setItem(this.api.SIGNED_IN_USER_ID, user.id)
-      window.localStorage.setItem(this.api.SIGNED_IN_USER_EMAIL, user.email)
-
-      if (this.api.context.dirList.loadStatus === LoadStatus.ERROR) {
-        this.api.context.dirList.loadStatus = LoadStatus.PENDING
-      }
+      user.authStatus = AuthStatus.VERIFICATION_CODE_GENERATED
     } else {
       user.authStatus = AuthStatus.SIGNED_OUT
       window.localStorage.removeItem(this.api.SIGNED_IN_USER_ID)
       window.localStorage.removeItem(this.api.SIGNED_IN_USER_EMAIL)
       if (response) {
         const errDetails = await response.text()
-        console.log('logIn, errDetails:', errDetails)
+        console.log('RequestVerificationCodeCmd:: errDetails:', errDetails)
         if (response.status === 401 || response.status === 403) {
           user.authWithError = 'Incorrect email or password'
         } else if ((response.status === 400 || response.status === 409) && errDetails) {

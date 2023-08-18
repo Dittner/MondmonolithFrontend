@@ -196,6 +196,14 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, () =>
   operator.marginRight = (value: string) => { setValue('margin-right', value) }
   operator.marginTop = (value: string) => { setValue('margin-top', value) }
   operator.marginBottom = (value: string) => { setValue('margin-bottom', value) }
+  operator.marginHorizontal = (value: string) => {
+    setValue('margin-left', value)
+    setValue('margin-right', value)
+  }
+  operator.marginVertical = (value: string) => {
+    setValue('margin-top', value)
+    setValue('margin-bottom', value)
+  }
 
   operator.bgColor = (value: string) => { setValue('background-color', value) }
   operator.borderColor = (value: string) => { setValue('border', '1px solid' + value) }
@@ -313,6 +321,12 @@ export interface StylableComponentProps {
   paddingVertical?: string
   paddingTop?: string
   paddingBottom?: string
+  marginLeft?: string
+  marginRight?: string
+  marginTop?: string
+  marginBottom?: string
+  marginHorizontal?: string
+  marginVertical?: string
   fixed?: boolean
   absolute?: boolean
   relative?: boolean
@@ -323,6 +337,12 @@ export interface StylableComponentProps {
   layer?: LayoutLayer
   animate?: string
   textColor?: string
+  textAlign?: 'left' | 'right' | 'center'
+  textDecoration?: 'none' | 'underline'
+  whiteSpace?: 'normal' | 'pre' | 'pre-wrap' | 'nowrap'
+  overflow?: 'auto' | 'hidden' | 'clip'
+  textOverflow?: 'auto' | 'ellipsis' | 'clip' | 'fade'
+  textTransform?: 'none' | 'uppercase' | 'capitalize' | 'lowercase'
   bgColor?: string
   border?: string | [string, string, string]
   borderColor?: string
@@ -343,6 +363,9 @@ export interface StylableComponentProps {
   className?: string
   children?: any
   hoverState?: (state: StylableComponentProps) => void
+  onClick?: () => void
+  onMouseDown?: (e: any) => void
+  onDoubleClick?: (e: any) => void
 }
 
 export const stylable = <T, X extends T & StylableComponentProps>(component: (componentProps: T) => React.JSX.Element): ((props: X) => React.JSX.Element) => {

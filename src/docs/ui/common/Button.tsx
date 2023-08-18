@@ -1,5 +1,4 @@
 import { buildClassName, type StylableComponentProps } from '../../application/NoCSS'
-import { type Theme } from '../../application/ThemeManager'
 import { useDocsContext } from '../../../App'
 import * as React from 'react'
 import { StylableContainer } from './Container'
@@ -7,39 +6,9 @@ import { StylableContainer } from './Container'
 interface ButtonProps extends StylableComponentProps {
   title?: string
   popUp?: string
-  onClick?: () => void
   visible?: boolean
   disabled?: boolean
   isSelected?: boolean
-}
-
-const defButtonProps = (theme: Theme): any => {
-  return {
-    textColor: theme.text75,
-    bgColor: theme.inputBg,
-    border: ['1px', 'solid', theme.inputBorder],
-    outline: ['10px', 'solid', theme.transparent],
-    focusState: (state: StylableComponentProps) => {
-      state.outline = ['10px', 'solid', theme.textAreaBorderFocused]
-    }
-  }
-}
-
-export const Btn = (props: ButtonProps) => {
-  if ('visible' in props && !props.visible) return <></>
-  const theme = useDocsContext().theme
-
-  const customProps = { ...defButtonProps(theme), ...props }
-  const className = 'className' in props ? props.className + ' ' + buildClassName(customProps) : buildClassName(customProps)
-
-  return <button className={className}
-                 title={props.popUp}
-                 onClick={(e) => {
-                   if (!props.disabled) {
-                     e.stopPropagation()
-                     props.onClick?.()
-                   }
-                 }}>{props.title ?? props.children}</button>
 }
 
 /*
@@ -97,6 +66,7 @@ export const LargeButton = (props: ButtonProps) => {
   if (props.disabled) {
     return <Button className={className}
                    title={props.title}
+                   bgColor='#a23f4b50'
                    textColor={theme.text75}
                    paddingHorizontal="20px"
                    disabled/>
@@ -109,6 +79,21 @@ export const LargeButton = (props: ButtonProps) => {
                  paddingHorizontal="20px"
                  hoverState={state => {
                    state.bgColor = '#bd404d'
+                 }}
+                 onClick={props.onClick}/>
+}
+
+export const TextButton = (props: ButtonProps) => {
+  if ('visible' in props && !props.visible) return <></>
+  const theme = useDocsContext().theme
+  const className = 'className' in props ? props.className + ' ' + buildClassName(props) : buildClassName(props)
+
+  return <Button className={className}
+                 title={props.title}
+                 textColor={theme.red}
+                 disabled={props.disabled}
+                 hoverState={state => {
+                   state.textDecoration = 'underline'
                  }}
                  onClick={props.onClick}/>
 }

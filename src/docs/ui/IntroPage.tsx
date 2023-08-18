@@ -84,7 +84,7 @@ export const IntroPage = observer(() => {
 
   const enterDemoMode = () => {
     navigate('/auth')
-    restApi.logIn('demo', 'pwd')
+    restApi.auth('demo', 'pwd')
   }
 
   return <VStack maxWidth="100%"
@@ -147,7 +147,7 @@ export const IntroPage = observer(() => {
            opacity='0.85'
            textAlign='left'
            paddingTop="70px"
-           paddingBottom='60px'
+           paddingBottom='30px'
            layer={LayoutLayer.ONE}>
       <span style={{ color: funcColor }}>{'              func\n'}</span>
       <span style={{ color: highlightColor }}>{'      highlight\n'}</span>
@@ -160,10 +160,9 @@ export const IntroPage = observer(() => {
 
     <Label className="ibm"
            whiteSpace="pre"
-           padding="30px"
+           padding="35px"
            text={app.size === AppSize.XS ? aboutTxtXS : aboutTxt}
-           textColor={theme.green}
-           opacity='0.85'
+           textColor={theme.p}
            layer={LayoutLayer.ONE}/>
 
     <VStack halign="stretch"
@@ -173,7 +172,7 @@ export const IntroPage = observer(() => {
             padding="60px"
             layer={LayoutLayer.ONE}>
 
-      <Label className="ibm h4"
+      <Label className="h1"
              text="Examples of Markdown formatting"
              textColor={theme.text}
              paddingLeft="25px"
@@ -210,7 +209,7 @@ const aboutTxt = `
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  YEAR  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   beta  |  3.06  |  2023  
+*   to format notes and code fragments easily without   *   beta  |  3.10  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           `
 
@@ -224,7 +223,7 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: beta  |  VER: 3.06  |  YEAR: 2023      
+*  MODE: beta  |  VER: 3.10  |  YEAR: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 `
@@ -238,7 +237,7 @@ const blockquote = `> «Sorry to interrupt the festivities, Dave, but I think we
 >
 >__HAL 9000__`
 
-const lists = `## Daisy Bell
+const lists = `# Daisy Bell
 + Daisy...
 + Daisy...
 + Daisy...
@@ -246,7 +245,7 @@ const lists = `## Daisy Bell
     + I'm.. half... crazy...
     + All for the love... of you...`
 
-const languages = `## Supported languages\n
+const languages = `# Supported languages\n
 + C: \`c\`\n
 + C++: \`cpp\`\n
 + C#: \`csharp, cs, dotnet\`\n
@@ -260,11 +259,11 @@ const languages = `## Supported languages\n
 + TypeScript: \`ts, tsx\`\n
 + XML: \`xml\``
 
-const shortcuts = `## Shortcuts\n
+const shortcuts = `# Shortcuts\n
 + Apply code changes: \`Shift + Enter\`\n
 + Format code: \`Ctrl + Shift + L\``
 
-const code = `## Memoization
+const code = `# Memoization
 Memoization is an optimization technique based on remembering the results returned by a function called with the same arguments.
  
 \`\`\`js
@@ -286,7 +285,7 @@ exc(2, 1, '+') //3, calculated
 exc(2, 1, '+') //3, returned from cache
 \`\`\``
 
-const links = `## Much more info:
+const links = `# Much more info:
 * [React-Markdown](https://remarkjs.github.io/react-markdown/)
 * [Markdown basic syntax](https://www.markdownguide.org/basic-syntax/)
 * [Source Code (GitHub)](https://github.com/dittner/mondmonolith/tree/master)`
@@ -324,7 +323,7 @@ const MarkdownEditor = (props: MarkdownEditorProps) => {
               width="100%"
               layer={LayoutLayer.ONE}>
 
-        <Label className="ibm h4"
+        <Label className="h4"
                text={props.title}
                textColor={theme.text75}
                whiteSpace="pre"
@@ -365,7 +364,7 @@ const MarkdownEditor = (props: MarkdownEditorProps) => {
 
   return (
     <>
-      <Label className="ibm h4"
+      <Label className="h4"
              text={props.title}
              textColor={theme.text75}
              whiteSpace="pre"

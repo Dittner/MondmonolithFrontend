@@ -11,9 +11,11 @@ export interface UserDto {
 export class SignupRequest implements RequestBody {
   username: string
   password: string
-  constructor(username: string, password: string) {
+  verificationCode: string
+  constructor(username: string, password: string, verificationCode: string) {
     this.username = username
     this.password = password
+    this.verificationCode = verificationCode
   }
 
   serialize() {

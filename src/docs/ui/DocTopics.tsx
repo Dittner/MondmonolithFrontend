@@ -39,7 +39,7 @@ const DocTopicsView = observer(() => {
         return <TopicLink key={page.uid}
                           page={page}
                           width="100%"
-                          textColor={theme.pageTitle}
+                          textColor={theme.topic}
                           hoverState={state => {
                             state.textColor = theme.text
                           }

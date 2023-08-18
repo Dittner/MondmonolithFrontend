@@ -1,7 +1,7 @@
 import { AuthCmd } from './cmd/AuthCmd'
 import { type DocsContext } from '../../DocsContext'
 import { LoadAllDirsCmd } from './cmd/LoadAllDirsCmd'
-import { AuthStatus, type Directory, type Doc, type Page } from '../../domain/DomainModel'
+import { AuthStatus, type Directory, type Doc, type Page, type User } from '../../domain/DomainModel'
 import { Base64 } from './Base64'
 import { StoreDirCmd } from './cmd/StoreDirCmd'
 import { type RequestBody } from './Dto'
@@ -13,6 +13,8 @@ import { LoadPagesCmd } from './cmd/LoadPagesCmd'
 import { StorePageCmd } from './cmd/StorePageCmd'
 import { DeletePageCmd } from './cmd/DeletePageCmd'
 import { StoreDocWithPagesCmd } from './cmd/StoreDocWithPagesCmd'
+import { SendVerificationCodeCmd } from './cmd/SendVerificationCodeCmd'
+import { RequestVerificationCodeCmd } from './cmd/RequestVerificationCodeCmd'
 
 export class RestApi {
   readonly SIGNED_IN_USER_ID = 'MM_SIGNED_IN_USER_ID'
@@ -46,13 +48,18 @@ export class RestApi {
   //  auth
   //--------------------------------------
 
-  logIn(email: string, pwd: string) {
-    const cmd = new AuthCmd(this, email, pwd)
+  requestVerificationCode(email: string, pwd: string) {
+    const cmd = new RequestVerificationCodeCmd(this, email, pwd)
     cmd.run()
   }
 
-  signup(email: string, pwd: string) {
-    const cmd = new AuthCmd(this, email, pwd, true)
+  sendVerificationCode(user: User, verificationCode: string) {
+    const cmd = new SendVerificationCodeCmd(this, user, verificationCode)
+    cmd.run()
+  }
+
+  auth(email: string, pwd: string) {
+    const cmd = new AuthCmd(this, email, pwd)
     cmd.run()
   }
 

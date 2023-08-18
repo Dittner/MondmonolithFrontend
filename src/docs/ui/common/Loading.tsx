@@ -13,6 +13,8 @@ export const LoadingSpinner = () => {
 
 export const SmallSpinner = stylable(() => {
   return (
-    <img src={smallSpinner} className="smallSpinner" alt="spinner"/>
+    <VStack halign="center" valign="center">
+      <img src={smallSpinner} className="smallSpinner" alt="spinner"/>
+    </VStack>
   )
 })

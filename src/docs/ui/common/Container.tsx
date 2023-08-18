@@ -7,13 +7,7 @@ import * as React from 'react'
 *
 * */
 
-interface ClickableComponentProps extends StylableComponentProps {
-  onClick?: (e: any) => void
-  onMouseDown?: (e: any) => void
-  onDoubleClick?: (e: any) => void
-}
-
-export interface StackProps extends ClickableComponentProps {
+export interface StackProps extends StylableComponentProps {
   halign: 'left' | 'right' | 'center' | 'stretch'
   valign: 'top' | 'center' | 'base' | 'bottom' | 'stretch'
 }
@@ -138,7 +132,7 @@ export const HStack = (props: StackProps) => {
   }
 }
 
-export const StylableContainer = (props: ClickableComponentProps) => {
+export const StylableContainer = (props: StylableComponentProps) => {
   const style = { boxSizing: 'border-box', ...props }
   const className = 'className' in props ? props.className + ' ' + buildClassName(style) : buildClassName(style)
   return <div id={props.id}

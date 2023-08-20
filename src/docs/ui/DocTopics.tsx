@@ -41,7 +41,7 @@ const DocTopicsView = observer(() => {
                           width="100%"
                           textColor={theme.topic}
                           hoverState={state => {
-                            state.textColor = theme.text
+                            state.textColor = theme.topicHover
                           }
                           }/>
       })}

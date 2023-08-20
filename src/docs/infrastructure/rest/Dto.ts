@@ -6,9 +6,10 @@ export interface UserDto {
   id: number
   email: string
   role: string
+  token: string
 }
 
-export class SignupRequest implements RequestBody {
+export class SignUpRequest implements RequestBody {
   username: string
   password: string
   verificationCode: string
@@ -16,6 +17,19 @@ export class SignupRequest implements RequestBody {
     this.username = username
     this.password = password
     this.verificationCode = verificationCode
+  }
+
+  serialize() {
+    return JSON.stringify(this)
+  }
+}
+
+export class SignInRequest implements RequestBody {
+  username: string
+  password: string
+  constructor(username: string, password: string) {
+    this.username = username
+    this.password = password
   }
 
   serialize() {

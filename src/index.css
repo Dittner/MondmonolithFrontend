@@ -66,34 +66,34 @@ body, p, a, b, i, h1, h2, h3, h4, blockquote {
 }
 
 h1, .h1 {
-  font-size: 1.2rem;
-  font-weight: 400;
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
 h2, .h2 {
   font-size: 1rem;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 h3, .h3 {
   font-size: 1rem;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 h4, .h4 {
   font-size: 1rem;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 div, p, b, i, code {
   font-size: 1rem;
-  font-weight: 400;
+  font-weight: 500;
   font-family: var(--font-family-mono);
 }
 
 .markdown p, .markdown li {
   font-size: 1rem;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .mono {
@@ -190,16 +190,18 @@ input {
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: #738793;
-  opacity: 1; /* Firefox */
+  color: #717f81;
+  opacity: 0.5; /* Firefox */
 }
 
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-  color: #738793;
+  color: #717f81;
+  opacity: 0.5;
 }
 
 ::-ms-input-placeholder { /* Microsoft Edge */
-  color: #738793;
+  color: #717f81;
+  opacity: 0.5;
 }
 
 textarea {
@@ -271,7 +273,6 @@ button {
   text-decoration: none;
   white-space: pre;
   box-sizing: border-box;
-
 }
 
 @media screen and (max-width: 480px) {
@@ -332,10 +333,12 @@ button {
 }
 
 .icon-nextPage:before {
+  font-size: 0.9rem;
   content: "\e909";
 }
 
 .icon-prevPage:before {
+  font-size: 0.9rem;
   content: "\e90a";
 }
 

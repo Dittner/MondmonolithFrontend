@@ -1,4 +1,3 @@
-
 import { type Theme } from '../../application/ThemeManager'
 import { buildClassName } from '../../application/NoCSS'
 import * as React from 'react'

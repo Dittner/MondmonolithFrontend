@@ -1,7 +1,7 @@
 import { AuthStatus, type User } from '../../../domain/DomainModel'
 import { type RestApiCmd } from './RestApiCmd'
 import { type RestApi } from '../RestApi'
-import { SignupRequest } from '../Dto'
+import { SignUpRequest } from '../Dto'
 
 export class RequestVerificationCodeCmd implements RestApiCmd {
   private readonly api: RestApi
@@ -20,9 +20,6 @@ export class RequestVerificationCodeCmd implements RestApiCmd {
       if (!this.validate(user)) return
       user.authStatus = AuthStatus.REQUESTING_VERIFICATION_CODE
       console.log('RequestVerificationCodeCmd:: user:', this.email, '*****')
-
-      this.api.headers = {}
-      this.api.headers['Content-Type'] = 'application/json'
       this.send()
     }
   }
@@ -43,7 +40,7 @@ export class RequestVerificationCodeCmd implements RestApiCmd {
   private async send() {
     const path = '/signup/code'
     const method = 'POST'
-    const request = new SignupRequest(this.email, this.pwd, '')
+    const request = new SignUpRequest(this.email, this.pwd, '')
     const [response, _] = await this.api.sendRequest(method, path, request, false)
     const user = this.api.context.user
 
@@ -54,8 +51,6 @@ export class RequestVerificationCodeCmd implements RestApiCmd {
       user.authStatus = AuthStatus.VERIFICATION_CODE_GENERATED
     } else {
       user.authStatus = AuthStatus.SIGNED_OUT
-      window.localStorage.removeItem(this.api.SIGNED_IN_USER_ID)
-      window.localStorage.removeItem(this.api.SIGNED_IN_USER_EMAIL)
       if (response) {
         const errDetails = await response.text()
         console.log('RequestVerificationCodeCmd:: errDetails:', errDetails)

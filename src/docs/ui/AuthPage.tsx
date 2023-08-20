@@ -12,6 +12,8 @@ import { Label } from './common/Label'
 import { AuthInput, Input } from './common/Input'
 
 const FORM_WIDTH = '420px'
+const USER_EMAIL = 'USER_EMAIL'
+
 export const AuthPage = observer(() => {
   console.log('new AuthPage')
   const {
@@ -22,8 +24,9 @@ export const AuthPage = observer(() => {
   } = useDocsContext()
   const navigate = useNavigate()
 
+  const email = window.localStorage.getItem(USER_EMAIL) ?? ''
   const [isCreatingAccount, setIsCreatingAccount] = useState(false)
-  const [nameProtocol, _] = useState({ value: IS_DEV_MODE ? 'dev' : '' })
+  const [emailProtocol, _] = useState({ value: email ?? '' })
   const [pwdProtocol, __] = useState({ value: IS_DEV_MODE ? 'pwd' : '' })
   const [codeProtocol, ___] = useState({ value: '' })
 
@@ -35,10 +38,11 @@ export const AuthPage = observer(() => {
   const submit = () => {
     if (isProcessing) return
     if (isCreatingAccount) {
-      restApi.requestVerificationCode(nameProtocol.value, pwdProtocol.value)
+      restApi.requestVerificationCode(emailProtocol.value, pwdProtocol.value)
     } else {
-      restApi.auth(nameProtocol.value, pwdProtocol.value)
+      restApi.auth(emailProtocol.value, pwdProtocol.value)
     }
+    window.localStorage.setItem(USER_EMAIL, emailProtocol.value)
   }
 
   const sendVerificationCode = () => {
@@ -71,7 +75,6 @@ export const AuthPage = observer(() => {
                   onClick={() => {
                     themeManager.switchTheme()
                   }}/>
-
       <Spacer/>
 
       <RedButton title="Home"
@@ -101,7 +104,7 @@ export const AuthPage = observer(() => {
         <>
           <AuthInput type="text"
                      placeHolder='Email'
-                     protocol={nameProtocol}
+                     protocol={emailProtocol}
                      onSubmitted={submit}/>
 
           <AuthInput type="password"

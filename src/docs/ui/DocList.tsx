@@ -304,13 +304,14 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
     <HStack width="100%"
             halign="left"
             valign="center"
-            textColor={isDocSelected ? theme.selectedDocLink : theme.text75}
+            textColor={isDocSelected ? theme.docLinkSelected : theme.docLink}
+            bgColor={isDocSelected ? theme.docLinkBgSelected : theme.transparent}
             paddingLeft="20px"
             paddingRight="5px"
             gap="8px"
             hoverState={state => {
-              state.textColor = theme.text
-              state.bgColor = theme.docSelection
+              state.textColor = theme.docLinkHovered
+              state.bgColor = theme.docLinkBgHovered
             }}
             onClick={openDoc}
             onDoubleClick={startEditing}>

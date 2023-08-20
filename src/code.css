@@ -28,23 +28,16 @@ pre[class*=language-] {
 	padding-left: 19px;
 	padding-right: 5px;
 	overflow: auto;
-	background-color: #3a4a5250;
+	background-color: #33414850;
 	white-space: pre-wrap;
 	margin-left: -20px;
 	margin-right: -20px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 .light pre[class*=language-] {
-	padding-top: 15px;
-	padding-bottom: 17px;
-	padding-left: 19px;
-	padding-right: 5px;
-	overflow: auto;
-	background: none;
-	background-color: #ccCCcc50;
-	white-space: pre-wrap;
-	margin-left: -20px;
-	margin-right: -20px;
+	background-color: #cdcdcd50;
 }
 
 :not(pre)>code[class*=language-],
@@ -123,7 +116,7 @@ code[class*=language-] {
 }
 
 .light .token.number {
-	color: #683b87
+	color: #62458d
 }
 
 /*------String-----*/
@@ -141,7 +134,7 @@ code[class*=language-] {
 .light .token.regex,
 .light .token.string,
 .light .token.variable {
-	color: #655400
+	color: #4a6b3a
 }
 
 /*---------------*/

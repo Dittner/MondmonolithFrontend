@@ -1,8 +1,7 @@
 import { AuthStatus, LoadStatus, type User } from '../../../domain/DomainModel'
 import { type RestApiCmd } from './RestApiCmd'
 import { type RestApi } from '../RestApi'
-import { SignupRequest, type UserDto } from '../Dto'
-import { Base64 } from '../Base64'
+import { SignUpRequest, type UserDto } from '../Dto'
 
 export class SendVerificationCodeCmd implements RestApiCmd {
   private readonly api: RestApi
@@ -44,7 +43,7 @@ export class SendVerificationCodeCmd implements RestApiCmd {
   private async send() {
     const path = '/signup'
     const method = 'POST'
-    const request = new SignupRequest(this.user.email, this.user.pwd, this.verificationCode)
+    const request = new SignUpRequest(this.user.email, this.user.pwd, this.verificationCode)
     const [response, body] = await this.api.sendRequest(method, path, request, false)
     const user = this.api.context.user
     const dto = body as UserDto
@@ -55,18 +54,15 @@ export class SendVerificationCodeCmd implements RestApiCmd {
       user.id = dto.id.toString()
       user.role = dto.role
 
-      window.localStorage.setItem(this.api.SIGNED_IN_USER_ID, user.id)
-      window.localStorage.setItem(this.api.SIGNED_IN_USER_EMAIL, user.email)
+      window.localStorage.setItem(this.api.TOKEN, dto.token)
 
-      this.api.headers['Authorization'] = 'basic ' + Base64.encode(this.user.email + ':' + this.user.pwd)
+      this.api.headers['Authorization'] = 'Bearer ' + dto.token
 
       if (this.api.context.dirList.loadStatus === LoadStatus.ERROR) {
         this.api.context.dirList.loadStatus = LoadStatus.PENDING
       }
     } else {
       user.authStatus = AuthStatus.VERIFICATION_CODE_GENERATED
-      window.localStorage.removeItem(this.api.SIGNED_IN_USER_ID)
-      window.localStorage.removeItem(this.api.SIGNED_IN_USER_EMAIL)
       if (response) {
         const errDetails = await response.text()
         console.log('SignUpCmd, errDetails:', errDetails)

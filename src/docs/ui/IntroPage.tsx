@@ -187,7 +187,7 @@ export const IntroPage = observer(() => {
       <MarkdownEditor text={shortcuts} secondMarkdownText={languages} title="5. Editor"/>
     </VStack>
 
-    <HStack halign='right' valign='center' width="100%" paddingHorizontal='20px'>
+    <HStack halign='right' valign='center' width="100%" maxWidth="1800px" paddingHorizontal='60px'>
       <Spacer/>
       
       <LargeButton title={'Try Demo Mode'}
@@ -209,7 +209,7 @@ const aboutTxt = `
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  YEAR  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   beta  |  3.10  |  2023  
+*   to format notes and code fragments easily without   *   beta  |  4.00  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           `
 
@@ -223,7 +223,7 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: beta  |  VER: 3.10  |  YEAR: 2023      
+*  MODE: beta  |  VER: 4.00  |  YEAR: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 `
@@ -261,7 +261,9 @@ const languages = `# Supported languages\n
 
 const shortcuts = `# Shortcuts\n
 + Apply code changes: \`Shift + Enter\`\n
-+ Format code: \`Ctrl + Shift + L\``
++ Format code: \`Ctrl + Shift + L\`
++ Create a new page's block: \`Ctrl + Shift + B\`
++ Edit selected page's block: \`Enter\``
 
 const code = `# Memoization
 Memoization is an optimization technique based on remembering the results returned by a function called with the same arguments.

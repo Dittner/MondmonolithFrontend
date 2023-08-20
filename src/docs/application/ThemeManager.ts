@@ -26,7 +26,6 @@ export interface Theme {
   appBg: string
   authPageBg: string
   transparent: string
-  docListBg: string
   panelBg: string
   modalWindowBg: string
   text: string
@@ -35,18 +34,26 @@ export interface Theme {
   green75: string
   pageTitleBg: string
   topic: string
+  topicHover: string
   inputBg: string
   codeBg: string
   inputBorder: string
   inputBorderFocused: string
   textAreaBorderFocused: string
   selectedBlockBg: string
-  docSelection: string
-  selectedDocLink: string
   border: string
   caretColor: string
   error: string
   errorMsgBg: string
+  //docBody
+  prevNextPageBtnBg: string
+  //docList
+  docListBg: string
+  docLink: string
+  docLinkHovered: string
+  docLinkBgHovered: string
+  docLinkSelected: string
+  docLinkBgSelected: string
 }
 
 export class ThemeManager extends Observable {
@@ -131,7 +138,6 @@ export class ThemeManager extends Observable {
     appBg: DARK_THEME_APP_BG,
     authPageBg: '#212628',
     transparent: TRANSPARENT,
-    docListBg: '#252b2e',
     panelBg: '#252b2e',
     modalWindowBg: '#495655',
     text: DARK_THEME_WHITE,
@@ -139,7 +145,8 @@ export class ThemeManager extends Observable {
     green: '#aec7d5',
     green75: '#aed9ee75',
     pageTitleBg: '#53cbff50',
-    topic: '#72a3bd',
+    topic: '#6aa2cc',
+    topicHover: DARK_THEME_WHITE,
     inputBg: '#252b2d',
     codeBg: '#2e393f75',
     inputBorder: '#323e44',
@@ -147,11 +154,18 @@ export class ThemeManager extends Observable {
     textAreaBorderFocused: '#3a4a5250',
     border: '#323e44',
     selectedBlockBg: '#323e44',
-    docSelection: '#00000020',
-    selectedDocLink: '#B88EBF',
     caretColor: DARK_THEME_RED,
     error: '#ff719a',
-    errorMsgBg: '#5e4e31'
+    errorMsgBg: '#5e4e31',
+    //docBody
+    prevNextPageBtnBg: '#794c78',
+    //docList
+    docListBg: '#252b2e',
+    docLink: '#76818d',
+    docLinkHovered: DARK_THEME_WHITE,
+    docLinkBgHovered: '#00000020',
+    docLinkSelected: '#B88EBF',
+    docLinkBgSelected: '#00000020'
   }
 
   buildDarkThemeStandardSelectors() {
@@ -188,39 +202,46 @@ export class ThemeManager extends Observable {
   lightTheme: Theme = {
     id: 'lightTheme',
     isDark: false,
-    h1: '#67344e',
-    h2: '#915619',
-    h3: '#6b441a',
+    h1: '#ebebeb',
+    h2: '#a1601c',
+    h3: '#7e7918',
     h4: '#989390',
     p: '#23282a',
-    code: '#446575',
+    code: '#2b5c73',
     red: LIGHT_THEME_RED,
     white: LIGHT_THEME_APP_BG,
     white25: '#ffffff20',
     appBg: LIGHT_THEME_APP_BG,
     authPageBg: '#dbdbdb',
     transparent: TRANSPARENT,
-    docListBg: '#d7d3cb25',
     panelBg: LIGHT_THEME_APP_BG,
     modalWindowBg: '#d0d4d8',
     text: '#2A2623',
-    text75: '#504943',
+    text75: '#706d69',
     green: '#2c363c',
     green75: '#2c363c75',
-    pageTitleBg: '#d5a3d150',
-    topic: '#85526d',
-    inputBg: '#efefef',
+    pageTitleBg: '#42134988',
+    topic: '#184495',
+    topicHover: '#721895',
+    inputBg: '#ebebeb',
     codeBg: '#e8d6cd',
-    inputBorder: '#dcd0d0',
+    inputBorder: '#ccCCcc',
     inputBorderFocused: '#d58c6b',
-    textAreaBorderFocused: '#d5d0d3',
-    border: '#e1cfd8',
+    textAreaBorderFocused: '#ccCCcc',
+    border: '#ccCCcc',
     selectedBlockBg: '#e1ddd7',
-    docSelection: '#e1ddd7',
-    selectedDocLink: '#6f2b86',
     caretColor: LIGHT_THEME_RED,
     error: '#914058',
-    errorMsgBg: '#c5b395'
+    errorMsgBg: '#c5b395',
+    //docBody
+    prevNextPageBtnBg: '#333333',
+    //docList
+    docListBg: '#d7d3cb25',
+    docLink: '#2A2623',
+    docLinkHovered: '#2A2623',
+    docLinkBgHovered: '#c5bfa0',
+    docLinkSelected: '#ebebeb',
+    docLinkBgSelected: '#968865'
   }
 
   buildLightThemeStandardSelectors() {
@@ -233,21 +254,22 @@ export class ThemeManager extends Observable {
     buildRule({ textColor: '#27388C' }, theme.id, 'a:visited')
     buildRule({ textDecoration: 'underline' }, theme.id, 'a:hover')
     buildRule({ textColor: '#27388C' }, theme.id, 'a:active')
-    buildRule({ textColor: theme.h1 }, theme.id, 'h1')
+
     buildRule({ textColor: theme.h2 }, theme.id, 'h2')
     buildRule({ textColor: theme.h3 }, theme.id, 'h3')
     buildRule({ textColor: theme.h4 }, theme.id, 'h4')
     buildRule({ textColor: theme.p }, theme.id, 'p, li')
     buildRule({ textColor: theme.code }, theme.id, 'code')
 
-    const inlineCodeProps: StylableComponentProps = {
-      className: 'mono',
-      textColor: theme.text,
-      bgColor: theme.codeBg,
+    const h1Props: StylableComponentProps = {
+      className: 'h1',
+      textColor: theme.h1,
+      bgColor: '#42134988',
       border: 'none',
-      padding: '4px'
+      paddingHorizontal: '20px',
+      marginHorizontal: '-20px'
     }
-    buildRule(inlineCodeProps, theme.id, 'code')
+    buildRule(h1Props, theme.id, 'h1')
 
     const blockquoteProps: StylableComponentProps = {
       padding: '20px',

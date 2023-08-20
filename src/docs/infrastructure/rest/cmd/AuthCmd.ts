@@ -1,8 +1,7 @@
 import { AuthStatus, LoadStatus, type User } from '../../../domain/DomainModel'
 import { type RestApiCmd } from './RestApiCmd'
 import { type RestApi } from '../RestApi'
-import { SignupRequest, type UserDto } from '../Dto'
-import { Base64 } from '../Base64'
+import { SignInRequest, type UserDto } from '../Dto'
 
 export class AuthCmd implements RestApiCmd {
   private readonly api: RestApi
@@ -24,7 +23,6 @@ export class AuthCmd implements RestApiCmd {
 
       this.api.headers = {}
       this.api.headers['Content-Type'] = 'application/json'
-      this.api.headers['Authorization'] = 'basic ' + Base64.encode(this.email + ':' + this.pwd)
 
       this.logIn()
     }
@@ -45,11 +43,11 @@ export class AuthCmd implements RestApiCmd {
 
   private async logIn() {
     const path = '/auth'
-    const method = 'GET'
-    const [response, body] = await this.api.sendRequest(method, path, null, false)
+    const method = 'POST'
+    const request = new SignInRequest(this.email, this.pwd)
+    const [response, body] = await this.api.sendRequest(method, path, request, false)
     const user = this.api.context.user
     const dto = body as UserDto
-    console.log('AuthCmd.logIn, body:', body)
 
     if (response?.ok && dto) {
       user.authStatus = AuthStatus.AUTHORIZED
@@ -58,16 +56,14 @@ export class AuthCmd implements RestApiCmd {
       user.email = this.email
       user.pwd = this.pwd
 
-      window.localStorage.setItem(this.api.SIGNED_IN_USER_ID, user.id)
-      window.localStorage.setItem(this.api.SIGNED_IN_USER_EMAIL, user.email)
+      window.localStorage.setItem(this.api.TOKEN, dto.token)
+      this.api.headers['Authorization'] = 'Bearer ' + dto.token
 
       if (this.api.context.dirList.loadStatus === LoadStatus.ERROR) {
         this.api.context.dirList.loadStatus = LoadStatus.PENDING
       }
     } else {
       user.authStatus = AuthStatus.SIGNED_OUT
-      window.localStorage.removeItem(this.api.SIGNED_IN_USER_ID)
-      window.localStorage.removeItem(this.api.SIGNED_IN_USER_EMAIL)
       if (response) {
         const errDetails = await response.text()
         console.log('logIn, errDetails:', errDetails)

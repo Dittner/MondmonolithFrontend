@@ -82,7 +82,7 @@ const PageList = observer(() => {
       let start = 0
       if (doc.pages.length > 0 && !doc.pages[0].isEditing && location.hash) {
         const isFirstLaunch = pagesSlice.end === 0
-        const pageIndex = doc.pages.findIndex(p => p.id === location.hash)
+        const pageIndex = doc.pages.findIndex(p => p.key === location.hash)
         start = Math.max(isFirstLaunch ? pageIndex : pageIndex - 1, 0)
       }
 
@@ -101,6 +101,7 @@ const PageList = observer(() => {
       }
       const isFirstPageShown = start === 0
       const isLastPageShown = doc && end === (doc.pages.length - 1)
+      //console.log('Slice: rowsTotal=', rowsTotal, ', start=', start, ', end=', end, 'isFirstPageShown=', isFirstPageShown, ', isLastPageShown=', isLastPageShown)
       setPagesSlice({
         start,
         end,
@@ -193,17 +194,17 @@ const PageList = observer(() => {
 
       {!pagesSlice.isFirstPageShown &&
         <Button onClick={showPrevPage}
-                textColor={theme.green75}
-                paddingHorizontal="150px"
-                paddingVertical="10px"
-                border={['1px', 'solid', theme.border]}
+                width='100%'
+                height='45px'
+                bgColor={theme.prevNextPageBtnBg + '88'}
+                textColor={theme.white}
                 hoverState={state => {
-                  state.textColor = theme.green
-                  state.border = ['1px', 'solid', theme.green]
+                  state.bgColor = theme.prevNextPageBtnBg
                 }}>
-          <p className="icon icon-prevPage"/>
-          <p>Previous Page</p>
+          <span className="icon icon-prevPage"/>
+          <span>  Previous Page</span>
         </Button>
+
       }
 
       {doc.pages.length > 0 &&
@@ -213,21 +214,17 @@ const PageList = observer(() => {
       }
 
       {doc.pages.length > 0 && !pagesSlice.isLastPageShown &&
-        <>
-          <Spacer height="10px"/>
-          <Button onClick={showNextPage}
-                  textColor={theme.green75}
-                  paddingHorizontal="150px"
-                  paddingVertical="10px"
-                  border={['1px', 'solid', theme.border]}
-                  hoverState={state => {
-                    state.textColor = theme.green
-                    state.border = ['1px', 'solid', theme.green]
-                  }}>
-            <p>Next Page</p>
-            <p className="icon icon-nextPage"/>
-          </Button>
-        </>
+        <Button onClick={showNextPage}
+                width='100%'
+                height='45px'
+                bgColor={theme.prevNextPageBtnBg + 'AA'}
+                textColor={theme.white}
+                hoverState={state => {
+                  state.bgColor = theme.prevNextPageBtnBg
+                }}>
+          <span className="icon icon-nextPage"/>
+          <span>  Next Page</span>
+        </Button>
       }
 
       {doc.pages.length > 0 && pagesSlice.isLastPageShown &&
@@ -294,17 +291,14 @@ const PageTitle = observer(({ page }: { page: Page }) => {
 
   if (editTools.editMode && isSelected) {
     return (<>
-        <StylableContainer minHeight="30px"
-                           paddingRight="20px"
-                           paddingLeft="14px"
-                           width="100%"
+        <StylableContainer width="100%"
                            bgColor={theme.selectedBlockBg}
                            borderLeft={['6px', 'solid', theme.red]}
                            onDoubleClick={editPage}>
           <Label className="h1"
+                 paddingVertical='5px'
                  textColor={theme.h1}
-                 marginHorizontal='-20px'
-                 paddingHorizontal='20px'
+                 paddingHorizontal='14px'
                  bgColor={theme.pageTitleBg}
                  text={page.title}/>
         </StylableContainer>
@@ -313,16 +307,14 @@ const PageTitle = observer(({ page }: { page: Page }) => {
   }
 
   if (editTools.editMode) {
-    return <StylableContainer minHeight="30px"
-                              paddingHorizontal="20px"
-                              width="100%"
+    return <StylableContainer width="100%"
                               onMouseDown={selectTitle}
                               hoverState={state => {
                                 state.bgColor = theme.selectedBlockBg
                               }}>
       <Label className="h1"
+             paddingVertical='5px'
              textColor={theme.h1}
-             marginHorizontal='-20px'
              paddingHorizontal='20px'
              bgColor={theme.pageTitleBg}
              text={page.title}/>
@@ -330,12 +322,10 @@ const PageTitle = observer(({ page }: { page: Page }) => {
   }
 
   return (
-    <StylableContainer minHeight="30px"
-                       paddingHorizontal="20px"
-                       width="100%">
+    <StylableContainer width="100%">
       <Label className="h1"
+             paddingVertical='5px'
              textColor={theme.h1}
-             marginHorizontal='-20px'
              paddingHorizontal='20px'
              bgColor={theme.pageTitleBg}
              text={page.title}/>
@@ -344,7 +334,10 @@ const PageTitle = observer(({ page }: { page: Page }) => {
 })
 
 const PageTitleEditor = observer(({ page }: { page: Page }) => {
-  const { restApi } = useDocsContext()
+  const {
+    restApi,
+    editTools
+  } = useDocsContext()
 
   const apply = (value: string) => {
     if (page.doc && page.title !== value) {
@@ -354,6 +347,7 @@ const PageTitleEditor = observer(({ page }: { page: Page }) => {
     } else {
       cancel()
     }
+    editTools.selectedItem = page
   }
 
   const cancel = () => {
@@ -449,7 +443,10 @@ const PageBlockView = observer(({ block }: { block: PageBlock }) => {
 })
 
 const PageBlockEditor = ({ block }: { block: PageBlock }) => {
-  const { restApi } = useDocsContext()
+  const {
+    restApi,
+    editTools
+  } = useDocsContext()
 
   const apply = (value: string) => {
     if (block.text !== value) {
@@ -461,6 +458,7 @@ const PageBlockEditor = ({ block }: { block: PageBlock }) => {
     } else {
       cancel()
     }
+    editTools.selectedItem = block
   }
 
   const cancel = () => {

@@ -83,6 +83,13 @@ export class EditTools extends Observable {
   private readonly _user: User
   get editModeEnabled(): boolean { return this._user.email !== '' && this._user.email !== 'demo' }
 
+  constructor(user: User) {
+    super('EditTools')
+    this.uid = uid()
+    this._user = user
+    document.addEventListener('keydown', this.onKeyDown.bind(this))
+  }
+
   //--------------------------------------
   //  editMode
   //--------------------------------------
@@ -107,19 +114,27 @@ export class EditTools extends Observable {
     }
   }
 
-  constructor(user: User) {
-    super('EditTools')
-    this.uid = uid()
-    this._user = user
-    document.addEventListener('keydown', this.onKeyDown.bind(this))
-  }
-
-  private onKeyDown(e: any) {
+  private onKeyDown(e: KeyboardEvent) {
     // Enter key
     if (this.editMode && e.keyCode === 13 && this.selectedItem && !this.selectedItem.isEditing) {
       e.preventDefault()
       e.stopPropagation()
       this.selectedItem.isEditing = true
+      console.log('e = ', e)
+    }
+    //Ctrl + Shift + b
+    else if (this.editMode && this.selectedItem && e.ctrlKey && e.keyCode === 66 && e.shiftKey) {
+      e.preventDefault()
+      e.stopPropagation()
+      //console.log('Ctrl + Shift + ', e.keyCode)
+      const selectedPage = this.selectedItem instanceof Page && this.selectedItem
+      const selectedPageBlock = this.selectedItem instanceof PageBlock && this.selectedItem
+      if (selectedPage) {
+        this.selectedItem = selectedPage.createAndAddBlock()
+      } else if (selectedPageBlock && selectedPageBlock.page) {
+        const curBlockIndex = selectedPageBlock.page.blocks.findIndex(b => b.uid === selectedPageBlock.uid)
+        this.selectedItem = selectedPageBlock.page.createAndAddBlock(curBlockIndex + 1)
+      }
     }
   }
 
@@ -555,18 +570,6 @@ export class Page extends Observable implements Serializable {
   }
 
   //--------------------------------------
-  //  storeWithError
-  //--------------------------------------
-  private _storeWithError: string = ''
-  get storeWithError(): string { return this._storeWithError }
-  set storeWithError(value: string) {
-    if (this._storeWithError !== value) {
-      this._storeWithError = value
-      this.mutated()
-    }
-  }
-
-  //--------------------------------------
   //  doc
   //--------------------------------------
   _doc: Doc | undefined = undefined
@@ -600,7 +603,7 @@ export class Page extends Observable implements Serializable {
     this.mutated()
   }
 
-  createAndAddBlock(atIndex: number = 0): void {
+  createAndAddBlock(atIndex: number = 0): PageBlock {
     const block = new PageBlock('_New Block_')
     block._page = this
     if (atIndex === 0) {
@@ -611,6 +614,7 @@ export class Page extends Observable implements Serializable {
       this._blocks = [...this._blocks.slice(0, atIndex), block, ...this._blocks.slice(atIndex)]
     }
     this.mutated()
+    return block
   }
 
   moveBlockUp(block: PageBlock): boolean {
@@ -665,11 +669,21 @@ export class Page extends Observable implements Serializable {
 export class PageBlock extends Observable implements Serializable {
   readonly uid = uid()
 
+  constructor(text: string) {
+    super('PageBlock')
+    this._text = text
+  }
+
   //--------------------------------------
   //  estimatedRowNum
   //--------------------------------------
   private _estimatedRowNum: number = 0
-  get estimatedRowNum(): number { return this._estimatedRowNum }
+  get estimatedRowNum(): number {
+    if (this._estimatedRowNum === 0) {
+      this._estimatedRowNum = Math.max(this.text.length / 100, this.text.split(/\r\n|\r|\n/).length)
+    }
+    return this._estimatedRowNum
+  }
 
   //--------------------------------------
   //  text
@@ -679,7 +693,7 @@ export class PageBlock extends Observable implements Serializable {
   set text(value: string) {
     if (this._text !== value) {
       this._text = value
-      this._estimatedRowNum = Math.max(value.length / 100, value.split(/\r\n|\r|\n/).length)
+      this._estimatedRowNum = 0
       this.mutated()
     }
   }
@@ -701,11 +715,6 @@ export class PageBlock extends Observable implements Serializable {
   //--------------------------------------
   _page: Page | undefined = undefined
   get page(): Page | undefined { return this._page }
-
-  constructor(text: string) {
-    super('PageBlock')
-    this._text = text
-  }
 
   serialize(): any {
     return { text: this.text }

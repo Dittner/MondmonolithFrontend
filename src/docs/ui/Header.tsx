@@ -19,8 +19,6 @@ export const Header = stylable(() => {
 })
 
 export const HeaderVerSep = ({ visible = true, marginHorizontal = '10px' }: { visible?: boolean, marginHorizontal?: string }) => {
-  const { theme } = useDocsContext()
-
   if (!visible) return <></>
 
   return <VSeparator marginHorizontal={marginHorizontal}
@@ -137,10 +135,10 @@ const ToolsPanel = observer(() => {
   const selectedPageBlock = editTools.selectedItem instanceof PageBlock && editTools.selectedItem
   const createBlock = () => {
     if (editTools.editMode && selectedPage) {
-      selectedPage.createAndAddBlock()
+      editTools.selectedItem = selectedPage.createAndAddBlock()
     } else if (editTools.editMode && selectedPageBlock && selectedPageBlock.page) {
       const curBlockIndex = selectedPageBlock.page.blocks.findIndex(b => b.uid === selectedPageBlock.uid)
-      selectedPageBlock.page.createAndAddBlock(curBlockIndex + 1)
+      editTools.selectedItem = selectedPageBlock.page.createAndAddBlock(curBlockIndex + 1)
     }
   }
 
@@ -204,7 +202,7 @@ const ToolsPanel = observer(() => {
               height="50px" gap="4px">
 
         <IconButton icon="plus"
-                    popUp="New Block"
+                    popUp="New Block (Ctrl + Shift + B)"
                     onClick={createBlock}
                     disabled={!selectedPage && !selectedPageBlock}/>
 

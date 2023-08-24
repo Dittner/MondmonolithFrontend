@@ -17,6 +17,8 @@ export interface Theme {
   h2: string
   h3: string
   h4: string
+  h5: string
+  h6: string
   p: string
   code: string
   isDark: boolean
@@ -24,7 +26,6 @@ export interface Theme {
   white: string
   white25: string
   appBg: string
-  authPageBg: string
   transparent: string
   panelBg: string
   modalWindowBg: string
@@ -45,6 +46,7 @@ export interface Theme {
   caretColor: string
   error: string
   errorMsgBg: string
+  about: string
   //docBody
   prevNextPageBtnBg: string
   //docList
@@ -79,12 +81,12 @@ export class ThemeManager extends Observable {
     this.uid = uid()
     this.buildDarkThemeStandardSelectors()
     this.buildLightThemeStandardSelectors()
-    if (window.localStorage.getItem('theme') === 'dark') {
-      this._theme = this.darkTheme
-      this.setUpDarkTheme()
-    } else {
+    if (window.localStorage.getItem('theme') === 'light') {
       this._theme = this.lightTheme
       this.setUpLightTheme()
+    } else {
+      this._theme = this.darkTheme
+      this.setUpDarkTheme()
     }
   }
 
@@ -124,19 +126,20 @@ export class ThemeManager extends Observable {
   * */
 
   readonly darkTheme: Theme = {
-    id: 'darkTheme',
+    id: 'dark',
     isDark: true,
     h1: DARK_THEME_WHITE,
     h2: '#c2b99f',
-    h3: '#7c716d',
-    h4: '#667585',
+    h3: '#a4887e',
+    h4: '#ab9b4d',
+    h5: '#8064c7',
+    h6: '#626b75',
     p: '#86b3c7',
     code: '#a9e2fc',
     red: DARK_THEME_RED,
     white: DARK_THEME_WHITE,
     white25: '#ffffff10',
     appBg: DARK_THEME_APP_BG,
-    authPageBg: '#212628',
     transparent: TRANSPARENT,
     panelBg: '#252b2e',
     modalWindowBg: '#495655',
@@ -157,6 +160,7 @@ export class ThemeManager extends Observable {
     caretColor: DARK_THEME_RED,
     error: '#ff719a',
     errorMsgBg: '#5e4e31',
+    about: '#a9e2fc',
     //docBody
     prevNextPageBtnBg: '#794c78',
     //docList
@@ -182,7 +186,10 @@ export class ThemeManager extends Observable {
     buildRule({ textColor: theme.h2 }, theme.id, 'h2')
     buildRule({ textColor: theme.h3 }, theme.id, 'h3')
     buildRule({ textColor: theme.h4 }, theme.id, 'h4')
-    buildRule({ textColor: theme.p }, theme.id, 'p, li')
+    buildRule({ textColor: theme.h5 }, theme.id, 'h5')
+    buildRule({ textColor: theme.h6 }, theme.id, 'h6')
+    buildRule({ textColor: theme.p }, theme.id, 'p')
+    buildRule({ textColor: theme.p }, theme.id, 'li')
     buildRule({ textColor: theme.code }, theme.id, 'code')
 
     const blockquoteProps: StylableComponentProps = {
@@ -200,23 +207,24 @@ export class ThemeManager extends Observable {
   * */
 
   lightTheme: Theme = {
-    id: 'lightTheme',
+    id: 'light',
     isDark: false,
     h1: '#ebebeb',
-    h2: '#a1601c',
-    h3: '#7e7918',
-    h4: '#989390',
+    h2: '#b47726',
+    h3: '#817c10',
+    h4: '#b6a11c',
+    h5: '#673c85',
+    h6: '#9f9a97',
     p: '#23282a',
     code: '#2b5c73',
     red: LIGHT_THEME_RED,
     white: LIGHT_THEME_APP_BG,
     white25: '#ffffff20',
     appBg: LIGHT_THEME_APP_BG,
-    authPageBg: '#dbdbdb',
     transparent: TRANSPARENT,
     panelBg: LIGHT_THEME_APP_BG,
     modalWindowBg: '#d0d4d8',
-    text: '#2A2623',
+    text: '#23282a',
     text75: '#706d69',
     green: '#2c363c',
     green75: '#2c363c75',
@@ -227,19 +235,20 @@ export class ThemeManager extends Observable {
     codeBg: '#e8d6cd',
     inputBorder: '#ccCCcc',
     inputBorderFocused: '#d58c6b',
-    textAreaBorderFocused: '#ccCCcc',
+    textAreaBorderFocused: '#d7d7d1',
     border: '#ccCCcc',
     selectedBlockBg: '#e1ddd7',
-    caretColor: LIGHT_THEME_RED,
+    caretColor: '#23282a',
     error: '#914058',
     errorMsgBg: '#c5b395',
+    about: '#23282a',
     //docBody
     prevNextPageBtnBg: '#333333',
     //docList
     docListBg: '#d7d3cb25',
     docLink: '#2A2623',
     docLinkHovered: '#2A2623',
-    docLinkBgHovered: '#c5bfa0',
+    docLinkBgHovered: '#96886550',
     docLinkSelected: '#ebebeb',
     docLinkBgSelected: '#968865'
   }
@@ -247,8 +256,8 @@ export class ThemeManager extends Observable {
   buildLightThemeStandardSelectors() {
     const theme = this.lightTheme
 
-    const textProps: StylableComponentProps = { textColor: theme.text }
-    buildRule(textProps, theme.id, '*')
+    // const textProps: StylableComponentProps = { textColor: theme.text }
+    // buildRule(textProps, theme.id, '*')
 
     buildRule({ textColor: '#27388C' }, theme.id, 'a:link')
     buildRule({ textColor: '#27388C' }, theme.id, 'a:visited')
@@ -258,7 +267,10 @@ export class ThemeManager extends Observable {
     buildRule({ textColor: theme.h2 }, theme.id, 'h2')
     buildRule({ textColor: theme.h3 }, theme.id, 'h3')
     buildRule({ textColor: theme.h4 }, theme.id, 'h4')
-    buildRule({ textColor: theme.p }, theme.id, 'p, li')
+    buildRule({ textColor: theme.h5 }, theme.id, 'h5')
+    buildRule({ textColor: theme.h6 }, theme.id, 'h6')
+    buildRule({ textColor: theme.p }, theme.id, 'p')
+    buildRule({ textColor: theme.p }, theme.id, 'li')
     buildRule({ textColor: theme.code }, theme.id, 'code')
 
     const h1Props: StylableComponentProps = {

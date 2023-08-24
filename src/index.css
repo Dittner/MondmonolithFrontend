@@ -57,9 +57,10 @@ body {
   max-width: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
+  caret-shape: auto;
 }
 
-body, p, a, b, i, h1, h2, h3, h4, blockquote {
+body, p, a, b, i, h1, h2, h3, h4, h5, h6, blockquote {
   margin: 0;
   padding: 0;
   text-decoration: none;
@@ -71,17 +72,27 @@ h1, .h1 {
 }
 
 h2, .h2 {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 500;
 }
 
 h3, .h3 {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 500;
 }
 
 h4, .h4 {
-  font-size: 1rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+h5, .h5 {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+h6, .h6 {
+  font-size: 1.1rem;
   font-weight: 500;
 }
 
@@ -146,20 +157,35 @@ hr {
 }
 
 .listScrollbar::-webkit-scrollbar-thumb {
-  background: #323e4450;
-  border-radius: 14px;
-  border: 4px solid transparent;
+  background: #aec7d550;
+  border-right: 1px solid transparent;
+  border-left: 5px solid transparent;
   background-clip: content-box;
 }
 
 .listScrollbar::-webkit-scrollbar-thumb:hover {
-  background: #323e44;
-  border-radius: 14px;
-  border: 4px solid transparent;
+  background: #aec7d5AA;
+  border-right: 1px solid transparent;
+  border-left: 5px solid transparent;
   background-clip: content-box;
 }
 
-/******************************/
+.light.listScrollbar::-webkit-scrollbar-thumb {
+  background: #33333350;
+  border-right: 1px solid transparent;
+  border-left: 5px solid transparent;
+  background-clip: content-box;
+}
+
+.light.listScrollbar::-webkit-scrollbar-thumb:hover {
+  background: #333333aa;
+  border-right: 1px solid transparent;
+  border-left: 5px solid transparent;
+  background-clip: content-box;
+}
+
+
+  /******************************/
 /*--------- LAYOUT -----------*/
 /******************************/
 

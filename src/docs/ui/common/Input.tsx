@@ -17,13 +17,14 @@ export interface InputProtocol {
   value: string
 }
 
-interface InputProps extends StylableComponentProps {
+export interface InputProps extends StylableComponentProps {
   type: 'text' | 'number' | 'password' | 'email'
   protocol?: InputProtocol
   text?: string
   fontSize?: string
   title?: string
   titleSize?: string
+  titleColor?: string
   caretColor?: string
   placeHolder?: string
   onChange?: ((value: string) => void) | undefined
@@ -101,60 +102,6 @@ export const Input = (props: InputProps) => {
              onKeyDown={onKeyDown}/>
     </VStack>
   )
-}
-
-const defAuthInputProps = (theme: Theme): any => {
-  return {
-    width: '100%',
-    height: '45px',
-    caretColor: theme.caretColor,
-    textColor: theme.text,
-    fontSize: '1.2rem',
-    borderBottom: ['3px', 'solid', '#6f838575'],
-    focusState: (state: StylableComponentProps) => {
-      state.borderBottom = ['3px', 'solid', theme.red]
-    }
-  }
-}
-
-export const AuthInput = (props: InputProps) => {
-  console.log('new Input')
-  const theme = useDocsContext().theme
-  const customProps = { ...defAuthInputProps(theme), ...props }
-
-  const onKeyDown = (e: any) => {
-    // Enter key
-    if (e.keyCode === 13 && !e.shiftKey) {
-      e.preventDefault()
-      e.stopPropagation()
-      customProps.onSubmitted?.()
-    }
-  }
-
-  const inputRef = useCallback((input: HTMLInputElement) => {
-    if (input && customProps.autoFocus) {
-      setTimeout(() => {
-        input.focus()
-      }, 0)
-    }
-  }, [customProps.autoFocus])
-
-  const className = 'className' in customProps ? customProps.className + ' ' + buildClassName(customProps) : buildClassName(customProps)
-
-  return <>
-    <input ref={inputRef}
-           className={className}
-           placeholder={customProps.placeHolder}
-           autoCorrect="off"
-           autoComplete="off"
-           type={customProps.type}
-           defaultValue={customProps.text || customProps.protocol.value}
-           onChange={e => {
-             if (customProps.protocol) customProps.protocol.value = e.currentTarget.value
-             customProps.onChange?.(e.currentTarget.value)
-           }}
-           onKeyDown={onKeyDown}/>
-  </>
 }
 
 /*
@@ -387,7 +334,7 @@ export const TextArea = (props: TextAreaProps) => {
 
   const className = 'className' in props ? props.className + ' ' + buildClassName(customProps) : buildClassName(customProps)
 
-  return <textarea className={className + ' listScrollbar'}
+  return <textarea className={className + ' ' + theme.id + ' listScrollbar'}
                    value={value}
                    autoFocus={customProps.autoFocus}
                    ref={ta}

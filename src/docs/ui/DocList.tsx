@@ -310,8 +310,10 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
             paddingRight="5px"
             gap="8px"
             hoverState={state => {
-              state.textColor = theme.docLinkHovered
-              state.bgColor = theme.docLinkBgHovered
+              if (!isDocSelected) {
+                state.textColor = theme.docLinkHovered
+                state.bgColor = theme.docLinkBgHovered
+              }
             }}
             onClick={openDoc}
             onDoubleClick={startEditing}>

@@ -76,8 +76,6 @@ export class RestApi {
   logOut() {
     window.localStorage.removeItem(this.TOKEN)
     const user = this.context.user
-    user.id = ''
-    user.email = ''
     user.pwd = ''
     user.authStatus = AuthStatus.SIGNED_OUT
     this.context.dirList.removeAll()
@@ -188,7 +186,7 @@ export class RestApi {
       }
       return [response, null]
     } catch (e: any) {
-      const msg = 'Error has occurred by requesting, url: ' + this.baseUrl + path
+      const msg = 'Unable to ' + method + ' resource: ' + this.baseUrl + path
       this.context.app.errorMsg = msg
       console.log(msg, '. Details:', e)
       return [null, null]

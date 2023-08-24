@@ -161,8 +161,9 @@ export const IntroPage = observer(() => {
     <Label className="ibm"
            whiteSpace="pre"
            padding="35px"
+           opacity='0.75'
            text={app.size === AppSize.XS ? aboutTxtXS : aboutTxt}
-           textColor={theme.p}
+           textColor={theme.about}
            layer={LayoutLayer.ONE}/>
 
     <VStack halign="stretch"
@@ -209,7 +210,7 @@ const aboutTxt = `
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  YEAR  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   beta  |  4.00  |  2023  
+*   to format notes and code fragments easily without   *   beta  |  4.03  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           `
 
@@ -223,14 +224,21 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: beta  |  VER: 4.00  |  YEAR: 2023      
+*  MODE: beta  |  VER: 4.03  |  YEAR: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 `
 
-const headings = `# HAL 9000
-## Created by Dr. Chandra
-__HAL 9000__ is an acronym for a Heuristically programmed ALgorithmic computer.
+const headings = `# _2001: A Space Odyssey_
+## Epic science fiction film produced and directed by __Stanley Kubrick__.
+### The screenplay was written by __Kubrick__ and science fiction author __Arthur C. Clarke__.
+#### Release date: 2 April 1968.
+
+&nbsp;
+
+##### _HAL 9000_
+###### Created by Dr. Chandra
+_HAL 9000_ is an acronym for a Heuristically programmed ALgorithmic computer.
 HAL’s main job is to control the systems in spacecraft _Discovery One_ while interacting with the crew.`
 
 const blockquote = `> «Sorry to interrupt the festivities, Dave, but I think we’ve got a problem.»
@@ -263,7 +271,7 @@ const shortcuts = `# Shortcuts\n
 + Apply code changes: \`Shift + Enter\`\n
 + Format code: \`Ctrl + Shift + L\`
 + Create a new page's block: \`Ctrl + Shift + B\`
-+ Edit selected page's block: \`Enter\``
++ Start editing the selected block: \`Enter\``
 
 const code = `# Memoization
 Memoization is an optimization technique based on remembering the results returned by a function called with the same arguments.
@@ -290,7 +298,7 @@ exc(2, 1, '+') //3, returned from cache
 const links = `# Much more info:
 * [React-Markdown](https://remarkjs.github.io/react-markdown/)
 * [Markdown basic syntax](https://www.markdownguide.org/basic-syntax/)
-* [Source Code (GitHub)](https://github.com/dittner/mondmonolith/tree/master)`
+* [Source Code (GitHub)](https://github.com/dittner/mondmonolith)`
 
 interface MarkdownEditorProps {
   text: string

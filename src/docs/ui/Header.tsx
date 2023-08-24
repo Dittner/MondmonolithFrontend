@@ -55,6 +55,10 @@ export const HeaderView = observer(() => {
     }
   }
 
+  const ampInd = user.email.indexOf('@')
+  let email = ampInd !== -1 ? user.email.substring(0, ampInd) : user.email
+  email = email.length > 30 ? email.substring(0, 27) + '...' : email
+
   return (
     <HStack halign="right"
             valign="center"
@@ -111,7 +115,7 @@ export const HeaderView = observer(() => {
             <>
               <Label className="mono"
                      visible={app.size !== AppSize.XS}
-                     text={user.email}
+                     text={email}
                      textColor={theme.text75}/>
 
               <HeaderVerSep visible={app.size !== AppSize.XS}/>

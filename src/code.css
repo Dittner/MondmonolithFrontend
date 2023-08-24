@@ -37,7 +37,7 @@ pre[class*=language-] {
 }
 
 .light pre[class*=language-] {
-	background-color: #cdcdcd50;
+	background-color: #d5d2cb50;
 }
 
 :not(pre)>code[class*=language-],

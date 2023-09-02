@@ -276,8 +276,15 @@ export const TextArea = (props: TextAreaProps) => {
   }, [width, height])
 
   const onKeyDown = (e: any) => {
+    //console.log('e.keyCode = ', e.keyCode)
+    // ESC
+    if (e.keyCode === 27) {
+      e.preventDefault()
+      e.stopPropagation()
+      customProps.onCancel()
+    }
     // Ctrl + Alt + L
-    if (e.keyCode === 76 && e.ctrlKey && e.shiftKey && ta?.current) {
+    else if (e.keyCode === 76 && e.ctrlKey && e.shiftKey && ta?.current) {
       e.preventDefault()
       e.stopPropagation()
       TextAreaController.format(ta.current)
@@ -294,6 +301,8 @@ export const TextArea = (props: TextAreaProps) => {
         e.stopPropagation()
         e.preventDefault()
         TextAreaController.adjustScroller(ta?.current)
+      } else {
+        e.stopPropagation()
       }
     }
     // PageUp key

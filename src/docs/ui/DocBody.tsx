@@ -127,7 +127,7 @@ const PageList = observer(() => {
           isFirstPageShown,
           isLastPageShown
         })
-      }, 10)
+      }, 2)
 
       setTimeout(() => {
         const isFirstPageShown = start === 0
@@ -137,7 +137,7 @@ const PageList = observer(() => {
           isFirstPageShown,
           isLastPageShown
         })
-      }, 50)
+      }, 4)
     }
   }
 
@@ -185,6 +185,8 @@ const PageList = observer(() => {
   if (!doc) {
     return <EmptyDoc msg="Doc not found"/>
   }
+
+  app.lastShownPage = doc.pages.length > 0 ? doc.pages.at(pagesSlice.end) : undefined
 
   return (
     <VStack valign="top" halign="center" gap="10px"

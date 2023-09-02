@@ -61,7 +61,8 @@ export const DocsPage = observer(() => {
                 layer={LayoutLayer.HEADER}
                 fixed/>
 
-        <DocList width="20%"
+        <DocList className={theme.id + ' listScrollbar'}
+                 width="20%"
                  height="100%"
                  left="0"
                  layer={LayoutLayer.DOC_LIST}
@@ -74,7 +75,8 @@ export const DocsPage = observer(() => {
                  left="20%"
                  absolute/>
 
-        <DocTopics width="20%"
+        <DocTopics className={theme.id + ' listScrollbar'}
+                   width="20%"
                    left="80%"
                    top={headerHeight}
                    bottom="0"
@@ -117,7 +119,8 @@ export const DocsPage = observer(() => {
                 layer={LayoutLayer.HEADER}
                 fixed/>
 
-        <DocList width="30%"
+        <DocList className={theme.id + ' listScrollbar'}
+                 width="30%"
                  height="100vh"
                  layer={LayoutLayer.DOC_LIST}
                  enableOwnScroller
@@ -159,7 +162,8 @@ export const DocsPage = observer(() => {
               layer={LayoutLayer.HEADER} // z-Index
               fixed/>
 
-      <DocList left={app.isDocListShown ? '0' : '-300px'}
+      <DocList className={theme.id + ' listScrollbar'}
+               left={app.isDocListShown ? '0' : '-300px'}
                width="300px"
                height="100vh"
                layer={LayoutLayer.DOC_LIST}

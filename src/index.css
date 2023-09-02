@@ -45,7 +45,7 @@ html {
 
 @media screen and (max-width: 480px) {
   html {
-    font-size: 14px;
+    font-size: 12px;
   }
 }
 
@@ -54,6 +54,8 @@ body {
   font-family: var(--font-family-mono);
   outline: none;
   box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   max-width: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -126,11 +128,9 @@ div, p, b, i, code {
 }
 
 hr {
-  display: block;
+  opacity: 0;
+  height: 1.1rem;
   margin: 0;
-  color: #2a3439;
-  border-style: inset;
-  border-width: 1px;
 }
 
 /*img {*/
@@ -157,30 +157,34 @@ hr {
 }
 
 .listScrollbar::-webkit-scrollbar-thumb {
-  background: #aec7d550;
-  border-right: 1px solid transparent;
-  border-left: 5px solid transparent;
+  background: #3d454988;
+  border-radius: 5px;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
   background-clip: content-box;
 }
 
 .listScrollbar::-webkit-scrollbar-thumb:hover {
-  background: #aec7d5AA;
-  border-right: 1px solid transparent;
-  border-left: 5px solid transparent;
+  background: #3d4549;
+  border-radius: 5px;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
   background-clip: content-box;
 }
 
 .light.listScrollbar::-webkit-scrollbar-thumb {
-  background: #33333350;
-  border-right: 1px solid transparent;
-  border-left: 5px solid transparent;
+  background: #aaAAaa50;
+  border-radius: 5px;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
   background-clip: content-box;
 }
 
 .light.listScrollbar::-webkit-scrollbar-thumb:hover {
-  background: #333333aa;
-  border-right: 1px solid transparent;
-  border-left: 5px solid transparent;
+  background: #aaAAaa;
+  border-radius: 5px;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
   background-clip: content-box;
 }
 

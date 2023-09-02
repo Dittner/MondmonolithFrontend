@@ -37,6 +37,6 @@ export class StoreDocCmd implements RestApiCmd {
       }
     }
 
-    this.dir.isStoring = false
+    this.doc.isStoring = false
   }
 }

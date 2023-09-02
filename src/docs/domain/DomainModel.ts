@@ -1,5 +1,6 @@
 import { type UID, uid } from '../infrastructure/UIDGenerator'
 import { Observable } from '../infrastructure/Observer'
+import { DocsContext } from '../DocsContext'
 
 export const UNDEFINED_ID = ''
 
@@ -705,6 +706,10 @@ export class PageBlock extends Observable implements Serializable {
   get isEditing(): boolean { return this._isEditing }
   set isEditing(value: boolean) {
     if (this._isEditing !== value) {
+      if (this.page && this.page === DocsContext.self.app.lastShownPage && this.page.blocks.at(-1) === this) {
+        const scrollMaxY = DocsContext.self.app.getScrollMaxY()
+        setTimeout(() => { window.scrollTo(0, scrollMaxY + 50) }, 20)
+      }
       this._isEditing = value
       this.mutated()
     }

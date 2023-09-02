@@ -3,7 +3,7 @@ import { LayoutLayer } from '../application/Application'
 import { observer } from '../infrastructure/Observer'
 import { useDocsContext } from '../../App'
 import { AuthStatus } from '../domain/DomainModel'
-import { SmallSpinner } from './common/Loading'
+import { LargeSpinner } from './common/Loading'
 import { useNavigate } from 'react-router-dom'
 import { HStack, VStack } from './common/Container'
 import { IconButton, LargeButton, RedButton, TextButton } from './common/Button'
@@ -42,7 +42,7 @@ const lightColorScheme = (theme: Theme): ColorScheme => {
     inputTitle: theme.p,
     inputText: theme.h3,
     errColor: theme.h1,
-    errBgColor: theme.text
+    errBgColor: '#444444'
   }
 }
 
@@ -122,6 +122,7 @@ export const AuthPage = observer(() => {
     <VStack halign="center" valign="top"
             width='100%' maxWidth={FORM_WIDTH}
             padding='40px'
+            paddingTop='100px'
             gap="15px">
 
       <Label fontSize={TITLE_FONT_SIZE}
@@ -200,10 +201,8 @@ export const AuthPage = observer(() => {
 
       }
 
-      <SmallSpinner opacity={isProcessing ? '1' : '0'}/>
-
       <HStack halign='stretch' valign='center'
-              width='100%'>
+              width='100%' paddingTop='30px'>
 
         <Spacer/>
 
@@ -214,13 +213,15 @@ export const AuthPage = observer(() => {
                     onClick={switchMode}/>
       </HStack>
 
+      <LargeSpinner opacity={isProcessing ? '1' : '0'}/>
+
       <Label className='mono'
              fontSize={LBL_FONT_SIZE}
              padding='20px'
              opacity={user.authWithError === '' ? '0' : '1'}
              bgColor={colorScheme.errBgColor}
              textAlign='left'
-             width='100%' minHeight='150px'
+             width='100%' minHeight='100px'
              text={user.authWithError}
              textColor={colorScheme.errColor}/>
     </VStack>
@@ -231,7 +232,7 @@ const defLInputProps = (theme: Theme): any => {
   return {
     className: 'mono',
     width: '100%',
-    height: '45px',
+    paddingVertical: '10px',
     caretColor: theme.caretColor,
     fontSize: TITLE_FONT_SIZE,
     borderBottom: ['2px', 'solid', theme.text75],
@@ -269,7 +270,7 @@ const LInput = (props: InputProps) => {
                  width='100%'>
     <Label className='mono'
            textAlign='left'
-           width='10rem'
+           width='160px'
            fontSize={TITLE_FONT_SIZE}
            text={customProps.placeHolder}
            textColor={customProps.titleColor}/>

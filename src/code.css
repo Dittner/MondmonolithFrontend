@@ -70,7 +70,7 @@ code[class*=language-] {
 .light .token.def,
 .light pre[class*=language-],
 .light code[class*=language-]{
-	color: #23282a;
+	color: #111314;
 }
 
 /*------Punctuation-----*/
@@ -90,7 +90,7 @@ code[class*=language-] {
 .light .token.url,
 .light .token.symbol,
 .light .token.property {
-	color: #3c4f53
+	color: #171b1c
 }
 
 /*------Tag------*/

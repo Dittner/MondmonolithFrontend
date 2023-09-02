@@ -63,7 +63,7 @@ export const IntroPage = observer(() => {
   let headerFontSize = ''
   switch (app.size) {
     case AppSize.XS:
-      headerFontSize = '40px'
+      headerFontSize = '30px'
       break
     case AppSize.S:
       headerFontSize = '60px'
@@ -93,7 +93,6 @@ export const IntroPage = observer(() => {
                  halign="center"
                  valign="center"
                  gap="0"
-                 paddingBottom="20px"
                  disableHorizontalScroll>
 
     {app.size === AppSize.XS &&
@@ -170,7 +169,7 @@ export const IntroPage = observer(() => {
             valign="top"
             maxWidth="1800px"
             bgColor={theme.appBg}
-            padding="60px"
+            padding="2rem"
             layer={LayoutLayer.ONE}>
 
       <Label className="h1"
@@ -188,16 +187,16 @@ export const IntroPage = observer(() => {
       <MarkdownEditor text={shortcuts} secondMarkdownText={languages} title="5. Editor"/>
     </VStack>
 
-    <HStack halign='right' valign='center' width="100%" maxWidth="1800px" paddingHorizontal='60px'>
-      <Spacer/>
-      
-      <LargeButton title={'Try Demo Mode'}
-                   width='250px'
-                   layer={LayoutLayer.ONE}
-                   onClick={enterDemoMode}/>
-    </HStack>
+    <LargeButton title={'Try Demo Mode'}
+                 width='250px'
+                 layer={LayoutLayer.ONE}
+                 onClick={enterDemoMode}/>
 
     <Label className="mono"
+           width='100%'
+           opacity='0.5'
+           textAlign='center'
+           padding='2rem'
            text={(app.isMobileDevice ? 'Mobile ' : 'Desktop ') + app.size}
            fontSize="10px"
            textColor={theme.text75}
@@ -210,7 +209,7 @@ const aboutTxt = `
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  YEAR  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   beta  |  4.03  |  2023  
+*   to format notes and code fragments easily without   *   Demo  |  4.07  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           `
 
@@ -224,22 +223,20 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: beta  |  VER: 4.03  |  YEAR: 2023      
+*  MODE: Demo  |  VER: 4.07  |  YEAR: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 `
 
-const headings = `# _2001: A Space Odyssey_
-## Epic science fiction film produced and directed by __Stanley Kubrick__.
-### The screenplay was written by __Kubrick__ and science fiction author __Arthur C. Clarke__.
-#### Release date: 2 April 1968.
+const headings = `# _HAL 9000_
+## Heuristically Programmed Algorithmic Computer
+### Created by Dr. Chandra
+#### Urbana, Illinois
 
-&nbsp;
+***
 
-##### _HAL 9000_
-###### Created by Dr. Chandra
-_HAL 9000_ is an acronym for a Heuristically programmed ALgorithmic computer.
-HAL’s main job is to control the systems in spacecraft _Discovery One_ while interacting with the crew.`
+##### _Hal's mission_
+_HAL_ is a sentient artificial general intelligence computer that controls the systems of the _Discovery One_ spacecraft and interacts with the ship's astronaut crew.`
 
 const blockquote = `> «Sorry to interrupt the festivities, Dave, but I think we’ve got a problem.»
 >

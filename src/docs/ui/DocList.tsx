@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import * as React from 'react'
 import { type ChangeEvent, useRef, useState } from 'react'
 import { useDocsContext } from '../../App'
-import { AppSize } from '../application/Application'
+import { AppSize, Dialog } from '../application/Application'
 import { type Directory, type Doc, LoadStatus } from '../domain/DomainModel'
 import { stylable } from '../application/NoCSS'
 import { observeApp, observeDirList, observeEditTools } from '../DocsContext'
@@ -253,6 +253,7 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
   observe(doc)
   const {
     restApi,
+    app,
     editTools,
     theme
   } = useDocsContext()
@@ -273,8 +274,11 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
     doc.isEditing = false
   }
   const onDelete = () => {
-    restApi.deleteDoc(doc)
-    doc.isEditing = false
+    app.dialog = new Dialog(
+      'Are you sure you want to delete the document «' + doc.title + '»?',
+      "The document will be deleted with all pages. You can't undo this action.",
+      () => { restApi.deleteDoc(doc); doc.isEditing = false },
+      () => {})
   }
 
   const startEditing = (e: any) => {
@@ -304,26 +308,32 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
     <HStack width="100%"
             halign="left"
             valign="center"
-            textColor={isDocSelected ? theme.docLinkSelected : theme.docLink}
             bgColor={isDocSelected ? theme.docLinkBgSelected : theme.transparent}
             paddingLeft="20px"
             paddingRight="5px"
             gap="8px"
             hoverState={state => {
               if (!isDocSelected) {
-                state.textColor = theme.docLinkHovered
                 state.bgColor = theme.docLinkBgHovered
               }
             }}
             onClick={openDoc}
             onDoubleClick={startEditing}>
 
-      <Label className='icon-doc' paddingBottom='5px' opacity='0.75'/>
+      <Label className='icon-doc'
+             textColor={isDocSelected ? theme.docLinkSelected : theme.docLinkIcon}
+             paddingBottom='5px' opacity='0.75'/>
 
       <Label className="notSelectable"
+             textColor={isDocSelected ? theme.docLinkSelected : theme.docLink}
              text={isDocSelected ? doc.title + ' ' : doc.title}
              textAlign="left"
-             width="100%"/>
+             width="100%"
+             hoverState={state => {
+               if (!isDocSelected) {
+                 state.textColor = theme.docLinkHovered
+               }
+             }}/>
     </HStack>
   )
 })

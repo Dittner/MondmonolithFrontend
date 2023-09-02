@@ -38,12 +38,7 @@ const DocTopicsView = observer(() => {
       {doc.pages.map(page => {
         return <TopicLink key={page.uid}
                           page={page}
-                          width="100%"
-                          textColor={theme.topic}
-                          hoverState={state => {
-                            state.textColor = theme.topicHover
-                          }
-                          }/>
+                          width="100%"/>
       })}
     </VStack>
   )

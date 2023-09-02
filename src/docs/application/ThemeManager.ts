@@ -8,6 +8,7 @@ const DARK_THEME_APP_BG = '#292f32'
 
 const LIGHT_THEME_APP_BG = '#ebebeb'
 const LIGHT_THEME_RED = '#b44553'
+const LIGHT_THEME_BLACK = '#111314'
 
 const TRANSPARENT = '#00000001'
 
@@ -34,8 +35,6 @@ export interface Theme {
   green: string
   green75: string
   pageTitleBg: string
-  topic: string
-  topicHover: string
   inputBg: string
   codeBg: string
   inputBorder: string
@@ -52,6 +51,7 @@ export interface Theme {
   //docList
   docListBg: string
   docLink: string
+  docLinkIcon: string
   docLinkHovered: string
   docLinkBgHovered: string
   docLinkSelected: string
@@ -148,8 +148,6 @@ export class ThemeManager extends Observable {
     green: '#aec7d5',
     green75: '#aed9ee75',
     pageTitleBg: '#53cbff50',
-    topic: '#6aa2cc',
-    topicHover: DARK_THEME_WHITE,
     inputBg: '#252b2d',
     codeBg: '#2e393f75',
     inputBorder: '#323e44',
@@ -166,10 +164,11 @@ export class ThemeManager extends Observable {
     //docList
     docListBg: '#252b2e',
     docLink: '#76818d',
+    docLinkIcon: '#86b3c7',
     docLinkHovered: DARK_THEME_WHITE,
     docLinkBgHovered: '#00000020',
     docLinkSelected: '#B88EBF',
-    docLinkBgSelected: '#00000020'
+    docLinkBgSelected: TRANSPARENT
   }
 
   buildDarkThemeStandardSelectors() {
@@ -213,8 +212,8 @@ export class ThemeManager extends Observable {
     h2: '#b47726',
     h3: '#817c10',
     h4: '#b6a11c',
-    h5: '#673c85',
-    h6: '#9f9a97',
+    h5: '#803eaf',
+    h6: '#867d78',
     p: '#23282a',
     code: '#2b5c73',
     red: LIGHT_THEME_RED,
@@ -224,13 +223,11 @@ export class ThemeManager extends Observable {
     transparent: TRANSPARENT,
     panelBg: LIGHT_THEME_APP_BG,
     modalWindowBg: '#d0d4d8',
-    text: '#23282a',
+    text: LIGHT_THEME_BLACK,
     text75: '#706d69',
     green: '#2c363c',
     green75: '#2c363c75',
     pageTitleBg: '#42134988',
-    topic: '#184495',
-    topicHover: '#721895',
     inputBg: '#ebebeb',
     codeBg: '#e8d6cd',
     inputBorder: '#ccCCcc',
@@ -238,15 +235,16 @@ export class ThemeManager extends Observable {
     textAreaBorderFocused: '#d7d7d1',
     border: '#ccCCcc',
     selectedBlockBg: '#e1ddd7',
-    caretColor: '#23282a',
+    caretColor: LIGHT_THEME_BLACK,
     error: '#914058',
     errorMsgBg: '#c5b395',
     about: '#23282a',
     //docBody
     prevNextPageBtnBg: '#333333',
     //docList
-    docListBg: '#d7d3cb25',
+    docListBg: '#e8e8e8',
     docLink: '#2A2623',
+    docLinkIcon: '#2A2623',
     docLinkHovered: '#2A2623',
     docLinkBgHovered: '#96886550',
     docLinkSelected: '#ebebeb',
@@ -271,7 +269,7 @@ export class ThemeManager extends Observable {
     buildRule({ textColor: theme.h6 }, theme.id, 'h6')
     buildRule({ textColor: theme.p }, theme.id, 'p')
     buildRule({ textColor: theme.p }, theme.id, 'li')
-    buildRule({ textColor: theme.code }, theme.id, 'code')
+    buildRule({ bgColor: '#dce3e7', padding: '3px', margin: '-3px' }, theme.id, 'code')
 
     const h1Props: StylableComponentProps = {
       className: 'h1',

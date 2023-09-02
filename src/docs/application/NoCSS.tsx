@@ -26,6 +26,7 @@ export const abbreviations: Record<string, string> = {
   'height': 'H',
   'justify-content': 'J',
   'left': 'L',
+  'margin': 'M',
   'margin-left': 'ML',
   'margin-right': 'MR',
   'margin-top': 'MT',
@@ -57,7 +58,7 @@ export const abbreviations: Record<string, string> = {
   'z-index': 'Z'
 }
 
-const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, () => string, (parentSelector: string, childSelector: string) => void] => {
+const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: string) => string, (parentSelector: string, childSelector: string) => void] => {
   let hashSum: string = ''
   let style = ''
   let state: 'normal' | 'hover' | 'focus' = 'normal'
@@ -74,7 +75,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, () =>
 
   const operator: Record<string, (value: any) => void> = Object.create(null)
 
-  const getClassName = (): string => {
+  const getClassName = (id: string): string => {
     if (!hashSum) return ''
 
     if (classNameHash.has(hashSum)) { return classNameHash.get(hashSum) as string }
@@ -83,17 +84,20 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, () =>
 
     //console.log('--new selector #' + (++selectorsCount) + ': ', className)
 
-    const rule = '.' + className + style + '}'
+    let rule = id ? '#' + id : ''
+    rule += '.' + className + style + '}'
     classNameHash.set(hashSum, className)
     styleSheet.insertRule(rule)
 
     if (hoverStyle) {
-      const rule = '.' + className + (isMobileDevice ? ':active{' : ':hover{') + hoverStyle + '}'
+      let rule = id ? '#' + id : ''
+      rule += '.' + className + (isMobileDevice ? ':active{' : ':hover{') + hoverStyle + '}'
       styleSheet.insertRule(rule)
     }
 
     if (focusStyle) {
-      const rule = '.' + className + ':focus{' + focusStyle + '}'
+      let rule = id ? '#' + id : ''
+      rule += '.' + className + ':focus{' + focusStyle + '}'
       styleSheet.insertRule(rule)
     }
 
@@ -192,6 +196,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, () =>
   operator.flexGrow = (value: string) => { setValue('flex-grow', value) }
   operator.alignItems = (value: string) => { setValue('align-items', value) }
   operator.justifyContent = (value: string) => { setValue('justify-content', value) }
+  operator.margin = (value: string) => { setValue('margin', value) }
   operator.marginLeft = (value: string) => { setValue('margin-left', value) }
   operator.marginRight = (value: string) => { setValue('margin-right', value) }
   operator.marginTop = (value: string) => { setValue('margin-top', value) }
@@ -263,8 +268,6 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, () =>
   return [clear, operator, getClassName, addRule]
 }
 
-const selectorsCount = 0
-
 const ruleBuilder = RuleBuilder()
 
 const sortKeys = (a: string, b: string) => {
@@ -273,7 +276,7 @@ const sortKeys = (a: string, b: string) => {
   return 0
 }
 
-export const buildClassName = (props: any): string => {
+export const buildClassName = (props: any, id = ''): string => {
   const [clear, operator, className] = ruleBuilder
   clear()
 
@@ -285,7 +288,7 @@ export const buildClassName = (props: any): string => {
     //   console.warn("  --NoCSS: Operator «" + k + "» not found!")
     // }
   }
-  return className()
+  return className(id)
 }
 
 export const buildRule = (props: any, parentSelector: string, childSelector: string): void => {
@@ -321,6 +324,7 @@ export interface StylableComponentProps {
   paddingVertical?: string
   paddingTop?: string
   paddingBottom?: string
+  margin?: string
   marginLeft?: string
   marginRight?: string
   marginTop?: string

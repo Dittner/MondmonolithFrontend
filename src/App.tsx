@@ -108,20 +108,20 @@ export const ModalView = observer(() => {
             bgColor={theme.panelBg}
             borderColor={theme.border}
             padding='40px'
-            gap="30px" width='100%' maxWidth='400px'>
+            gap="30px" width='100%' maxWidth='500px'>
       {app.dialog &&
         <>
-          <Label className="ibm h4"
+          <Label className="mono h3"
                  width='100%'
                  textAlign='center'
                  text={app.dialog?.title}
-                 textColor={theme.green}
+                 textColor={theme.h3}
                  layer={LayoutLayer.ONE}/>
 
-          <Label className='ibm'
+          <Label className='mono'
                  width='100%'
                  text={app.dialog?.text}
-                 textColor={theme.text}/>
+                 textColor={theme.p}/>
 
           <HStack halign="center" valign="top" gap="50px">
             {app.dialog.onCancel &&

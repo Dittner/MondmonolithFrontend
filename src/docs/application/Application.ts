@@ -1,5 +1,6 @@
 import { uid } from '../infrastructure/UIDGenerator'
 import { Observable } from '../infrastructure/Observer'
+import { type Page } from '../domain/DomainModel'
 
 export enum LayoutLayer {
   ZERO = '0',
@@ -20,6 +21,7 @@ export enum AppSize {
 
 export class Application extends Observable {
   readonly uid
+  lastShownPage: Page | undefined = undefined
 
   //--------------------------------------
   //  isDocListShown
@@ -91,6 +93,19 @@ export class Application extends Observable {
 
   subscribeToWindowResize(): void {
     window.addEventListener('resize', this.updateSize.bind(this))
+  }
+
+  getScrollMaxY(): number {
+    const body = document.body
+    const html = document.documentElement
+    const docHeight = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    )
+    return docHeight - window.innerHeight
   }
 
   private updateSize(): void {

@@ -18,3 +18,11 @@ export const SmallSpinner = stylable(() => {
     </VStack>
   )
 })
+
+export const LargeSpinner = stylable(() => {
+  return (
+    <VStack halign="center" valign="center">
+      <img src={spinner} className="spinner" alt="spinner"/>
+    </VStack>
+  )
+})

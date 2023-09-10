@@ -97,7 +97,9 @@ code[class*=language-] {
 
 .token.attr-name,
 .token.deleted,
-.token.namespace,
+.token.namespace {
+	color: #7BA3AB
+}
 .token.tag {
 	color: #e2777a
 }
@@ -126,7 +128,7 @@ code[class*=language-] {
 .token.regex,
 .token.string,
 .token.variable {
-	color: #9cb9a8
+	color: #a6b794
 }
 
 .light .token.attr-value,

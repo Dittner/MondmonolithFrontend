@@ -10,15 +10,17 @@ import { useDocsContext } from '../../../App'
 * */
 
 interface HSeparatorProps {
-  theme: Theme
   visible?: boolean
   width?: string
+  height?: string
   marginHorizontal?: string
   marginVertical?: string
+  color?: string
 }
 
 export const HSeparator = (props: HSeparatorProps) => {
   if (props.visible === false) return <></>
+  const theme = useDocsContext().theme
 
   const style: any = { ...props }
   if (props.width !== undefined) style.width = props.width
@@ -30,18 +32,20 @@ export const HSeparator = (props: HSeparatorProps) => {
     style.marginTop = props.marginVertical
     style.marginBottom = props.marginVertical
   }
-  style.bgColor = props.theme.border
-  style.height = '1px'
-  style.maxHeight = '1px'
+  style.bgColor = props.color ?? theme.border
+  style.height = props.height ?? '1px'
+  style.maxHeight = props.height ?? '1px'
 
   return <div className={buildClassName(style)}/>
 }
 
 interface VSeparatorProps {
   visible?: boolean
+  width?: string
   height?: string
   marginHorizontal?: string
   marginVertical?: string
+  color?: string
 }
 
 export const VSeparator = (props: VSeparatorProps) => {
@@ -59,9 +63,9 @@ export const VSeparator = (props: VSeparatorProps) => {
     style.marginTop = props.marginVertical
     style.marginBottom = props.marginVertical
   }
-  style.bgColor = theme.border
-  style.width = '1px'
-  style.maxWidth = '1px'
+  style.bgColor = props.color ?? theme.border
+  style.width = props.width ?? '1px'
+  style.maxWidth = props.width ?? '1px'
 
   if (props.height !== undefined) {
     style.height = props.height

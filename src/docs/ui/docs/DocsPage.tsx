@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { DocList } from './DocList'
-import { useDocsContext } from '../../App'
+import { useDocsContext } from '../../../App'
 import { DocBody } from './DocBody'
 import { DocTopics } from './DocTopics'
 import { Header } from './Header'
-import { AppSize, LayoutLayer } from '../application/Application'
-import { observeApp } from '../DocsContext'
-import { observer } from '../infrastructure/Observer'
-import { StylableContainer } from './common/Container'
+import { AppSize, LayoutLayer } from '../../application/Application'
+import { observeApp } from '../../DocsContext'
+import { observer } from '../../infrastructure/Observer'
+import { StylableContainer } from '../common/Container'
 
 export const DocsPage = observer(() => {
   console.log('new DocsPage')

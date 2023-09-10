@@ -1,0 +1,566 @@
+import React, { useState } from 'react'
+import 'prismjs/components/prism-java'
+import 'prismjs/components/prism-jsx'
+import 'prismjs/components/prism-tsx'
+import 'prismjs/components/prism-typescript'
+import 'prismjs/components/prism-javascript'
+import 'prismjs/components/prism-python'
+import 'prismjs/components/prism-c'
+import 'prismjs/components/prism-cpp'
+import 'prismjs/components/prism-csharp'
+import 'prismjs/components/prism-swift'
+import 'prismjs/components/prism-json'
+import 'prismjs/components/prism-css'
+import 'prismjs/components/prism-markup'
+import { Label } from '../../common/Label'
+import { type NoCSSPageTheme } from '../NoCSSPage'
+import { loremIpsum } from '../../common/String++'
+import { MarkdownBlock, NoCSSControlView } from './NoCSSControlView'
+import { Button, type ButtonProps } from '../../common/Button'
+import { buildClassName, type StylableComponentProps } from '../../../application/NoCSS'
+import { useDocsContext } from '../../../../App'
+import { Spacer } from '../../common/Spacer'
+
+export const NoCSSButton = ({ theme }: { theme: NoCSSPageTheme }) => {
+  console.log('new NoCSSButton')
+  const [isSelected, setSelected] = useState(true)
+
+  return <NoCSSControlView controlLink='button'
+                           theme={theme}
+                           title='Button'
+                           subTitle='<button>'>
+
+    <MarkdownBlock title="1. Default and custom button"
+                   cssText={block1CSSTxt}
+                   noCSSText={block1NoCSSTxt}
+                   theme={theme}>
+      <Button title='Template'/>
+
+      <Button title='Template Disabled'
+              disabled/>
+
+      <Button title='Custom Btn'
+              textColor='#ebcdef'
+              bgColor='#8851ae'
+              paddingHorizontal='12px'
+              cornerRadius='5px'
+              borderColor='#8851ae'
+              hoverState={state => {
+                state.bgColor = '#673e83'
+              }}/>
+
+      <Button title='Custom Btn Disabled'
+              textColor='#ff0000'
+              bgColor='#ff0000'
+              paddingHorizontal='12px'
+              cornerRadius='5px'
+              borderColor='#ff0000'
+              hoverState={state => {
+                state.bgColor = '#ff0000'
+              }}
+              disabledState={state => {
+                state.opacity = '1'
+                state.bgColor = '0'
+                state.textColor = '#888888'
+                state.borderColor = '#888888'
+              }}
+              disabled/>
+
+    </MarkdownBlock>
+
+    <MarkdownBlock title="2. Selectable button"
+                   cssText={block2CSSTxt}
+                   noCSSText={block2NoCSSTxt}
+                   theme={theme}>
+      <Button title='Selectable Template Btn'
+              isSelected={isSelected}
+              onClick={() => {
+                setSelected(!isSelected)
+              }}/>
+
+      <Button title='Selectable Custom Btn'
+              isSelected={isSelected}
+              textColor='#ebcdef'
+              bgColor='#8851ae'
+              paddingHorizontal='12px'
+              cornerRadius='5px'
+              borderColor='#8851ae'
+              hoverState={state => {
+                state.bgColor = '#673e83'
+              }}
+              selectedState={state => {
+                state.borderColor = '#ebcdef'
+                state.bgColor = '#673e83'
+              }}
+              onClick={() => {
+                setSelected(!isSelected)
+              }}/>
+
+      <Label width='100%'
+             textAlign='right'
+             text={isSelected ? 'Selected' : 'Not selected'}
+             textColor={isSelected ? '#dca83a' : '#888888'}/>
+
+    </MarkdownBlock>
+
+    <MarkdownBlock title="3. Title with icon"
+                   cssText={block3CSSTxt}
+                   noCSSText={block3NoCSSTxt}
+                   theme={theme}>
+
+      <Button textColor='#ebcdef'
+              bgColor='#8851ae'
+              paddingHorizontal='12px'
+              cornerRadius='5px'
+              borderColor='#8851ae'
+              hoverState={state => {
+                state.bgColor = '#673e83'
+              }}>
+        <span className="icon-download"/>
+        <span>  Download</span>
+      </Button>
+
+    </MarkdownBlock>
+
+    <MarkdownBlock title="4. Inheritance"
+                   cssText={block4CSSTxt}
+                   noCSSText={block4NoCSSTxt}
+                   theme={theme}>
+      <SBtn title='S-Btn'/>
+      <MBtn title='M-Btn'/>
+      <LBtn title='L-Btn'/>
+      <XLBtn title='XL-Btn'/>
+    </MarkdownBlock>
+  </NoCSSControlView>
+}
+
+const SBtn = (props: ButtonProps) => {
+  return (
+    <Button textColor='#ebcdef'
+            bgColor='#8851ae'
+            fontSize='14px'
+            padding='8px'
+            cornerRadius='5px'
+            borderColor='#8851ae'
+            hoverState={state => {
+              state.bgColor = '#673e83'
+            }}
+            {...props}/>
+  )
+}
+
+const MBtn = (props: ButtonProps) => {
+  return (
+    <SBtn fontSize='18px'
+          padding='12px'
+          {...props}/>
+  )
+}
+
+const LBtn = (props: ButtonProps) => {
+  return (
+    <MBtn textColor='#f1e0bb'
+          fontSize='24px'
+          padding='20px'
+          {...props}/>
+  )
+}
+
+const XLBtn = (props: ButtonProps) => {
+  return (
+    <LBtn fontSize='32px'
+          padding='20px'
+          bgColor='#ae51a9'
+          hoverState={state => {
+            state.bgColor = '#874083'
+          }}
+          {...props}/>
+  )
+}
+
+/*
+==============================
+Block 1
+==============================
+*/
+const block1CSSTxt = `###### css-modules
+\`\`\`css
+.btn_template {
+  background-color: #3a4448;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #eeEEee;
+}
+.btn_template:hover {
+  background-color: #212628;
+}
+.btn_template_disabled {
+  background-color: #3a4448;
+  cursor: not-allowed;
+  opacity: 0.5;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #eeEEee;
+}
+
+.btn_custom {
+  color: #ebcdef;
+  background-color: #8851ae;
+  padding-left: 12px;
+  padding-right: 12px;
+  border-radius: 5px;
+  border: 1px solid #8851ae;
+}
+.btn_custom:hover {
+  background-color: #673e83;
+}
+.btn_custom_disabled {
+  background-color: 0;
+  border: 1px solid #888888;
+  border-radius: 5px;
+  cursor: not-allowed;
+  padding-left: 12px;
+  padding-right: 12px;
+  color:#888888;
+}
+\`\`\`
+###### jsx-module
+\`\`\`tsx
+const App = () => {
+  return (
+    <button className='btn_template'>
+      Template
+    </button>
+    <button className='btn_template_disabled'>
+      Template Disabled
+    </button>
+    <button className='btn_custom'>
+      Custom Btn
+    </button>
+    <button className='btn_custom_disabled'>
+      Custom Btn Disabled
+    </button>
+  )
+}
+\`\`\``
+
+const block1NoCSSTxt = `###### jsx-module
+\`\`\`tsx
+const App = () => {
+  return (
+    <Button title='Template'/>
+
+    <Button title='Template Disabled'
+            disabled/>
+
+    <Button title='Custom Btn'
+            textColor='#ebcdef'
+            bgColor='#8851ae'
+            paddingHorizontal='12px'
+            cornerRadius='5px'
+            borderColor='#8851ae'
+            hoverState={state => {
+              state.bgColor = '#673e83'
+            }}/>
+
+    <Button title='Custom Btn Disabled'
+            textColor='#ff0000'
+            bgColor='#ff0000'
+            paddingHorizontal='12px'
+            cornerRadius='5px'
+            borderColor='#ff0000'
+            hoverState={state => {
+              state.bgColor = '#ff0000'
+            }}
+            disabledState={state => {
+              state.opacity = '1'
+              state.bgColor = '0'
+              state.textColor = '#888888'
+              state.borderColor = '#888888'
+            }}
+            disabled/>
+  )
+}
+\`\`\``
+
+/*
+==============================
+Block 2
+==============================
+*/
+const block2CSSTxt = `###### css-module
+\`\`\`css
+.btn_template {
+  background-color: #3a4448;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #eeEEee;
+}
+.btn_template:hover {
+  background-color: #212628;
+}
+
+.btn_template_selected {
+  background-color: #212628;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #eeEEee;
+}
+
+.btn_custom {
+  color: #ebcdef;
+  background-color: #8851ae;
+  padding-left: 12px;
+  padding-right: 12px;
+  border-radius: 5px;
+  border: 1px solid #8851ae;
+}
+.btn_custom:hover {
+  background-color: #673e83;
+}
+.btn_custom_selected {
+  background-color: #673e83;
+  border: 1px solid #ebcdef;
+  border-radius: 5px;
+  padding-left: 12px;
+  padding-right: 12px;
+  color:#ebcdef;
+}
+.lbl_status {
+  width: 100%;  
+  text-align: right;
+  color: #888888;
+}
+.lbl_status_selected {
+  width: 100%;  
+  text-align: right;
+  color: #dca83a;
+}
+\`\`\`
+###### jsx-module
+\`\`\`tsx
+const App = () => {
+  const [isSelected, setSelected] = useState(true)
+  return (
+    <button 
+      className={isSelected ? 'btn_template_selected' : 'btn_template'}
+      onClick={() => { setSelected(!isSelected) }}>
+      Selectable Template Btn
+    </button>
+    <button 
+      className={isSelected ? 'btn_custom_selected' : 'btn_custom'}
+      onClick={() => { setSelected(!isSelected) }}>
+      Selectable Custom Btn
+    </button>
+    <p 
+      className={isSelected ? 'lbl_status_selected' : 'lbl_status'}>
+      Selectable Custom Btn
+    </p>
+  )
+}
+\`\`\``
+
+const block2NoCSSTxt = `###### jsx-module
+\`\`\`tsx
+const App = () => {
+  const [isSelected, setSelected] = useState(true)
+  return (
+    <Button title='Selectable Template Btn'
+            isSelected={isSelected}
+            onClick={() => {
+              setSelected(!isSelected)
+            }}/>
+
+    <Button title='Selectable Custom Btn'
+            isSelected={isSelected}
+            textColor='#ebcdef'
+            bgColor='#8851ae'
+            paddingHorizontal='12px'
+            cornerRadius='5px'
+            borderColor='#8851ae'
+            hoverState={state => {
+              state.bgColor = '#673e83'
+            }}
+            selectedState={state => {
+              state.borderColor = '#ebcdef'
+              state.bgColor = '#673e83'
+            }}
+            onClick={() => {
+              setSelected(!isSelected)
+            }}/>
+
+    <Label width='100%'
+           textAlign='right'
+           text={isSelected ? 'Selected' : 'Not selected'}
+           textColor={isSelected ? '#dca83a' : '#888888'}/>
+  )
+}
+\`\`\``
+/*
+==============================
+Block 3
+==============================
+*/
+const block3CSSTxt = `###### css-module
+\`\`\`css
+.btn_custom {
+  color: #ebcdef;
+  background-color: #8851ae;
+  padding-left: 12px;
+  padding-right: 12px;
+  border-radius: 5px;
+  border: 1px solid #8851ae;
+}
+.btn_custom:hover {
+  background-color: #673e83;
+}
+\`\`\`
+###### jsx-module
+\`\`\`tsx
+const App = () => {
+  return (
+    <button className='btn_custom'>
+      <span className="icon-download"/>
+      <span>  Download</span>
+    </button>
+  )
+}
+\`\`\``
+
+const block3NoCSSTxt = `###### jsx-module
+\`\`\`tsx
+const App = () => {
+  return (
+    <Button textColor='#ebcdef'
+            bgColor='#8851ae'
+            paddingHorizontal='12px'
+            cornerRadius='5px'
+            borderColor='#8851ae'
+            hoverState={state => {
+              state.bgColor = '#673e83'
+            }}>
+      <span className="icon-download"/>
+      <span>  Download</span>
+    </Button>
+  )
+}
+\`\`\``
+
+/*
+==============================
+Block 4
+==============================
+*/
+const block4CSSTxt = `###### css-modules
+\`\`\`css
+.btn {
+  color: #ebcdef;
+  background-color: #8851ae;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #8851ae;
+}
+.btn:hover {
+  background-color: #673e83;
+}
+
+.btn_s {
+  font-size: 14px;
+  padding: 8px;
+}
+
+.btn_m {
+  font-size: 18px;
+  padding: 12px;
+}
+
+.btn_l {
+  color: #f1e0bb;
+  font-size: 24px;
+  padding: 20px;
+}
+
+.btn_xl {
+  font-size: 32px;
+  padding: 20px;
+  background-color: #ae51a9;
+}
+.btn_xl:hover {
+  background-color: #874083;
+}
+\`\`\`
+###### jsx-module
+\`\`\`tsx
+const App = () => {
+  return (
+    <button className='btn btn_s'>
+      S-Btn
+    </button>
+    <button className='btn btn_s btn_m'>
+      M-Btn
+    </button>
+    <button className='btn btn_s btn_m btn_l'>
+      L-Btn
+    </button>
+    <button className='btn btn_s btn_m btn_l btn_xl'>
+      XL-Btn
+    </button>
+  )
+}
+\`\`\``
+
+const block4NoCSSTxt = `###### jsx-modules
+\`\`\`tsx
+const SBtn = (props: ButtonProps) => {
+  return (
+    <Button textColor='#ebcdef'
+            bgColor='#8851ae'
+            fontSize='14px'
+            padding='8px'
+            cornerRadius='5px'
+            borderColor='#8851ae'
+            hoverState={state => {
+              state.bgColor = '#673e83'
+            }}
+            {...props}/>
+  )
+}
+
+const MBtn = (props: ButtonProps) => {
+  return (
+    <SBtn fontSize='18px'
+          padding='12px'
+          {...props}/>
+  )
+}
+
+const LBtn = (props: ButtonProps) => {
+  return (
+    <MBtn textColor='#f1e0bb'
+          fontSize='24px'
+          padding='20px'
+          {...props}/>
+  )
+}
+
+const XLBtn = (props: ButtonProps) => {
+  return (
+    <LBtn fontSize='32px'
+          padding='20px'
+          bgColor='#ae51a9'
+          hoverState={state => {
+            state.bgColor = '#874083'
+          }}
+          {...props}/>
+  )
+}
+
+const App = () => {
+  return (
+    <SBtn title='S-Btn'/>
+    <MBtn title='M-Btn'/>
+    <LBtn title='L-Btn'/>
+    <XLBtn title='XL-Btn'/>
+  )
+}
+\`\`\``

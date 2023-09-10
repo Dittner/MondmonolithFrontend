@@ -4,7 +4,7 @@ import React, { lazy, Suspense, useLayoutEffect, useState } from 'react'
 import { AuthStatus } from './docs/domain/DomainModel'
 import { LoadingSpinner } from './docs/ui/common/Loading'
 import { observe, observer } from './docs/infrastructure/Observer'
-import { AuthPage } from './docs/ui/AuthPage'
+import { AuthPage } from './docs/ui/auth/AuthPage'
 import { LayoutLayer } from './docs/application/Application'
 import { HStack, VStack } from './docs/ui/common/Container'
 import { Label } from './docs/ui/common/Label'
@@ -20,8 +20,9 @@ console.log('DEV_MODE:', IS_DEV_MODE)
 const docsContext = React.createContext(DocsContext.init())
 export const useDocsContext = () => React.useContext(docsContext)
 
-export const LazyDocsPage = lazy(async() => await import('./docs/ui/DocsPage').then((module) => ({ default: module.DocsPage })))
-export const LazyIntroPage = lazy(async() => await import('./docs/ui/IntroPage').then((module) => ({ default: module.IntroPage })))
+export const LazyDocsPage = lazy(async() => await import('./docs/ui/docs/DocsPage').then((module) => ({ default: module.DocsPage })))
+export const LazyIntroPage = lazy(async() => await import('./docs/ui/intro/IntroPage').then((module) => ({ default: module.IntroPage })))
+export const LazyNoCSSPage = lazy(async() => await import('./docs/ui/nocss/NoCSSPage').then((module) => ({ default: module.NoCSSPage })))
 
 export const App = observer(() => {
   console.log('new App')
@@ -36,6 +37,8 @@ export const App = observer(() => {
         <Routes>
           <Route path="/auth" element={isUserAuthorized ? (<Navigate replace to="/docs"/>) : <AuthPage/>}/>
           <Route path="/docs/*" element={isUserAuthorized ? <LazyDocsPage/> : (<Navigate replace to="/auth"/>)}/>
+          <Route path="/nocss/*" element={<LazyNoCSSPage/>}/>
+          <Route path="/nocss/:controlId" element={<LazyNoCSSPage/>}/>
           <Route path="*" element={<LazyIntroPage/>}/>
         </Routes>
       </Suspense>

@@ -8,7 +8,7 @@ const DARK_THEME_APP_BG = '#292f32'
 
 const LIGHT_THEME_APP_BG = '#ebebeb'
 const LIGHT_THEME_RED = '#b44553'
-const LIGHT_THEME_BLACK = '#111314'
+const LIGHT_THEME_BLACK = '#23282a'
 
 const TRANSPARENT = '#00000001'
 
@@ -34,7 +34,6 @@ export interface Theme {
   text75: string
   green: string
   green75: string
-  pageTitleBg: string
   inputBg: string
   codeBg: string
   inputBorder: string
@@ -48,6 +47,7 @@ export interface Theme {
   about: string
   //docBody
   prevNextPageBtnBg: string
+  pageTitleBg: string
   //docList
   docListBg: string
   docLink: string
@@ -147,7 +147,6 @@ export class ThemeManager extends Observable {
     text75: '#76818d',
     green: '#aec7d5',
     green75: '#aed9ee75',
-    pageTitleBg: '#53cbff50',
     inputBg: '#252b2d',
     codeBg: '#2e393f75',
     inputBorder: '#323e44',
@@ -161,6 +160,7 @@ export class ThemeManager extends Observable {
     about: '#a9e2fc',
     //docBody
     prevNextPageBtnBg: '#794c78',
+    pageTitleBg: '#53cbff50',
     //docList
     docListBg: '#252b2e',
     docLink: '#76818d',
@@ -227,7 +227,6 @@ export class ThemeManager extends Observable {
     text75: '#706d69',
     green: '#2c363c',
     green75: '#2c363c75',
-    pageTitleBg: '#42134988',
     inputBg: '#ebebeb',
     codeBg: '#e8d6cd',
     inputBorder: '#ccCCcc',
@@ -241,6 +240,7 @@ export class ThemeManager extends Observable {
     about: '#23282a',
     //docBody
     prevNextPageBtnBg: '#333333',
+    pageTitleBg: '#42134988',
     //docList
     docListBg: '#e8e8e8',
     docLink: '#2A2623',
@@ -269,7 +269,7 @@ export class ThemeManager extends Observable {
     buildRule({ textColor: theme.h6 }, theme.id, 'h6')
     buildRule({ textColor: theme.p }, theme.id, 'p')
     buildRule({ textColor: theme.p }, theme.id, 'li')
-    buildRule({ bgColor: '#dce3e7', padding: '3px', margin: '-3px' }, theme.id, 'code')
+    buildRule({ bgColor: '#e0e5e8', padding: '3px', margin: '-3px' }, theme.id, 'code')
 
     const h1Props: StylableComponentProps = {
       className: 'h1',

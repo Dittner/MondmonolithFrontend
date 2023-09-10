@@ -88,12 +88,16 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
     rule += '.' + className + style + '}'
     classNameHash.set(hashSum, className)
     styleSheet.insertRule(rule)
+    //console.log('---NEW RULE:', rule)
 
     if (hoverStyle) {
       let rule = id ? '#' + id : ''
       rule += '.' + className + (isMobileDevice ? ':active{' : ':hover{') + hoverStyle + '}'
       styleSheet.insertRule(rule)
+      //console.log('  HOVER:', rule)
     }
+
+    //console.log('---------------')
 
     if (focusStyle) {
       let rule = id ? '#' + id : ''
@@ -136,9 +140,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
   }
 
   const setValue = (key: string, value: string, appendToClassName: boolean = true) => {
-    if (value === undefined) {
-      console.warn('NoCSS::setValue: undefined value was found for key: ', key)
-    }
+    if (value === undefined) return
 
     if (state === 'focus') focusStyle += key + ':' + value + ';'
     else if (state === 'hover') hoverStyle += key + ':' + value + ';'

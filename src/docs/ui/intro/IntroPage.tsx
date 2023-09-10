@@ -14,20 +14,20 @@ import 'prismjs/components/prism-swift'
 import 'prismjs/components/prism-json'
 import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-markup'
-import { stylable } from '../application/NoCSS'
-import { AppSize, LayoutLayer } from '../application/Application'
-import { observeApp } from '../DocsContext'
-import { observer } from '../infrastructure/Observer'
-import { useDocsContext } from '../../App'
+import { stylable } from '../../application/NoCSS'
+import { AppSize, LayoutLayer } from '../../application/Application'
+import { observeApp } from '../../DocsContext'
+import { observer } from '../../infrastructure/Observer'
+import { useDocsContext } from '../../../App'
 import { useNavigate } from 'react-router-dom'
-import { AuthStatus } from '../domain/DomainModel'
-import { Image } from './common/Image'
-import { HStack, VStack } from './common/Container'
-import { IconButton, LargeButton, RedButton } from './common/Button'
-import { Label } from './common/Label'
-import { TextArea } from './common/Input'
-import { Spacer } from './common/Spacer'
-import { VSeparator } from './common/Separator'
+import { AuthStatus } from '../../domain/DomainModel'
+import { Image } from '../common/Image'
+import { HStack, VStack } from '../common/Container'
+import { IconButton, LargeButton, RedButton } from '../common/Button'
+import { Label } from '../common/Label'
+import { TextArea } from '../common/Input'
+import { Spacer } from '../common/Spacer'
+import { VSeparator } from '../common/Separator'
 
 function useWindowPosition(limit: number = -1): number {
   const [scrollPosition, setPosition] = useState(window.scrollY)
@@ -209,7 +209,7 @@ const aboutTxt = `
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  YEAR  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   Demo  |  4.07  |  2023  
+*   to format notes and code fragments easily without   *   Demo  |  4.09  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           `
 
@@ -223,7 +223,7 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: Demo  |  VER: 4.07  |  YEAR: 2023      
+*  MODE: Demo  |  VER: 4.09  |  YEAR: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 `

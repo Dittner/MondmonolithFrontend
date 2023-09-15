@@ -13,7 +13,7 @@ import { Label } from '../common/Label'
 import { Spacer } from '../common/Spacer'
 import { sortByKey } from '../common/Utils'
 import { HeaderVerSep } from './Header'
-import { Input } from '../common/Input'
+import { InputForm } from '../common/Input'
 
 export const DocList = observer(stylable(() => {
   console.log('new DocList')
@@ -223,8 +223,6 @@ const DirectoryView = observer(({ dir }: { dir: Directory }) => {
 
 const DocPicker = ({ onFileSelected }: { onFileSelected: (doc: File) => void }) => {
   const [value, setValue] = useState('')
-  const { theme } = useDocsContext()
-
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -372,11 +370,11 @@ const DocForm = stylable((props: DocFormProps) => {
             paddingTop='11px'
             gap="0">
 
-        <Input type="text"
-               protocol={newDocTitleProtocol}
-               title="Doc's title"
-               onSubmitted={apply}
-               autoFocus/>
+        <InputForm type="text"
+                   protocol={newDocTitleProtocol}
+                   title="Doc's title"
+                   onSubmitted={apply}
+                   autoFocus/>
 
       <HStack halign="center" valign="center" gap="50px">
         <RedButton title="Cancel"
@@ -431,11 +429,11 @@ const DirForm = stylable((props: DirFormProps) => {
               paddingTop='11px'
               gap="0">
 
-        <Input type="text"
-               protocol={titleProtocol}
-               title="Directory"
-               onSubmitted={apply}
-               autoFocus
+        <InputForm type="text"
+                   protocol={titleProtocol}
+                   title="Directory"
+                   onSubmitted={apply}
+                   autoFocus
         />
 
       <HStack halign="center" valign="center" gap="50px">

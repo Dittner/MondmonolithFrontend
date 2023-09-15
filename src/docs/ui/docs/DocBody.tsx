@@ -25,7 +25,7 @@ import { observeApp, observeDirList, observeEditTools } from '../../DocsContext'
 import { HStack, StylableContainer, VStack } from '../common/Container'
 import { Button, IconButton, RedButton } from '../common/Button'
 import { Label } from '../common/Label'
-import { TextArea } from '../common/Input'
+import { TextEditor } from '../common/Input'
 import { Spacer } from '../common/Spacer'
 import { observe, observer } from '../../infrastructure/Observer'
 
@@ -357,14 +357,14 @@ const PageTitleEditor = observer(({ page }: { page: Page }) => {
   }
 
   return (
-    <TextArea key={page.uid}
-              className="mono"
-              text={page.title}
-              paddingHorizontal="20px"
-              paddingTop="10px"
-              onApply={apply}
-              onCancel={cancel}
-              autoFocus/>
+    <TextEditor key={page.uid}
+                className="mono"
+                text={page.title}
+                paddingHorizontal="20px"
+                paddingTop="10px"
+                onApply={apply}
+                onCancel={cancel}
+                autoFocus/>
   )
 })
 
@@ -468,13 +468,13 @@ const PageBlockEditor = ({ block }: { block: PageBlock }) => {
   }
 
   return (
-    <TextArea key={block.uid}
-              text={block.text}
-              className="mono"
-              paddingHorizontal="20px"
-              paddingTop="10px"
-              onApply={apply}
-              onCancel={cancel}
-              autoFocus/>
+    <TextEditor key={block.uid}
+                text={block.text}
+                className="mono"
+                paddingHorizontal="20px"
+                paddingTop="10px"
+                onApply={apply}
+                onCancel={cancel}
+                autoFocus/>
   )
 }

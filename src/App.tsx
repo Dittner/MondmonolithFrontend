@@ -182,6 +182,9 @@ export const ErrorMsgView = observer(() => {
 
     <IconButton icon="close"
                 popUp="Close"
+                textColor={theme.text}
+                hoverState={state =>
+                  state.textColor = theme.h3}
                 onClick={close}/>
   </HStack>
 })

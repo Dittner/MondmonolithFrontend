@@ -31,7 +31,7 @@ export const NoCSSLabel = ({ theme }: { theme: NoCSSPageTheme }) => {
                    theme={theme}>
       <Label className='def'
              fontSize='18px'
-             text='Abyssus abyssum invocat.'
+             text='Abyssus abyssum invocat'
              padding='20px'
              textColor='#ffFFff'
              bgColor='#3a7c7b'
@@ -131,7 +131,7 @@ const colorsCSSTxt = `###### css-module
 const App = () => {
   return (
     <p className='label'>
-      Abyssus abyssum invocat.
+      Abyssus abyssum invocat
     </p>
   )
 }
@@ -141,7 +141,7 @@ const colorsNoCSSTxt = `###### jsx-module
 \`\`\`tsx
 const App = () => {
   return (
-    <Label text='Abyssus abyssum invocat.'
+    <Label text='Abyssus abyssum invocat'
            fontSize='18px'
            padding='20px'
            textColor='#ffFFff'

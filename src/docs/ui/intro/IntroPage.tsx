@@ -25,7 +25,7 @@ import { Image } from '../common/Image'
 import { HStack, VStack } from '../common/Container'
 import { IconButton, LargeButton, RedButton } from '../common/Button'
 import { Label } from '../common/Label'
-import { TextArea } from '../common/Input'
+import { TextEditor } from '../common/Input'
 import { Spacer } from '../common/Spacer'
 import { VSeparator } from '../common/Separator'
 
@@ -123,7 +123,7 @@ export const IntroPage = observer(() => {
     }
 
     <HStack halign='left' valign='center'
-            width="100%" height='50px'
+            width="100%" height='50px' gap='0'
             paddingHorizontal='10px' top="0" fixed
             layer={LayoutLayer.HEADER}>
       <IconButton icon={theme.isDark ? 'moon' : 'sun'}
@@ -133,6 +133,14 @@ export const IntroPage = observer(() => {
                   }}/>
 
       <Spacer/>
+
+      <RedButton title='NoCSS'
+                 onClick={() => {
+                   navigate('/nocss')
+                 }}/>
+
+      <VSeparator marginHorizontal='10px' color={theme.red}
+                  height="20px"/>
 
       <RedButton title={user.authStatus === AuthStatus.AUTHORIZED ? 'Docs' : 'Log in'}
                  onClick={() => {
@@ -209,7 +217,7 @@ const aboutTxt = `
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  YEAR  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   Demo  |  4.09  |  2023  
+*   to format notes and code fragments easily without   *   Demo  |  4.13  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           `
 
@@ -223,7 +231,7 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: Demo  |  VER: 4.09  |  YEAR: 2023      
+*  MODE: Demo  |  VER: 4.13  |  YEAR: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 `
@@ -344,13 +352,13 @@ const MarkdownEditor = (props: MarkdownEditorProps) => {
         }
 
         {!props.secondMarkdownText &&
-          <TextArea className="mono"
-                    text={value}
-                    paddingHorizontal="25px"
-                    paddingVertical="20px"
-                    onApply={apply}
-                    onCancel={cancel}
-                    autoFocus={props.autoFocus}/>
+          <TextEditor className="mono"
+                      text={value}
+                      paddingHorizontal="25px"
+                      paddingVertical="20px"
+                      onApply={apply}
+                      onCancel={cancel}
+                      autoFocus={props.autoFocus}/>
         }
 
         <HStack halign="left"
@@ -387,14 +395,14 @@ const MarkdownEditor = (props: MarkdownEditorProps) => {
         }
 
         {!props.secondMarkdownText &&
-          <TextArea className="mono"
-                    text={value}
-                    paddingHorizontal="25px"
-                    paddingVertical="20px"
-                    onApply={apply}
-                    onCancel={cancel}
-                    autoFocus={props.autoFocus}
-                    width="50%"/>
+          <TextEditor className="mono"
+                      text={value}
+                      paddingHorizontal="25px"
+                      paddingVertical="20px"
+                      onApply={apply}
+                      onCancel={cancel}
+                      autoFocus={props.autoFocus}
+                      width="50%"/>
         }
 
         <VSeparator/>

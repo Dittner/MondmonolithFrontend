@@ -101,9 +101,7 @@ export const HeaderView = observer(() => {
                  text={editTools.editMode ? 'Edit mode: ' : 'Read mode: '}
                  textColor={theme.text75}/>
 
-          <Switcher color={theme.appBg}
-                    disabled={!editTools.editModeEnabled}
-                    selectionColor={theme.red}
+          <Switcher disabled={!editTools.editModeEnabled}
                     isSelected={editTools.editMode}
                     onClick={() => {
                       editTools.toggleEditMode()

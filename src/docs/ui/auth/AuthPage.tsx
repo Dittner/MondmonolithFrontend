@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { LayoutLayer } from '../../application/Application'
 import { observer } from '../../infrastructure/Observer'
 import { useDocsContext } from '../../../App'
@@ -9,8 +9,8 @@ import { HStack, VStack } from '../common/Container'
 import { IconButton, LargeButton, RedButton, TextButton } from '../common/Button'
 import { Spacer } from '../common/Spacer'
 import { Label } from '../common/Label'
-import { Input, type InputProps } from '../common/Input'
-import { buildClassName, type StylableComponentProps } from '../../application/NoCSS'
+import { TextInput, InputForm, type InputFormProps, type TextInputProps } from '../common/Input'
+import { type StylableComponentProps } from '../../application/NoCSS'
 import { type Theme } from '../../application/ThemeManager'
 
 const FORM_WIDTH = '40rem'
@@ -169,19 +169,19 @@ export const AuthPage = observer(() => {
                paddingBottom='20px'
                layer={LayoutLayer.ONE}/>
 
-        <Input type="text"
-               width='175px'
-               placeHolder='000000'
-               className='mono'
-               fontSize='40px'
-               textColor={colorScheme.inputText}
-               height='60px'
-               protocol={codeProtocol}
-               border={['2px', 'solid', theme.text75]}
-               focusState={state => {
-                 state.border = ['2px', 'solid', theme.red]
-               }}
-               onSubmitted={sendVerificationCode}/>
+        <InputForm type="text"
+                   width='175px'
+                   placeHolder='000000'
+                   className='mono'
+                   fontSize='40px'
+                   textColor={colorScheme.inputText}
+                   height='60px'
+                   protocol={codeProtocol}
+                   border={['1px', 'solid', theme.text75]}
+                   focusState={state => {
+                     state.border = ['1px', 'solid', theme.red]
+                   }}
+                   onSubmitted={sendVerificationCode}/>
 
         <Spacer height='30px'/>
 
@@ -242,29 +242,10 @@ const defLInputProps = (theme: Theme): any => {
   }
 }
 
-const LInput = (props: InputProps) => {
+const LInput = (props: InputFormProps) => {
   console.log('new LInput')
   const theme = useDocsContext().theme
-  const customProps = { ...defLInputProps(theme), ...props }
-
-  const onKeyDown = (e: any) => {
-    // Enter key
-    if (e.keyCode === 13 && !e.shiftKey) {
-      e.preventDefault()
-      e.stopPropagation()
-      customProps.onSubmitted?.()
-    }
-  }
-
-  const inputRef = useCallback((input: HTMLInputElement) => {
-    if (input && customProps.autoFocus) {
-      setTimeout(() => {
-        input.focus()
-      }, 0)
-    }
-  }, [customProps.autoFocus])
-
-  const className = 'className' in customProps ? customProps.className + ' ' + buildClassName(customProps) : buildClassName(customProps)
+  const style = { ...defLInputProps(theme), ...props }
 
   return <HStack halign='left' valign='base'
                  width='100%'>
@@ -272,19 +253,9 @@ const LInput = (props: InputProps) => {
            textAlign='left'
            width='160px'
            fontSize={TITLE_FONT_SIZE}
-           text={customProps.placeHolder}
-           textColor={customProps.titleColor}/>
+           text={style.placeHolder}
+           textColor={style.titleColor}/>
 
-    <input ref={inputRef}
-           className={className}
-           autoCorrect="off"
-           autoComplete="off"
-           type={customProps.type}
-           defaultValue={customProps.text ?? customProps.protocol?.value ?? ''}
-           onChange={e => {
-             if (customProps.protocol) customProps.protocol.value = e.currentTarget.value
-             customProps.onChange?.(e.currentTarget.value)
-           }}
-           onKeyDown={onKeyDown}/>
+    <TextInput {...style} placeHolder='' border='none'/>
   </HStack>
 }

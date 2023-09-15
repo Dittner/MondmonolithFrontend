@@ -19,6 +19,7 @@ export const abbreviations: Record<string, string> = {
   'display': 'D',
   'flex-direction': 'F',
   'flex-grow': 'FG',
+  'flex-wrap': 'FR',
   'font-family': 'FF',
   'font-size': 'FS',
   'font-weight': 'FW',
@@ -26,6 +27,7 @@ export const abbreviations: Record<string, string> = {
   'height': 'H',
   'justify-content': 'J',
   'left': 'L',
+  'line_height': 'LH',
   'margin': 'M',
   'margin-left': 'ML',
   'margin-right': 'MR',
@@ -58,7 +60,7 @@ export const abbreviations: Record<string, string> = {
   'z-index': 'Z'
 }
 
-const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: string) => string, (parentSelector: string, childSelector: string) => void] => {
+const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: string, tag: string) => string, (parentSelector: string, childSelector: string) => void] => {
   let hashSum: string = ''
   let style = ''
   let state: 'normal' | 'hover' | 'focus' = 'normal'
@@ -75,7 +77,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
 
   const operator: Record<string, (value: any) => void> = Object.create(null)
 
-  const getClassName = (id: string): string => {
+  const getClassName = (id: string, tag: string): string => {
     if (!hashSum) return ''
 
     if (classNameHash.has(hashSum)) { return classNameHash.get(hashSum) as string }
@@ -85,14 +87,14 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
     //console.log('--new selector #' + (++selectorsCount) + ': ', className)
 
     let rule = id ? '#' + id : ''
-    rule += '.' + className + style + '}'
+    rule += tag + '.' + className + style + '}'
     classNameHash.set(hashSum, className)
     styleSheet.insertRule(rule)
     //console.log('---NEW RULE:', rule)
 
     if (hoverStyle) {
       let rule = id ? '#' + id : ''
-      rule += '.' + className + (isMobileDevice ? ':active{' : ':hover{') + hoverStyle + '}'
+      rule += tag + '.' + className + (isMobileDevice ? ':active{' : ':hover{') + hoverStyle + '}'
       styleSheet.insertRule(rule)
       //console.log('  HOVER:', rule)
     }
@@ -101,7 +103,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
 
     if (focusStyle) {
       let rule = id ? '#' + id : ''
-      rule += '.' + className + ':focus{' + focusStyle + '}'
+      rule += tag + '.' + className + ':focus{' + focusStyle + '}'
       styleSheet.insertRule(rule)
     }
 
@@ -136,7 +138,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
     focusStyle = ''
     hoverStyle = ''
     state = 'normal'
-    style = '{box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;'
+    style = '{'
   }
 
   const setValue = (key: string, value: string, appendToClassName: boolean = true) => {
@@ -196,6 +198,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
   operator.gap = (value: string) => { setValue('gap', value) }
   operator.flexDirection = (value: string) => { setValue('flex-direction', value) }
   operator.flexGrow = (value: string) => { setValue('flex-grow', value) }
+  operator.wrap = (value: string) => { value && setValue('flex-wrap', 'wrap') }
   operator.alignItems = (value: string) => { setValue('align-items', value) }
   operator.justifyContent = (value: string) => { setValue('justify-content', value) }
   operator.margin = (value: string) => { setValue('margin', value) }
@@ -212,10 +215,10 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
     setValue('margin-bottom', value)
   }
 
-  operator.bgColor = (value: string) => { setValue('background-color', value) }
-  operator.borderColor = (value: string) => { setValue('border', '1px solid' + value) }
-  operator.border = (value: string | [string, string, string]) => { setValue('border', Array.isArray(value) ? value.join(' ') : value) }
   operator.outline = (value: string | [string, string, string]) => { setValue('outline', Array.isArray(value) ? value.join(' ') : value) }
+  operator.bgColor = (value: string) => { setValue('background-color', value) }
+  operator.borderColor = (value: string) => { setValue('border', '1px ' + 'solid ' + value) }
+  operator.border = (value: string | [string, string, string]) => { setValue('border', Array.isArray(value) ? value.join(' ') : value) }
   operator.borderLeft = (value: string | [string, string, string]) => { setValue('border-left', Array.isArray(value) ? value.join(' ') : value) }
   operator.borderRight = (value: string | [string, string, string]) => { setValue('border-right', Array.isArray(value) ? value.join(' ') : value) }
   operator.borderTop = (value: string | [string, string, string]) => { setValue('border-top', Array.isArray(value) ? value.join(' ') : value) }
@@ -228,6 +231,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
   operator.fontFamily = (value: string) => { setValue('font-family', value) }
   operator.fontSize = (value: string) => { setValue('font-size', value) }
   operator.fontWeight = (value: string) => { setValue('font-weight', value) }
+  operator.lineHeight = (value: string) => { setValue('line_height', value) }
   operator.textColor = (value: string) => { setValue('color', value) }
   operator.textAlign = (value: string) => { setValue('text-align', value) }
   operator.textDecoration = (value: string) => { setValue('text-decoration', value) }
@@ -278,7 +282,7 @@ const sortKeys = (a: string, b: string) => {
   return 0
 }
 
-export const buildClassName = (props: any, id = ''): string => {
+export const buildClassName = (props: any, id = '', tag = ''): string => {
   const [clear, operator, className] = ruleBuilder
   clear()
 
@@ -290,7 +294,7 @@ export const buildClassName = (props: any, id = ''): string => {
     //   console.warn("  --NoCSS: Operator «" + k + "» not found!")
     // }
   }
-  return className(id)
+  return className(id, tag)
 }
 
 export const buildRule = (props: any, parentSelector: string, childSelector: string): void => {
@@ -305,6 +309,7 @@ export const buildRule = (props: any, parentSelector: string, childSelector: str
   addRule(parentSelector, childSelector)
 }
 
+export type BorderStyle = 'solid' | 'dotted' | 'dashed' | 'double' | 'none' | 'hidden'
 export interface StylableComponentProps {
   id?: string
   key?: string
@@ -334,6 +339,7 @@ export interface StylableComponentProps {
   marginHorizontal?: string
   marginVertical?: string
   fixed?: boolean
+  wrap?: boolean
   absolute?: boolean
   relative?: boolean
   enableOwnScroller?: boolean
@@ -350,13 +356,13 @@ export interface StylableComponentProps {
   textOverflow?: 'auto' | 'ellipsis' | 'clip' | 'fade'
   textTransform?: 'none' | 'uppercase' | 'capitalize' | 'lowercase'
   bgColor?: string
-  border?: string | [string, string, string]
   borderColor?: string
+  border?: string | [string, BorderStyle, string]
+  borderLeft?: string | [string, BorderStyle, string]
+  borderRight?: string | [string, BorderStyle, string]
+  borderTop?: string | [string, BorderStyle, string]
+  borderBottom?: string | [string, BorderStyle, string]
   outline?: string | [string, string, string]
-  borderLeft?: string | [string, string, string]
-  borderRight?: string | [string, string, string]
-  borderTop?: string | [string, string, string]
-  borderBottom?: string | [string, string, string]
   cornerRadius?: string
   opacity?: string
   shadow?: string
@@ -364,6 +370,7 @@ export interface StylableComponentProps {
   fontFamily?: string
   fontSize?: string
   fontWeight?: string
+  lineHeight?: string
   caretColor?: string
   visible?: boolean
   className?: string

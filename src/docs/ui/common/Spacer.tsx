@@ -35,5 +35,5 @@ export const Spacer = ({
     style.maxHeight = height
   }
 
-  return <div className={'spacer ' + buildClassName(style)}/>
+  return <div className={buildClassName(style)}/>
 }

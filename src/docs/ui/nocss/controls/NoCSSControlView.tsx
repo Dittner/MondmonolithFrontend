@@ -42,14 +42,14 @@ export const NoCSSControlView = observer((props: NoCSSControlViewProps) => {
             bgColor={theme.bg}
             halign="center"
             paddingLeft={app.size !== AppSize.XS ? '200px' : '40px'}
-            paddingRight={app.size === AppSize.L ? '200px' : '40px'}
+            paddingRight='40px'
             valign="top"
             gap="20px"
             disableHorizontalScroll>
 
       <VStack halign='stretch' valign='top'
-              width="100%" maxWidth='1400px' gap='0'
-              paddingTop='20px'>
+              width="100%" maxWidth={theme.contentWidth} gap='0'
+              paddingTop='40px'>
 
         <Label className='h2'
                text={props.title}
@@ -61,12 +61,12 @@ export const NoCSSControlView = observer((props: NoCSSControlViewProps) => {
                text={props.subTitle}
                width='100%'
                marginTop='-10px'
-               paddingBottom='50px'
-               textColor={theme.red}/>
+               paddingBottom='30px'
+               textColor={theme.gray}/>
 
         {props.children}
 
-        <HStack halign='stretch' valign='center'>
+        <HStack halign='stretch' valign='center' marginHorizontal='-20px'>
           {prevLink &&
             <Button onClick={() => { navigateTo(prevLink) }}
                     height='45px'
@@ -134,22 +134,29 @@ export const MarkdownBlock = observer((props: MarkdownBlockProps) => {
 
         <HStack halign='left' valign='center'
                 padding='20px' marginHorizontal='-20px'
-                bgColor='#33414850'>
+                bgColor='#33414850'
+                wrap>
           {props.children}
         </HStack>
 
         <Label text='CSS'
-               textAlign='right'
-               marginRight='-20px'
-               textColor='#92027c'/>
+               fontSize='14px'
+               textAlign='center'
+               height='30px'
+               width='100%'
+               padding='5px'
+               textColor='#c70091'/>
 
         <MarkdownText value={props.cssText}
                       width="100%"/>
 
         <Label text='NoCSS'
-               marginRight='-20px'
-               textAlign='right'
-               textColor='#8b28c9'/>
+               textAlign='center'
+               height='30px'
+               fontSize='14px'
+               width='100%'
+               padding='5px'
+               textColor='#8300d5'/>
 
         <MarkdownText value={props.noCSSText}
                       width="100%"/>
@@ -182,23 +189,26 @@ export const MarkdownBlock = observer((props: MarkdownBlockProps) => {
       </HStack>
 
       <HStack halign="stretch"
-              valign="stretch"
-              paddingVertical='15px'
+              valign="bottom"
               marginHorizontal='-20px'
+              paddingTop='10px'
               gap="0">
-
         <Label text='CSS'
+               textAlign='center'
                width='50%'
-               textAlign='right'
-               paddingRight='30px'
-               textColor='#92027c'/>
+               height='30px'
+               fontSize='14px'
+               padding='5px'
+               marginRight='40px'
+               textColor='#c70091'/>
 
         <Label text='NoCSS'
+               textAlign='center'
+               height='30px'
+               fontSize='14px'
                width='50%'
-               textAlign='right'
-               textColor='#8b28c9'/>
-
-        <Spacer/>
+               padding='5px'
+               textColor='#8300d5'/>
       </HStack>
 
       <HSeparator color='#334148' marginHorizontal='-20px'/>

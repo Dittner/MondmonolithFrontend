@@ -126,6 +126,7 @@ export const NoCSSButton = ({ theme }: { theme: NoCSSPageTheme }) => {
                    cssText={block4CSSTxt}
                    noCSSText={block4NoCSSTxt}
                    theme={theme}>
+      <Btn title='Btn'/>
       <SBtn title='S-Btn'/>
       <MBtn title='M-Btn'/>
       <LBtn title='L-Btn'/>
@@ -134,18 +135,30 @@ export const NoCSSButton = ({ theme }: { theme: NoCSSPageTheme }) => {
   </NoCSSControlView>
 }
 
-const SBtn = (props: ButtonProps) => {
+const Btn = (props: ButtonProps) => {
   return (
     <Button textColor='#ebcdef'
-            bgColor='#8851ae'
+            bgColor='0'
             fontSize='14px'
+            paddingHorizontal='none'
             padding='8px'
-            cornerRadius='5px'
-            borderColor='#8851ae'
             hoverState={state => {
-              state.bgColor = '#673e83'
+              state.textDecoration = 'underline'
             }}
             {...props}/>
+  )
+}
+
+const SBtn = (props: ButtonProps) => {
+  return (
+    <Btn textColor='#ebcdef'
+         bgColor='#8851ae'
+         cornerRadius='5px'
+         borderColor='#8851ae'
+         hoverState={state => {
+           state.bgColor = '#673e83'
+         }}
+         {...props}/>
   )
 }
 
@@ -159,7 +172,7 @@ const MBtn = (props: ButtonProps) => {
 
 const LBtn = (props: ButtonProps) => {
   return (
-    <MBtn textColor='#f1e0bb'
+    <MBtn textColor='#ffFFff'
           fontSize='24px'
           padding='20px'
           {...props}/>
@@ -169,7 +182,7 @@ const LBtn = (props: ButtonProps) => {
 const XLBtn = (props: ButtonProps) => {
   return (
     <LBtn fontSize='32px'
-          padding='20px'
+          padding='32px'
           bgColor='#ae51a9'
           hoverState={state => {
             state.bgColor = '#874083'
@@ -244,7 +257,7 @@ const App = () => {
 }
 \`\`\``
 
-const block1NoCSSTxt = `###### jsx-module
+const block1NoCSSTxt = `###### tsx-module
 \`\`\`tsx
 const App = () => {
   return (
@@ -360,7 +373,7 @@ const App = () => {
 }
 \`\`\``
 
-const block2NoCSSTxt = `###### jsx-module
+const block2NoCSSTxt = `###### tsx-module
 \`\`\`tsx
 const App = () => {
   const [isSelected, setSelected] = useState(true)
@@ -427,7 +440,7 @@ const App = () => {
 }
 \`\`\``
 
-const block3NoCSSTxt = `###### jsx-module
+const block3NoCSSTxt = `###### tsx-module
 \`\`\`tsx
 const App = () => {
   return (
@@ -454,19 +467,22 @@ Block 4
 const block4CSSTxt = `###### css-modules
 \`\`\`css
 .btn {
+  font-size: 14px;
   color: #ebcdef;
-  background-color: #8851ae;
-  padding: 12px;
-  border-radius: 5px;
-  border: 1px solid #8851ae;
+  padding: 8px;
+  textDecoration = none
 }
 .btn:hover {
-  background-color: #673e83;
+  textDecoration = underline
 }
 
 .btn_s {
-  font-size: 14px;
-  padding: 8px;
+  background-color: #8851ae;
+  border-radius: 5px;
+  border: 1px solid #8851ae;
+}
+.btn_s:hover {
+  background-color: #673e83;
 }
 
 .btn_m {
@@ -475,14 +491,14 @@ const block4CSSTxt = `###### css-modules
 }
 
 .btn_l {
-  color: #f1e0bb;
+  color: #ffFFff;
   font-size: 24px;
   padding: 20px;
 }
 
 .btn_xl {
   font-size: 32px;
-  padding: 20px;
+  padding: 32px;
   background-color: #ae51a9;
 }
 .btn_xl:hover {
@@ -493,6 +509,9 @@ const block4CSSTxt = `###### css-modules
 \`\`\`tsx
 const App = () => {
   return (
+    <button className='btn'>
+      Btn
+    </button>
     <button className='btn btn_s'>
       S-Btn
     </button>
@@ -509,20 +528,31 @@ const App = () => {
 }
 \`\`\``
 
-const block4NoCSSTxt = `###### jsx-modules
+const block4NoCSSTxt = `###### tsx-modules
 \`\`\`tsx
-const SBtn = (props: ButtonProps) => {
+const Btn = (props: ButtonProps) => {
   return (
     <Button textColor='#ebcdef'
-            bgColor='#8851ae'
-            fontSize='14px'
+            bgColor='0'
+            paddingHorizontal='none'
             padding='8px'
-            cornerRadius='5px'
-            borderColor='#8851ae'
+            fontSize='14px'
             hoverState={state => {
-              state.bgColor = '#673e83'
+              state.textDecoration = 'underline'
             }}
             {...props}/>
+  )
+}
+
+const SBtn = (props: ButtonProps) => {
+  return (
+    <Btn bgColor='#8851ae'
+         cornerRadius='5px'
+         borderColor='#8851ae'
+         hoverState={state => {
+           state.bgColor = '#673e83'
+         }}
+         {...props}/>
   )
 }
 
@@ -536,7 +566,7 @@ const MBtn = (props: ButtonProps) => {
 
 const LBtn = (props: ButtonProps) => {
   return (
-    <MBtn textColor='#f1e0bb'
+    <MBtn textColor='#ffFFff'
           fontSize='24px'
           padding='20px'
           {...props}/>
@@ -546,7 +576,7 @@ const LBtn = (props: ButtonProps) => {
 const XLBtn = (props: ButtonProps) => {
   return (
     <LBtn fontSize='32px'
-          padding='20px'
+          padding='32px'
           bgColor='#ae51a9'
           hoverState={state => {
             state.bgColor = '#874083'
@@ -557,6 +587,7 @@ const XLBtn = (props: ButtonProps) => {
 
 const App = () => {
   return (
+    <Btn title='Btn'/>
     <SBtn title='S-Btn'/>
     <MBtn title='M-Btn'/>
     <LBtn title='L-Btn'/>

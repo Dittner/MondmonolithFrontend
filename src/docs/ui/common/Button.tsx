@@ -19,19 +19,9 @@ export interface ButtonProps extends StylableComponentProps {
   disabledState?: (state: StylableComponentProps) => void
 }
 
-const defBtnProps = {
-  textColor: '#eeEEee',
-  bgColor: '#3a4448',
-  selectedBgColor: '#212628',
-  paddingHorizontal: '10px',
-  hoverState: (state: StylableComponentProps) => {
-    state.bgColor = '#212628'
-  }
-}
-
 const BaseButton = (props: ButtonProps) => {
   if ('visible' in props && !props.visible) return <></>
-  let className = buildClassName(props, 'NoCSSBtn')
+  let className = buildClassName(props)
   if ('className' in props) className += ' ' + props.className
 
   return <button id='NoCSSBtn'
@@ -45,6 +35,16 @@ const BaseButton = (props: ButtonProps) => {
                  }}>{props.title ?? props.children}</button>
 }
 
+const defBtnProps = {
+  textColor: '#eeEEee',
+  bgColor: '#3a4448',
+  selectedBgColor: '#212628',
+  paddingHorizontal: '10px',
+  hoverState: (state: StylableComponentProps) => {
+    state.bgColor = '#212628'
+  }
+}
+
 export const Button = (props: ButtonProps) => {
   const isDisabled = 'disabled' in props && props.disabled
   if (isDisabled) {
@@ -55,7 +55,8 @@ export const Button = (props: ButtonProps) => {
                        paddingHorizontal={defBtnProps.paddingHorizontal}
                        opacity='0.5'
                        {...style}
-                       hoverState={_ => {}}/>
+                       hoverState={_ => {
+                       }}/>
   }
 
   const isSelected = 'isSelected' in props && props.isSelected
@@ -127,38 +128,68 @@ export const TextButton = (props: ButtonProps) => {
                  {...props}/>
 }
 
-export const Switcher = ({
-  color,
-  selectionColor,
-  isSelected,
-  disabled,
-  onClick
-}: { color: string, selectionColor: string, isSelected: boolean, disabled: boolean, onClick: () => void }) => {
-  const btnWidth = '34px'
-  const btnHeight = '22px'
-  const thumbDiameter = '16px'
+/*
+*
+* Switcher
+*
+* */
+
+export interface SwitcherProps {
+  width?: number
+  height?: number
+  borderWidth?: number
+  thumbColor?: string
+  selectedThumbColor?: string
+  bgColor?: string
+  selectedBgColor?: string
+  visible?: boolean
+  disabled?: boolean
+  isSelected?: boolean
+  onClick?: () => void
+}
+
+export const BaseSwitcher = (props: SwitcherProps) => {
+  const width = props.width ?? 34
+  const height = props.height ?? 22
+  const borderWidth = props.borderWidth ?? 3
+  const thumbDiameter = height - 2 * borderWidth
+
   const click = () => {
-    if (!disabled) onClick()
+    if (!props.disabled) props.onClick?.()
   }
-  return <StylableContainer disabled={disabled}
-                            width={btnWidth}
-                            height={btnHeight}
-                            bgColor={isSelected ? selectionColor : '#727a8690'}
-                            cornerRadius={btnHeight}
-                            animate="background-color 300ms"
+  return <StylableContainer disabled={props.disabled}
+                            width={width + 'px'}
+                            height={height + 'px'}
+                            bgColor={props.isSelected ? props.selectedBgColor ?? props.bgColor : props.bgColor}
+                            cornerRadius={height + 'px'}
+                            animate='background-color 300ms'
                             btnCursor
                             onClick={click}>
 
-    <StylableContainer width={thumbDiameter}
-                       height={thumbDiameter}
-                       cornerRadius={thumbDiameter}
-                       bgColor={color}
-                       top="3px"
-                       left={isSelected ? '15px' : '3px'}
-                       animate="left 300ms"
+    <StylableContainer width={thumbDiameter + 'px'}
+                       height={thumbDiameter + 'px'}
+                       cornerRadius={thumbDiameter + 'px'}
+                       bgColor={props.isSelected ? props.selectedThumbColor ?? props.thumbColor : props.thumbColor}
+                       top='3px'
+                       left={(props.isSelected ? width - thumbDiameter - borderWidth : borderWidth) + 'px'}
+                       animate='left 300ms'
                        relative/>
   </StylableContainer>
 }
+
+export const Switcher = (props: SwitcherProps) => {
+  const { theme } = useDocsContext()
+  return <BaseSwitcher bgColor='#727a8690'
+                       selectedBgColor={theme.red}
+                       thumbColor={theme.appBg}
+                       {...props}/>
+}
+
+/*
+*
+* IconButton
+*
+* */
 
 type IconType =
   'sun'

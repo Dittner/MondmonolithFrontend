@@ -7,9 +7,12 @@ import * as React from 'react'
 *
 * */
 
+export type StackHAlign = 'left' | 'right' | 'center' | 'stretch'
+export type StackVAlign = 'top' | 'center' | 'base' | 'bottom' | 'stretch'
+
 export interface StackProps extends StylableComponentProps {
-  halign: 'left' | 'right' | 'center' | 'stretch'
-  valign: 'top' | 'center' | 'base' | 'bottom' | 'stretch'
+  halign?: StackHAlign
+  valign?: StackVAlign
 }
 
 const defVStackProps = {
@@ -38,6 +41,8 @@ export const VStack = (props: StackProps) => {
     case 'stretch':
       style.alignItems = 'stretch'
       break
+    default:
+      style.alignItems = 'flex-start'
   }
 
   switch (props.valign) {
@@ -53,23 +58,23 @@ export const VStack = (props: StackProps) => {
     case 'bottom':
       style.justifyContent = 'flex-end'
       break
+    case 'stretch':
+      style.justifyContent = 'space-between'
+      break
+    default:
+      style.alignItems = 'flex-start'
   }
 
-  if ('className' in props) {
-    return <div id={props.id}
-                className={props.className + ' ' + buildClassName(style)}
-                onMouseDown={props.onMouseDown}
-                onClick={props.onClick}
-                onDoubleClick={props.onDoubleClick}>
-      {props.children}</div>
-  } else {
-    return <div id={props.id}
-                className={buildClassName(style)}
-                onMouseDown={props.onMouseDown}
-                onClick={props.onClick}
-                onDoubleClick={props.onDoubleClick}>
-      {props.children}</div>
-  }
+  let className = buildClassName(style)
+  if ('className' in props) className += ' ' + props.className
+
+  return <div id={props.id}
+              key={props.key}
+              className={className}
+              onMouseDown={props.onMouseDown}
+              onClick={props.onClick}
+              onDoubleClick={props.onDoubleClick}>
+    {props.children}</div>
 }
 
 const defHStackProps = {
@@ -78,7 +83,8 @@ const defHStackProps = {
   alignItems: 'flex-start',
   justifyContent: 'center',
   gap: '10px',
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
+  wrap: false
 }
 
 export const HStack = (props: StackProps) => {
@@ -94,6 +100,11 @@ export const HStack = (props: StackProps) => {
     case 'right':
       style.justifyContent = 'flex-end'
       break
+    case 'stretch':
+      style.justifyContent = 'space-between'
+      break
+    default:
+      style.alignItems = 'flex-start'
   }
 
   switch (props.valign) {
@@ -112,29 +123,28 @@ export const HStack = (props: StackProps) => {
     case 'stretch':
       style.alignItems = 'stretch'
       break
+    default:
+      style.alignItems = 'flex-start'
   }
 
-  if ('className' in props) {
-    return <div id={props.id}
-                className={props.className + ' ' + buildClassName(style)}
-                onClick={props.onClick}
-                onMouseDown={props.onMouseDown}
-                onDoubleClick={props.onDoubleClick}>
-      {props.children}
-    </div>
-  } else {
-    return <div id={props.id}
-                className={buildClassName(style)}
-                onClick={props.onClick}
-                onMouseDown={props.onMouseDown}
-                onDoubleClick={props.onDoubleClick}>
-      {props.children}</div>
-  }
+  let className = buildClassName(style)
+  if ('className' in props) className += ' ' + props.className
+
+  return <div id={props.id}
+              key={props.key}
+              className={className}
+              onClick={props.onClick}
+              onMouseDown={props.onMouseDown}
+              onDoubleClick={props.onDoubleClick}>
+    {props.children}
+  </div>
 }
 
 export const StylableContainer = (props: StylableComponentProps) => {
   const style = { boxSizing: 'border-box', ...props }
-  const className = 'className' in props ? props.className + ' ' + buildClassName(style) : buildClassName(style)
+  let className = buildClassName(style)
+  if ('className' in props) className += ' ' + props.className
+
   return <div id={props.id}
               key={props.key}
               className={className}

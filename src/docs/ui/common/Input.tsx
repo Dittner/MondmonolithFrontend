@@ -1,4 +1,4 @@
-import { buildClassName, type StylableComponentProps } from '../../application/NoCSS'
+import { type BorderStyle, buildClassName, type StylableComponentProps } from '../../application/NoCSS'
 import { type Theme } from '../../application/ThemeManager'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { calcSpaceBefore, formatCode, formatIfTextIsCode } from './String++'
@@ -17,23 +17,109 @@ export interface InputProtocol {
   value: string
 }
 
-export interface InputProps extends StylableComponentProps {
-  type: 'text' | 'number' | 'password' | 'email'
+type InputType = 'text' | 'number' | 'password' | 'email'
+type TurnType = 'on' | 'off'
+
+export interface TextInputProps extends StylableComponentProps {
+  type?: InputType
   protocol?: InputProtocol
   text?: string
   fontSize?: string
-  title?: string
-  titleSize?: string
-  titleColor?: string
   caretColor?: string
   placeHolder?: string
   onChange?: ((value: string) => void) | undefined
   onSubmitted?: (() => void) | undefined
   autoFocus?: boolean
+  autoCorrect?: TurnType
+  autoComplete?: TurnType
   focusState?: (state: StylableComponentProps) => void
 }
 
-const defInputProps = (theme: Theme): any => {
+const BaseInput = (props: TextInputProps) => {
+  let className = buildClassName(props)
+  if ('className' in props) className += ' ' + props.className
+
+  const onKeyDown = (e: any) => {
+    // Enter key
+    if (props.onSubmitted && e.keyCode === 13 && !e.shiftKey) {
+      e.preventDefault()
+      e.stopPropagation()
+      props.onSubmitted()
+    }
+  }
+
+  const inputRef = useCallback((input: HTMLInputElement) => {
+    if (input && props.autoFocus) {
+      setTimeout(() => {
+        input.focus()
+      }, 0)
+    }
+  }, [props.autoFocus])
+
+  return (
+    <input ref={inputRef}
+           className={className}
+           placeholder={props.placeHolder}
+           autoCorrect={props.autoCorrect}
+           autoComplete={props.autoComplete}
+           type={props.type}
+           defaultValue={props.text ?? props.protocol?.value}
+           onChange={e => {
+             if (props.protocol) props.protocol.value = e.currentTarget.value
+             props.onChange?.(e.currentTarget.value)
+           }}
+           onKeyDown={onKeyDown}/>
+  )
+}
+
+const defInputProps = {
+  type: 'text' as InputType,
+  width: '150px',
+  minHeight: '35px',
+  caretColor: '#ffFFff',
+  textColor: '#eeEEee',
+  fontSize: '1rem',
+  padding: '10px',
+  autoCorrect: 'off' as TurnType,
+  autoComplete: 'off' as TurnType,
+  border: ['1px', 'solid', '#3a4448'] as [string, BorderStyle, string],
+  focusState: (state: StylableComponentProps) => {
+    state.border = ['1px', 'solid', '#eeEEee'] as [string, BorderStyle, string]
+  }
+}
+
+export const TextInput = (props: TextInputProps) => {
+  if ('visible' in props && !props.visible) return <></>
+
+  console.log('new Input')
+  return (
+    <BaseInput type={defInputProps.type}
+               width={defInputProps.width}
+               minHeight={defInputProps.minHeight}
+               padding={defInputProps.padding}
+               caretColor={defInputProps.caretColor}
+               fontSize={defInputProps.fontSize}
+               border={defInputProps.border}
+               autoCorrect={defInputProps.autoCorrect}
+               autoComplete={defInputProps.autoComplete}
+               focusState={defInputProps.focusState}
+               {...props}/>
+  )
+}
+
+/*
+*
+* InputForm
+*
+* */
+
+export interface InputFormProps extends TextInputProps {
+  title?: string
+  titleSize?: string
+  titleColor?: string
+}
+
+const defInputFormProps = (theme: Theme): any => {
   return {
     width: '100%',
     height: '35px',
@@ -44,6 +130,8 @@ const defInputProps = (theme: Theme): any => {
     titleColor: theme.green,
     fontSize: '1rem',
     padding: '10px',
+    autoCorrect: 'off',
+    autoComplete: 'off',
     border: ['1px', 'solid', theme.inputBorder],
     focusState: (state: StylableComponentProps) => {
       state.border = ['1px', 'solid', theme.inputBorderFocused]
@@ -51,55 +139,25 @@ const defInputProps = (theme: Theme): any => {
   }
 }
 
-export const Input = (props: InputProps) => {
-  console.log('new Input')
+export const InputForm = (props: InputFormProps) => {
+  console.log('new InputForm')
   const theme = useDocsContext().theme
-  const customProps = { ...defInputProps(theme), ...props }
-
-  const onKeyDown = (e: any) => {
-    // Enter key
-    if (e.keyCode === 13 && !e.shiftKey) {
-      e.preventDefault()
-      e.stopPropagation()
-      customProps.onSubmitted?.()
-    }
-  }
-
-  const inputRef = useCallback((input: HTMLInputElement) => {
-    if (input && customProps.autoFocus) {
-      setTimeout(() => {
-        input.focus()
-      }, 0)
-    }
-  }, [customProps.autoFocus])
-
-  const className = 'className' in customProps ? customProps.className + ' ' + buildClassName(customProps) : buildClassName(customProps)
+  const style = { ...defInputFormProps(theme), ...props }
 
   return (
     <VStack halign="left" valign="top" gap="0"
-            width={customProps.width}>
+            width={style.width}>
 
-      {customProps.title &&
+      {style.title &&
         <Label className="ibm"
-               fontSize={customProps.titleSize}
+               fontSize={style.titleSize}
                width='100%'
-               text={customProps.title}
-               textColor={customProps.titleColor}
+               text={style.title}
+               textColor={style.titleColor}
                paddingLeft="10px"/>
       }
 
-      <input ref={inputRef}
-             className={className}
-             placeholder={customProps.placeHolder}
-             autoCorrect="off"
-             autoComplete="off"
-             type={customProps.type}
-             defaultValue={customProps.text || customProps.protocol.value}
-             onChange={e => {
-               if (customProps.protocol) customProps.protocol.value = e.currentTarget.value
-               customProps.onChange?.(e.currentTarget.value)
-             }}
-             onKeyDown={onKeyDown}/>
+      <BaseInput {...style}/>
     </VStack>
   )
 }
@@ -110,7 +168,78 @@ export const Input = (props: InputProps) => {
 *
 * */
 
-class TextAreaController {
+interface TextAreaProps extends StylableComponentProps {
+  text?: string
+  rows?: number
+  lineHeight?: string
+  protocol?: InputProtocol
+  placeHolder?: string
+  caretColor?: string
+  autoFocus?: boolean
+  autoCorrect?: TurnType
+  autoComplete?: TurnType
+  onChange?: ((value: string) => void) | undefined
+  focusState?: (state: StylableComponentProps) => void
+}
+
+const BaseTextArea = (props: TextAreaProps) => {
+  const className = 'className' in props ? props.className + ' ' + buildClassName(props) : buildClassName(props)
+
+  return <textarea className={className}
+                   placeholder={props.placeHolder}
+                   value={props.text ?? props.protocol?.value}
+                   autoFocus={props.autoFocus}
+                   spellCheck="false"
+                   rows={props.rows}
+                   onChange={e => {
+                     if (props.protocol) props.protocol.value = e.currentTarget.value
+                     props.onChange?.(e.currentTarget.value)
+                   }}/>
+}
+
+const defTextAreaProps = {
+  type: 'text' as InputType,
+  width: '150px',
+  rows: 10,
+  lineHeight: '1.5rem',
+  caretColor: '#ffFFff',
+  textColor: '#eeEEee',
+  fontSize: '1rem',
+  padding: '10px',
+  autoCorrect: 'off' as TurnType,
+  autoComplete: 'off' as TurnType,
+  border: ['1px', 'solid', '#3a4448'] as [string, BorderStyle, string],
+  focusState: (state: StylableComponentProps) => {
+    state.border = ['1px', 'solid', '#eeEEee'] as [string, BorderStyle, string]
+  }
+}
+
+export const TextArea = (props: TextAreaProps) => {
+  if ('visible' in props && !props.visible) return <></>
+
+  console.log('new Input')
+  return (
+    <BaseTextArea width={defTextAreaProps.width}
+                  rows={defTextAreaProps.rows}
+                  lineHeight={defTextAreaProps.lineHeight}
+                  padding={defTextAreaProps.padding}
+                  caretColor={defTextAreaProps.caretColor}
+                  fontSize={defTextAreaProps.fontSize}
+                  border={defTextAreaProps.border}
+                  autoCorrect={defTextAreaProps.autoCorrect}
+                  autoComplete={defTextAreaProps.autoComplete}
+                  focusState={defTextAreaProps.focusState}
+                  {...props}/>
+  )
+}
+
+/*
+*
+* TextEditor
+*
+* */
+
+class TextEditorController {
   static scrollToCursor(ta: HTMLTextAreaElement) {
     ta.blur()
     ta.focus()
@@ -141,7 +270,7 @@ class TextAreaController {
       document.execCommand('insertText', false, formattedCode)
       ta.setSelectionRange(selectionStart, selectionStart)
       window.scrollTo(0, scrollY)
-      TextAreaController.scrollToCursor(ta)
+      TextEditorController.scrollToCursor(ta)
     } catch (e) {
       console.log('Error, while formatting code: ', e)
     }
@@ -175,7 +304,7 @@ class TextAreaController {
       // func setRangeText unfortunately clears browser history
       // ta.current.setRangeText(spaces, selectionStart, selectionStart, 'end')
       document.execCommand('insertText', false, spaces)
-      TextAreaController.scrollToCursor(ta)
+      TextEditorController.scrollToCursor(ta)
       return true
     }
     return false
@@ -235,17 +364,12 @@ class TextAreaController {
   }
 }
 
-interface TextAreaProps extends StylableComponentProps {
-  text?: string
-  caretColor?: string
+interface TextEditorProps extends TextAreaProps {
   onApply?: ((value: string) => void) | undefined
   onCancel?: (() => void) | undefined
-  autoFocus?: boolean
-  selectAll?: boolean
-  focusState?: (state: StylableComponentProps) => void
 }
 
-const defTextAreaProps = (theme: Theme): any => {
+const defTextEditorProps = (theme: Theme): any => {
   return {
     width: '100%',
     caretColor: theme.caretColor,
@@ -258,9 +382,9 @@ const defTextAreaProps = (theme: Theme): any => {
   }
 }
 
-export const TextArea = (props: TextAreaProps) => {
+export const TextEditor = (props: TextEditorProps) => {
   const theme = useDocsContext().theme
-  const customProps = { ...defTextAreaProps(theme), ...props }
+  const customProps = { ...defTextEditorProps(theme), ...props }
   const [value, setValue] = useState(props.text ?? '')
   const [width, height] = useWindowSize()
 
@@ -268,11 +392,11 @@ export const TextArea = (props: TextAreaProps) => {
 
   const onChange = (event: any) => {
     setValue(event.target.value)
-    TextAreaController.adjustScroller(ta?.current)
+    TextEditorController.adjustScroller(ta?.current)
   }
 
   useEffect(() => {
-    TextAreaController.adjustScroller(ta?.current)
+    TextEditorController.adjustScroller(ta?.current)
   }, [width, height])
 
   const onKeyDown = (e: any) => {
@@ -287,20 +411,20 @@ export const TextArea = (props: TextAreaProps) => {
     else if (e.keyCode === 76 && e.ctrlKey && e.shiftKey && ta?.current) {
       e.preventDefault()
       e.stopPropagation()
-      TextAreaController.format(ta.current)
-      TextAreaController.moveCursorToBeginLine(ta?.current)
+      TextEditorController.format(ta.current)
+      TextEditorController.moveCursorToBeginLine(ta?.current)
     }
     // Enter key
     else if (e.keyCode === 13 && e.shiftKey) {
       e.preventDefault()
       e.stopPropagation()
-      TextAreaController.adjustScroller(ta?.current)
+      TextEditorController.adjustScroller(ta?.current)
       props.onApply?.(value)
     } else if (ta?.current && e.keyCode === 13 && !e.shiftKey) {
-      if (TextAreaController.newLine(ta.current)) {
+      if (TextEditorController.newLine(ta.current)) {
         e.stopPropagation()
         e.preventDefault()
-        TextAreaController.adjustScroller(ta?.current)
+        TextEditorController.adjustScroller(ta?.current)
       } else {
         e.stopPropagation()
       }
@@ -310,7 +434,7 @@ export const TextArea = (props: TextAreaProps) => {
       e.preventDefault()
       e.stopPropagation()
       ta.current.setSelectionRange(0, 0)
-      TextAreaController.scrollToCursor(ta.current)
+      TextEditorController.scrollToCursor(ta.current)
     }
     // PageDown key
     else if (e.keyCode === 34 && ta?.current) {
@@ -318,23 +442,23 @@ export const TextArea = (props: TextAreaProps) => {
       e.stopPropagation()
       const length = ta?.current?.value.length ?? 0
       ta.current.setSelectionRange(length, length)
-      TextAreaController.scrollToCursor(ta.current)
+      TextEditorController.scrollToCursor(ta.current)
     }
     // Home key
     else if (e.keyCode === 36) {
       e.preventDefault()
       e.stopPropagation()
-      TextAreaController.moveCursorToBeginLine(ta?.current)
+      TextEditorController.moveCursorToBeginLine(ta?.current)
     }
     // End key
     else if (e.keyCode === 35) {
       e.preventDefault()
       e.stopPropagation()
-      TextAreaController.moveCursorToEndLine(ta?.current)
+      TextEditorController.moveCursorToEndLine(ta?.current)
     }
     // Delete key
     else if (e.keyCode === 8 && ta?.current && ta.current.selectionStart === ta.current.selectionEnd) {
-      if (TextAreaController.deleteAllSpacesBeforeCursor(ta.current)) {
+      if (TextEditorController.deleteAllSpacesBeforeCursor(ta.current)) {
         e.preventDefault()
         e.stopPropagation()
       }

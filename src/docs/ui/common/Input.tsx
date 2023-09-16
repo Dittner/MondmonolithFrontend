@@ -25,14 +25,15 @@ export interface TextInputProps extends StylableComponentProps {
   protocol?: InputProtocol
   text?: string
   fontSize?: string
+  placeholder?: string
   caretColor?: string
-  placeHolder?: string
   onChange?: ((value: string) => void) | undefined
   onSubmitted?: (() => void) | undefined
   autoFocus?: boolean
   autoCorrect?: TurnType
   autoComplete?: TurnType
   focusState?: (state: StylableComponentProps) => void
+  placeholderState?: (state: StylableComponentProps) => void
 }
 
 const BaseInput = (props: TextInputProps) => {
@@ -59,7 +60,7 @@ const BaseInput = (props: TextInputProps) => {
   return (
     <input ref={inputRef}
            className={className}
-           placeholder={props.placeHolder}
+           placeholder={props.placeholder}
            autoCorrect={props.autoCorrect}
            autoComplete={props.autoComplete}
            type={props.type}
@@ -173,20 +174,21 @@ interface TextAreaProps extends StylableComponentProps {
   rows?: number
   lineHeight?: string
   protocol?: InputProtocol
-  placeHolder?: string
+  placeholder?: string
   caretColor?: string
   autoFocus?: boolean
   autoCorrect?: TurnType
   autoComplete?: TurnType
   onChange?: ((value: string) => void) | undefined
   focusState?: (state: StylableComponentProps) => void
+  placeholderState?: (state: StylableComponentProps) => void
 }
 
 const BaseTextArea = (props: TextAreaProps) => {
   const className = 'className' in props ? props.className + ' ' + buildClassName(props) : buildClassName(props)
 
   return <textarea className={className}
-                   placeholder={props.placeHolder}
+                   placeholder={props.placeholder}
                    value={props.text ?? props.protocol?.value}
                    autoFocus={props.autoFocus}
                    spellCheck="false"
@@ -217,7 +219,7 @@ const defTextAreaProps = {
 export const TextArea = (props: TextAreaProps) => {
   if ('visible' in props && !props.visible) return <></>
 
-  console.log('new Input')
+  console.log('new TextArea')
   return (
     <BaseTextArea width={defTextAreaProps.width}
                   rows={defTextAreaProps.rows}

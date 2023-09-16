@@ -138,14 +138,14 @@ export const AuthPage = observer(() => {
           user.authStatus === AuthStatus.REQUESTING_VERIFICATION_CODE) &&
         <>
           <LInput type="text"
-                  placeHolder='Email:'
+                  placeholder='Email:'
                   protocol={emailProtocol}
                   titleColor={colorScheme.inputTitle}
                   textColor={colorScheme.inputText}
                   onSubmitted={submit}/>
 
           <LInput type="password"
-                  placeHolder='Password:'
+                  placeholder='Password:'
                   protocol={pwdProtocol}
                   titleColor={colorScheme.inputTitle}
                   textColor={colorScheme.inputText}
@@ -171,7 +171,7 @@ export const AuthPage = observer(() => {
 
         <InputForm type="text"
                    width='175px'
-                   placeHolder='000000'
+                   placeholder='000000'
                    className='mono'
                    fontSize='40px'
                    textColor={colorScheme.inputText}
@@ -253,7 +253,7 @@ const LInput = (props: InputFormProps) => {
            textAlign='left'
            width='160px'
            fontSize={TITLE_FONT_SIZE}
-           text={style.placeHolder}
+           text={style.placeholder}
            textColor={style.titleColor}/>
 
     <TextInput {...style} placeHolder='' border='none'/>

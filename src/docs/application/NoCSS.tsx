@@ -1,5 +1,8 @@
 import { type LayoutLayer } from './Application'
 import * as React from 'react'
+import {
+  type PseudoClassType, StyleSheetProcessor
+} from './NoCSSPseudoClass'
 
 export const abbreviations: Record<string, string> = {
   'align-items': 'A',
@@ -61,97 +64,52 @@ export const abbreviations: Record<string, string> = {
 }
 
 const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: string, tag: string) => string, (parentSelector: string, childSelector: string) => void] => {
-  let hashSum: string = ''
-  let style = ''
-  let state: 'normal' | 'hover' | 'focus' = 'normal'
-  let focusStyle = ''
-  let hoverStyle = ''
   const notAllowedSymbolsInClassName = /[%. #]+/g
   const classNameHash = new Map<string, string>()
-  const isMobileDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0)
 
   // Creating of dynamic stylesheets are enabled only in Chrome (23.06.2023)
   // const styleSheet = new CSSStyleSheet();
   // document.adoptedStyleSheets = [styleSheet];
   const styleSheet = window.document.styleSheets[0]
+  const styleSheetProcessor = new StyleSheetProcessor(styleSheet)
+  let context: PseudoClassType = 'none'
 
   const operator: Record<string, (value: any) => void> = Object.create(null)
 
   const getClassName = (id: string, tag: string): string => {
+    const hashSum = styleSheetProcessor.valuesToHashSum()
     if (!hashSum) return ''
 
     if (classNameHash.has(hashSum)) { return classNameHash.get(hashSum) as string }
 
     const className = hashSum.replace(notAllowedSymbolsInClassName, 'x')
-
+    classNameHash.set(hashSum, className)
     //console.log('--new selector #' + (++selectorsCount) + ': ', className)
 
-    let rule = id ? '#' + id : ''
-    rule += tag + '.' + className + style + '}'
-    classNameHash.set(hashSum, className)
-    styleSheet.insertRule(rule)
-    //console.log('---NEW RULE:', rule)
-
-    if (hoverStyle) {
-      let rule = id ? '#' + id : ''
-      rule += tag + '.' + className + (isMobileDevice ? ':active{' : ':hover{') + hoverStyle + '}'
-      styleSheet.insertRule(rule)
-      //console.log('  HOVER:', rule)
-    }
-
-    //console.log('---------------')
-
-    if (focusStyle) {
-      let rule = id ? '#' + id : ''
-      rule += tag + '.' + className + ':focus{' + focusStyle + '}'
-      styleSheet.insertRule(rule)
-    }
+    styleSheetProcessor.insertRule(className, id, tag)
 
     return className
   }
 
   const addRule = (parentSelector: string, childSelector: string): void => {
+    const hashSum = styleSheetProcessor.valuesToHashSum()
     if (!hashSum) return
 
     const selector = parentSelector + ' ' + childSelector
     if (classNameHash.has(selector)) return
-
     //console.log('--new selector #' + (++selectorsCount) + ': ', selector)
 
-    const rule = '.' + selector + style + '}'
-    classNameHash.set(selector, parentSelector)
-    styleSheet.insertRule(rule)
-
-    if (hoverStyle) {
-      const rule = '.' + selector + (isMobileDevice ? ':active{' : ':hover{') + hoverStyle + '}'
-      styleSheet.insertRule(rule)
-    }
-
-    if (focusStyle) {
-      const rule = '.' + selector + ':focus{' + focusStyle + '}'
-      styleSheet.insertRule(rule)
-    }
+    styleSheetProcessor.insertRule(selector, '', '')
   }
 
   const clear = (): void => {
-    hashSum = ''
-    focusStyle = ''
-    hoverStyle = ''
-    state = 'normal'
-    style = '{'
+    styleSheetProcessor.clearValues()
   }
 
   const setValue = (key: string, value: string, appendToClassName: boolean = true) => {
     if (value === undefined) return
 
-    if (state === 'focus') focusStyle += key + ':' + value + ';'
-    else if (state === 'hover') hoverStyle += key + ':' + value + ';'
-    else style += key + ':' + value + ';'
-
-    if (appendToClassName) {
-      if (!(key in abbreviations)) { throw new Error('SelectorRuleBuilder.setValue:: No abbreviation for tag: ' + key) }
-      hashSum += abbreviations[key] + value
-    }
+    styleSheetProcessor.setValue(context, key, value, appendToClassName)
   }
 
   operator.width = (value: string) => { setValue('width', value) }
@@ -245,30 +203,42 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
 
   // HOVER
   operator.hoverState = (fillPropsFunc: (state: StylableComponentProps) => void) => {
+    context = 'hover'
     const hoverStateProps: any = {}
     fillPropsFunc(hoverStateProps)
-    state = 'hover'
-    hashSum += 'HOVER'
+
     for (const k of [...Object.keys(hoverStateProps)].sort(sortKeys)) {
       if (operator[k]) {
         operator[k](hoverStateProps[k])
       }
     }
-    state = 'normal'
+    context = 'none'
   }
 
   // FOCUS
   operator.focusState = (fillPropsFunc: (state: StylableComponentProps) => void) => {
+    context = 'focus'
     const focusStateProps: any = {}
     fillPropsFunc(focusStateProps)
-    state = 'focus'
-    hashSum += 'FOCUS'
     for (const k of [...Object.keys(focusStateProps)].sort(sortKeys)) {
       if (operator[k]) {
         operator[k](focusStateProps[k])
       }
     }
-    state = 'normal'
+    context = 'none'
+  }
+
+  // PLACEHOLDER
+  operator.placeholderState = (fillPropsFunc: (state: StylableComponentProps) => void) => {
+    context = 'placeholder'
+    const placeholderProps: any = {}
+    fillPropsFunc(placeholderProps)
+    for (const k of [...Object.keys(placeholderProps)].sort(sortKeys)) {
+      if (operator[k]) {
+        operator[k](placeholderProps[k])
+      }
+    }
+    context = 'none'
   }
 
   return [clear, operator, getClassName, addRule]

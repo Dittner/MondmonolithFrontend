@@ -2,6 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-java'
+import 'prismjs/components/prism-kotlin'
 import 'prismjs/components/prism-jsx'
 import 'prismjs/components/prism-tsx'
 import 'prismjs/components/prism-typescript'
@@ -217,7 +218,7 @@ const aboutTxt = `
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  YEAR  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   Demo  |  4.13  |  2023  
+*   to format notes and code fragments easily without   *   Demo  |  4.15  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           `
 
@@ -231,7 +232,7 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: Demo  |  VER: 4.13  |  YEAR: 2023      
+*  MODE: Demo  |  VER: 4.15  |  YEAR: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 `
@@ -267,6 +268,7 @@ const languages = `# Supported languages\n
 + Java: \`java\`\n
 + JavaScript: \`js, jsx\`\n
 + JSON: \`json\`\n
++ Kotlin: \`kotlin, kt\`\n
 + Python: \`py\`\n
 + Swift: \`swift\`\n
 + TypeScript: \`ts, tsx\`\n

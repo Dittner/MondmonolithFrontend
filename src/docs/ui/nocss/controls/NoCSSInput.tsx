@@ -1,28 +1,13 @@
 import React, { useState } from 'react'
-import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-jsx'
 import 'prismjs/components/prism-tsx'
-import 'prismjs/components/prism-typescript'
-import 'prismjs/components/prism-javascript'
-import 'prismjs/components/prism-python'
-import 'prismjs/components/prism-c'
-import 'prismjs/components/prism-cpp'
-import 'prismjs/components/prism-csharp'
-import 'prismjs/components/prism-swift'
-import 'prismjs/components/prism-json'
 import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-markup'
 import { Label } from '../../common/Label'
 import { type NoCSSPageTheme } from '../NoCSSPage'
-import { loremIpsum } from '../../common/String++'
 import { MarkdownBlock, NoCSSControlView } from './NoCSSControlView'
-import { Button, type ButtonProps } from '../../common/Button'
-import { buildClassName, type StylableComponentProps } from '../../../application/NoCSS'
-import { useDocsContext } from '../../../../App'
-import { Spacer } from '../../common/Spacer'
-import { HStack, type StackHAlign, type StackVAlign, StylableContainer, VStack } from '../../common/Container'
-import { Rectangle } from '../../common/Rectangle'
-import { TextInput, InputFormProps, type TextInputProps, TextArea } from '../../common/Input'
+import { HStack, VStack } from '../../common/Container'
+import { TextInput, type TextInputProps, TextArea } from '../../common/Input'
 
 export const NoCSSInput = ({ theme }: { theme: NoCSSPageTheme }) => {
   console.log('new NoCSSInput')
@@ -34,11 +19,6 @@ export const NoCSSInput = ({ theme }: { theme: NoCSSPageTheme }) => {
   const submit = () => {
     setEnteredName(nameProtocol.value)
     setEnteredPwd(pwdProtocol.value)
-  }
-
-  const [numOfSymbols, setNumOfSymbols] = useState(0)
-  const onTextAreaChanged = (value: string) => {
-    setNumOfSymbols(value.length)
   }
 
   return <NoCSSControlView controlLink='input'
@@ -56,7 +36,7 @@ export const NoCSSInput = ({ theme }: { theme: NoCSSPageTheme }) => {
                  width='150px'
                  textColor='#626b75'/>
 
-          <CustomInput placeHolder='Enter your name'
+          <CustomInput placeholder='Enter your name'
                        protocol={nameProtocol}
                        onSubmitted={submit}/>
 
@@ -71,7 +51,7 @@ export const NoCSSInput = ({ theme }: { theme: NoCSSPageTheme }) => {
 
           <CustomInput type='password'
                        protocol={pwdProtocol}
-                       placeHolder='Enter password'
+                       placeholder='Enter password'
                        onSubmitted={submit}/>
 
           <Label text={enteredPwd}
@@ -86,27 +66,40 @@ export const NoCSSInput = ({ theme }: { theme: NoCSSPageTheme }) => {
                    noCSSText={block2NoCSSTxt}
                    theme={theme}>
 
-      <HStack valign='bottom'>
-        <TextArea width='400px'
-                  placeHolder='Enter multiline text'
-                  textColor='#c3d2de'
-                  caretColor='#ffFFff'
-                  bgColor='#35414a'
-                  rows={7}
-                  border='2px solid #35414a'
-                  cornerRadius='5px'
-                  focusState={state => {
-                    state.border = '2px solid #5b9dcf'
-                    state.bgColor = '#272e34'
-                  }}
-                  onChange={onTextAreaChanged}/>
-
-        <Label text={numOfSymbols > 0 ? numOfSymbols + ' symbols' : ''}
-               textColor='#dca83a'/>
-      </HStack>
+      <CustomTextArea/>
 
     </MarkdownBlock>
   </NoCSSControlView>
+}
+
+export const CustomTextArea = (props: TextInputProps) => {
+  const [numOfSymbols, setNumOfSymbols] = useState(0)
+  const onTextAreaChanged = (value: string) => {
+    setNumOfSymbols(value.length)
+  }
+  return (
+    <HStack valign='bottom'>
+      <TextArea width='400px'
+                placeholder='Enter multiline text'
+                textColor='#c3d2de'
+                caretColor='#ffFFff'
+                bgColor='#272c2f'
+                rows={7}
+                border='2px solid #35414a'
+                cornerRadius='5px'
+                focusState={state => {
+                  state.border = '2px solid #5b9dcf'
+                }}
+                placeholderState={state => {
+                  state.textColor = '#83a6b4'
+                }}
+                onChange={onTextAreaChanged}
+                {...props}/>
+
+      <Label text={numOfSymbols > 0 ? numOfSymbols + ' symbols' : ''}
+             textColor='#dca83a'/>
+    </HStack>
+  )
 }
 
 export const CustomInput = (props: TextInputProps) => {
@@ -114,12 +107,14 @@ export const CustomInput = (props: TextInputProps) => {
     <TextInput width='200px'
                textColor='#c3d2de'
                caretColor='#ffFFff'
-               bgColor='#35414a'
+               bgColor='#272c2f'
                border='2px solid #35414a'
                cornerRadius='5px'
                focusState={state => {
                  state.border = '2px solid #5b9dcf'
-                 state.bgColor = '#272e34'
+               }}
+               placeholderState={state => {
+                 state.textColor = '#83a6b4'
                }}
                {...props}/>
   )
@@ -166,14 +161,16 @@ const block1CSSTxt = `###### css-modules
   min-height: 35px;
   padding: 10px;
   color: #c3d2de;
-  background-color: #35414a;
+  background-color: #272c2f;
   caret-color: #ffFFff;
   border: 2px solid #35414a;
   border-radius: 5px;
 }
 .text_input:focus {
-  background-color: #272e34;
   border: 2px solid #5b9dcf;
+}
+.text_input::placeholder {
+  color: #83a6b4;
 }
 \`\`\`
 ###### jsx-module
@@ -210,7 +207,7 @@ const App = () => {
         <p className='lbl'>Password:</p>
 
         <input class="text_input" 
-               type="text"
+               type="password"
                placeholder="Enter password" 
                autocorrect="off" 
                autocomplete="off"
@@ -245,7 +242,7 @@ const App = () => {
                width='150px'
                textColor='#626b75'/>
 
-        <CustomInput placeHolder='Enter your name'
+        <CustomInput placeholder='Enter your name'
                      protocol={nameProtocol}
                      onSubmitted={submit}/>
 
@@ -260,7 +257,7 @@ const App = () => {
 
         <CustomInput type='password'
                      protocol={pwdProtocol}
-                     placeHolder='Enter password'
+                     placeholder='Enter password'
                      onSubmitted={submit}/>
 
         <Label text={enteredPwd}
@@ -275,12 +272,14 @@ export const CustomInput = (props: InputProps) => {
     <TextInput width='200px'
                textColor='#c3d2de'
                caretColor='#ffFFff'
-               bgColor='#35414a'
+               bgColor='#272c2f'
                border='2px solid #35414a'
                cornerRadius='5px'
                focusState={state => {
                  state.border = '2px solid #5b9dcf'
-                 state.bgColor = '#272e34'
+               }}
+               placeholderState={state => {
+                  state.textColor = '#83a6b4'
                }}
                {...props}/>
   )
@@ -300,14 +299,16 @@ const block2CSSTxt = `###### css-modules
   min-height: 35px;
   padding: 10px;
   color: #c3d2de;
-  background-color: #35414a;
+  background-color: #272c2f;
   caret-color: #ffFFff;
   border: 2px solid #35414a;
   border-radius: 5px;
 }
 .multiline_input:focus {
-  background-color: #272e34;
   border: 2px solid #5b9dcf;
+}
+.multiline_input::placeholder {
+  color: #83a6b4;
 }
 
 .hstack {
@@ -359,16 +360,18 @@ const App = () => {
   return (
     <HStack valign='bottom'>
       <TextArea width='400px'
-                placeHolder='Enter multiline text'
+                placeholder='Enter multiline text'
                 textColor='#c3d2de'
                 caretColor='#ffFFff'
-                bgColor='#35414a'
+                bgColor='#272c2f'
                 rows={7}
                 border='2px solid #35414a'
                 cornerRadius='5px'
                 focusState={state => {
                   state.border = '2px solid #5b9dcf'
-                  state.bgColor = '#272e34'
+                }}
+                placeholderState={state => {
+                  state.textColor = '#83a6b4'
                 }}
                 onChange={onTextAreaChanged}/>
 

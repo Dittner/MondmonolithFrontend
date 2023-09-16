@@ -1,22 +1,13 @@
 import React, { useState } from 'react'
-import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-jsx'
 import 'prismjs/components/prism-tsx'
-import 'prismjs/components/prism-typescript'
-import 'prismjs/components/prism-javascript'
-import 'prismjs/components/prism-python'
-import 'prismjs/components/prism-c'
-import 'prismjs/components/prism-cpp'
-import 'prismjs/components/prism-csharp'
-import 'prismjs/components/prism-swift'
-import 'prismjs/components/prism-json'
 import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-markup'
 import { Label } from '../../common/Label'
 import { type NoCSSPageTheme } from '../NoCSSPage'
 import { MarkdownBlock, NoCSSControlView } from './NoCSSControlView'
 import { Button } from '../../common/Button'
-import { HStack, type StackHAlign, type StackVAlign, VStack } from '../../common/Container'
+import { HStack, type StackHAlign, type StackProps, type StackVAlign, VStack } from '../../common/Container'
 import { Rectangle } from '../../common/Rectangle'
 
 export const NoCSSContainer = ({ theme }: { theme: NoCSSPageTheme }) => {
@@ -25,6 +16,11 @@ export const NoCSSContainer = ({ theme }: { theme: NoCSSPageTheme }) => {
   const [halign, setHalign] = useState<StackHAlign>('center')
   const valignValues = Array.of<StackVAlign>('top', 'center', 'bottom', 'stretch')
   const halignValues = Array.of<StackHAlign>('left', 'center', 'right', 'stretch')
+  const [layout, setLayout] = useState<StackLayout>('horizontal')
+
+  const switchLayout = () => {
+    if (layout === 'horizontal') { setLayout('vertical') } else { setLayout('horizontal') }
+  }
 
   return <NoCSSControlView controlLink='container'
                            theme={theme}
@@ -46,7 +42,9 @@ export const NoCSSContainer = ({ theme }: { theme: NoCSSPageTheme }) => {
           return <Button key={align}
                          title={align}
                          isSelected={halign === align}
-                         onClick={() => { setHalign(align) }}/>
+                         onClick={() => {
+                           setHalign(align)
+                         }}/>
         })}
       </VStack>
 
@@ -61,7 +59,9 @@ export const NoCSSContainer = ({ theme }: { theme: NoCSSPageTheme }) => {
           return <Button key={align}
                          title={align}
                          isSelected={valign === align}
-                         onClick={() => { setValign(align) }}/>
+                         onClick={() => {
+                           setValign(align)
+                         }}/>
         })}
       </VStack>
 
@@ -94,7 +94,9 @@ export const NoCSSContainer = ({ theme }: { theme: NoCSSPageTheme }) => {
           return <Button key={align}
                          title={align}
                          isSelected={halign === align}
-                         onClick={() => { setHalign(align) }}/>
+                         onClick={() => {
+                           setHalign(align)
+                         }}/>
         })}
       </VStack>
 
@@ -109,7 +111,9 @@ export const NoCSSContainer = ({ theme }: { theme: NoCSSPageTheme }) => {
           return <Button key={align}
                          title={align}
                          isSelected={valign === align}
-                         onClick={() => { setValign(align) }}/>
+                         onClick={() => {
+                           setValign(align)
+                         }}/>
         })}
       </VStack>
 
@@ -127,6 +131,29 @@ export const NoCSSContainer = ({ theme }: { theme: NoCSSPageTheme }) => {
 
     </MarkdownBlock>
 
+    <MarkdownBlock title="3. How can we change a stack alignment at runtime?"
+                   cssText={block3CSSTxt}
+                   noCSSText={block3NoCSSTxt}
+                   theme={theme}>
+
+      <VStack width='300px'>
+        <Stack layout={layout}
+               halign='center'
+               valign='center'
+               width='100%'
+               height='250px'
+               bgColor='#3a7c7b'>
+          <BlackBox/>
+          <BlackBox/>
+          <BlackBox/>
+        </Stack>
+
+        <Button title='Switch alignment'
+                width='100%'
+                onClick={switchLayout}/>
+      </VStack>
+    </MarkdownBlock>
+
   </NoCSSControlView>
 }
 
@@ -134,6 +161,20 @@ const BlackBox = () => {
   return (
     <Rectangle bgColor='#212628' padding='25px'/>
   )
+}
+
+type StackLayout = 'horizontal' | 'vertical'
+
+interface LayoutProps extends StackProps {
+  layout: StackLayout
+}
+
+const Stack = (props: LayoutProps) => {
+  if (props.layout === 'horizontal') {
+    return <HStack {...props}>{props.children}</HStack>
+  } else {
+    return <VStack {...props}>{props.children}</VStack>
+  }
 }
 
 /*
@@ -187,7 +228,7 @@ const block1CSSTxt = `###### css-modules
   width: 300px;
 }
 \`\`\`
-###### jsx-module
+###### tsx-module
 \`\`\`tsx
 const App = () => {
   const [valign, setValign] = useState<StackVAlign>('center')
@@ -227,7 +268,7 @@ const App = () => {
 }
 \`\`\``
 
-const block1NoCSSTxt = `###### jsx-module
+const block1NoCSSTxt = `###### tsx-module
 \`\`\`tsx
 const App = () => {
   const [valign, setValign] = useState<StackVAlign>('center')
@@ -332,7 +373,7 @@ const block2CSSTxt = `###### css-modules
   width: 300px;
 }
 \`\`\`
-###### jsx-module
+###### tsx-module
 \`\`\`tsx
 const App = () => {
   const [valign, setValign] = useState<StackVAlign>('center')
@@ -372,7 +413,7 @@ const App = () => {
 }
 \`\`\``
 
-const block2NoCSSTxt = `###### jsx-module
+const block2NoCSSTxt = `###### tsx-module
 \`\`\`tsx
 const App = () => {
   const [valign, setValign] = useState<StackVAlign>('center')
@@ -422,6 +463,139 @@ const App = () => {
       <BlackBox/>
       <BlackBox/>
     </HStack>
+  )
+}
+\`\`\``
+
+/*
+==============================
+Block 3
+==============================
+*/
+const block3CSSTxt = `###### css-modules
+\`\`\`css
+.vstack_cont {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  box-sizing: border-box;
+  gap: 10px;
+  width: 300px;
+}
+
+.btn_template {
+  width: 100%;
+  background-color: #3a4448;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #eeEEee;
+}
+.btn_template:hover {
+  background-color: #212628;
+}
+.btn_template_selected {
+  background-color: #212628;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #eeEEee;
+}
+
+.stack {
+  align-items: center;
+  background-color: #3a7c7b;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 250px;
+  justify-content: center;
+  margin-left: 20px;
+  margin-right: 20px;
+  width: 100%;
+}
+
+.stack_vertical {
+  flex-direction: column;
+}
+
+.stack_horizontal {
+  flex-direction: row;
+}
+\`\`\`
+###### tsx-module
+\`\`\`tsx
+const App = () => {
+  const [layout, setLayout] = useState<StackLayout>('horizontal')
+  
+  const switchLayout = () => {
+    if (layout === 'horizontal') 
+      setLayout('vertical')
+    else 
+      setLayout('horizontal')
+  }
+  
+  let stackClassName = 'stack '
+  stackClassName += layout === 'horizontal' ? 'stack_horizontal' : 'stack_vertical'
+  
+  return (
+    <div className='vstack_cont'>
+      <div className={stackClassName}>
+        <BlackBox/>
+        <BlackBox/>
+        <BlackBox/>
+      </div>
+      <button className='btn_template'
+              onClick={switchLayout}>
+        Switch alignment
+      </button>
+    </div>
+  )
+}
+\`\`\``
+
+const block3NoCSSTxt = `###### tsx-modules
+\`\`\`tsx
+type StackLayout = 'horizontal' | 'vertical'
+interface LayoutProps extends StackProps {
+  layout: StackLayout
+}
+
+const Stack = (props: LayoutProps) => {
+  if (props.layout === 'horizontal') {
+    return <HStack {...props}>{props.children}</HStack>
+  } else {
+    return <VStack {...props}>{props.children}</VStack>
+  }
+}
+
+const App = () => {
+  const [layout, setLayout] = useState<StackLayout>('horizontal')
+  
+  const switchLayout = () => {
+    if (layout === 'horizontal') 
+      setLayout('vertical')
+    else 
+      setLayout('horizontal')
+  }
+  
+  return (
+    <VStack width='300px'>
+      <Stack layout={layout}
+             halign='center'
+             valign='center'
+             width='100%'
+             height='250px'
+             bgColor='#3a7c7b'>
+        <BlackBox/>
+        <BlackBox/>
+        <BlackBox/>
+      </Stack>
+
+      <Button title='Switch alignment'
+              width='100%'
+              onClick={switchLayout}/>
+    </VStack>
   )
 }
 \`\`\``

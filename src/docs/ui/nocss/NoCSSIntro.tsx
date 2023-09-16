@@ -1,17 +1,8 @@
 import React, { useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import Prism from 'prismjs'
-import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-jsx'
 import 'prismjs/components/prism-tsx'
-import 'prismjs/components/prism-typescript'
-import 'prismjs/components/prism-javascript'
-import 'prismjs/components/prism-python'
-import 'prismjs/components/prism-c'
-import 'prismjs/components/prism-cpp'
-import 'prismjs/components/prism-csharp'
-import 'prismjs/components/prism-swift'
-import 'prismjs/components/prism-json'
 import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-markup'
 import { stylable } from '../../application/NoCSS'
@@ -101,14 +92,14 @@ const principlesTxt = `0. Software module boundaries, its isolation and privacy 
 9. Mistakes should not be hidden, they must be detected as early as possible;
 10. Mistakes should be fixed only at the place where they were caused.`
 
-const disadvantagesTxt = `0. CSS does not have a monopoly on the representation of data. We often see UI logic leakage between CSS selectors, JS objects, and JSX components.
+const disadvantagesTxt = `0. CSS does not have a monopoly on the representation of data. We often see UI logic leakage between CSS selectors, JS objects and JSX components.
 1. CSS is not OOP friendly. CSS manipulates data structures, not objects. As a result, the isolation and security of modules is ignored. Changing the representation of one object may unexpectedly affect the representation of another.
 2. If two modules are responsible for representing the same data, have similar or identical names, depend on each other or a common state, and when writing code we regularly switch between these modules, then we are actually dealing with one module that suffers from a split personality (split module). These modules can be a CSS selector and a JSX component, which actually perform the same task and share the same responsibility. Breaking module isolation like this or duplicating modules will make it harder to maintain old code and write new code.
 3. Now we can declare variables and functions in CSS/SASS. These new possibilities demonstrate a trend in which CSS tries to mimic a programming language. This means actually duplicating JS functionality. In this case, Martin Fowler would say that CSS is jealous of JS.`
 
 const conclusionTxt = `Direct interaction with CSS inevitably produces a lot of duplications and style conflicts.
   Converting CSS selectors into a JS object, as happens in [JSS library](https://cssinjs.org/), allows us to get rid of redundant CSS files.
-  However, styles declared in a JS object remain isolated from JSX components. Thus, the problem with the splitting of the module remains in JSS unresolved. In addition, declaring CSS properties in a JS object has a negative impact on readability.
+  However, styles declared in a JS object remain isolated from JSX components. Thus, the problem with the split module remains in JSS unresolved. In addition, declaring CSS properties in a JS object has a negative impact on readability.
   Therefore, the main goal of NoCSS is to completely abandon CSS modules and CSS syntax by adding an abstract layer between CSS and JSX. When building a UI-component, we can now use only JSX syntax and only one module.`
 
 const Fragment = ({

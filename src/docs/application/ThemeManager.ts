@@ -6,7 +6,7 @@ const DARK_THEME_RED = '#E06C75'
 const DARK_THEME_WHITE = '#c7d7e5'
 const DARK_THEME_APP_BG = '#292f32'
 
-const LIGHT_THEME_APP_BG = '#ebebeb'
+const LIGHT_THEME_APP_BG = '#eceff2'
 const LIGHT_THEME_RED = '#b44553'
 const LIGHT_THEME_BLACK = '#23282a'
 
@@ -44,9 +44,12 @@ export interface Theme {
   caretColor: string
   error: string
   errorMsgBg: string
+  search: string
   about: string
+  link: string
   //docBody
   prevNextPageBtnBg: string
+  pageTitleColor: string
   pageTitleBg: string
   //docList
   docListBg: string
@@ -157,12 +160,15 @@ export class ThemeManager extends Observable {
     caretColor: DARK_THEME_RED,
     error: '#ff719a',
     errorMsgBg: '#5e4e31',
+    search: '#DC9B30',
     about: '#a9e2fc',
+    link: '#64B1EB',
     //docBody
     prevNextPageBtnBg: '#794c78',
+    pageTitleColor: DARK_THEME_WHITE,
     pageTitleBg: '#53cbff50',
     //docList
-    docListBg: '#252b2e',
+    docListBg: DARK_THEME_APP_BG,
     docLink: '#76818d',
     docLinkIcon: '#86b3c7',
     docLinkHovered: DARK_THEME_WHITE,
@@ -173,25 +179,103 @@ export class ThemeManager extends Observable {
 
   buildDarkThemeStandardSelectors() {
     const theme = this.darkTheme
-
+    const monoFont = 'var(--font-family-mono)'
     // const textProps: StylableComponentProps = { textColor: '#86b3c7' }
     // buildRule(textProps, theme.id, '*')
 
-    buildRule({ textColor: '#64B1EB' }, theme.id, 'a:link')
-    buildRule({ textColor: '#64B1EB' }, theme.id, 'a:visited')
-    buildRule({ textDecoration: 'underline' }, theme.id, 'a:hover')
-    buildRule({ textColor: '#5391c0' }, theme.id, 'a:active')
-    buildRule({ textColor: theme.h1 }, theme.id, 'h1')
-    buildRule({ textColor: theme.h2 }, theme.id, 'h2')
-    buildRule({ textColor: theme.h3 }, theme.id, 'h3')
-    buildRule({ textColor: theme.h4 }, theme.id, 'h4')
-    buildRule({ textColor: theme.h5 }, theme.id, 'h5')
-    buildRule({ textColor: theme.h6 }, theme.id, 'h6')
-    buildRule({ textColor: theme.p }, theme.id, 'p')
-    buildRule({ textColor: theme.p }, theme.id, 'li')
-    buildRule({ textColor: theme.code }, theme.id, 'code')
+    const h1Props: StylableComponentProps = {
+      fontFamily: monoFont,
+      fontSize: '1.1rem',
+      fontWeight: '500',
+      textColor: theme.h1
+    }
+    buildRule(h1Props, theme.id, 'h1')
 
+    const h2Props: StylableComponentProps = {
+      fontFamily: monoFont,
+      fontSize: '1.1rem',
+      fontWeight: '400',
+      textColor: theme.h2
+    }
+    buildRule(h2Props, theme.id, 'h2')
+
+    const h3Props: StylableComponentProps = {
+      fontFamily: monoFont,
+      fontSize: '1.1rem',
+      fontWeight: '400',
+      textColor: theme.h3
+    }
+    buildRule(h3Props, theme.id, 'h3')
+
+    const h4Props: StylableComponentProps = {
+      fontFamily: monoFont,
+      fontSize: '1.1rem',
+      fontWeight: '400',
+      textColor: theme.h4
+    }
+    buildRule(h4Props, theme.id, 'h4')
+
+    const h5Props: StylableComponentProps = {
+      fontFamily: monoFont,
+      fontSize: '1.1rem',
+      fontWeight: '500',
+      textColor: theme.h5
+    }
+    buildRule(h5Props, theme.id, 'h5')
+
+    const h6Props: StylableComponentProps = {
+      fontFamily: monoFont,
+      fontSize: '1.1rem',
+      fontWeight: '500',
+      textColor: theme.h6
+    }
+    buildRule(h6Props, theme.id, 'h6')
+
+    const pProps: StylableComponentProps = {
+      fontFamily: monoFont,
+      fontSize: '1rem',
+      fontWeight: '500',
+      textColor: theme.p
+    }
+    buildRule(pProps, theme.id, 'p')
+
+    const globalProps: StylableComponentProps = {
+      fontFamily: monoFont,
+      fontSize: '1rem',
+      fontWeight: '500',
+      textColor: theme.p
+    }
+    buildRule(globalProps, theme.id, 'b')
+    buildRule(globalProps, theme.id, 'i')
+    buildRule(globalProps, theme.id, 'li')
+
+    const inlineCodeProps: StylableComponentProps = {
+      fontFamily: monoFont,
+      fontSize: '1rem',
+      fontWeight: '500',
+      textColor: theme.code
+    }
+    buildRule(inlineCodeProps, theme.id, 'code')
+    inlineCodeProps.textColor = theme.search
+
+    buildRule({ bgColor: theme.search, textColor: theme.appBg }, theme.id, 'mark')
+
+    const linkProps: StylableComponentProps = {
+      fontFamily: monoFont,
+      fontSize: '1rem',
+      fontWeight: '500',
+      textColor: theme.link
+    }
+    buildRule(linkProps, theme.id, 'a:link')
+    buildRule(linkProps, theme.id, 'a:visited')
+    buildRule(linkProps, theme.id, 'a:active')
+    linkProps.textDecoration = 'underline'
+    buildRule(linkProps, theme.id, 'a:hover')
+    
     const blockquoteProps: StylableComponentProps = {
+      fontFamily: monoFont,
+      fontSize: '1rem',
+      fontWeight: '500',
       padding: '20px',
       borderLeft: ['7px', 'solid', theme.p]
     }
@@ -208,7 +292,7 @@ export class ThemeManager extends Observable {
   lightTheme: Theme = {
     id: 'light',
     isDark: false,
-    h1: '#ebebeb',
+    h1: '#23282a',
     h2: '#b47726',
     h3: '#817c10',
     h4: '#b6a11c',
@@ -227,61 +311,138 @@ export class ThemeManager extends Observable {
     text75: '#706d69',
     green: '#2c363c',
     green75: '#2c363c75',
-    inputBg: '#ebebeb',
-    codeBg: '#e8d6cd',
-    inputBorder: '#ccCCcc',
-    inputBorderFocused: '#d58c6b',
-    textAreaBorderFocused: '#d7d7d1',
-    border: '#ccCCcc',
-    selectedBlockBg: '#e1ddd7',
+    inputBg: '#dfe4e8',
+    codeBg: '#dfe6ea',
+    inputBorder: '#c5d2d8',
+    inputBorderFocused: '#c5d2d8',
+    textAreaBorderFocused: '#c5d2d8',
+    border: '#c5d2d8',
+    selectedBlockBg: '#e0e6ea',
     caretColor: LIGHT_THEME_BLACK,
     error: '#914058',
     errorMsgBg: '#c5b395',
+    search: '#b44553',
     about: '#23282a',
+    link: '#27388C',
     //docBody
     prevNextPageBtnBg: '#333333',
+    pageTitleColor: '#eceff2',
     pageTitleBg: '#42134988',
     //docList
-    docListBg: '#e8e8e8',
+    docListBg: LIGHT_THEME_APP_BG,
     docLink: '#2A2623',
     docLinkIcon: '#2A2623',
     docLinkHovered: '#2A2623',
-    docLinkBgHovered: '#96886550',
-    docLinkSelected: '#ebebeb',
-    docLinkBgSelected: '#968865'
+    docLinkBgHovered: '#dbe0e4',
+    docLinkSelected: '#7f188e',
+    docLinkBgSelected: TRANSPARENT
   }
 
   buildLightThemeStandardSelectors() {
     const theme = this.lightTheme
+    const defFont = 'var(--font-family)'
+    const monoFont = 'var(--font-family-mono)'
 
     // const textProps: StylableComponentProps = { textColor: theme.text }
     // buildRule(textProps, theme.id, '*')
 
-    buildRule({ textColor: '#27388C' }, theme.id, 'a:link')
-    buildRule({ textColor: '#27388C' }, theme.id, 'a:visited')
-    buildRule({ textDecoration: 'underline' }, theme.id, 'a:hover')
-    buildRule({ textColor: '#27388C' }, theme.id, 'a:active')
-
-    buildRule({ textColor: theme.h2 }, theme.id, 'h2')
-    buildRule({ textColor: theme.h3 }, theme.id, 'h3')
-    buildRule({ textColor: theme.h4 }, theme.id, 'h4')
-    buildRule({ textColor: theme.h5 }, theme.id, 'h5')
-    buildRule({ textColor: theme.h6 }, theme.id, 'h6')
-    buildRule({ textColor: theme.p }, theme.id, 'p')
-    buildRule({ textColor: theme.p }, theme.id, 'li')
-    buildRule({ bgColor: '#e0e5e8', padding: '3px', margin: '-3px' }, theme.id, 'code')
-
     const h1Props: StylableComponentProps = {
-      className: 'h1',
+      fontFamily: defFont,
+      fontSize: '2rem',
+      fontWeight: '400',
       textColor: theme.h1,
-      bgColor: '#42134988',
-      border: 'none',
-      paddingHorizontal: '20px',
-      marginHorizontal: '-20px'
+      border: 'none'
     }
     buildRule(h1Props, theme.id, 'h1')
 
+    const h2Props: StylableComponentProps = {
+      fontFamily: defFont,
+      fontSize: '1.25rem',
+      fontWeight: '400',
+      textColor: theme.h2
+    }
+    buildRule(h2Props, theme.id, 'h2')
+
+    const h3Props: StylableComponentProps = {
+      fontFamily: defFont,
+      fontSize: '1.25rem',
+      fontWeight: '400',
+      textColor: theme.h3
+    }
+    buildRule(h3Props, theme.id, 'h3')
+
+    const h4Props: StylableComponentProps = {
+      fontFamily: defFont,
+      fontSize: '1.25rem',
+      fontWeight: '400',
+      textColor: theme.h4
+    }
+    buildRule(h4Props, theme.id, 'h4')
+
+    const h5Props: StylableComponentProps = {
+      fontFamily: defFont,
+      fontSize: '1.25rem',
+      fontWeight: '400',
+      textColor: theme.h5
+    }
+    buildRule(h5Props, theme.id, 'h5')
+
+    const h6Props: StylableComponentProps = {
+      fontFamily: defFont,
+      fontSize: '1.25rem',
+      fontWeight: '400',
+      textColor: theme.h6
+    }
+    buildRule(h6Props, theme.id, 'h6')
+
+    const pProps: StylableComponentProps = {
+      fontFamily: defFont,
+      fontSize: '1rem',
+      fontWeight: '400',
+      textColor: theme.p
+    }
+    buildRule(pProps, theme.id, 'p')
+
+    const globalProps: StylableComponentProps = {
+      fontFamily: defFont,
+      fontSize: '1rem',
+      fontWeight: '400',
+      textColor: theme.p
+    }
+    buildRule(globalProps, theme.id, 'b')
+    buildRule(globalProps, theme.id, 'i')
+    buildRule(globalProps, theme.id, 'li')
+
+    const inlineCodeProps: StylableComponentProps = {
+      fontFamily: monoFont,
+      fontSize: '0.9rem',
+      fontWeight: '500',
+      bgColor: theme.codeBg,
+      padding: '3px',
+      margin: '-3px',
+      textColor: theme.p
+    }
+    buildRule(inlineCodeProps, theme.id, 'code')
+
+    const linkProps: StylableComponentProps = {
+      fontFamily: defFont,
+      fontSize: '1rem',
+      fontWeight: '500',
+      textColor: theme.link
+    }
+    buildRule({ bgColor: theme.search, textColor: theme.white }, theme.id, 'mark')
+
+    buildRule(linkProps, theme.id, 'a:link')
+    buildRule(linkProps, theme.id, 'a:visited')
+    buildRule(linkProps, theme.id, 'a:active')
+    linkProps.textDecoration = 'underline'
+    buildRule(linkProps, theme.id, 'a:hover')
+
     const blockquoteProps: StylableComponentProps = {
+      fontFamily: defFont,
+      fontSize: '1rem',
+      fontWeight: '400',
+      textColor: theme.p,
       padding: '20px',
       borderLeft: '7px solid #ce9c81'
     }

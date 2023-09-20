@@ -24,6 +24,18 @@ export class Application extends Observable {
   lastShownPage: Page | undefined = undefined
 
   //--------------------------------------
+  //  searchFilter
+  //--------------------------------------
+  private _searchFilter: string = ''
+  get searchFilter(): string { return this._searchFilter }
+  set searchFilter(value: string) {
+    if (this._searchFilter !== value) {
+      this._searchFilter = value
+      this.mutated()
+    }
+  }
+
+  //--------------------------------------
   //  isDocListShown
   //--------------------------------------
   private _isDocListShown: boolean = false

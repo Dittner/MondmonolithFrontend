@@ -38,7 +38,8 @@ export const NoCSSControlView = observer((props: NoCSSControlViewProps) => {
   }
 
   return (
-    <VStack width="100%" height="100%" minHeight='100vh'
+    <VStack className={theme.id}
+            width="100%" height="100%" minHeight='100vh'
             bgColor={theme.bg}
             halign="center"
             paddingLeft={app.size !== AppSize.XS ? '200px' : '40px'}
@@ -124,7 +125,7 @@ export const MarkdownBlock = observer((props: MarkdownBlockProps) => {
               paddingVertical='40px'
               width="100%">
 
-        <Label className="h2"
+        <Label type="h2"
                text={props.title}
                textColor={props.theme.white}
                bgColor={props.theme.redDark}
@@ -171,7 +172,7 @@ export const MarkdownBlock = observer((props: MarkdownBlockProps) => {
             paddingVertical='40px'
             valign="top" gap='0'
             width="100%">
-      <Label className="h2"
+      <Label type="h2"
              text={props.title}
              textColor={props.theme.white}
              bgColor={props.theme.redDark}

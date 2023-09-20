@@ -88,7 +88,8 @@ export const IntroPage = observer(() => {
     restApi.auth('demo', 'pwd')
   }
 
-  return <VStack maxWidth="100%"
+  return <VStack className={theme.id}
+                 maxWidth="100%"
                  width="100%"
                  height="100%"
                  halign="center"
@@ -138,6 +139,7 @@ export const IntroPage = observer(() => {
       <RedButton title='NoCSS'
                  onClick={() => {
                    navigate('/nocss')
+                   window.scrollTo(0, 0)
                  }}/>
 
       <VSeparator marginHorizontal='10px' color={theme.red}
@@ -146,13 +148,17 @@ export const IntroPage = observer(() => {
       <RedButton title={user.authStatus === AuthStatus.AUTHORIZED ? 'Docs' : 'Log in'}
                  onClick={() => {
                    navigate('/auth')
+                   window.scrollTo(0, 0)
                  }}/>
     </HStack>
 
-    <Label className={theme.isDark ? 'title' : 'title light'}
+    <Label fontFamily='ibm'
            fontSize={headerFontSize}
+           fontWeight='800'
            whiteSpace="pre"
            opacity='0.85'
+           letterSpacing='-1.5px'
+           lineHeight='1.4'
            textAlign='left'
            paddingTop="70px"
            paddingBottom='30px'
@@ -166,9 +172,10 @@ export const IntroPage = observer(() => {
       <span style={{ color: symbolsColor }}>{'])'}</span>
     </Label>
 
-    <Label className="ibm"
-           whiteSpace="pre"
-           padding="35px"
+    <Label className='ibm'
+           fontSize='1rem'
+           whiteSpace='pre'
+           padding='35px'
            opacity='0.75'
            text={app.size === AppSize.XS ? aboutTxtXS : aboutTxt}
            textColor={theme.about}
@@ -193,7 +200,7 @@ export const IntroPage = observer(() => {
       <MarkdownEditor text={code} title="2.Code"/>
       <MarkdownEditor text={lists} title="3.Lists"/>
       <MarkdownEditor text={links} title="4.Links"/>
-      <MarkdownEditor text={shortcuts} secondMarkdownText={languages} title="5. Editor"/>
+      <MarkdownEditor text={shortcuts} secondMarkdownText={languages} title="5.Editor"/>
     </VStack>
 
     <LargeButton title={'Try Demo Mode'}
@@ -218,7 +225,7 @@ const aboutTxt = `
 *   Designed by developers for developers               *   ========================
 *   This is a web-solution, that enables you to make    *   MODE  |  VER   |  YEAR  
 *   notes using a markdown-editor. Markdown helps       *   ––––––––––––––––––––––––
-*   to format notes and code fragments easily without   *   Demo  |  4.15  |  2023  
+*   to format notes and code fragments easily without   *   Demo  |  4.19  |  2023  
 *   having to write a plane text or HTML tags.          *   ========================
 *                                                       *                           `
 
@@ -232,19 +239,19 @@ const aboutTxtXS = `
 *  or HTML tags.                                
 *                                               
 *  –––––––––––––––––––––––––––––––––––––––––    
-*  MODE: Demo  |  VER: 4.15  |  YEAR: 2023      
+*  MODE: Demo  |  VER: 4.19  |  YEAR: 2023      
 *  –––––––––––––––––––––––––––––––––––––––––    
 *                                               
 `
 
-const headings = `# _HAL 9000_
+const headings = `# HAL 9000
 ## Heuristically Programmed Algorithmic Computer
 ### Created by Dr. Chandra
 #### Urbana, Illinois
 
 ***
 
-##### _Hal's mission_
+##### _HAL's mission_
 _HAL_ is a sentient artificial general intelligence computer that controls the systems of the _Discovery One_ spacecraft and interacts with the ship's astronaut crew.`
 
 const blockquote = `> «Sorry to interrupt the festivities, Dave, but I think we’ve got a problem.»
@@ -282,7 +289,6 @@ const shortcuts = `# Shortcuts\n
 
 const code = `# Memoization
 Memoization is an optimization technique based on remembering the results returned by a function called with the same arguments.
- 
 \`\`\`js
 const memoize = (fn) => {
   const argKey = (x) => x.toString() + ':' + typeof x
@@ -340,8 +346,7 @@ const MarkdownEditor = (props: MarkdownEditorProps) => {
               width="100%"
               layer={LayoutLayer.ONE}>
 
-        <Label className="h4"
-               text={props.title}
+        <Label text={props.title}
                textColor={theme.text75}
                whiteSpace="pre"
                paddingLeft="25px"
@@ -381,8 +386,7 @@ const MarkdownEditor = (props: MarkdownEditorProps) => {
 
   return (
     <>
-      <Label className="h4"
-             text={props.title}
+      <Label text={props.title}
              textColor={theme.text75}
              whiteSpace="pre"
              paddingLeft="25px"
@@ -420,7 +424,6 @@ const MarkdownEditor = (props: MarkdownEditorProps) => {
 
 const MarkdownText = stylable(({ value }: { value: string }) => {
   const { theme } = useDocsContext()
-
   useEffect(() => {
     console.log('--Prism.highlightAll')
     Prism.highlightAll()

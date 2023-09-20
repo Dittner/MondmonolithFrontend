@@ -41,7 +41,7 @@ const lightColorScheme = (theme: Theme): ColorScheme => {
     header: theme.h2,
     inputTitle: theme.p,
     inputText: theme.h3,
-    errColor: theme.h1,
+    errColor: '#a4887e',
     errBgColor: '#444444'
   }
 }
@@ -256,6 +256,6 @@ const LInput = (props: InputFormProps) => {
            text={style.placeholder}
            textColor={style.titleColor}/>
 
-    <TextInput {...style} placeHolder='' border='none'/>
+    <TextInput {...style} placeholder='' border='none'/>
   </HStack>
 }

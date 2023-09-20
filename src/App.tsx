@@ -101,7 +101,7 @@ export const ModalView = observer(() => {
                  valign="center"
                  width="100%"
                  height="100%"
-                 bgColor="#00000050"
+                 bgColor="#00000088"
                  layer={LayoutLayer.MODAL}
                  fixed>
 

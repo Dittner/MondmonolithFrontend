@@ -24,8 +24,7 @@ const BaseButton = (props: ButtonProps) => {
   let className = buildClassName(props)
   if ('className' in props) className += ' ' + props.className
 
-  return <button id='NoCSSBtn'
-                 className={className}
+  return <button className={className}
                  title={props.popUp}
                  onClick={(e) => {
                    if (!props.disabled) {
@@ -201,6 +200,8 @@ type IconType =
   | 'prevPage'
   | 'close'
   | 'menu'
+  | 'settings'
+  | 'search'
   | 'plus'
   | 'delete'
   | 'edit'
@@ -217,6 +218,10 @@ export const IconButton = (props: IconButtonProps) => {
                  bgColor={undefined}
                  textColor={theme.red}
                  hoverState={state => {
+                   state.textColor = theme.white
+                   state.bgColor = theme.isDark ? theme.transparent : theme.red
+                 }}
+                 selectedState={state => {
                    state.textColor = theme.white
                    state.bgColor = theme.isDark ? theme.transparent : theme.red
                  }}

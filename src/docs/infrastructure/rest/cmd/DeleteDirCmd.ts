@@ -14,11 +14,11 @@ export class DeleteDirCmd implements RestApiCmd {
   run() {
     if (!this.dir.isStoring && !this.dir.isNew) {
       this.dir.isStoring = true
-      this.deleteDoc()
+      this.deleteDir()
     }
   }
 
-  private async deleteDoc() {
+  private async deleteDir() {
     const url = '/dirs/' + this.dir.id
     const [response, _] = await this.api.sendRequest('DELETE', url)
 

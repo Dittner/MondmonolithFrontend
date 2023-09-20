@@ -5,18 +5,22 @@ import 'prismjs/components/prism-jsx'
 import 'prismjs/components/prism-tsx'
 import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-markup'
-import { stylable } from '../../application/NoCSS'
-import { LayoutLayer } from '../../application/Application'
+import { buildClassName } from '../../application/NoCSS'
+import { AppSize, LayoutLayer } from '../../application/Application'
 import { VStack } from '../common/Container'
-import { Label } from '../common/Label'
+import { Label, type LabelProps } from '../common/Label'
 import { Spacer } from '../common/Spacer'
 import { noCSSControlLinks, type NoCSSPageTheme } from './NoCSSPage'
 import { Button } from '../common/Button'
 import { useNavigate } from 'react-router-dom'
+import { useDocsContext } from '../../../App'
+import { observe } from '../../infrastructure/Observer'
 
 export const NoCSSIntro = ({ theme }: { theme: NoCSSPageTheme }) => {
   console.log('new NoCSSIntro')
   const navigate = useNavigate()
+  const { app } = useDocsContext()
+  observe(app)
 
   return <VStack width="100%"
                  height="100%"
@@ -27,21 +31,23 @@ export const NoCSSIntro = ({ theme }: { theme: NoCSSPageTheme }) => {
 
     <VStack halign='center' valign='top'
             width="100%"
+            paddingHorizontal={app.size !== AppSize.XS ? '150px' : '40px'}
             paddingVertical='40px'
             bgColor={theme.headerBgColor}>
       <Label className='def'
              fontSize={theme.headerFontSize}
+             fontWeight='500'
              text='NoCSS'
-             padding='10px'
              width='100%' maxWidth={theme.introContentWidth}
              whiteSpace="pre"
              textColor={theme.white}
              layer={LayoutLayer.ONE}/>
 
       <MarkdownText className='def'
-                    padding='10px'
                     width="100%" maxWidth={theme.introContentWidth}
-                    value={introTxt}
+                    text={introTxt}
+                    fontSize='1.1rem'
+                    fontWeight='400'
                     textColor={theme.white}/>
     </VStack>
 
@@ -94,40 +100,39 @@ const principlesTxt = `0. Software module boundaries, its isolation and privacy 
 
 const disadvantagesTxt = `0. CSS does not have a monopoly on the representation of data. We often see UI logic leakage between CSS selectors, JS objects and JSX components.
 1. CSS is not OOP friendly. CSS manipulates data structures, not objects. As a result, the isolation and security of modules is ignored. Changing the representation of one object may unexpectedly affect the representation of another.
-2. If two modules are responsible for representing the same data, have similar or identical names, depend on each other or a common state, and when writing code we regularly switch between these modules, then we are actually dealing with one module that suffers from a split personality (split module). These modules can be a CSS selector and a JSX component, which actually perform the same task and share the same responsibility. Breaking module isolation like this or duplicating modules will make it harder to maintain old code and write new code.
+2. If two modules are responsible for representing the same data, have similar or identical names, depend on each other or a common state, and when writing code we regularly switch between these modules, then we are actually dealing with one module that suffers from a split personality (split module). These modules can be a CSS rule and a JSX component, which actually perform the same task and share the same responsibility. Breaking module isolation like this or duplicating modules will make it harder to maintain old code and write new code.
 3. Now we can declare variables and functions in CSS/SASS. These new possibilities demonstrate a trend in which CSS tries to mimic a programming language. This means actually duplicating JS functionality. In this case, Martin Fowler would say that CSS is jealous of JS.`
 
 const conclusionTxt = `Direct interaction with CSS inevitably produces a lot of duplications and style conflicts.
-  Converting CSS selectors into a JS object, as happens in [JSS library](https://cssinjs.org/), allows us to get rid of redundant CSS files.
+  Converting CSS rules into a JS object, as happens in [JSS library](https://cssinjs.org/), allows us to get rid of redundant CSS files.
   However, styles declared in a JS object remain isolated from JSX components. Thus, the problem with the split module remains in JSS unresolved. In addition, declaring CSS properties in a JS object has a negative impact on readability.
   Therefore, the main goal of NoCSS is to completely abandon CSS modules and CSS syntax by adding an abstract layer between CSS and JSX. When building a UI-component, we can now use only JSX syntax and only one module.`
 
-const Fragment = ({
-  title,
-  text,
-  theme
-}: { title: string, text: string, theme: NoCSSPageTheme }) => {
-  return <VStack halign='left' valign='top'
-                 width="100%" maxWidth={theme.introContentWidth}
-                 paddingVertical='20px' paddingHorizontal='10px'>
+const Fragment = ({ title, text, theme }: { title: string, text: string, theme: NoCSSPageTheme }) => {
+  const { app } = useDocsContext()
+  observe(app)
+  return <VStack halign='center' valign='top'
+                 width="100%" paddingHorizontal={app.size !== AppSize.XS ? '150px' : '40px'}
+                 paddingVertical='20px'>
 
     <Label className='def'
-           fontSize='30px'
+           fontSize='2rem'
+           fontWeight='400'
            text={title}
+           width="100%" maxWidth={theme.introContentWidth}
            textColor={theme.darkTextColor}
            layer={LayoutLayer.ONE}/>
 
-    <MarkdownText className='def light'
+    <MarkdownText className='def'
+                  text={text}
                   textColor={theme.darkTextColor}
-                  value={text}
-                  width="100%"/>
+                  fontSize='1.1rem'
+                  width="100%" maxWidth={theme.introContentWidth}/>
   </VStack>
 }
 
-const MarkdownText = stylable(({ value }: { value: string }) => {
-  useEffect(() => {
-    console.log('--Prism.highlightAll')
-    Prism.highlightAll()
-  }, [value])
-  return <ReactMarkdown className='markdown' key={value}>{value}</ReactMarkdown>
-})
+const MarkdownText = (props: LabelProps) => {
+  let className = 'className' in props ? props.className + ' ' : ''
+  className += buildClassName(props)
+  return <ReactMarkdown className={className} key={props.key}>{props.text ?? ''}</ReactMarkdown>
+}

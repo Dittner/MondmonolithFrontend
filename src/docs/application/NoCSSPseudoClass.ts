@@ -1,4 +1,4 @@
-import { abbreviations } from './NoCSS'
+import { abbreviations, type RulePriority } from './NoCSS'
 
 export class StyleSheetProcessor {
   private readonly hash = new Map<PseudoClassType, PseudoClass>()
@@ -12,10 +12,10 @@ export class StyleSheetProcessor {
     this.list.forEach(c => this.hash.set(c.type, c))
   }
 
-  setValue(to: PseudoClassType, key: string, value: string, appendToClassName: boolean = true) {
+  setValue(to: PseudoClassType, key: string, value: string, priority: RulePriority, appendToClassName: boolean = true) {
     const pseudoClass = this.hash.get(to)
     if (pseudoClass) {
-      pseudoClass.setValue(key, value, appendToClassName)
+      pseudoClass.setValue(key, value, priority, appendToClassName)
     } else {
       throw new Error('PseudoClassProcessor:setValue, PseudoClassType <' + to + '> not added to PseudoClassProcessor')
     }
@@ -25,8 +25,8 @@ export class StyleSheetProcessor {
     return this.list.reduce((res, pseudoClass) => (res + (pseudoClass.isEmpty() ? '' : pseudoClass.hashSum)), '')
   }
 
-  insertRule(className: string, id: string, tag: string) {
-    this.list.forEach(c => { c.insertRule(className, id, tag) })
+  insertRule(className: string, tag: string) {
+    this.list.forEach(c => { c.insertRule(className, tag) })
   }
 
   clearValues() {
@@ -47,14 +47,14 @@ export class PseudoClass {
     this.hashSum = ''
   }
 
-  insertRule(className: string, id: string, tag: string) {
+  insertRule(className: string, tag: string) {
     throw new Error('Abstract method PseudoClass:insertRule should be overwritten')
   }
 
-  setValue(key: string, value: string, appendToClassName: boolean = true) {
+  setValue(key: string, value: string, priority: RulePriority, appendToClassName: boolean = true) {
     if (value === undefined) return
 
-    this.style += key + ':' + value + ';'
+    this.style += key + ':' + value + (priority === 'high' ? ' !important;' : ';')
 
     if (appendToClassName) {
       if (!(key in abbreviations)) { throw new Error('SelectorRuleBuilder.setValue:: No abbreviation for tag: ' + key) }
@@ -77,10 +77,9 @@ class NoPseudoClass extends PseudoClass {
     super('none', styleSheet)
   }
 
-  insertRule(className: string, id: string, tag: string) {
+  insertRule(className: string, tag: string) {
     if (this.style) {
-      let rule = id ? '#' + id : ''
-      rule += tag + '.' + className + '{' + this.style + '}'
+      const rule = tag + '.' + className + '{' + this.style + '}'
       this.styleSheet.insertRule(rule)
     }
   }
@@ -93,10 +92,9 @@ class HoverPseudoClass extends PseudoClass {
     super('hover', styleSheet)
   }
 
-  insertRule(className: string, id: string, tag: string) {
+  insertRule(className: string, tag: string) {
     if (this.style) {
-      let rule = id ? '#' + id : ''
-      rule += tag + '.' + className + (this.isMobileDevice ? ':active{' : ':hover{') + this.style + '}'
+      const rule = tag + '.' + className + (this.isMobileDevice ? ':active{' : ':hover{') + this.style + '}'
       this.styleSheet.insertRule(rule)
     }
   }
@@ -107,10 +105,9 @@ class FocusPseudoClass extends PseudoClass {
     super('focus', styleSheet)
   }
 
-  insertRule(className: string, id: string, tag: string) {
+  insertRule(className: string, tag: string) {
     if (this.style) {
-      let rule = id ? '#' + id : ''
-      rule += tag + '.' + className + ':focus{' + this.style + '}'
+      const rule = tag + '.' + className + ':focus{' + this.style + '}'
       this.styleSheet.insertRule(rule)
     }
   }
@@ -121,13 +118,9 @@ class PlaceholderPseudoClass extends PseudoClass {
     super('placeholder', styleSheet)
   }
 
-  insertRule(className: string, id: string, tag: string) {
+  insertRule(className: string, tag: string) {
     if (this.style) {
-      const rule = id ? '#' + id : ''
-
-      this.styleSheet.insertRule(rule + tag + '.' + className + '::placeholder{' + this.style + '}')
-      //this.styleSheet.insertRule(rule + tag + '.' + className + '::-ms-input-placeholder{' + this.style + '}')
-      //this.styleSheet.insertRule(rule + tag + '.' + className + '::-ms-input-placeholder{' + this.style + '}')
+      this.styleSheet.insertRule(tag + '.' + className + '::placeholder{' + this.style + '}')
     }
   }
 }

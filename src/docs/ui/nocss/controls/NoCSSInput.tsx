@@ -336,9 +336,7 @@ const App = () => {
     <div className='hstack'>
       <textarea class="multiline_input" 
                 rows={7}
-                placeholder="Enter multiline text" 
-                autocorrect="off" 
-                autocomplete="off"
+                placeholder="Enter multiline text"
                 onChange={onTextAreaChanged}>
 
       <p className='lbl'>

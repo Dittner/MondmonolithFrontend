@@ -29,7 +29,6 @@ export class StoreDirCmd implements RestApiCmd {
       if (this.dir.isNew) {
         const dto = responseBody as DirDto
         this.dir.id = dto.id.toString()
-        this.dir.title = dto.title
         this.dir.isNew = false
         this.api.context.dirList.add(this.dir)
       }

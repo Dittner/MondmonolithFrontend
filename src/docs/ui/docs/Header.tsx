@@ -1,7 +1,7 @@
 import { AuthStatus, Page, PageBlock } from '../../domain/DomainModel'
 import { stylable } from '../../application/NoCSS'
 import { Route, Routes, useParams } from 'react-router-dom'
-import { AppSize, Dialog } from '../../application/Application'
+import { AppSize, Dialog, LayoutLayer } from '../../application/Application'
 import { observeApp, observeDirList, observeEditTools } from '../../DocsContext'
 import { HStack } from '../common/Container'
 import { IconButton, RedButton, Switcher } from '../common/Button'
@@ -10,6 +10,9 @@ import { Spacer } from '../common/Spacer'
 import { observer } from '../../infrastructure/Observer'
 import { useDocsContext } from '../../../App'
 import { VSeparator } from '../common/Separator'
+import * as React from 'react'
+import { useState } from 'react'
+import { type InputFormProps, TextInput } from '../common/Input'
 
 export const Header = stylable(() => {
   return <Routes>
@@ -18,7 +21,10 @@ export const Header = stylable(() => {
   </Routes>
 })
 
-export const HeaderVerSep = ({ visible = true, marginHorizontal = '10px' }: { visible?: boolean, marginHorizontal?: string }) => {
+export const HeaderVerSep = ({
+  visible = true,
+  marginHorizontal = '10px'
+}: { visible?: boolean, marginHorizontal?: string }) => {
   if (!visible) return <></>
 
   return <VSeparator marginHorizontal={marginHorizontal}
@@ -27,6 +33,7 @@ export const HeaderVerSep = ({ visible = true, marginHorizontal = '10px' }: { vi
 
 export const HeaderView = observer(() => {
   console.log('new AuthPanel')
+  const [filterProtocol] = useState({ value: '' })
   const editTools = observeEditTools()
   const app = observeApp()
   const dirList = observeDirList()
@@ -53,6 +60,10 @@ export const HeaderView = observer(() => {
       page.isEditing = true
       restApi.storePage(page, doc)
     }
+  }
+
+  const startSearching = () => {
+    app.searchFilter = filterProtocol.value
   }
 
   const ampInd = user.email.indexOf('@')
@@ -85,13 +96,20 @@ export const HeaderView = observer(() => {
 
           {doc && editTools.editMode &&
             <>
+              <Spacer width='40px' visible={app.size !== AppSize.S && app.size !== AppSize.XS}/>
+
               <RedButton title="Add Page"
                          onClick={createPage}/>
 
               <Spacer width="10px"/>
 
               <ToolsPanel/>
-            </>}
+            </>
+          }
+
+          {doc && !editTools.editMode &&
+            <SearchInput protocol={filterProtocol} onSubmitted={startSearching}/>
+          }
 
           <Spacer/>
 
@@ -101,8 +119,7 @@ export const HeaderView = observer(() => {
                  text={editTools.editMode ? 'Edit mode: ' : 'Read mode: '}
                  textColor={theme.text75}/>
 
-          <Switcher disabled={!editTools.editModeEnabled}
-                    isSelected={editTools.editMode}
+          <Switcher isSelected={editTools.editMode}
                     onClick={() => {
                       editTools.toggleEditMode()
                     }}/>
@@ -163,7 +180,7 @@ const ToolsPanel = observer(() => {
   const deleteBlock = () => {
     if (editTools.editMode && selectedPage) {
       app.dialog = new Dialog(
-        '???',
+        'Delete?',
         `Are you sure you want to remove the page «${selectedPage.title}» with its content?`,
         () => {
           selectedPage.isEditing = false
@@ -177,7 +194,7 @@ const ToolsPanel = observer(() => {
       )
     } else if (editTools.editMode && selectedPageBlock) {
       app.dialog = new Dialog(
-        '???',
+        'Delete?',
         "Are you sure you want to remove the selected page's block?",
         () => {
           selectedPageBlock.isEditing = false
@@ -228,3 +245,42 @@ const ToolsPanel = observer(() => {
   }
   return <></>
 })
+
+export const SearchInput = (props: InputFormProps) => {
+  console.log('new SearchInput')
+  const theme = useDocsContext().theme
+
+  return (
+    <HStack halign="left" valign="bottom" gap="10px" paddingLeft='35px'
+            width={props.width}>
+
+      <Label textColor={theme.text75} layer={LayoutLayer.ONE}>
+        <span className="icon icon-search"/>
+      </Label>
+
+      <TextInput className='mono'
+                 whiteSpace="pre"
+                 fontWeight='500'
+                 width='300px' height='35px'
+                 marginLeft='-35px'
+                 paddingLeft='35px'
+                 placeholder='Search'
+                 textColor={theme.search}
+                 caretColor={theme.caretColor}
+                 borderColor={theme.transparent}
+                 bgColor={theme.transparent}
+                 focusState={state => {
+                   state.borderColor = theme.border
+                   state.bgColor = theme.inputBg
+                 }}
+                 hoverState={state => {
+                   state.borderColor = theme.border
+                   state.bgColor = theme.inputBg
+                 }}
+                 placeholderState={state => {
+                   state.opacity = '1'
+                 }}
+                 {...props}/>
+    </HStack>
+  )
+}

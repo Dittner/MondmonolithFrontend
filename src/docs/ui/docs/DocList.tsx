@@ -12,7 +12,6 @@ import { IconButton, RedButton } from '../common/Button'
 import { Label } from '../common/Label'
 import { Spacer } from '../common/Spacer'
 import { sortByKey } from '../common/Utils'
-import { HeaderVerSep } from './Header'
 import { InputForm } from '../common/Input'
 
 export const DocList = observer(stylable(() => {
@@ -53,7 +52,8 @@ export const DocList = observer(stylable(() => {
   if (dirList.loadStatus === LoadStatus.LOADING) {
     return <StylableContainer width="100%"
                               height="100%"
-                              bgColor={theme.docListBg}/>
+                              bgColor={theme.docListBg}
+                              borderRight={['1px', 'solid', theme.border]}/>
   }
   return (
     <VStack valign="top"
@@ -61,7 +61,8 @@ export const DocList = observer(stylable(() => {
             gap="0"
             width="100%"
             height="100%"
-            bgColor={theme.docListBg}>
+            bgColor={theme.docListBg}
+            borderRight={['1px', 'solid', theme.border]}>
 
       <HStack halign="center"
               valign="center"
@@ -77,8 +78,8 @@ export const DocList = observer(stylable(() => {
                     }}/>
 
         {editTools.editMode &&
-            <RedButton title="Add Dir"
-                       onClick={createDir}/>
+          <RedButton title="Add Dir"
+                     onClick={createDir}/>
         }
 
         <Spacer/>
@@ -107,14 +108,23 @@ export const DocList = observer(stylable(() => {
 const DirectoryView = observer(({ dir }: { dir: Directory }) => {
   observe(dir)
   const editTools = observeEditTools()
-  const { restApi, theme, docsLoader } = useDocsContext()
+  const {
+    app,
+    restApi,
+    theme,
+    docsLoader
+  } = useDocsContext()
 
   const [newDoc, setNewDoc] = useState<Doc | null>(null)
+  const [isSettingsOpened, setIsSettingsOpened] = useState<boolean>(false)
 
-  if (dir.loadStatus === LoadStatus.PENDING) { restApi.loadDocs(dir) }
+  if (dir.loadStatus === LoadStatus.PENDING) {
+    restApi.loadDocs(dir)
+  }
 
   const createDoc = () => {
     setNewDoc(dir.createDoc())
+    setIsSettingsOpened(false)
   }
   const onApplyDocCreating = (title: string) => {
     if (newDoc && title) {
@@ -138,8 +148,15 @@ const DirectoryView = observer(({ dir }: { dir: Directory }) => {
   }
 
   const onDeleteDir = () => {
-    restApi.deleteDir(dir)
-    dir.isEditing = false
+    app.dialog = new Dialog(
+      'Are you sure you want to delete the directory «' + dir.title + '»?',
+      "The directory will be deleted with all docs. You can't undo this action.",
+      () => {
+        restApi.deleteDir(dir)
+        dir.isEditing = false
+      },
+      () => {
+      })
   }
 
   const onCancelDirEditing = () => {
@@ -149,11 +166,13 @@ const DirectoryView = observer(({ dir }: { dir: Directory }) => {
   const startEditing = () => {
     if (!dir.isStoring && editTools.editMode) {
       dir.isEditing = true
+      setIsSettingsOpened(false)
     }
   }
 
   const onFileSelected = (f: File) => {
     docsLoader.loadDocFromDisc(f, dir)
+    setIsSettingsOpened(false)
   }
 
   if (editTools.editMode && dir.isEditing) {
@@ -162,8 +181,7 @@ const DirectoryView = observer(({ dir }: { dir: Directory }) => {
                padding='10px'
                width='100%'
                onCancel={onCancelDirEditing}
-               onApply={onApplyDirEditing}
-               onDelete={onDeleteDir}/>
+               onApply={onApplyDirEditing}/>
       {
         dir.docs.map(doc => {
           return <DocLink key={doc.uid} doc={doc}/>
@@ -176,8 +194,7 @@ const DirectoryView = observer(({ dir }: { dir: Directory }) => {
             gap='0'
             halign="left"
             valign="center"
-            paddingBottom='30px'
-            onDoubleClick={startEditing}>
+            paddingBottom='30px'>
 
       <HStack halign='left' valign='center'
               height="35px"
@@ -193,15 +210,29 @@ const DirectoryView = observer(({ dir }: { dir: Directory }) => {
                textAlign="left"/>
 
         {editTools.editMode &&
-          <HStack halign='left' valign='center' gap='0'>
+          <IconButton icon='settings'
+                      isSelected={isSettingsOpened}
+                      popUp="Show settings"
+                      onClick={() => {
+                        setIsSettingsOpened(!isSettingsOpened)
+                      }}/>
 
-            <RedButton title="New Doc"
-                       onClick={createDoc}/>
-            <HeaderVerSep marginHorizontal='0'/>
-            <DocPicker onFileSelected={onFileSelected}/>
-          </HStack>
         }
       </HStack>
+
+      {editTools.editMode && isSettingsOpened &&
+        <VStack halign='center' valign='center' gap='0' bgColor='#00000020'>
+          <RedButton title="New Doc"
+                     onClick={createDoc}/>
+          <DocPicker onFileSelected={onFileSelected}/>
+          <RedButton title="Edit"
+                     onClick={startEditing}/>
+          <RedButton title="Delete"
+                     visible={!dir.isNew}
+                     popUp="Delete"
+                     onClick={onDeleteDir}/>
+        </VStack>
+      }
 
       {newDoc &&
         <DocForm doc={newDoc}
@@ -238,7 +269,7 @@ const DocPicker = ({ onFileSelected }: { onFileSelected: (doc: File) => void }) 
   }
 
   return <>
-    <RedButton title="Import"
+    <RedButton title="Import Doc"
                onClick={importDoc}/>
 
     <input ref={inputRef} className="btn" type="file" onChange={handleFileChange} value={value}
@@ -251,7 +282,6 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
   observe(doc)
   const {
     restApi,
-    app,
     editTools,
     theme
   } = useDocsContext()
@@ -270,13 +300,6 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
 
   const onCancel = () => {
     doc.isEditing = false
-  }
-  const onDelete = () => {
-    app.dialog = new Dialog(
-      'Are you sure you want to delete the document «' + doc.title + '»?',
-      "The document will be deleted with all pages. You can't undo this action.",
-      () => { restApi.deleteDoc(doc); doc.isEditing = false },
-      () => {})
   }
 
   const startEditing = (e: any) => {
@@ -297,8 +320,7 @@ const DocLink = observer(({ doc }: { doc: Doc }) => {
                padding='10px'
                width='100%'
                onCancel={onCancel}
-               onApply={onApply}
-               onDelete={onDelete}/>
+               onApply={onApply}/>
     )
   }
 
@@ -340,7 +362,6 @@ interface DocFormProps {
   doc: Doc
   onCancel: () => void
   onApply: (title: string) => void
-  onDelete?: (() => void) | undefined
 }
 
 const DocForm = stylable((props: DocFormProps) => {
@@ -357,24 +378,19 @@ const DocForm = stylable((props: DocFormProps) => {
     props.onCancel()
   }
 
-  const deleteDoc = () => {
-    props.onDelete?.()
-  }
-
   return (
-    <HStack halign="stretch" valign="center" gap="5px"
-            paddingHorizontal="10px"
-            borderColor={theme.border}>
     <VStack halign="stretch"
             valign="center"
             paddingTop='11px'
+            paddingHorizontal='10px'
+            borderColor={theme.border}
             gap="0">
 
-        <InputForm type="text"
-                   protocol={newDocTitleProtocol}
-                   title="Doc's title"
-                   onSubmitted={apply}
-                   autoFocus/>
+      <InputForm type="text"
+                 protocol={newDocTitleProtocol}
+                 title="Doc's title"
+                 onSubmitted={apply}
+                 autoFocus/>
 
       <HStack halign="center" valign="center" gap="50px">
         <RedButton title="Cancel"
@@ -384,12 +400,6 @@ const DocForm = stylable((props: DocFormProps) => {
                    onClick={apply}/>
       </HStack>
     </VStack>
-
-      <IconButton icon="delete"
-                  visible={!props.doc.isNew}
-                  popUp="Delete"
-                  onClick={deleteDoc}/>
-    </HStack>
   )
 })
 
@@ -397,7 +407,6 @@ interface DirFormProps {
   dir: Directory
   onCancel: () => void
   onApply: (title: string) => void
-  onDelete?: (() => void) | undefined
 }
 
 const DirForm = stylable((props: DirFormProps) => {
@@ -416,25 +425,20 @@ const DirForm = stylable((props: DirFormProps) => {
     props.onCancel()
   }
 
-  const deleteDir = () => {
-    props.onDelete?.()
-  }
-
   return (
-    <HStack halign="stretch" valign="center" gap="5px"
-            paddingHorizontal="10px"
-            borderColor={theme.border}>
-      <VStack halign="stretch"
-              valign="center"
-              paddingTop='11px'
-              gap="0">
+    <VStack halign="stretch"
+            valign="center"
+            paddingTop='11px'
+            paddingHorizontal='10px'
+            borderColor={theme.border}
+            gap="0">
 
-        <InputForm type="text"
-                   protocol={titleProtocol}
-                   title="Directory"
-                   onSubmitted={apply}
-                   autoFocus
-        />
+      <InputForm type="text"
+                 protocol={titleProtocol}
+                 title="Directory"
+                 onSubmitted={apply}
+                 autoFocus
+      />
 
       <HStack halign="center" valign="center" gap="50px">
         <RedButton title="Cancel"
@@ -444,10 +448,5 @@ const DirForm = stylable((props: DirFormProps) => {
                    onClick={apply}/>
       </HStack>
     </VStack>
-      <IconButton icon="delete"
-                  visible={!props.dir.isNew}
-                  popUp="Delete"
-                  onClick={deleteDir}/>
-</HStack>
   )
 })

@@ -47,12 +47,6 @@ export class DocsContext {
       }
     })
 
-    this.dirList.subscribe(() => {
-      if (this.dirList.loadStatus === LoadStatus.LOADED && this.dirList.dirs.length === 0) {
-        this.editTools.editMode = true
-      }
-    })
-
     this.themeManager.subscribe(() => {
       this._theme = this.themeManager.theme
     })

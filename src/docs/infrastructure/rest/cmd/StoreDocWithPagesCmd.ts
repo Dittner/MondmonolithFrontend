@@ -56,6 +56,7 @@ export class StoreDocWithPagesCmd implements RestApiCmd {
         const pageDto = pageResponseBody as PageDto
         if (pageResponse?.ok) {
           page.id = pageDto.id.toString()
+          page.isNew = false
         } else {
           return
         }

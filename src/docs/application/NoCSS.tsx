@@ -30,7 +30,8 @@ export const abbreviations: Record<string, string> = {
   'height': 'H',
   'justify-content': 'J',
   'left': 'L',
-  'line_height': 'LH',
+  'letter-spacing': 'LS',
+  'line-height': 'LH',
   'margin': 'M',
   'margin-left': 'ML',
   'margin-right': 'MR',
@@ -63,7 +64,16 @@ export const abbreviations: Record<string, string> = {
   'z-index': 'Z'
 }
 
-const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: string, tag: string) => string, (parentSelector: string, childSelector: string) => void] => {
+interface RuleBuilderInterface {
+  reset: (pseudoClass: PseudoClassType, rulePriority: RulePriority) => void
+  operator: Record<string, (value: any) => void>
+  getClassName: (tag: string) => string
+  addRule: (parentSelector: string, childSelector: string) => void
+}
+
+export type RulePriority = 'high' | 'low'
+
+const RuleBuilder = (): RuleBuilderInterface => {
   const notAllowedSymbolsInClassName = /[%. #]+/g
   const classNameHash = new Map<string, string>()
 
@@ -72,11 +82,18 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
   // document.adoptedStyleSheets = [styleSheet];
   const styleSheet = window.document.styleSheets[0]
   const styleSheetProcessor = new StyleSheetProcessor(styleSheet)
-  let context: PseudoClassType = 'none'
+  let pseudoClass: PseudoClassType = 'none'
+  let rulePriority: RulePriority = 'low'
 
   const operator: Record<string, (value: any) => void> = Object.create(null)
 
-  const getClassName = (id: string, tag: string): string => {
+  const reset = (pseudoClassValue: PseudoClassType, rulePriorityValue: RulePriority): void => {
+    styleSheetProcessor.clearValues()
+    pseudoClass = pseudoClassValue
+    rulePriority = rulePriorityValue
+  }
+
+  const getClassName = (tag: string): string => {
     const hashSum = styleSheetProcessor.valuesToHashSum()
     if (!hashSum) return ''
 
@@ -86,30 +103,26 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
     classNameHash.set(hashSum, className)
     //console.log('--new selector #' + (++selectorsCount) + ': ', className)
 
-    styleSheetProcessor.insertRule(className, id, tag)
+    styleSheetProcessor.insertRule(className, tag)
 
     return className
   }
 
-  const addRule = (parentSelector: string, childSelector: string): void => {
+  const addRule = (parentSelector: string, childTagSelector: string): void => {
     const hashSum = styleSheetProcessor.valuesToHashSum()
     if (!hashSum) return
 
-    const selector = parentSelector + ' ' + childSelector
+    const selector = parentSelector + ' ' + childTagSelector
     if (classNameHash.has(selector)) return
     //console.log('--new selector #' + (++selectorsCount) + ': ', selector)
 
-    styleSheetProcessor.insertRule(selector, '', '')
+    styleSheetProcessor.insertRule(selector, '')
   }
 
-  const clear = (): void => {
-    styleSheetProcessor.clearValues()
-  }
-
-  const setValue = (key: string, value: string, appendToClassName: boolean = true) => {
+  const setValue = (key: string, value: string, appendToClassSelectorName: boolean = true) => {
     if (value === undefined) return
 
-    styleSheetProcessor.setValue(context, key, value, appendToClassName)
+    styleSheetProcessor.setValue(pseudoClass, key, value, rulePriority, appendToClassSelectorName)
   }
 
   operator.width = (value: string) => { setValue('width', value) }
@@ -189,7 +202,8 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
   operator.fontFamily = (value: string) => { setValue('font-family', value) }
   operator.fontSize = (value: string) => { setValue('font-size', value) }
   operator.fontWeight = (value: string) => { setValue('font-weight', value) }
-  operator.lineHeight = (value: string) => { setValue('line_height', value) }
+  operator.lineHeight = (value: string) => { setValue('line-height', value) }
+  operator.letterSpacing = (value: string) => { setValue('letter-spacing', value) }
   operator.textColor = (value: string) => { setValue('color', value) }
   operator.textAlign = (value: string) => { setValue('text-align', value) }
   operator.textDecoration = (value: string) => { setValue('text-decoration', value) }
@@ -203,7 +217,7 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
 
   // HOVER
   operator.hoverState = (fillPropsFunc: (state: StylableComponentProps) => void) => {
-    context = 'hover'
+    pseudoClass = 'hover'
     const hoverStateProps: any = {}
     fillPropsFunc(hoverStateProps)
 
@@ -212,12 +226,12 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
         operator[k](hoverStateProps[k])
       }
     }
-    context = 'none'
+    pseudoClass = 'none'
   }
 
   // FOCUS
   operator.focusState = (fillPropsFunc: (state: StylableComponentProps) => void) => {
-    context = 'focus'
+    pseudoClass = 'focus'
     const focusStateProps: any = {}
     fillPropsFunc(focusStateProps)
     for (const k of [...Object.keys(focusStateProps)].sort(sortKeys)) {
@@ -225,12 +239,12 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
         operator[k](focusStateProps[k])
       }
     }
-    context = 'none'
+    pseudoClass = 'none'
   }
 
   // PLACEHOLDER
   operator.placeholderState = (fillPropsFunc: (state: StylableComponentProps) => void) => {
-    context = 'placeholder'
+    pseudoClass = 'placeholder'
     const placeholderProps: any = {}
     fillPropsFunc(placeholderProps)
     for (const k of [...Object.keys(placeholderProps)].sort(sortKeys)) {
@@ -238,10 +252,10 @@ const RuleBuilder = (): [() => void, Record<string, (value: any) => void>, (id: 
         operator[k](placeholderProps[k])
       }
     }
-    context = 'none'
+    pseudoClass = 'none'
   }
 
-  return [clear, operator, getClassName, addRule]
+  return { reset, operator, getClassName, addRule }
 }
 
 const ruleBuilder = RuleBuilder()
@@ -252,9 +266,9 @@ const sortKeys = (a: string, b: string) => {
   return 0
 }
 
-export const buildClassName = (props: any, id = '', tag = ''): string => {
-  const [clear, operator, className] = ruleBuilder
-  clear()
+export const buildClassName = (props: any, tag = ''): string => {
+  const { reset, operator, getClassName } = ruleBuilder
+  reset('none', 'high')
 
   for (const k of [...Object.keys(props)].sort(sortKeys)) {
     if (operator[k]) {
@@ -264,12 +278,12 @@ export const buildClassName = (props: any, id = '', tag = ''): string => {
     //   console.warn("  --NoCSS: Operator «" + k + "» not found!")
     // }
   }
-  return className(id, tag)
+  return getClassName(tag)
 }
 
 export const buildRule = (props: any, parentSelector: string, childSelector: string): void => {
-  const [clear, operator, _, addRule] = ruleBuilder
-  clear()
+  const { reset, operator, addRule } = ruleBuilder
+  reset('none', 'low')
 
   for (const k of [...Object.keys(props)].sort(sortKeys)) {
     if (operator[k]) {
@@ -340,7 +354,6 @@ export interface StylableComponentProps {
   fontFamily?: string
   fontSize?: string
   fontWeight?: string
-  lineHeight?: string
   caretColor?: string
   visible?: boolean
   className?: string

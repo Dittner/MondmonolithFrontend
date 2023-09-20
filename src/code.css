@@ -32,12 +32,11 @@ pre[class*=language-] {
 	white-space: pre-wrap;
 	margin-left: -20px;
 	margin-right: -20px;
-	margin-top: 10px;
-	margin-bottom: 10px;
 }
 
 .light pre[class*=language-] {
-	background-color: #d5d2cb50;
+	background-color: #d2d9e050;
+	border: 1px solid #c5d2d8;
 }
 
 :not(pre)>code[class*=language-],
@@ -53,7 +52,6 @@ pre[class*=language-] {
 .token.prolog {
 	color: #717783;
 }
-
 
 .token.comment.bold {
 	color: #717783;

@@ -15,12 +15,22 @@ import { StoreDocWithPagesCmd } from './cmd/StoreDocWithPagesCmd'
 import { SendVerificationCodeCmd } from './cmd/SendVerificationCodeCmd'
 import { RequestVerificationCodeCmd } from './cmd/RequestVerificationCodeCmd'
 import { RefreshTokenCmd } from './cmd/RefreshTokenCmd'
+import {
+  FakeDeleteDirCmd,
+  FakeDeleteDocCmd, FakeDeletePageCmd,
+  FakeStoreDirCmd,
+  FakeStoreDocCmd,
+  FakeStoreDocWithPagesCmd, FakeStorePageCmd
+} from './cmd/FakeCmd'
+
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
 export class RestApi {
   readonly TOKEN = 'MM_TOKEN'
   readonly baseUrl: string
   readonly context: DocsContext
   headers: any = { 'Content-Type': 'application/json' }
+  isDemoMode = false
 
   constructor(context: DocsContext) {
     this.baseUrl = process.env.REACT_APP_API_URL ?? 'http://localhost:3000'
@@ -91,12 +101,12 @@ export class RestApi {
   }
 
   storeDir(dir: Directory) {
-    const cmd = new StoreDirCmd(this, dir)
+    const cmd = this.isDemoMode ? new FakeStoreDirCmd(this, dir) : new StoreDirCmd(this, dir)
     cmd.run()
   }
 
   deleteDir(dir: Directory) {
-    const cmd = new DeleteDirCmd(this, dir)
+    const cmd = this.isDemoMode ? new FakeDeleteDirCmd(this, dir) : new DeleteDirCmd(this, dir)
     cmd.run()
   }
 
@@ -105,17 +115,17 @@ export class RestApi {
   //--------------------------------------
 
   storeDoc(doc: Doc, dir: Directory) {
-    const cmd = new StoreDocCmd(this, doc, dir)
+    const cmd = this.isDemoMode ? new FakeStoreDocCmd(this, doc, dir) : new StoreDocCmd(this, doc, dir)
     cmd.run()
   }
 
   storeDocWithPages(doc: Doc, pages: Page[], dir: Directory) {
-    const cmd = new StoreDocWithPagesCmd(this, doc, pages, dir)
+    const cmd = this.isDemoMode ? new FakeStoreDocWithPagesCmd(this, doc, pages, dir) : new StoreDocWithPagesCmd(this, doc, pages, dir)
     cmd.run()
   }
 
   deleteDoc(doc: Doc) {
-    const cmd = new DeleteDocCmd(this, doc)
+    const cmd = this.isDemoMode ? new FakeDeleteDocCmd(this, doc) : new DeleteDocCmd(this, doc)
     cmd.run()
   }
 
@@ -134,12 +144,12 @@ export class RestApi {
   }
 
   storePage(page: Page, doc: Doc) {
-    const cmd = new StorePageCmd(this, page, doc)
+    const cmd = this.isDemoMode ? new FakeStorePageCmd(this, page, doc) : new StorePageCmd(this, page, doc)
     cmd.run()
   }
 
   deletePage(page: Page) {
-    const cmd = new DeletePageCmd(this, page)
+    const cmd = this.isDemoMode ? new FakeDeletePageCmd(this, page) : new DeletePageCmd(this, page)
     cmd.run()
   }
 
@@ -174,6 +184,8 @@ export class RestApi {
           this.logOut()
         } else if (response.status >= 500) {
           this.context.app.errorMsg = response.status + ': Internal server error'
+        } else if (response.status === 400 && this.isDemoMode) {
+          this.context.app.errorMsg = ''
         } else {
           this.context.app.errorMsg = response.status + ': Bad Request'
         }
@@ -182,7 +194,8 @@ export class RestApi {
           const details = await response.text()
 
           console.log('Details:', details)
-        } catch (_) {}
+        } catch (_) {
+        }
       }
       return [response, null]
     } catch (e: any) {
@@ -192,6 +205,12 @@ export class RestApi {
       return [null, null]
     }
   }
-}
 
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
+  //--------------------------------------
+  //  id
+  //--------------------------------------
+  private fakeId = 100
+  generateFakeId(): string {
+    return (this.fakeId++).toString()
+  }
+}

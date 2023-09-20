@@ -82,7 +82,6 @@ export class EditTools extends Observable {
   readonly uid: UID
 
   private readonly _user: User
-  get editModeEnabled(): boolean { return this._user.email !== '' && this._user.email !== 'demo' }
 
   constructor(user: User) {
     super('EditTools')
@@ -420,18 +419,6 @@ export class Doc extends Observable implements Serializable {
   }
 
   //--------------------------------------
-  //  storeWithError
-  //--------------------------------------
-  private _storeWithError: string = ''
-  get storeWithError(): string { return this._storeWithError }
-  set storeWithError(value: string) {
-    if (this._storeWithError !== value) {
-      this._storeWithError = value
-      this.mutated()
-    }
-  }
-
-  //--------------------------------------
   //  loadStatus
   //--------------------------------------
   private _loadStatus: DocLoadStatus = DocLoadStatus.HEADER_LOADED
@@ -596,6 +583,18 @@ export class Page extends Observable implements Serializable {
 
   get key(): string {
     return strToHashId(this.title)
+  }
+
+  includes(str: string): boolean {
+    if (str.length < 2) return true
+    const rx = new RegExp(str, 'gi')
+    if (this.title.includes(str)) {
+      return true
+    }
+    for (let i = 0; i < this.blocks.length; i++) {
+      if (this.blocks[i].text.match(rx)) return true
+    }
+    return false
   }
 
   add(block: PageBlock): void {

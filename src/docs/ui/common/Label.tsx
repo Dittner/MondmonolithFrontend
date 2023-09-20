@@ -10,15 +10,17 @@ import * as React from 'react'
 type LabelType = 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 export interface LabelProps extends StylableComponentProps {
   text?: string
+  lineHeight?: string
+  letterSpacing?: string
   type?: LabelType | undefined
 }
 
 export const Label = (props: LabelProps) => {
   if ('visible' in props && !props.visible) return <></>
 
-  const id = props.id ?? 'NoCSSLbl'
+  const id = props.id
   let className = 'className' in props ? props.className + ' ' : ''
-  className += buildClassName(props, id)
+  className += buildClassName(props)
 
   switch (props.type) {
     case 'p': return <p id={id} className={className} onClick={props.onClick}>{props.text ?? props.children}</p>

@@ -2,7 +2,7 @@ import { NavLink, Route, Routes, useParams } from 'react-router-dom'
 import { DocLoadStatus, type Page } from '../../domain/DomainModel'
 import { buildClassName, stylable, type StylableComponentProps } from '../../application/NoCSS'
 
-import { observeDirList } from '../../DocsContext'
+import { observeApp, observeDirList } from '../../DocsContext'
 import { observe, observer } from '../../infrastructure/Observer'
 import { useDocsContext } from '../../../App'
 import { VStack } from '../common/Container'
@@ -21,6 +21,7 @@ const EmptyDocTopicsView = () => {
 const DocTopicsView = observer(() => {
   console.log('new DocTopicsView')
   const dirList = observeDirList()
+  const app = observeApp()
   const { theme } = useDocsContext()
 
   const params = useParams()
@@ -32,11 +33,14 @@ const DocTopicsView = observer(() => {
   observe(doc)
 
   return (
-    <VStack halign="left" valign="top" gap="0"
+    <VStack className={theme.id}
+            halign="left" valign="top" gap="0"
             width="100%" height="100%"
             paddingHorizontal="10px" paddingTop="5px">
       {doc.pages.map(page => {
         return <TopicLink key={page.uid}
+                          fontSize='1rem'
+                          textColor={page.includes(app.searchFilter) ? theme.link : theme.text75}
                           page={page}
                           width="100%"/>
       })}

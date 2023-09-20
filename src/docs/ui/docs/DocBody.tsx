@@ -21,7 +21,7 @@ import 'prismjs/components/prism-markup'
 import { DocLoadStatus, LoadStatus, type Page, type PageBlock } from '../../domain/DomainModel'
 import ReactMarkdown from 'react-markdown'
 import { stylable } from '../../application/NoCSS'
-import { AppSize } from '../../application/Application'
+import { AppSize, Dialog } from '../../application/Application'
 import { observeApp, observeDirList, observeEditTools } from '../../DocsContext'
 import { HStack, StylableContainer, VStack } from '../common/Container'
 import { Button, IconButton, RedButton } from '../common/Button'
@@ -29,6 +29,7 @@ import { Label } from '../common/Label'
 import { TextEditor } from '../common/Input'
 import { Spacer } from '../common/Spacer'
 import { observe, observer } from '../../infrastructure/Observer'
+import { VSeparator } from '../common/Separator'
 
 export const DocBody = stylable(() => {
   return <Routes>
@@ -52,10 +53,8 @@ const PageList = observer(() => {
 
   const app = observeApp()
   const dirList = observeDirList()
-  const {
-    restApi,
-    theme
-  } = useDocsContext()
+  const editTools = observeEditTools()
+  const { restApi, theme } = useDocsContext()
 
   //console.log('  dirList = ', dirList)
   const params = useParams()
@@ -111,6 +110,39 @@ const PageList = observer(() => {
       })
     }
   }, [doc?.uid, doc?.pages.length, location.key])
+
+  useEffect(() => {
+    if (app.searchFilter) {
+      setTimeout(() => {
+        const coll = document.getElementsByClassName('markdown')
+        const rx = new RegExp('[\>][^\<\>.]*' + app.searchFilter, 'gi')
+        const replaceWith = '<mark>' + app.searchFilter + '</mark>'
+        if (coll) {
+          for (let i = 0; i < coll.length; i++) {
+            const el = coll[i]
+            let text = el.innerHTML
+            text = text.replace(rx, function(item, exp) {
+              const subRegex = new RegExp(app.searchFilter, 'gi')
+              return item.replace(subRegex, replaceWith)
+            })
+            el.innerHTML = text
+          }
+        }
+      }, 10)
+    }
+  })
+
+  useEffect(() => {
+    const coll = document.getElementsByClassName('markdown')
+    if (coll) {
+      for (let i = 0; i < coll.length; i++) {
+        const el = coll[i]
+        let text = el.innerHTML
+        text = text.replace(/(<mark>|<\/mark>)/gim, '')
+        el.innerHTML = text
+      }
+    }
+  }, [app.searchFilter])
 
   const showPrevPage = () => {
     if (doc && pagesSlice.start > 0) {
@@ -169,6 +201,20 @@ const PageList = observer(() => {
     }
   }
 
+  const onDocDelete = () => {
+    if (doc) {
+      app.dialog = new Dialog(
+        'Are you sure you want to delete the document «' + doc.title + '»?',
+        "The document will be deleted with all pages. You can't undo this action.",
+        () => {
+          restApi.deleteDoc(doc)
+          doc.isEditing = false
+        },
+        () => {
+        })
+    }
+  }
+
   const scrollBack = () => {
     setPagesSlice({
       start: 0,
@@ -190,7 +236,8 @@ const PageList = observer(() => {
   app.lastShownPage = doc.pages.length > 0 ? doc.pages.at(pagesSlice.end) : undefined
 
   return (
-    <VStack valign="top" halign="center" gap="10px"
+    <VStack className={theme.id}
+            valign="top" halign="center" gap="10px"
             width="100%" maxWidth='1000px'
             paddingHorizontal={app.size === AppSize.XS ? '2px' : '40px'}
             paddingVertical="20px">
@@ -233,11 +280,21 @@ const PageList = observer(() => {
       {doc.pages.length > 0 && pagesSlice.isLastPageShown &&
         <HStack halign="stretch"
                 valign="center"
+                gap='0'
                 padding="8px"
                 width="100%">
 
           <RedButton title="Export as JSON"
                      onClick={exportDocAsJSON}/>
+          {!doc.isNew && editTools.editMode &&
+            <>
+              <VSeparator marginHorizontal='10px' color={theme.red}
+                          height="20px"/>
+              <RedButton title="Delete"
+                         popUp="Delete"
+                         onClick={onDocDelete}/>
+            </>
+          }
 
           <Spacer/>
 
@@ -298,9 +355,9 @@ const PageTitle = observer(({ page }: { page: Page }) => {
                            bgColor={theme.selectedBlockBg}
                            borderLeft={['6px', 'solid', theme.red]}
                            onDoubleClick={editPage}>
-          <Label className="h1"
+          <Label type='h2'
                  paddingVertical='5px'
-                 textColor={theme.h1}
+                 textColor={theme.pageTitleColor}
                  paddingHorizontal='14px'
                  bgColor={theme.pageTitleBg}
                  text={page.title}/>
@@ -315,9 +372,9 @@ const PageTitle = observer(({ page }: { page: Page }) => {
                               hoverState={state => {
                                 state.bgColor = theme.selectedBlockBg
                               }}>
-      <Label className="h1"
+      <Label type='h2'
              paddingVertical='5px'
-             textColor={theme.h1}
+             textColor={theme.pageTitleColor}
              paddingHorizontal='20px'
              bgColor={theme.pageTitleBg}
              text={page.title}/>
@@ -326,9 +383,9 @@ const PageTitle = observer(({ page }: { page: Page }) => {
 
   return (
     <StylableContainer width="100%">
-      <Label className="h1"
+      <Label type='h2'
              paddingVertical='5px'
-             textColor={theme.h1}
+             textColor={theme.pageTitleColor}
              paddingHorizontal='20px'
              bgColor={theme.pageTitleBg}
              text={page.title}/>

@@ -1,4 +1,19 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import Prism from 'prismjs'
+import 'prismjs/components/prism-java'
+import 'prismjs/components/prism-kotlin'
+import 'prismjs/components/prism-jsx'
+import 'prismjs/components/prism-tsx'
+import 'prismjs/components/prism-typescript'
+import 'prismjs/components/prism-javascript'
+import 'prismjs/components/prism-python'
+import 'prismjs/components/prism-c'
+import 'prismjs/components/prism-cpp'
+import 'prismjs/components/prism-csharp'
+import 'prismjs/components/prism-swift'
+import 'prismjs/components/prism-json'
+import 'prismjs/components/prism-css'
+import 'prismjs/components/prism-markup'
 import { stylable } from '../../application/NoCSS'
 import { AppSize, LayoutLayer } from '../../application/Application'
 import { observe, observer } from '../../infrastructure/Observer'
@@ -14,11 +29,13 @@ import { NoCSSContainer } from './controls/NoCSSContainer'
 import { NoCSSSpacer } from './controls/NoCSSSpacerr'
 import { Spacer } from '../common/Spacer'
 import { NoCSSInput } from './controls/NoCSSInput'
+import ReactMarkdown from 'react-markdown'
 
 export type ControlLink = 'intro' | 'label' | 'button' | 'container' | 'spacer' | 'input' | 'animation'
 export const noCSSControlLinks = Array.of<ControlLink>('intro', 'label', 'button', 'container', 'spacer', 'input', 'animation')
 
 export interface NoCSSPageTheme {
+  id: string
   introContentWidth: string
   contentWidth: string
   headerFontSize: string
@@ -36,6 +53,7 @@ export interface NoCSSPageTheme {
 }
 
 const theme: NoCSSPageTheme = {
+  id: 'dark',
   introContentWidth: '860px',
   contentWidth: '1800px',
   headerFontSize: '60px',
@@ -180,7 +198,7 @@ const ControlLinkList = stylable(({
       const isSelected = params.controlId === link || (link === 'intro' && params.controlId === undefined)
       return <Label key={link}
                     fontSize={app.size === AppSize.XS ? '1.5rem' : '1rem'}
-                    className="notSelectable"
+                    className="mono notSelectable"
                     paddingHorizontal='20px'
                     textColor={isSelected ? theme.controlLinkSelectedColor : theme.controlLinkColor}
                     bgColor={isSelected ? theme.headerBgColor : '0'}
@@ -200,4 +218,17 @@ const ControlLinkList = stylable(({
                     }}/>
     })}
   </VStack>
+})
+
+//TODO Do not remove it: the reference on Prism,js is necessary for subpages
+const MarkdownText = stylable(({ value }: { value: string }) => {
+  const { theme } = useDocsContext()
+
+  useEffect(() => {
+    console.log('--Prism.highlightAll')
+    Prism.highlightAll()
+  }, [value])
+  return <div className={theme.id}>
+    <ReactMarkdown className={theme.isDark ? 'markdown dark' : 'markdown light'} key={value}>{value}</ReactMarkdown>
+  </div>
 })
